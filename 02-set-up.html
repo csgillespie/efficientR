@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Colin Gillespie and Robin Lovelace" />
+
+<meta name="date" content="2016-01-11" />
+
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<title>Efficient R programming</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+
+<div class="row">
+<div class="col-sm-4 well">
+<div id="TOC">
+<ul>
+<li><a href="01-introduction.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="02-set-up.html#efficient-set-up"><span class="toc-section-number">2</span> Efficient set-up</a><ul>
+<li><a href="02-set-up.html#r-startup"><span class="toc-section-number">2.1</span> R startup</a><ul>
+<li><a href="02-set-up.html#rprofile"><span class="toc-section-number">2.1.1</span> The <code>.Rprofile</code> file</a></li>
+<li><a href="02-set-up.html#example-.rprofile-settings"><span class="toc-section-number">2.1.2</span> Example <code>.Rprofile</code> settings</a></li>
+<li><a href="02-set-up.html#renviron"><span class="toc-section-number">2.1.3</span> The <code>.Renviron</code> file</a></li>
+<li><a href="02-set-up.html#exercises"><span class="toc-section-number">2.1.4</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#blas-and-alternative-r-interpreters"><span class="toc-section-number">2.2</span> BLAS and alternative R interpreters</a><ul>
+<li><a href="02-set-up.html#revolution-r"><span class="toc-section-number">2.2.1</span> Revolution R</a></li>
+<li><a href="02-set-up.html#other-interpreters"><span class="toc-section-number">2.2.2</span> Other interpreters</a></li>
+<li><a href="02-set-up.html#useful-blasbenchmarking-resources"><span class="toc-section-number">2.2.3</span> Useful BLAS/benchmarking resources</a></li>
+<li><a href="02-set-up.html#exercises-1"><span class="toc-section-number">2.2.4</span> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li><a href="03-hardware.html#efficient-hardware"><span class="toc-section-number">3</span> Efficient hardware</a><ul>
+<li><a href="03-hardware.html#introduction-what-is-a-byte"><span class="toc-section-number">3.1</span> Introduction: what is a byte?</a></li>
+<li><a href="03-hardware.html#random-access-memory-ram"><span class="toc-section-number">3.2</span> Random access memory: RAM</a><ul>
+<li><a href="03-hardware.html#exercises-2"><span class="toc-section-number">3.2.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="03-hardware.html#hard-drives-hdd-vs-ssd"><span class="toc-section-number">3.3</span> Hard drives: HDD vs SSD</a></li>
+<li><a href="03-hardware.html#operating-systems-32-bit-or-64-bit"><span class="toc-section-number">3.4</span> Operating systems: 32-bit or 64-bit</a><ul>
+<li><a href="03-hardware.html#exercises-3"><span class="toc-section-number">3.4.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="03-hardware.html#central-processing-unit-cpu"><span class="toc-section-number">3.5</span> Central processing unit (CPU)</a></li>
+<li><a href="03-hardware.html#cloud-computing"><span class="toc-section-number">3.6</span> Cloud computing</a><ul>
+<li><a href="03-hardware.html#amazon-ec2"><span class="toc-section-number">3.6.1</span> Amazon EC2</a></li>
+<li><a href="03-hardware.html#exercise"><span class="toc-section-number">3.6.2</span> Exercise</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div class="col-sm-8">
+<div id="efficient-set-up" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Efficient set-up</h1>
+<div id="r-startup" class="section level2">
+<h2><span class="header-section-number">2.1</span> R startup</h2>
+<p>Every time R starts, a number of files are read, in a particular order. The contents of these files determine how R performs for the duration of the session. Note that these files should only be changed with caution, as they may make your R version behave differently to other R installations. This could reduce the reproducibility of your code.</p>
+<p>Files in three folders are important in this process:</p>
+<ul>
+<li><p><code>R_HOME</code>, the directory in which R is installed. The <code>etc</code> sub-directory can contain startup files read early on in the startup process. Find out where your <code>R_HOME</code> is with the <code>R.home()</code> command.</p></li>
+<li><p><code>HOME</code>, the user’s home directory. Typically this is <code>/home/username</code> on Unix machines or <code>C:\Users\username</code> on Windows (since Windows 7). Ask R where your home directory with, <code>path.expand(&quot;~&quot;)</code> (note the use of the Unix-like tilde to represent the home directory).</p></li>
+<li><p>R’s current working directory. This is reported by <code>getwd()</code>.</p></li>
+</ul>
+<p>It is important to know the location of the <code>.Rprofile</code> and <code>.Renviron</code> setup files that are being used out of these three options. R only uses one <code>.Rprofile</code> and one <code>.Renviron</code> in any session: if you have a <code>.Rprofile</code> file in your current project, R will ignore <code>.Rprofile</code> in <code>R_HOME</code> and <code>HOME</code>. Likewise, <code>.Rprofile</code> in <code>HOME</code> overrides <code>.Rprofile</code> in <code>R_HOME</code>. The same applies to <code>.Renviron</code>: you should remember that adding project specific environment variables with <code>.Renviron</code> will de-activate other <code>.Renviron</code> files.</p>
+<p>To create a project specific setup R code you simply create a <code>.Rprofile</code> file in the project’s root directory and start adding R code, e.g. via <code>file.edit(&quot;.Rprofile&quot;)</code>. Remember that this will make <code>.Rprofile</code> in the home directory be ignored. To change the user-level settings from within an R editor such as RStudio, this would be:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.edit</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Rprofile&quot;</span>))</code></pre>
+<p>Note that editing the <code>.Renviron</code> file in the same locations will have the same effect. The following code will create a user specific <code>.Renviron</code> file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.</p>
+<pre class="sourceCode r"><code class="sourceCode r">user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))
+if(!<span class="kw">file.exists</span>(user_renviron)) <span class="co"># check to see if the file already exists</span>
+  <span class="kw">file.create</span>(user_renviron)
+<span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></code></pre>
+<p>The location, contents and uses of each is outlined in more detail below.</p>
+<div id="rprofile" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> The <code>.Rprofile</code> file</h3>
+<p>By default R looks for and runs <code>.Rprofile</code> files in the three locations described above, in a specific order. <code>.Rprofile</code> files are simply R scripts that run each time R runs and they can be found within <code>R_HOME</code>, <code>HOME</code> and the project’s home directory, found with <code>getwd()</code>. To check if you have a site-wide <code>.Rprofile</code>, which will run for all users on start-up, run:</p>
+<pre class="sourceCode r"><code class="sourceCode r">site_path =<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)
+fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <span class="st">&quot;etc&quot;</span>, <span class="st">&quot;Rprofile.site&quot;</span>)
+<span class="kw">file.exists</span>(fname)</code></pre>
+<p>The above code checks for the presence of <code>Rprofile.site</code> in that directory. As outlined above, the <code>.Rprofile</code> located in your home directory is user-specific. Again, we can test whether this file exists using</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre>
+<p>We can use R to create and edit <code>.Rprofile</code> (warning: do not overwrite your previous <code>.Rprofile</code> - we suggest you try project-specific <code>.Rprofile</code> first):</p>
+<pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)) <span class="co"># only create if not already there</span>
+  <span class="kw">file.create</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)    <span class="co"># (don&#39;t overwrite it)</span>
+<span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre>
+</div>
+<div id="example-.rprofile-settings" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Example <code>.Rprofile</code> settings</h3>
+<p>An <code>.Rprofile</code> file is just an R script that is run at start-up. The examples at the bottom of the <code>.Rprofile</code> help file</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help</span>(<span class="st">&quot;Rprofile&quot;</span>)</code></pre>
+<p>give clues as to the types of things we could place in our profile.</p>
+<div id="setting-options" class="section level4">
+<h4><span class="header-section-number">2.1.2.1</span> Setting options</h4>
+<p>The function <code>options</code> is a list that contains a number of default options. See <code>help(&quot;options&quot;)</code> or simply type <code>options()</code> to get an idea of what we can configure. In my <code>.Rprofile</code> file, we have the line</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt=</span><span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits=</span><span class="dv">4</span>, <span class="dt">show.signif.stars=</span><span class="ot">FALSE</span>)</code></pre>
+<p>This changes three features.</p>
+<ul>
+<li>The R prompt, from the boring <code>&gt;</code> to the exciting <code>R&gt;</code>.</li>
+<li>The number of digits displayed.</li>
+<li>Removing the stars after significant <span class="math">\(p\)</span>-values.</li>
+</ul>
+<p>Typically we want to avoid adding options to the start-up file that make our code non-portable. For example, adding</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</code></pre>
+<p>to your start-up script has knock-on effects for <code>read.table</code> and related functions including <code>read.csv</code>, making them convert text strings into characters rather than into factors as is default. This may be useful for you, but it is dangerous as it may make your code less portable.</p>
+</div>
+<div id="setting-the-cran-mirror" class="section level4">
+<h4><span class="header-section-number">2.1.2.2</span> Setting the CRAN mirror</h4>
+<p>To avoid setting the CRAN mirror each time you run <code>install.packages</code> you can permanently set the mirror in your <code>.Rprofile</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">## local creates a new, empty environment
+## This avoids polluting the global environment with
+## the object r
+<span class="kw">local</span>({
+  r =<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)             
+  r[<span class="st">&quot;CRAN&quot;</span>] =<span class="st"> &quot;https://cran.rstudio.com/&quot;</span>
+  <span class="kw">options</span>(<span class="dt">repos =</span> r)
+})</code></pre>
+<p>The RStudio mirror is a virtual machine run by Amazon’s EC2 service, and it syncs with the main CRAN mirror in Austria once per day. Since RStudio is using Amazon’s CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn’t need to travel very far, and is therefore fast to download.</p>
+</div>
+<div id="the-fortunes-package" class="section level4">
+<h4><span class="header-section-number">2.1.2.3</span> The <code>fortunes</code> package</h4>
+<p>This section illustrate what <code>.Rprofile</code> does with reference to a package that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.</p>
+<p>The <code>fortunes</code> package contains a number of memorable quotes that the community has collected over many years, called <code>R fortunes</code>. Each fortune has a number. To get fortune number <span class="math">\(50\)</span>, for example, enter</p>
+<pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">50</span>)</code></pre>
+<p>It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to <code>~/.Rprofile</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">interactive</span>()) 
+  <span class="kw">try</span>(fortunes::<span class="kw">fortune</span>(), <span class="dt">silent=</span><span class="ot">TRUE</span>)</code></pre>
+<p>The <code>interactive</code> function tests whether R is being used interactively in a terminal. The <code>fortune</code> function is called within <code>try</code>. If the <code>fortunes</code> package is not available, we avoid raising an error and move on. By using <code>::</code> we avoid adding the fortunes package to our list of attached packages..</p>
+<p>The function <code>.Last</code>, if it exists in the <code>.Rprofile</code>, is always run at the end of the session. We can use it to install the <code>fortunes</code> package if needed. To load the package, we use <code>require</code>, since if the package isn’t installed, the <code>require</code> function returns <code>FALSE</code> and raises a warning.</p>
+<pre class="sourceCode r"><code class="sourceCode r">.Last =<span class="st"> </span>function() {
+  cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(!<span class="kw">require</span>(fortunes, <span class="dt">quietly=</span><span class="ot">TRUE</span>))
+  if(cond) 
+    <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
+  <span class="kw">message</span>(<span class="st">&quot;Goodbye at &quot;</span>, <span class="kw">date</span>(), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+}</code></pre>
+</div>
+<div id="useful-functions" class="section level4">
+<h4><span class="header-section-number">2.1.2.4</span> Useful functions</h4>
+<p>You can also load useful functions in <code>.Rprofile</code>. For example, we could load the following two functions for examining data frames:</p>
+<pre class="sourceCode r"><code class="sourceCode r">## ht == headtail
+ht =<span class="st"> </span>function(d, <span class="dt">n=</span><span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))
+  
+## Show the first 5 rows &amp; first 5 columns of a data frame
+hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">1</span>:<span class="dv">5</span>]</code></pre>
+<p>and a function for setting a nice plotting window:</p>
+<pre class="sourceCode r"><code class="sourceCode r">setnicepar =<span class="st"> </span>function(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>, <span class="dv">0</span>), 
+                      <span class="dt">tck =</span> -.<span class="dv">01</span>, <span class="dt">cex.axis =</span> <span class="fl">0.9</span>, 
+                      <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), ...) {
+    <span class="kw">par</span>(<span class="dt">mar =</span> mar, <span class="dt">mgp =</span> mgp, <span class="dt">tck =</span> tck,
+        <span class="dt">cex.axis =</span> cex.axis, <span class="dt">las =</span> las, 
+        <span class="dt">mfrow =</span> mfrow, ...)
+}</code></pre>
+<p>Note that these functions are for personal use and are unlikely to interfere with code from other people. For this reason even if you use a certain package every day, we don’t recommend loading it in your <code>.Rprofile</code>. Also beware the dangers of loading many functions by default: it may make your code less portable. Another downside of putting functions in your <code>.Rprofile</code> is that it can clutter-up your work space: when you run the <code>ls()</code> command, your <code>.Rprofile</code> functions will appear. Also if you run <code>rm(list=ls())</code>, your functions will be deleted.</p>
+<p>One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with <code>.</code>, by default it doesn’t appear in the output of the <code>ls()</code> function</p>
+<pre class="sourceCode r"><code class="sourceCode r">.obj =<span class="st"> </span><span class="dv">1</span>
+<span class="st">&quot;.obj&quot;</span> %in%<span class="st"> </span><span class="kw">ls</span>()</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>This concept also works with environments. In the <code>.Rprofile</code> file we can create a <em>hidden</em> environment</p>
+<pre class="sourceCode r"><code class="sourceCode r">.env =<span class="st"> </span><span class="kw">new.env</span>()</code></pre>
+<p>and then add functions to this environment</p>
+<pre class="sourceCode r"><code class="sourceCode r">.env$ht =<span class="st"> </span>function(d, <span class="dt">n =</span> <span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</code></pre>
+<p>At the end of the <code>.Rprofile</code> file, we use <code>attach</code>, which makes it possible to refer to objects in the environment by their names alone.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">attach</span>(.env)</code></pre>
+<!--
+\sidenote{I also have a function that shows the size of
+  objects in my R session (\url{http://stackoverflow.com/q/1358003/203420}).}-->
+</div>
+</div>
+<div id="renviron" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> The <code>.Renviron</code> file</h3>
+<p>The <code>.Renviron</code> file is used to store system variables. It follows a similar start up routine to the <code>.Rprofile</code> file: R first looks for a global <code>.Renviron</code> file, then for local versions. A typical use of the <code>.Renviron</code> file is to specify the <code>R_LIBS</code> path</p>
+<pre><code>## Linux
+R_LIBS=~/R/library
+
+## Windows
+R_LIBS=C:/R/library</code></pre>
+<p>This variable points to a directory where R packages will be installed. When <code>install.packages</code> is called, new packages will be stored in <code>R_LIBS</code>.</p>
+<p>Another common use of <code>.Renviron</code> is to store API keys that will be available from one session to another.<a href="03-hardware.html#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> The following line in <code>.Renviron</code>, for example, sets the <code>ZEIT_KEY</code> environment variable which is used in the package <a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a> package:</p>
+<pre><code>ZEIT_KEY=PUT_YOUR_KEY_HERE</code></pre>
+<p>You will need to sign-in and start a new R session for the environment variable (accessed by <code>Sys.getenv</code>) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</code></pre>
+<p>Use of the <code>.Renviron</code> file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session. Furthermore, the same <code>.Renviron</code> file will work across different platforms so keep it stored safely.</p>
+</div>
+<div id="exercises" class="section level3">
+<h3><span class="header-section-number">2.1.4</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>What are the three locations where they are stored? Where are these locations on your computer?</li>
+<li>For each location, does a <code>.Rprofile</code> or <code>.Renviron</code> file exist?</li>
+<li>Create a <code>.Rprofile</code> file in your current working directory that prints the message <code>Happy efficient R programming</code> each time you start R at this location.</li>
+</ol>
+</div>
+</div>
+<div id="blas-and-alternative-r-interpreters" class="section level2">
+<h2><span class="header-section-number">2.2</span> BLAS and alternative R interpreters</h2>
+<p>In this section we cover a few system-level options available to speed-up R’s performance. Note that for many applications stability rather than speed is a priority, so these should only be considered if a) you have exhausted options for writing your R code more efficiently and b) you are confident tweaking system-level settings. This should therefore be seen as an advanced section: if you are not interested in speeding-up base R, feel free to skip to the next section of hardware.</p>
+<p>Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.</p>
+<p>The two open source alternative BLAS libraries are <a href="http://math-atlas.sourceforge.net/">ATLAS</a> and <a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a>. The <a href="https://software.intel.com/en-us/intel-mkl">Intel MKL</a> is another implementation, designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching you BLAS library, linear algebra operations can run several times faster than with the base BLAS routines.</p>
+<!--
+ Currently only works for linux.
+ 
+To find out what BLAS library you are using on Linux the following function, from the [benchmarkme](https://github.com/csgillespie/benchmarkme) package can be used:
+
+
+```r
+# devtools::install_github("csgillespie/benchmarkme")
+benchmarkme::get_linear_algebra()
+```
+-->
+<div id="revolution-r" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Revolution R</h3>
+<p>Revolution R is the main software product offered by Revolution Analytics. It is “100%” compatible with R“, supporting all available packages through the MRAN package repository. Revolution R provides faster performance on for certain functions than base R, through its use of MKL, an implementation of BLAS (as described above). Revolution R is available as a free and open source product, ‘Revolution R Open’ (RRO), and is reported to be faster than base R installations.<a href="03-hardware.html#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>Additional benchmarks reported by <span class="citation">Eddelbuettel (2010)</span> show the MKL implementations of R used in RRO and the commercial edition to be substantially faster than the reference case.</p>
+</div>
+<div id="other-interpreters" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Other interpreters</h3>
+<p>Due to the popularity of R, it now possible to use alternative interpreters (the interpreter is where the code is run). There are currently four possibilities</p>
+<ul>
+<li><p><a href="http://www.pqr-project.org/">pqrR</a> (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. <strong>pqR</strong> is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.</p></li>
+<li><p><a href="http://www.renjin.org/">Renjin</a> reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.</p></li>
+<li><p><a href="http://spotfire.tibco.com/">Tibco</a> created a C++ based interpreter called TERR.</p></li>
+<li><p>Oracle also offer an R-interpreter that uses Intel’s mathematics library and therefore achieves a higher performance without changing R’s core.</p></li>
+</ul>
+<p>At the time of writing, switching interpreters is something to consider carefully. But in the future, it may become more routine.</p>
+</div>
+<div id="useful-blasbenchmarking-resources" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Useful BLAS/benchmarking resources</h3>
+<ul>
+<li>The <a href="https://cran.r-project.org/web/packages/gcbd/">gcbd</a> package benchmarks performance of a few standard linear algebra operations across a number of different BLAS libraries as well as a GPU implementation. It has an excellent vignette summarising the results.</li>
+<li><a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Brett Klamer</a> provides a nice comparison of ATLAS, OpenBLAS and Intel MKL BLAS libraries. He also gives a description of how to install the different libraries.</li>
+<li>The official R manual <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#BLAS">section</a> on BLAS.</li>
+</ul>
+</div>
+<div id="exercises-1" class="section level3">
+<h3><span class="header-section-number">2.2.4</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>What BLAS system is your version of R using?</li>
+</ol>
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+</div>
+</div>
+</div>
+<div style="text-align: center;">
+<a href="01-introduction.html" class="btn btn-default">Previous</a>
+<a href="03-hardware.html" class="btn btn-default">Next</a>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>
