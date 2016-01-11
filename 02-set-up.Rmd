@@ -1,0 +1,357 @@
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+# Efficient set-up
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## R startup
+
+Every time R starts, a number of files are read, in a particular order.
+The contents of these files determine how R performs for the duration of the session.
+Note that these files should only be changed with caution, as they may make your R version behave differently to other R installations.
+This could reduce the reproducibility of your code.
+
+Files in three folders are important in this process:
+
+- `R_HOME`, the directory in which R is installed. The `etc` sub-directory can contain startup files read early on in the startup process. Find out where your `R_HOME` is with the `R.home()` command.
+
+- `HOME`, the user's home directory. Typically this is `/home/username` on Unix machines or `C:\Users\username` on Windows (since Windows 7). Ask R where your home directory with, `path.expand("~")` (note the use of the Unix-like tilde to represent the home directory).
+
+- R's current working directory. This is reported by `getwd()`.
+
+It is important to know the location of the `.Rprofile` and `.Renviron` setup files that are being used out of these three options.
+R only uses one `.Rprofile` and one `.Renviron` in any session: if you have a `.Rprofile` file in your current project, R will ignore `.Rprofile` in `R_HOME` and `HOME`.
+Likewise, `.Rprofile` in `HOME` overrides `.Rprofile` in `R_HOME`. 
+The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files.
+
+To create a project specific setup R code you simply create a `.Rprofile` file in the project's root directory and start adding R code, e.g. via `file.edit(".Rprofile")`.
+Remember that this will make `.Rprofile` in the home directory be ignored.
+To change the user-level settings from within an R editor such as RStudio, this would be:
+
+```{r, eval=FALSE}
+file.edit(file.path("~", ".Rprofile"))
+```
+
+Note that editing the `.Renviron` file in the same locations will have the same effect.
+The following code will create a user specific `.Renviron` file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.
+
+```{r, eval=FALSE}
+user_renviron = path.expand(file.path("~", ".Renviron"))
+if(!file.exists(user_renviron)) # check to see if the file already exists
+  file.create(user_renviron)
+file.edit(user_renviron) # open with another text editor if this fails
+```
+
+The location, contents and uses of each is outlined in more detail below.
+
+### The `.Rprofile` file {#rprofile}
+
+By default R looks for and runs `.Rprofile` files in the three locations described above, in a specific order.
+`.Rprofile` files are simply R scripts that run each time R runs and
+they can be found within `R_HOME`, `HOME` and the project's home directory, found with `getwd()`.
+To check if you have a site-wide `.Rprofile`,
+which will run for all users on start-up, run:
+
+```{r, eval=FALSE}
+site_path = R.home(component = "home")
+fname = file.path(site_path, "etc", "Rprofile.site")
+file.exists(fname)
+```
+
+The above code checks for the presence of
+`Rprofile.site` in that directory.
+As outlined above, the `.Rprofile` located in your home directory is user-specific.
+Again, we can test whether this file exists using 
+
+```{r, eval=FALSE}
+file.exists("~/.Rprofile")
+```
+
+We can use R to create and edit `.Rprofile` (warning: do not overwrite your previous `.Rprofile` - we suggest you try project-specific `.Rprofile` first):
+
+```{r, eval=FALSE}
+if(!file.exists("~/.Rprofile")) # only create if not already there
+  file.create("~/.Rprofile")    # (don't overwrite it)
+file.edit("~/.Rprofile")
+```
+
+### Example `.Rprofile` settings
+
+An `.Rprofile` file is just an R script that is run at start-up. The examples at the bottom of the `.Rprofile` help file
+
+```{r, eval=FALSE}
+help("Rprofile")
+```
+
+give clues as to the types of things we could place in our profile.
+
+#### Setting options
+
+The function `options` is a list that contains a number of default
+options. See `help("options")` or simply type `options()`
+to get an idea of what we can configure.  In my `.Rprofile` file, we have the line
+
+```{r, eval=FALSE}
+options(prompt="R> ", digits=4, show.signif.stars=FALSE)
+```  
+
+This changes three features.
+
+  * The R prompt, from the boring `>` to the exciting `R>`.
+  * The number of digits displayed.
+  * Removing the stars after significant $p$-values.
+
+Typically we want to avoid adding options to the start-up file that make our code non-portable. For example, adding
+
+```{r, eval=FALSE}
+options(stringsAsFactors=FALSE)
+```
+
+to your start-up script has knock-on effects for `read.table` and related functions including `read.csv`, 
+making them convert text strings into characters rather than into factors as is default.
+This may be useful for you, but it is dangerous as it may make your code less portable.
+
+#### Setting the CRAN mirror
+
+To avoid setting the CRAN mirror each time you run
+`install.packages` you can permanently set the mirror in your `.Rprofile`.
+
+```{r, eval=FALSE}
+## local creates a new, empty environment
+## This avoids polluting the global environment with
+## the object r
+local({
+  r = getOption("repos")             
+  r["CRAN"] = "https://cran.rstudio.com/"
+  options(repos = r)
+})
+```
+  
+The RStudio mirror is a virtual machine run by Amazon's 
+EC2 service, and it syncs with the main CRAN mirror in Austria once per day. 
+Since RStudio is using Amazon's CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn't need to travel very far, and is therefore fast to download.
+
+#### The `fortunes` package
+
+This section illustrate what `.Rprofile` does with reference to a package that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been
+downloaded. 
+
+The `fortunes` package contains a number of memorable quotes that the community has collected over many years, called `R fortunes`. Each fortune has a number. To get fortune number $50$, for example, enter
+
+```{r, eval=FALSE}
+fortunes::fortune(50)
+```
+
+It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to `~/.Rprofile`:
+
+```{r results="hide"}
+if(interactive()) 
+  try(fortunes::fortune(), silent=TRUE)
+```
+
+The `interactive` function tests whether R is being used
+interactively in a terminal. The `fortune` function is called within `try`. If the `fortunes` package is not available, we avoid raising an error and move on. By using `::` we avoid adding the fortunes package to our list of
+attached packages..
+
+The function `.Last`, if it exists in the `.Rprofile`, is always run 
+at the end of the session.
+We can use it to install the `fortunes` package if needed. To load
+the package, we use `require`, since if the package isn't installed, the `require` function
+returns `FALSE` and raises a warning.
+
+```{r, eval=FALSE}  
+.Last = function() {
+  cond = suppressWarnings(!require(fortunes, quietly=TRUE))
+  if(cond) 
+    try(install.packages("fortunes"), silent=TRUE)
+  message("Goodbye at ", date(), "\n")
+}
+```
+
+#### Useful functions
+
+You can also load useful functions in `.Rprofile`.
+For example, we could load the following two functions for examining data frames:
+
+```{r}  
+## ht == headtail
+ht = function(d, n=6) rbind(head(d, n), tail(d, n))
+  
+## Show the first 5 rows & first 5 columns of a data frame
+hh = function(d) d[1:5, 1:5]
+```
+
+and a function for setting a nice plotting window:
+
+```{r, eval=FALSE}  
+setnicepar = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), 
+                      tck = -.01, cex.axis = 0.9, 
+                      las = 1, mfrow = c(1, 1), ...) {
+    par(mar = mar, mgp = mgp, tck = tck,
+        cex.axis = cex.axis, las = las, 
+        mfrow = mfrow, ...)
+}
+```
+
+Note that these functions are for personal use and are unlikely to interfere with code from other people.
+For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
+Also beware the dangers of loading many functions by default: it may make your code less portable.
+Another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space:
+when you run the `ls()` command, your `.Rprofile` functions will appear.
+Also if you run `rm(list=ls())`, your functions will be deleted. 
+
+One neat trick to overcome this issue is to use hidden objects and environments. When an object
+name starts with `.`, by default it doesn't appear in the output of the
+`ls()` function
+
+```{r}
+.obj = 1
+".obj" %in% ls()
+```
+
+This concept also works with environments. In the `.Rprofile` file
+we can create a _hidden_ environment
+
+```{r}
+.env = new.env()
+```
+
+and then add functions to this environment
+
+```{r}
+.env$ht = function(d, n = 6) rbind(head(d, n), tail(d, n))
+```
+
+At the end of the `.Rprofile` file, we use
+`attach`, which makes it possible to refer to objects in the environment by their names alone.
+
+```{r message=FALSE}
+attach(.env)
+```
+
+<!--
+\sidenote{I also have a function that shows the size of
+  objects in my R session (\url{http://stackoverflow.com/q/1358003/203420}).}-->
+  
+### The `.Renviron` file {#renviron}
+
+The `.Renviron` file is used to store system variables. It follows a similar
+start up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
+local versions. A typical use of the `.Renviron` file is to
+specify the `R_LIBS` path
+
+```
+## Linux
+R_LIBS=~/R/library
+
+## Windows
+R_LIBS=C:/R/library
+```
+
+This variable points to a directory where R packages will be installed. When `install.packages` is called, new packages will be stored in `R_LIBS`.
+
+Another common use of `.Renviron` is to store API keys that will be available
+from one session to another.^[See
+[`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)
+from the `httr` package for more on
+this.] The following line in `.Renviron`, for example,
+sets the `ZEIT_KEY` environment variable which is used in the package
+[diezeit](https://cran.r-project.org/web/packages/diezeit/) package:
+
+```
+ZEIT_KEY=PUT_YOUR_KEY_HERE
+```
+
+You will need to sign-in and start a new R session for the environment variable (accessed by `Sys.getenv`) to be visible.
+To test if the example API key has been successfully added as an environment variable, run the following:
+
+```{r, eval=FALSE}
+Sys.getenv("ZEIT_KEY")
+```
+
+Use of the `.Renviron` file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session.
+Furthermore, the same `.Renviron` file will work across different platforms so keep it stored safely.
+
+### Exercises
+
+1. What are the three locations where they are stored? Where are these locations on your computer?
+2. For each location, does a `.Rprofile` or `.Renviron` file exist?
+3. Create a `.Rprofile` file in your current working directory that prints the message `Happy efficient R programming` each time you start R at this location.
+
+
+
+
+
+
+
+
+## BLAS and alternative R interpreters
+
+In this section we cover a few system-level options available to speed-up R's performance.
+Note that for many applications stability rather than speed is a priority, so these should only be considered if a) you have exhausted options for writing your R code more efficiently and b) you are confident tweaking system-level settings.
+This should therefore be seen as an advanced section: if you are not interested in speeding-up base R, feel free to skip to the next section of hardware.
+
+Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.
+
+The two open source alternative BLAS libraries are [ATLAS](http://math-atlas.sourceforge.net/) and [OpenBLAS](https://github.com/xianyi/OpenBLAS). The [Intel MKL](https://software.intel.com/en-us/intel-mkl) is another implementation,
+designed for Intel processors by Intel and used in Revolution R
+(described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching you BLAS library, linear algebra operations can run several times faster than with the base BLAS routines. 
+
+<!--
+ Currently only works for linux.
+ 
+To find out what BLAS library you are using on Linux the following function, from the [benchmarkme](https://github.com/csgillespie/benchmarkme) package can be used:
+
+```{r, eval=FALSE}
+# devtools::install_github("csgillespie/benchmarkme")
+benchmarkme::get_linear_algebra()
+```
+-->
+
+### Revolution R
+
+Revolution R is the main software product offered by Revolution Analytics.
+It is "100%" compatible with R",
+supporting all available packages through the MRAN package repository.
+Revolution R provides faster performance on for certain functions
+than base R, through its use of 
+MKL, an implementation of BLAS (as described above).
+Revolution R is available as a free and open source product,
+'Revolution R Open' (RRO), and is reported to be
+faster than base R installations.^[See
+[brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/](http://www.brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/), which finds Revolution R to be marginally faster than R using
+OpenBLAS and ATLAS BLAS implementations and
+[Faster BLAS in R](http://brettklamer.com/diversions/statistical/faster-blas-in-r/), which does not.]
+
+Additional benchmarks reported by @eddelbuettel2010benchmarking show the MKL
+implementations of R used in RRO and the commercial edition
+to be substantially faster than the reference case.
+
+### Other interpreters
+
+Due to the popularity of R, it now possible to use alternative interpreters (the interpreter is where the code is run). There are currently four possibilities
+
+ * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
+ 
+  * [Renjin](http://www.renjin.org/) reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.
+
+  * [Tibco](http://spotfire.tibco.com/) created a C++ based interpreter called TERR. 
+
+  * Oracle also offer an R-interpreter that uses Intel's mathematics library and therefore achieves a higher performance without changing R's core. 
+
+At the time of writing, switching interpreters is something to consider carefully. But in the future, it may become more routine.
+
+### Useful BLAS/benchmarking resources
+
+  * The [gcbd](https://cran.r-project.org/web/packages/gcbd/) package benchmarks performance of a few standard linear algebra operations across a number of different BLAS libraries as well as a GPU implementation. It has an excellent vignette summarising the results.
+  * [Brett Klamer](http://brettklamer.com/diversions/statistical/faster-blas-in-r/) provides a nice comparison of ATLAS, OpenBLAS and Intel MKL BLAS libraries. He also gives a description of how to install the different libraries.
+  * The official R manual [section](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#BLAS) on BLAS.
+  
+### Exercises
+
+1. What BLAS system is your version of R using?
