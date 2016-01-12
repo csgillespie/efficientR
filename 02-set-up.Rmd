@@ -8,6 +8,261 @@
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+An efficient computer set-up is analogous to a well-tuned vehicle:
+its components work in harmony, it is well-serviced,
+and it is fast.
+This chapter describes the software set-up decisions that will enable
+a productive workflow, with an emphasis on the operating system and R set-up files
+that are used each time R loads.
+The next chapter deals with the hardware set-up.
+By the end of this chapter you will understand how to optimize your system to maximise the efficiency of your R programming.
+The topics we will cover include:
+
+- R and operating systems: Windows, Mac or Linux? What's the 'system state'?
+- R version: how to keep your base R installation and packages up to date;
+- R startup: how and why to adjust your `.Rprofile` and `.Renviron` files;
+- RStudio: an integrated development environment (IDE) to boost your programming productivity;
+- BLAS and alternative R interpreters: looks at ways to make R faster.
+
+## Operating system
+
+R works on all three major operating systems (OSs): Linux, Mac and Windows.
+R is predominantly platform-independent, meaning that it should behave
+in the same way on each of these platforms.
+This is partly facilitated by CRAN tests which ensure that
+R packages work in all major operating systems.
+There are some operating system specific quirks that may influence the choice
+of OS and how it is set-up for R programming in the long-term.
+
+### Operating system and resource monitoring
+
+R is mostly platform independent, working equally well on Windows, Linux and Mac.
+Minor differences aside,^[Benchmarking
+conducted for a presentation "R on Different Platforms" at useR 2006
+found that R was marginally faster on Windows than Linux set-ups.
+Similar results were reported in an academic paper, with R completing
+statistical analyses faster on a Linux than Mac OS's [@sekhon2006art].
+In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html)
+supported these results with slightly faster
+run times for certain benchmarks on Ubuntu than Mac systems. The data from the `benchmarkme` package
+also suggests that running code under the Linux OS is faster.
+]
+R is equally efficent across different operating systems.
+Likewise, the same optimisation techniques will work equally well on different OSs.
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter), the main issue for many will be user friendliness and compatibility other programs used alongside R for work.
+Changing operating system can be a time consuming and *inefficient* process.
+Unless switching OSs for educational reasons, that could boost productivity in the longer term, our advice to stick to whatever OS you are most comfortable with.
+
+```{r, echo=FALSE}
+# # Removed as superfluous - reinclude reworded?
+# Processing very large text files without loading them into RAM can be done using the Linux command line with tools such as `sed`.
+# To take another example, the `shiny-server` program used to deploy apps developed with the `shiny` package runs only on Linux, so users may want to develop their shiny-compatible code on a Linux machine.
+# Clearly requirements will vary depending on use:
+# for basic statistics and plotting the operating system does not matter.
+# But if you rely heavily on cutting-edge open source programs, Linux-based systems may be preferable because the latest versions of new libraries are often easier to install and maintain on Linux.
+
+# Because of Linux's central role in the history of open source software, many open source
+# projects are better supported on Linux than Windows and, to a lesser extent, Mac.
+# The OpenCPU system for reproducible scientific
+# computing, for example, is better supported on Ubuntu-based systems.
+```
+
+Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using `install.packages`) on Linux systems.
+On Debian-based operating systems such as Ubuntu, these are named with the prefix `r-cran-` (see [Section 2.4](#deps)).
+
+Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming tasks.
+Alongside R profiling functions such as `profvis` (see Section __XXX__), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.
+
+```{r, echo=FALSE}
+# # Removed for now - not essential information - shall we include a 'real world' example?
+# An example of this is memory use. When co-author Robin Lovelace was running
+# models for his PhD, R would sometimes consume all available RAM, start
+# eating into 'scratch' resources and crash.^[Scratch
+# or 'swap' resource is
+# hard-disk space to be used for temporary storage
+# when the computer runs out of RAM. Because hard disks are much slower than
+# RAM, dipping into scratch resources can slow your processing to a standstill.
+# ]
+# It was only when looking at the output from a computer monitoring program
+# that the problem was identified as lack of RAM and a work-around could be
+# found. 
+```
+
+A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter 3).
+System monitors also report the percentage of CPU resource allocated over time.
+On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter 6 on parallel programming).
+Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure 2-1).
+
+![](figures/sysmon.png)
+
+Figure 2-1. Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.
+
+System monitoring is a complex topic that spills over into system administration and
+server management. Fortunately there are many tools designed to ease monitoring all major operating systems.
+
+- On Linux, the shell command `top` displays key resource use figures for most
+distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see Figure 2-1) are more refined alternatives which use command-line and graphical user interfaces respectively.
+A number of options such as `nethogs` monitor internet usage.
+- On Windows the **Task Manager** provides key information on RAM and CPU use by
+process. This can be started in modern Windows versions by typing `Ctl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
+- On Mac the **Activity Monitor** provides similar functionality. This can be initiated
+form the Utilities folder in Launchpad.
+
+### Exercises
+
+1. What is the exact version of your computer's operating system?
+2. Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure 2-1?
+
+    ```{r, eval=FALSE}
+    # 1: Create large dataset
+    X = data.frame(matrix(rnorm(1e8), nrow = 1e7))
+
+    # 2: Find the median of each column using a single core
+    r1 = lapply(X, median)
+
+    # 3: Find the median of each column using many cores
+    # XXX: Change to function from package
+    r2 = parallel::mclapply(X, median) # runs in serial on Windows
+    ```
+
+3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
+4. Bonus question: how would the results change depending on operating system?
+
+```{r timings-tests, echo=FALSE, eval=FALSE}
+system.time(lapply(X, median))
+system.time(parallel::mclapply(X, median))
+identical(r1, r2)
+# Answers:
+# 1: The RAM use should jump up by 1 Gb or so and one processor should max out.
+# 
+# 2: One processor should max out.
+# 
+# 3: A few processors should max out, it should run quicker
+```
+
+## R version
+
+It is important to keep your R installation and packages up-to-date.
+This section explains how.
+
+### Installing R
+
+The method of installing R varies for Windows, Linux and Mac.
+
+On Windows, a single `.exe` file (hosted at [cran.r-project.org/bin/windows/base/](https://cran.r-project.org/bin/windows/base/)) will install the base R package.
+
+On a Mac, the latest version should be installed by downloading the `.pkg` files hosted at [cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/).
+
+On Debian-based systems adding the CRAN repository in the format.
+To add the RStudio mirror for Ubuntu 14.04 (codenamed Trusty), for example, add the following line to `/etc/apt/sources.list`:
+
+```
+echo 'deb https://cran.rstudio.com/bin/linux/ubuntu trusty`
+```
+
+In the above code `cran.rstudio.com` is the mirror and `trusty` is the Ubuntu version.
+Then `r-base` and other `r-` packages can be installed.
+R also works on FreeBSD and other Unix-based systems.^[See
+[jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
+
+Once R is installed it should be kept up-to-date.
+
+### Updating R
+
+R is a mature and stable language so well-written code in base R should work on most versions.
+However, it is important to keep your R version relatively up-to-date, because:
+
+- Bug fixes are introduced in each version, making errors less likely;
+- Performance enhancements are made from one version to the next, meaning your code may run faster in later versions;
+- Many R packages only work on recent versions on R.
+
+Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS).
+R release versions have 3 components corresponding to major.minor.patch changes.
+Generally 2 or 3 patches are released before the next minor increment.
+R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
+
+ - On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with `apt-get upgrade`.
+ - On Mac, the latest version should be installed by the user from the `.pkg` files mentioned above.
+ - On Windows `installr` package makes updating easy:
+
+    ```{r, eval=FALSE}
+    # check and install the latest R version
+    installr::updateR() 
+    ```
+    
+For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up to date.
+
+### Installing R packages
+
+Large projects may need several packages to be installed.
+In this case, the required packages can be installed at once.
+Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:
+
+```{r, eval=FALSE}
+pkgs = c("raster", "leaflet", "rgeos") # package names
+install.packages(pkgs)
+```
+
+In the above code all the required packages are installed with two not three lines, reducing typing.
+Note that we can now re-use the `pkgs` object to load them all:
+
+```{r, eval=FALSE}
+inst = lapply(pkgs, library, character.only = TRUE) # load them
+```
+
+In the above code `library(pkg[i])` is executed for every package stored in the text string vector.
+We use `library` here instead of `require` because the former produces an error if the package is not available.
+
+Loading all packages at the begginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
+Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
+To provide another example, we can update only the packages named in `pkgs` with the following command:
+
+```{r, eval=FALSE}
+update.packages(oldPkgs = pkgs)
+```
+
+### Installing R packages with dependencies {#deps}
+
+Some packages have external dependencies (i.e. they call libraries outside R).
+On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`.
+This will ensure the necessary dependencies are installed and setup correctly alongside the R package.
+On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be search for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
+
+```{r, engine='bash', eval = FALSE}
+apt-cache search r-cran- # search for available cran Debian packages
+sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies)
+```
+
+On Windows the `installr` package helps manage and update R packages with system-level dependencies.
+For example the `Rtools` package for compiling C/C++ code on Window can be installed with the following command:
+
+```{r, eval=FALSE}
+installr::install.rtools() 
+```
+
+
+### Updating R packages
+
+An efficient R set-up will contain up-to-date packages.
+This can be done *for all packages* with:
+
+```{r, eval=FALSE}
+update.packages() # update installed CRAN packages
+```
+
+The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system.^[In
+the previous section we specified only a few packages to update.]
+This is a good thing:
+updating dozens of large packages can consume a large proportion of available system resources and much time!
+
+An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates.
+Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
+Next (after the exercises) we take a look at how to configure R using startup files. 
+
+### Exercises
+
+1. What version of R are you using? Is it the most up-to-date?
+2. Do any of your packages need updating?
 
 ## R startup
 
@@ -283,12 +538,255 @@ Furthermore, the same `.Renviron` file will work across different platforms so k
 2. For each location, does a `.Rprofile` or `.Renviron` file exist?
 3. Create a `.Rprofile` file in your current working directory that prints the message `Happy efficient R programming` each time you start R at this location.
 
+## RStudio {#rstudio}
 
+RStudio is an Integrated Development Environment (IDE) for R.
+It makes life easy for R users and developers with its intuitive and flexible interface.
+RStudio encourages good programming practice.
+Through its wide range of features RStudio can help make you a more efficient and productive R programmer, for example by reducing the amount of time spent remembering and typing function names thanks to intelligent autocompletion.
+Some of the most important features of RStudio include:
 
+- Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.
+- Intelligent auto-completion of function names, packages and R objects.
+- A wide range of keyboard shortcuts.
+- Visual display of objects, including a searchable data display table.
+- Real-time code checking and error detection.
+- Menus to install and update packages.
+- Project management and integration with version control.
 
+The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.^[Other
+open source R IDEs exist, including [RKWard](https://rkward.kde.org/), [Tinn-R](http://sourceforge.net/projects/tinn-r/) and [JGR](https://www.rforge.net/JGR/). [emacs](https://www.gnu.org/software/emacs/) is another popular software environment. However, it has a very steep learning curve.]
+As with R itself, the best way to learn about RStudio is by using it.
+It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.
 
+### Installing and updating RStudio {#install-rstudio}
 
+RStudio can be installed from the RStudio website [rstudio.com](https://www.rstudio.com/products/rstudio/download/) and is available for all major operating systems.
+Updating RStudio is simple: click on `Help > Check for Updates` in the menu.
+For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse.
+RStudio has many keyboard shortcuts that will help with this.
+To get into good habits early, try accessing the RStudio Update interface without touching the mouse.
+On Linux and Windows dropdown menus are activated with the `Alt` button, so the menu item can be found with:
 
+```
+Alt+H U
+```
+
+On Mac it works differently.
+`Cmd+?` should activate a search across menu items,
+allowing the same operation can be achieved with:
+
+```
+Cmd+? update
+```
+
+**Note:** in RStudio the keyboard shortcuts differ between Linux and Windows versions on one hand and Mac on the other.
+In this section we generally only use the Windows/Linux shortcut keys for brevity.
+The Mac equivalent is usually found by simply replacing `Ctl` and `Alt` with the Mac-specific `Cmd` button.
+
+### Window pane layout
+
+RStudio has four main window 'panes' (see Figure 2-2 below), each of which serves a range of purposes:
+
+ - The **Source pane**, for editing, saving, and dispatching R code to the console (top left). Note that this pane does not exist by default when you start RStudio: it appears when you open an R script, e.g. via File -> New File -> R Script. A common task in this pane is to send code on the current line to the console, via `Ctl-Enter` (or `Cmd-Enter` on Mac).
+ 
+ - The **Console pane**. Any code entered here is processed by R, line by line. This pane is ideal for interactively testing ideas before saving the final results in the Source pane above.
+ 
+ - The **Environment pane** (top right) contains information about the current objects loaded in the workspace including their class, dimension (if they are a data frame) and name. This pane also contains tabbed sub-panes with a searchable history that was dispatched to the console and (if applicable to the project) Build and Git options.
+ 
+ - The **Files pane** (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML 'widgets'.
+ 
+ ![](https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png)
+ 
+ Figure 2-2. RStudio Panels.
+
+Using each of the panels effectively and navigating between them quickly is a skill that will develop over time, and will only improve with practice.
+
+### Exercises
+
+You are developing a project to visualise data.
+Test out the multi-panel RStudio workflow by following the steps below:
+
+1. Create a new folder for the input data using the **Files pane**.
+
+2. Type in `downl` in the **Source pane** and hit `Enter` to make the function `download.file()` autocomplete. Then type `"`, which will autocomplete to `""`, paste the URL of a file to download (e.g. `https://www.census.gov/2010census/csv/pop_change.csv`) and a file name (e.g. `pop_change.csv`).
+3. Execute the full command with `Ctl-Enter`:
+
+    ```{r, eval=FALSE}
+    download.file("https://www.census.gov/2010census/csv/pop_change.csv",
+                  "data/pop_change.csv")
+    ```
+
+3. Write and execute a command to read-in the data, such as
+
+    ```{r}
+    pop_change = read.csv("data/pop_change.csv", skip = 2)
+    ```
+
+    ```{r, echo=FALSE}
+    # question: complete example with plots and all here?
+    ```
+
+4. Use the **Environment pane** to click on the data object `pop_change`. Note that this runs the command `View(pop_change)`, which launches an interactive data explore pane in the top left panel (see Figure 2-3).
+
+![Data Viewer](figures/View.png)
+
+Figure 2-3. The data viewing tab in RStudio.
+
+5. Use the **Console** to test different plot commands to visualise the data, saving the code you want to keep back into the **Source pane**, as `pop_change.R`.
+
+6. Use the **Plots tab** in the Files pane to scroll through past plots. Save the best using the Export dropdown button.
+
+The above example shows understanding of these panes and how to use them interactively can help with the speed and productivity of you R programming.
+Further, there are a number of RStudio settings that can help ensure that it works for your needs.
+
+### RStudio options
+
+A range of `Project Options` and `Global Options` are available in RStudio from the `Tools` menu (accessible in Linux and Windows from the keyboard via `Alt+T`).
+Most of these are self-explanatory but it is worth mentioning a few that can boost your programming efficiency:
+
+- GIT/SVN project settings allow RStudio to provide a graphical interface to your version control system, described in Chapter XX.
+
+- R version settings allow RStudio to 'point' to different R versions/interpreters, which may be faster for some projects.
+
+- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make
+starting R quicker and also reduce the change of getting bugs due to previously created objects.
+
+- Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling `Vim mode` makes RStudio act as a (partial) Vim emulator.
+
+- Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work.
+This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.
+
+- Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen.
+Other options in this area relate more to aesthetics, which are also important because feeling comfortable in your programming environment can boost productivity.
+
+```{r, echo=FALSE}
+# TODO say which 'subsequent chapter' above
+```
+
+### Auto-completion 
+
+R provides some basic autocompletion functionality.
+Typing the beginning of a function name, for example `rn` (short for `rnorm()`), and hitting `Tab` will result in the full function names associated with this text string being printed.
+In this case two options would be displayed: `rnbinom` and `rnorm`, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing `te` in the console in a project which contains a file called `test.R` should result in the full name `"test.R"` being auto-completed.
+RStudio builds on this functionality and takes it to a new level.
+
+Instead of only auto completing options when `Tab` is pressed, RStudio auto completes them at any point.
+Building on the previous example, RStudio's autocompletion triggers when the first three characters are typed: `rno`.
+The same functionality works when only the first characters are typed, followed by `Tab`:
+automatic auto-completion does not replace `Tab` autocompletion but supplements it.
+Note that in RStudio two more options are provided to the user after entering `rn Tab` compared with entering the same text into base R's console described in the previous paragraph: `RNGkind` and `RNGversion`.
+This illustrates that RStudio's autocompletion functionality is not case sensitive in the same way that R is.
+This is a good thing because R has no consistent function name style!
+
+RStudio also has more intelligent auto-completion of objects and file names than R's built-in command line.
+To test this functionality, try typing `US`, followed by the Tab key.
+After pressing down until `USArrests` is selected, press Enter so it autocompletes.
+Finally, typing `$` should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.
+
+```{r, eval=FALSE}
+USArrests$ # a dropdown menu of columns should appear in RStudio
+```
+
+To take a more complex example, variable names stored in the `data` slot of the class `SpatialPolygonsDataFrame` (a class defined by the foundational spatial package sp) are referred to in the long form
+`spdf@data$varname`.^['Slots' are sub-elements of an object analogous to a column in a `data.frame` but referred to with `@` not `$`.]
+In this case `spdf` is the object name, `data` is the slot and `varname` is the variable name.
+RStudio makes such `S4` objects easier to use by enabling autocompletion of the short form `spdf$varname`.
+Another example is RStudio's ability to find files hidden away in sub-folders.
+Typing `"te` will find `test.R` even if it is located in a sub-folder such as `R/test.R`.
+There are a number of other clever auto-completion tricks that can boost R's productivity when using RStudio which are best found by experimenting and hitting `Tab` frequently during your R programming work.
+
+### Keyboard shortcuts
+
+RStudio has many useful shortcuts that can help make your programming more efficient by reducing the need to reach for the mouse and point and click your way around code and RStudio.
+These can be viewed by using a little known but extremely useful keyboard shortcut:
+
+```
+Alt+Shift+K
+```
+
+This will display the default shortcuts in RStudio.
+It is worth spending time identifying which of these could be useful in your work and practicing interacting with RStudio rapidly with minimal reliance on the mouse.
+Some more [useful](http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/) shortcuts are listed below.
+There are many more gems to find that could boost your R writing productivity:
+
+- `Ctl+Z/Shift+Z`: Undo/Redo.
+- `Ctl+Enter`: Execute the current line or code selection in the Source pane.
+- `Ctl+Alt+R`: Execute all the R code in the currently open file in the Source pane.
+- `Ctl+Left/Right`: Navigate code quickly, word by word.
+- `Home/End`: Navigate to the beginning/end of the current line.
+- `Alt+Shift+Up/Down`: Duplicate the current line up or down.
+- `Ctl+D`: Delete the current line.
+
+### Object display and output table
+
+It is useful to know what is in your current R environment.
+This information can be revealed with `ls()`, but this function only provides object names.
+RStudio provides an efficient mechanism to show currently loaded objects, and their details, in real-time: the Environment tab in the top right corner.
+It makes sense to keep an eye on which objects are loaded and to delete objects that are no longer useful.
+Doing so will minimise the probability of confusion in your workflow (e.g. by using the wrong version of an object) and reduce the amount of RAM R needs.
+The details provided in the Environment tab include the object's dimension and some additional details depending on the object's class (e.g. size in MB for large datasets).
+
+A very useful feature of RStudio is its advanced viewing functionality.
+This is triggered either by executing `View(object)` or by double clicking on the object name in the Environment tab.
+Although you cannot edit data in the Viewer (this should be considered a good thing from a data integrity perspective), recent versions of RStudio provide an efficient search mechanism to rapidly filter and view the records that are of most interest (see Figure 2-3 above).
+
+### Project management
+
+In the far top-right of RStudio there is a diminutive drop-down menu illustrated with R inside a transparent box.
+This menu may be small and simple, but it is hugely efficient in terms of organising large, complex and long-term projects.
+
+The idea of RStudio projects is that the bulk of R programming work is part of a wider task, which will likely consist of input data, R code, graphical and numerical outputs and documents describing the work.
+It is possible to scatter each of these elements at random across your hard-discs but this is not recommended.
+Instead, the concept of projects encourages reproducible working, such that anyone who opens the particular project folder that you are working from should be able to repeat your analyses and replicate your results.
+
+It is therefore *highly recommended* that you use projects to organise your work. It could save hours in the long-run.
+Organizing data, code and outputs also makes sense from a portability perspective: if you copy the folder (e.g. via GitHub) your can work on it from any computer without worrying about having the right files on your current machine.
+These tasks are implemented using RStudio's simple project system, in which the following things happen each time you open an existing project:
+
+- The working directory automatically switches to the project's folder. This enables data and script files to be referred to using relative file paths, which are much shorter than absolute file paths. This means that switching directory using `setwd()`, a common source of error for R users, is rarely if ever needed.
+
+- The last previously open file is loaded into the Source pane. The history of R commands executed in previous sessions is also loaded into the History tab. This assists with continuity between one session and the next.
+
+- The `File` tab displays the associated files and folders in the project, allowing you to quickly find your previous work.
+
+- Any settings associated with the project, such as Git settings, are loaded. This assists with collaboration and project-specific set-up.
+
+Each project is different but most contain input data, R code and outputs.
+To keep things tidy, we recommend a sub-directory structure resembling the following:
+
+```{r, engine='bash', eval = FALSE}
+project/
+  - README.rmd # Project description
+  - set-up.R  # Required packages
+  - R/ # For R code
+  - input # Data files
+  - graphics/
+  - output/ # Results
+```
+
+Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are 'first class citizens' within the project's design, each with their own folder.
+
+Another approach to project management is to treat projects as R packages.
+Creating R packages is easier than ever before, with tools such as `devtools` for managing R's quirks and making the process user friendly.
+If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using `devtools::install_github("username/projectname")`, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.
+
+Note that a `set-up.R` or even a `.Rprofile` file in the project's root directory enable project-specific settings to be loaded each time people work on the project.
+As described in the previous section, `.Rprofile` can be used to tweak how R works at start-up.
+It is also a portable way to manage R's configuration on a project-by-project basis.
+
+```{r, echo=FALSE}
+## RStudio tips and tricks
+# Commented out for now: plenty of tips and tricks in there already...
+```
+
+### Exercises
+
+1. Try modifying the look and appearance of your RStudio setup.
+
+2. What is the keyboard shortcut to show the other shortcut? (Hint: it begins with `Alt+Shift`.)
+
+3. Try as many of the shortcuts revealed by the previous step as you like. Write down the ones that you think will save you time, perhaps on a post-it note to go on your computer.
 
 ## BLAS and alternative R interpreters
 
