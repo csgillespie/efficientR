@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Colin Gillespie and Robin Lovelace" />
+
+<meta name="date" content="2016-01-12" />
+
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<title>Efficient R programming</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+
+<div class="row">
+<div class="col-sm-4 well">
+<div id="TOC">
+<ul>
+<li><a href="01-introduction.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="02-set-up.html#efficient-set-up"><span class="toc-section-number">2</span> Efficient set-up</a><ul>
+<li><a href="02-set-up.html#operating-system"><span class="toc-section-number">2.1</span> Operating system</a><ul>
+<li><a href="02-set-up.html#operating-system-and-resource-monitoring"><span class="toc-section-number">2.1.1</span> Operating system and resource monitoring</a></li>
+<li><a href="02-set-up.html#exercises"><span class="toc-section-number">2.1.2</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#r-version"><span class="toc-section-number">2.2</span> R version</a><ul>
+<li><a href="02-set-up.html#installing-r"><span class="toc-section-number">2.2.1</span> Installing R</a></li>
+<li><a href="02-set-up.html#updating-r"><span class="toc-section-number">2.2.2</span> Updating R</a></li>
+<li><a href="02-set-up.html#installing-r-packages"><span class="toc-section-number">2.2.3</span> Installing R packages</a></li>
+<li><a href="02-set-up.html#deps"><span class="toc-section-number">2.2.4</span> Installing R packages with dependencies</a></li>
+<li><a href="02-set-up.html#updating-r-packages"><span class="toc-section-number">2.2.5</span> Updating R packages</a></li>
+<li><a href="02-set-up.html#exercises-1"><span class="toc-section-number">2.2.6</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#r-startup"><span class="toc-section-number">2.3</span> R startup</a><ul>
+<li><a href="02-set-up.html#rprofile"><span class="toc-section-number">2.3.1</span> The <code>.Rprofile</code> file</a></li>
+<li><a href="02-set-up.html#example-.rprofile-settings"><span class="toc-section-number">2.3.2</span> Example <code>.Rprofile</code> settings</a></li>
+<li><a href="02-set-up.html#renviron"><span class="toc-section-number">2.3.3</span> The <code>.Renviron</code> file</a></li>
+<li><a href="02-set-up.html#exercises-2"><span class="toc-section-number">2.3.4</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#rstudio"><span class="toc-section-number">2.4</span> RStudio</a><ul>
+<li><a href="02-set-up.html#install-rstudio"><span class="toc-section-number">2.4.1</span> Installing and updating RStudio</a></li>
+<li><a href="02-set-up.html#window-pane-layout"><span class="toc-section-number">2.4.2</span> Window pane layout</a></li>
+<li><a href="02-set-up.html#exercises-3"><span class="toc-section-number">2.4.3</span> Exercises</a></li>
+<li><a href="02-set-up.html#rstudio-options"><span class="toc-section-number">2.4.4</span> RStudio options</a></li>
+<li><a href="02-set-up.html#auto-completion"><span class="toc-section-number">2.4.5</span> Auto-completion</a></li>
+<li><a href="02-set-up.html#keyboard-shortcuts"><span class="toc-section-number">2.4.6</span> Keyboard shortcuts</a></li>
+<li><a href="02-set-up.html#object-display-and-output-table"><span class="toc-section-number">2.4.7</span> Object display and output table</a></li>
+<li><a href="02-set-up.html#project-management"><span class="toc-section-number">2.4.8</span> Project management</a></li>
+<li><a href="02-set-up.html#exercises-4"><span class="toc-section-number">2.4.9</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#blas-and-alternative-r-interpreters"><span class="toc-section-number">2.5</span> BLAS and alternative R interpreters</a><ul>
+<li><a href="02-set-up.html#revolution-r"><span class="toc-section-number">2.5.1</span> Revolution R</a></li>
+<li><a href="02-set-up.html#other-interpreters"><span class="toc-section-number">2.5.2</span> Other interpreters</a></li>
+<li><a href="02-set-up.html#useful-blasbenchmarking-resources"><span class="toc-section-number">2.5.3</span> Useful BLAS/benchmarking resources</a></li>
+<li><a href="02-set-up.html#exercises-5"><span class="toc-section-number">2.5.4</span> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li><a href="03-hardware.html#efficient-hardware"><span class="toc-section-number">3</span> Efficient hardware</a><ul>
+<li><a href="03-hardware.html#introduction-what-is-a-byte"><span class="toc-section-number">3.1</span> Introduction: what is a byte?</a></li>
+<li><a href="03-hardware.html#random-access-memory-ram"><span class="toc-section-number">3.2</span> Random access memory: RAM</a><ul>
+<li><a href="03-hardware.html#exercises-6"><span class="toc-section-number">3.2.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="03-hardware.html#hard-drives-hdd-vs-ssd"><span class="toc-section-number">3.3</span> Hard drives: HDD vs SSD</a></li>
+<li><a href="03-hardware.html#operating-systems-32-bit-or-64-bit"><span class="toc-section-number">3.4</span> Operating systems: 32-bit or 64-bit</a><ul>
+<li><a href="03-hardware.html#exercises-7"><span class="toc-section-number">3.4.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="03-hardware.html#central-processing-unit-cpu"><span class="toc-section-number">3.5</span> Central processing unit (CPU)</a></li>
+<li><a href="03-hardware.html#cloud-computing"><span class="toc-section-number">3.6</span> Cloud computing</a><ul>
+<li><a href="03-hardware.html#amazon-ec2"><span class="toc-section-number">3.6.1</span> Amazon EC2</a></li>
+<li><a href="03-hardware.html#exercise"><span class="toc-section-number">3.6.2</span> Exercise</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div class="col-sm-8">
+<div class="references">
+<p>Eddelbuettel, Dirk. 2010. “Benchmarking Single-and Multi-Core BLAS Implementations and GPUs for Use with R.” Mathematica.</p>
+<p>Sekhon, Jasjeet S. 2006. “The Art of Benchmarking: Evaluating the Performance of R on Linux and OS X.” <em>The Political Methodologist</em> 14 (1): 15–19.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon 2006)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <code>benchmarkme</code> package also suggests that running code under the Linux OS is faster.<a href="02-set-up.html#fnref1">↩</a></p></li>
+<li id="fn2"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="02-set-up.html#fnref2">↩</a></p></li>
+<li id="fn3"><p>In the previous section we specified only a few packages to update.<a href="02-set-up.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette(&quot;api-packages&quot;)</code></a> from the <code>httr</code> package for more on this.<a href="02-set-up.html#fnref4">↩</a></p></li>
+<li id="fn5"><p>Other open source R IDEs exist, including <a href="https://rkward.kde.org/">RKWard</a>, <a href="http://sourceforge.net/projects/tinn-r/">Tinn-R</a> and <a href="https://www.rforge.net/JGR/">JGR</a>. <a href="https://www.gnu.org/software/emacs/">emacs</a> is another popular software environment. However, it has a very steep learning curve.<a href="02-set-up.html#fnref5">↩</a></p></li>
+<li id="fn6"><p>‘Slots’ are sub-elements of an object analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="02-set-up.html#fnref6">↩</a></p></li>
+<li id="fn7"><p>See <a href="http://www.brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/">brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/</a>, which finds Revolution R to be marginally faster than R using OpenBLAS and ATLAS BLAS implementations and <a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Faster BLAS in R</a>, which does not.<a href="02-set-up.html#fnref7">↩</a></p></li>
+</ol>
+</div>
+<div style="text-align: center;">
+<a href="03-hardware.html" class="btn btn-default">Previous</a>
+<a href="#" class="btn btn-default" disabled>Next</a>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>
