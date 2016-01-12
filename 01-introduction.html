@@ -7,10 +7,11 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-01-11" />
+<meta name="date" content="2016-01-12" />
 
   <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
@@ -50,8 +51,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 
-<link rel="stylesheet" href="style.css" type="text/css" />
-
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -80,27 +79,50 @@ img {
 <ul>
 <li><a href="01-introduction.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
 <li><a href="02-set-up.html#efficient-set-up"><span class="toc-section-number">2</span> Efficient set-up</a><ul>
-<li><a href="02-set-up.html#r-startup"><span class="toc-section-number">2.1</span> R startup</a><ul>
-<li><a href="02-set-up.html#rprofile"><span class="toc-section-number">2.1.1</span> The <code>.Rprofile</code> file</a></li>
-<li><a href="02-set-up.html#example-.rprofile-settings"><span class="toc-section-number">2.1.2</span> Example <code>.Rprofile</code> settings</a></li>
-<li><a href="02-set-up.html#renviron"><span class="toc-section-number">2.1.3</span> The <code>.Renviron</code> file</a></li>
-<li><a href="02-set-up.html#exercises"><span class="toc-section-number">2.1.4</span> Exercises</a></li>
+<li><a href="02-set-up.html#operating-system"><span class="toc-section-number">2.1</span> Operating system</a><ul>
+<li><a href="02-set-up.html#operating-system-and-resource-monitoring"><span class="toc-section-number">2.1.1</span> Operating system and resource monitoring</a></li>
+<li><a href="02-set-up.html#exercises"><span class="toc-section-number">2.1.2</span> Exercises</a></li>
 </ul></li>
-<li><a href="02-set-up.html#blas-and-alternative-r-interpreters"><span class="toc-section-number">2.2</span> BLAS and alternative R interpreters</a><ul>
-<li><a href="02-set-up.html#revolution-r"><span class="toc-section-number">2.2.1</span> Revolution R</a></li>
-<li><a href="02-set-up.html#other-interpreters"><span class="toc-section-number">2.2.2</span> Other interpreters</a></li>
-<li><a href="02-set-up.html#useful-blasbenchmarking-resources"><span class="toc-section-number">2.2.3</span> Useful BLAS/benchmarking resources</a></li>
-<li><a href="02-set-up.html#exercises-1"><span class="toc-section-number">2.2.4</span> Exercises</a></li>
+<li><a href="02-set-up.html#r-version"><span class="toc-section-number">2.2</span> R version</a><ul>
+<li><a href="02-set-up.html#installing-r"><span class="toc-section-number">2.2.1</span> Installing R</a></li>
+<li><a href="02-set-up.html#updating-r"><span class="toc-section-number">2.2.2</span> Updating R</a></li>
+<li><a href="02-set-up.html#installing-r-packages"><span class="toc-section-number">2.2.3</span> Installing R packages</a></li>
+<li><a href="02-set-up.html#deps"><span class="toc-section-number">2.2.4</span> Installing R packages with dependencies</a></li>
+<li><a href="02-set-up.html#updating-r-packages"><span class="toc-section-number">2.2.5</span> Updating R packages</a></li>
+<li><a href="02-set-up.html#exercises-1"><span class="toc-section-number">2.2.6</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#r-startup"><span class="toc-section-number">2.3</span> R startup</a><ul>
+<li><a href="02-set-up.html#rprofile"><span class="toc-section-number">2.3.1</span> The <code>.Rprofile</code> file</a></li>
+<li><a href="02-set-up.html#example-.rprofile-settings"><span class="toc-section-number">2.3.2</span> Example <code>.Rprofile</code> settings</a></li>
+<li><a href="02-set-up.html#renviron"><span class="toc-section-number">2.3.3</span> The <code>.Renviron</code> file</a></li>
+<li><a href="02-set-up.html#exercises-2"><span class="toc-section-number">2.3.4</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#rstudio"><span class="toc-section-number">2.4</span> RStudio</a><ul>
+<li><a href="02-set-up.html#install-rstudio"><span class="toc-section-number">2.4.1</span> Installing and updating RStudio</a></li>
+<li><a href="02-set-up.html#window-pane-layout"><span class="toc-section-number">2.4.2</span> Window pane layout</a></li>
+<li><a href="02-set-up.html#exercises-3"><span class="toc-section-number">2.4.3</span> Exercises</a></li>
+<li><a href="02-set-up.html#rstudio-options"><span class="toc-section-number">2.4.4</span> RStudio options</a></li>
+<li><a href="02-set-up.html#auto-completion"><span class="toc-section-number">2.4.5</span> Auto-completion</a></li>
+<li><a href="02-set-up.html#keyboard-shortcuts"><span class="toc-section-number">2.4.6</span> Keyboard shortcuts</a></li>
+<li><a href="02-set-up.html#object-display-and-output-table"><span class="toc-section-number">2.4.7</span> Object display and output table</a></li>
+<li><a href="02-set-up.html#project-management"><span class="toc-section-number">2.4.8</span> Project management</a></li>
+<li><a href="02-set-up.html#exercises-4"><span class="toc-section-number">2.4.9</span> Exercises</a></li>
+</ul></li>
+<li><a href="02-set-up.html#blas-and-alternative-r-interpreters"><span class="toc-section-number">2.5</span> BLAS and alternative R interpreters</a><ul>
+<li><a href="02-set-up.html#revolution-r"><span class="toc-section-number">2.5.1</span> Revolution R</a></li>
+<li><a href="02-set-up.html#other-interpreters"><span class="toc-section-number">2.5.2</span> Other interpreters</a></li>
+<li><a href="02-set-up.html#useful-blasbenchmarking-resources"><span class="toc-section-number">2.5.3</span> Useful BLAS/benchmarking resources</a></li>
+<li><a href="02-set-up.html#exercises-5"><span class="toc-section-number">2.5.4</span> Exercises</a></li>
 </ul></li>
 </ul></li>
 <li><a href="03-hardware.html#efficient-hardware"><span class="toc-section-number">3</span> Efficient hardware</a><ul>
 <li><a href="03-hardware.html#introduction-what-is-a-byte"><span class="toc-section-number">3.1</span> Introduction: what is a byte?</a></li>
 <li><a href="03-hardware.html#random-access-memory-ram"><span class="toc-section-number">3.2</span> Random access memory: RAM</a><ul>
-<li><a href="03-hardware.html#exercises-2"><span class="toc-section-number">3.2.1</span> Exercises</a></li>
+<li><a href="03-hardware.html#exercises-6"><span class="toc-section-number">3.2.1</span> Exercises</a></li>
 </ul></li>
 <li><a href="03-hardware.html#hard-drives-hdd-vs-ssd"><span class="toc-section-number">3.3</span> Hard drives: HDD vs SSD</a></li>
 <li><a href="03-hardware.html#operating-systems-32-bit-or-64-bit"><span class="toc-section-number">3.4</span> Operating systems: 32-bit or 64-bit</a><ul>
-<li><a href="03-hardware.html#exercises-3"><span class="toc-section-number">3.4.1</span> Exercises</a></li>
+<li><a href="03-hardware.html#exercises-7"><span class="toc-section-number">3.4.1</span> Exercises</a></li>
 </ul></li>
 <li><a href="03-hardware.html#central-processing-unit-cpu"><span class="toc-section-number">3.5</span> Central processing unit (CPU)</a></li>
 <li><a href="03-hardware.html#cloud-computing"><span class="toc-section-number">3.6</span> Cloud computing</a><ul>
@@ -116,6 +138,7 @@ img {
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
 <p>Introduction</p>
 
+<link rel="stylesheet" type="text/css" href="style.css">
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
