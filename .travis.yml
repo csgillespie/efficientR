@@ -1,30 +1,33 @@
 language: r
 sudo: required
+
 install_r:
-- devtools
+  - devtools
+
 script:
-- Rscript -e 'devtools::install_github("csgillespie/benchmarkme-data")'
-- Rscript -e 'devtools::install_github("csgillespie/benchmarkme")'
-- Rscript -e 'devtools::install_github("rstudio/bookdown")'
-- Rscript -e 'bookdown::render_book("index.Rmd", bookdown::html_chapters())'
+  - Rscript -e 'devtools::install_github("csgillespie/benchmarkme-data")'
+  - Rscript -e 'devtools::install_github("csgillespie/benchmarkme")'
+  - Rscript -e 'devtools::install_github("rstudio/bookdown")'
+  - Rscript -e 'bookdown::render_book("index.Rmd", bookdown::html_chapters())'
+  
 after_success:
-- BASE_REPO=$PWD
-- cd ..; mkdir gh-pages; cd gh-pages
-- git init
-- git config user.name "Colin Gillespie"
-- git config user.email "csgillespie@gmail.com"
-- git config --global push.default simple
-- git remote add upstream "https://$GH_TOKEN@github.com/csgillespie/efficientR.git"
-- git fetch upstream 2>err.txt
-- git checkout gh-pages
-- cp -fvr $BASE_REPO/*html $BASE_REPO/libs/ $BASE_REPO/figures/ $BASE_REPO/style.css
-  .
-- git add *.html; git add libs/; git add figures/; git add style.css
-- git commit -a -m "Updating book"
-- git status
-- git push
-after_failure:
-- ./travis-tool.sh dump_logs
+  - BASE_REPO=$PWD
+  - cd ..; mkdir gh-pages; cd gh-pages
+  - git init
+  - git config user.name "Colin Gillespie"
+  - git config user.email "csgillespie@gmail.com"
+  - git config --global push.default simple
+  - git remote add upstream "https://$GH_TOKEN@github.com/csgillespie/efficientR.git"
+  - git fetch upstream 2>err.txt
+  - git checkout gh-pages
+  - cp -fvr $BASE_REPO/*html $BASE_REPO/libs/ $BASE_REPO/figures/ $BASE_REPO/style.css .
+  - cp -fvr $BASE_REPO/_main_files/ .
+  - git add *.html; git add libs/; git add figures/; git add style.css
+  - git add _main_files/*
+  - git commit -a -m "Updating book"
+  - git status
+  - git push
+
 notifications:
   email:
     on_success: change
