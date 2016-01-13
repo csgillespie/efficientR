@@ -15,17 +15,17 @@ its components work in harmony, it is well-serviced,
 and it is fast.
 This chapter describes the software decisions that will enable
 a productive workflow. We explore how the operating system,
-R version, R startup files, use of RStudio and
-linear algebra library (BLAS) can make your R work faster.
-The next chapter deals with the hardware set-up.
-By the end of this chapter you will understand how to optimize your system to maximise the efficiency of your R programming.
-The topics we will cover include:
+R versions and settings, configuration of your R editor, and
+other settings can make your R work faster.
+The next chapter deals with hardware.
+By the end of this chapter you should understand how to optimize your computer for efficient R programming.
+That includes consideration of the following topics:
 
-- R and operating systems: Windows, Mac or Linux? What's the 'system state'?
-- R version: how to keep your base R installation and packages up to date;
-- R startup: how and why to adjust your `.Rprofile` and `.Renviron` files;
-- RStudio: an integrated development environment (IDE) to boost your programming productivity;
-- BLAS and alternative R interpreters: looks at ways to make R faster.
+- R and the operating systems: system monitoring on Linux, Mac and Windows
+- R version: how to keep your base R installation and packages up to date
+- R start-up: how and why to adjust your `.Rprofile` and `.Renviron` files
+- RStudio: an integrated development environment (IDE) to boost your programming productivity
+- BLAS and alternative R interpreters: looks at ways to make R faster
 
 ## Operating system
 
@@ -39,7 +39,6 @@ of OS and how it is set-up for R programming in the long-term.
 
 ### Operating system and resource monitoring
 
-R is mostly platform independent, working equally well on Windows, Linux and Mac.
 Minor differences aside,^[Benchmarking
 conducted for a presentation "R on Different Platforms" at useR 2006
 found that R was marginally faster on Windows than Linux set-ups.
@@ -50,11 +49,11 @@ supported these results with slightly faster
 run times for certain benchmarks on Ubuntu than Mac systems. The data from the `benchmarkme` package
 also suggests that running code under the Linux OS is faster.
 ]
-R is equally efficent across different operating systems.
-Likewise, the same optimisation techniques will work equally well on different OSs.
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter), the main issue for many will be user friendliness and compatibility other programs used alongside R for work.
-Changing operating system can be a time consuming and *inefficient* process.
-Unless switching OSs for educational reasons, that could boost productivity in the longer term, our advice to stick to whatever OS you are most comfortable with.
+R's computational efficiency is the same across different operating systems.
+This is important as it means the techniques will, in general, work equally well on different OSs.
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter 6) the main issue for many will be user friendliness and compatibility other programs used alongside R for work.
+Changing operating system can be a time consuming process so
+our advice is usually to stick to whatever OS you are most comfortable with.
 
 ```{r, echo=FALSE}
 # # Removed as superfluous - reinclude reworded?
@@ -216,7 +215,7 @@ inst = lapply(pkgs, library, character.only = TRUE) # load them
 In the above code `library(pkg[i])` is executed for every package stored in the text string vector.
 We use `library` here instead of `require` because the former produces an error if the package is not available.
 
-Loading all packages at the begginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
+Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
 Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
 To provide another example, we can update only the packages named in `pkgs` with the following command:
 
@@ -260,7 +259,7 @@ updating dozens of large packages can consume a large proportion of available sy
 
 An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates.
 Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
-Next (after the exercises) we take a look at how to configure R using startup files. 
+Next (after the exercises) we take a look at how to configure R using start-up files. 
 
 ### Exercises
 
@@ -276,23 +275,24 @@ This could reduce the reproducibility of your code.
 
 Files in three folders are important in this process:
 
-- `R_HOME`, the directory in which R is installed. The `etc` sub-directory can contain startup files read early on in the startup process. Find out where your `R_HOME` is with the `R.home()` command.
+- `R_HOME`, the directory in which R is installed. The `etc` sub-directory can contain start-up files read early on in the start-up process. Find out where your `R_HOME` is with the `R.home()` command.
 
 - `HOME`, the user's home directory. Typically this is `/home/username` on Unix machines or `C:\Users\username` on Windows (since Windows 7). Ask R where your home directory with, `path.expand("~")` (note the use of the Unix-like tilde to represent the home directory).
 
 - R's current working directory. This is reported by `getwd()`.
 
-It is important to know the location of the `.Rprofile` and `.Renviron` setup files that are being used out of these three options.
+It is important to know the location of the `.Rprofile` and `.Renviron` set-up files that are being used out of these three options.
 R only uses one `.Rprofile` and one `.Renviron` in any session: if you have a `.Rprofile` file in your current project, R will ignore `.Rprofile` in `R_HOME` and `HOME`.
 Likewise, `.Rprofile` in `HOME` overrides `.Rprofile` in `R_HOME`. 
 The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files.
 
-To create a project specific setup R code you simply create a `.Rprofile` file in the project's root directory and start adding R code, e.g. via `file.edit(".Rprofile")`.
+To create a project-specific start-up script, simply create a `.Rprofile` file in the project's root directory and start adding R code, e.g. via `file.edit(".Rprofile")`.
 Remember that this will make `.Rprofile` in the home directory be ignored.
-To change the user-level settings from within an R editor such as RStudio, this would be:
+The following commands will open your `.Rprofile` from within an R editor:
 
 ```{r, eval=FALSE}
-file.edit(file.path("~", ".Rprofile"))
+file.edit(file.path("~", ".Rprofile")) # edit .Rprofile in HOME
+file.edit(".Rprofile") # edit project specific .Rprofile
 ```
 
 Note that editing the `.Renviron` file in the same locations will have the same effect.
@@ -709,7 +709,7 @@ Alt+Shift+K
 ```
 
 This will display the default shortcuts in RStudio.
-It is worth spending time identifying which of these could be useful in your work and practicing interacting with RStudio rapidly with minimal reliance on the mouse.
+It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse.
 Some more [useful](http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/) shortcuts are listed below.
 There are many more gems to find that could boost your R writing productivity:
 
@@ -835,7 +835,7 @@ to be substantially faster than the reference case.
 
 ### Other interpreters
 
-Due to the popularity of R, it now possible to use alternative interpreters (the interpreter is where the code is run). There are currently four possibilities
+The R *language* can be separated from the R *interpreter*. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.
 
  * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
  
@@ -846,6 +846,8 @@ Due to the popularity of R, it now possible to use alternative interpreters (the
   * Oracle also offer an R-interpreter that uses Intel's mathematics library and therefore achieves a higher performance without changing R's core. 
 
 At the time of writing, switching interpreters is something to consider carefully. But in the future, it may become more routine.
+
+In this context it is also worth mentioning [Julia](http://julialang.org/). This is a fast language and interpreter which aims to provide "a high-level, high-performance dynamic programming language for technical computing" that will be familiar to R and Python users.
 
 ### Useful BLAS/benchmarking resources
 
