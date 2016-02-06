@@ -11,9 +11,9 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-01-28" />
+<meta name="date" content="2016-02-06" />
 
-  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
@@ -26,23 +26,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 <style type="text/css">
   pre:not([class]) {
@@ -77,7 +95,7 @@ img {
 <div id="header">
 <h1 class="title">Efficient R programming</h1>
 <h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-01-28</em></h4>
+<h4 class="date"><em>2016-02-06</em></h4>
 </div>
 <!--bookdown:title:end-->
 
@@ -152,23 +170,26 @@ img {
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>.</p>
-<p>Pull requests and general comments are welcome.</p>
+<div class="figure">
+<img src="figures/front_scale.png" alt="" />
+
+</div>
+<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p>
 <p><strong>Dependencies for this book</strong></p>
 <p>To build this book on your own system, you will need to install the following packages.</p>
-<pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;readxl&quot;</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;readxl&quot;</span>,
   <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;grid&quot;</span>, <span class="st">&quot;png&quot;</span>,
   <span class="st">&quot;rbenchmark&quot;</span>, <span class="st">&quot;microbenchmark&quot;</span>,
   <span class="st">&quot;fortunes&quot;</span>, <span class="st">&quot;pryr&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>)
 
 to_install =<span class="st"> </span>pkgs[!pkgs %in%<span class="st"> </span><span class="kw">installed.packages</span>()]
 if(<span class="kw">length</span>(to_install))
-  <span class="kw">install.packages</span>(to_install)</code></pre>
+  <span class="kw">install.packages</span>(to_install)</code></pre></div>
 <p>GitHub packages to install.</p>
-<pre class="sourceCode r"><code class="sourceCode r">gh_pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;csgillespie/efficient_pkg&quot;</span>, <span class="st">&quot;rstudio/bookdown&quot;</span>, <span class="st">&quot;csgillespie/benchmarkme&quot;</span>)
-devtools::<span class="kw">install_github</span>(gh_pkgs)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gh_pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;csgillespie/efficient_pkg&quot;</span>, <span class="st">&quot;rstudio/bookdown&quot;</span>, <span class="st">&quot;csgillespie/benchmarkme&quot;</span>)
+devtools::<span class="kw">install_github</span>(gh_pkgs)</code></pre></div>
 <p>Then run the command</p>
-<pre class="sourceCode r"><code class="sourceCode r">bookdown::<span class="kw">render_book</span>(<span class="st">&quot;index.Rmd&quot;</span>,  bookdown::<span class="kw">html_chapters</span>())</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bookdown::<span class="kw">render_book</span>(<span class="st">&quot;index.Rmd&quot;</span>,  bookdown::<span class="kw">html_chapters</span>())</code></pre></div>
 <!--chapter:end:index-->
 <link rel="stylesheet" type="text/css" href="style.css">
 <script type="text/javascript" async
@@ -198,12 +219,13 @@ devtools::<span class="kw">install_github</span>(gh_pkgs)</code></pre>
 <p>R works on all three major operating systems (OSs): Linux, Mac and Windows. R is predominantly platform-independent, meaning that it should behave in the same way on each of these platforms. This is partly facilitated by CRAN tests which ensure that R packages work in all major operating systems. There are some operating system specific quirks that may influence the choice of OS and how it is set-up for R programming in the long-term.</p>
 <div id="operating-system-and-resource-monitoring" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Operating system and resource monitoring</h3>
-<p>Minor differences aside,<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> R’s computational efficiency is the same across different operating systems. This is important as it means the techniques will, in general, work equally well on different OSs. Beyond the <span class="math">\(32\)</span> vs <span class="math">\(64\)</span> bit issue (covered in the next chapter) and <em>process forking</em> (covered in Chapter 6) the main issue for many will be user friendliness and compatibility other programs used alongside R for work. Changing operating system can be a time consuming process so our advice is usually to stick to whatever OS you are most comfortable with.</p>
+<p>Minor differences aside,<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> R’s computational efficiency is the same across different operating systems. This is important as it means the techniques will, in general, work equally well on different OSs. Beyond the <span class="math inline">\(32\)</span> vs <span class="math inline">\(64\)</span> bit issue (covered in the next chapter) and <em>process forking</em> (covered in Chapter 6) the main issue for many will be user friendliness and compatibility other programs used alongside R for work. Changing operating system can be a time consuming process so our advice is usually to stick to whatever OS you are most comfortable with.</p>
 <p>Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using <code>install.packages</code>) on Linux systems. On Debian-based operating systems such as Ubuntu, these are named with the prefix <code>r-cran-</code> (see <a href="#deps">Section 2.4</a>).</p>
 <p>Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming tasks. Alongside R profiling functions such as <code>profvis</code> (see Section <strong>XXX</strong>), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.</p>
 <p>A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter 3). System monitors also report the percentage of CPU resource allocated over time. On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter 6 on parallel programming). Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure 2-1).</p>
 <div class="figure">
-<img src="figures/sysmon.png" />
+<img src="figures/sysmon.png" alt="" />
+
 </div>
 <p>Figure 2-1. Output from a system monitor (<code>gnome-system-monitor</code> running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.</p>
 <p>System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring all major operating systems.</p>
@@ -218,7 +240,7 @@ devtools::<span class="kw">install_github</span>(gh_pkgs)</code></pre>
 <ol style="list-style-type: decimal">
 <li>What is the exact version of your computer’s operating system?</li>
 <li><p>Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure 2-1?</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1: Create large dataset</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1: Create large dataset</span>
 X =<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e8</span>), <span class="dt">nrow =</span> <span class="fl">1e7</span>))
 
 <span class="co"># 2: Find the median of each column using a single core</span>
@@ -226,7 +248,7 @@ r1 =<span class="st"> </span><span class="kw">lapply</span>(X, median)
 
 <span class="co"># 3: Find the median of each column using many cores</span>
 <span class="co"># XXX: Change to function from package</span>
-r2 =<span class="st"> </span>parallel::<span class="kw">mclapply</span>(X, median) <span class="co"># runs in serial on Windows</span></code></pre></li>
+r2 =<span class="st"> </span>parallel::<span class="kw">mclapply</span>(X, median) <span class="co"># runs in serial on Windows</span></code></pre></div></li>
 <li>What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?</li>
 <li><p>Bonus question: how would the results change depending on operating system?</p></li>
 </ol>
@@ -258,34 +280,34 @@ r2 =<span class="st"> </span>parallel::<span class="kw">mclapply</span>(X, media
 <li>On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with <code>apt-get upgrade</code>.</li>
 <li>On Mac, the latest version should be installed by the user from the <code>.pkg</code> files mentioned above.</li>
 <li><p>On Windows <code>installr</code> package makes updating easy:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check and install the latest R version</span>
-installr::<span class="kw">updateR</span>() </code></pre></li>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check and install the latest R version</span>
+installr::<span class="kw">updateR</span>() </code></pre></div></li>
 </ul>
 <p>For information about changes to expect in the next version, you can subscribe to the R’s NEWS RSS feed: <a href="http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss">developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss</a>. It’s a good way of keeping up to date.</p>
 </div>
 <div id="installing-r-packages" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Installing R packages</h3>
 <p>Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:</p>
-<pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span>
-<span class="kw">install.packages</span>(pkgs)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span>
+<span class="kw">install.packages</span>(pkgs)</code></pre></div>
 <p>In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the <code>pkgs</code> object to load them all:</p>
-<pre class="sourceCode r"><code class="sourceCode r">inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></code></pre></div>
 <p>In the above code <code>library(pkg[i])</code> is executed for every package stored in the text string vector. We use <code>library</code> here instead of <code>require</code> because the former produces an error if the package is not available.</p>
 <p>Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed <em>before</em> time is spent executing code. Storing package names in a character vector object such as <code>pkgs</code> is also useful because it allows us to refer back to them again and again. To provide another example, we can update only the packages named in <code>pkgs</code> with the following command:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>(<span class="dt">oldPkgs =</span> pkgs)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>(<span class="dt">oldPkgs =</span> pkgs)</code></pre></div>
 </div>
 <div id="deps" class="section level3">
 <h3><span class="header-section-number">2.2.4</span> Installing R packages with dependencies</h3>
 <p>Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing <code>install.packages</code>. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with <code>r-cran-</code> can be search for and installed as follows (see <a href="https://cran.r-project.org/bin/linux/ubuntu/">cran.r-project.org/bin/linux/ubuntu/</a> for a list of these):</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span>
-<span class="kw">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span>
+<span class="kw">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></code></pre></div>
 <p>On Windows the <code>installr</code> package helps manage and update R packages with system-level dependencies. For example the <code>Rtools</code> package for compiling C/C++ code on Window can be installed with the following command:</p>
-<pre class="sourceCode r"><code class="sourceCode r">installr::<span class="kw">install.rtools</span>() </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">installr::<span class="kw">install.rtools</span>() </code></pre></div>
 </div>
 <div id="updating-r-packages" class="section level3">
 <h3><span class="header-section-number">2.2.5</span> Updating R packages</h3>
 <p>An efficient R set-up will contain up-to-date packages. This can be done <em>for all packages</em> with:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></code></pre></div>
 <p>The default for this function is for the <code>ask</code> argument to be set to <code>TRUE</code>, giving control over what is downloaded onto your system.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> This is a good thing: updating dozens of large packages can consume a large proportion of available system resources and much time!</p>
 <p>An even more interactive method for updating packages in R is provided by RStudio via Tools &gt; Check for Package Updates. Many such time saving tricks are enabled by RStudio, as described in <a href="#install-rstudio">a subsequent section</a>. Next (after the exercises) we take a look at how to configure R using start-up files.</p>
 </div>
@@ -308,103 +330,103 @@ installr::<span class="kw">updateR</span>() </code></pre></li>
 </ul>
 <p>It is important to know the location of the <code>.Rprofile</code> and <code>.Renviron</code> set-up files that are being used out of these three options. R only uses one <code>.Rprofile</code> and one <code>.Renviron</code> in any session: if you have a <code>.Rprofile</code> file in your current project, R will ignore <code>.Rprofile</code> in <code>R_HOME</code> and <code>HOME</code>. Likewise, <code>.Rprofile</code> in <code>HOME</code> overrides <code>.Rprofile</code> in <code>R_HOME</code>. The same applies to <code>.Renviron</code>: you should remember that adding project specific environment variables with <code>.Renviron</code> will de-activate other <code>.Renviron</code> files.</p>
 <p>To create a project-specific start-up script, simply create a <code>.Rprofile</code> file in the project’s root directory and start adding R code, e.g. via <code>file.edit(&quot;.Rprofile&quot;)</code>. Remember that this will make <code>.Rprofile</code> in the home directory be ignored. The following commands will open your <code>.Rprofile</code> from within an R editor:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.edit</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Rprofile&quot;</span>)) <span class="co"># edit .Rprofile in HOME</span>
-<span class="kw">file.edit</span>(<span class="st">&quot;.Rprofile&quot;</span>) <span class="co"># edit project specific .Rprofile</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.edit</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Rprofile&quot;</span>)) <span class="co"># edit .Rprofile in HOME</span>
+<span class="kw">file.edit</span>(<span class="st">&quot;.Rprofile&quot;</span>) <span class="co"># edit project specific .Rprofile</span></code></pre></div>
 <p>Note that editing the <code>.Renviron</code> file in the same locations will have the same effect. The following code will create a user specific <code>.Renviron</code> file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.</p>
-<pre class="sourceCode r"><code class="sourceCode r">user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))
 if(!<span class="kw">file.exists</span>(user_renviron)) <span class="co"># check to see if the file already exists</span>
   <span class="kw">file.create</span>(user_renviron)
-<span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></code></pre>
+<span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></code></pre></div>
 <p>The location, contents and uses of each is outlined in more detail below.</p>
 <div id="rprofile" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> The <code>.Rprofile</code> file</h3>
 <p>By default R looks for and runs <code>.Rprofile</code> files in the three locations described above, in a specific order. <code>.Rprofile</code> files are simply R scripts that run each time R runs and they can be found within <code>R_HOME</code>, <code>HOME</code> and the project’s home directory, found with <code>getwd()</code>. To check if you have a site-wide <code>.Rprofile</code>, which will run for all users on start-up, run:</p>
-<pre class="sourceCode r"><code class="sourceCode r">site_path =<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">site_path =<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)
 fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <span class="st">&quot;etc&quot;</span>, <span class="st">&quot;Rprofile.site&quot;</span>)
-<span class="kw">file.exists</span>(fname)</code></pre>
+<span class="kw">file.exists</span>(fname)</code></pre></div>
 <p>The above code checks for the presence of <code>Rprofile.site</code> in that directory. As outlined above, the <code>.Rprofile</code> located in your home directory is user-specific. Again, we can test whether this file exists using</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre></div>
 <p>We can use R to create and edit <code>.Rprofile</code> (warning: do not overwrite your previous <code>.Rprofile</code> - we suggest you try project-specific <code>.Rprofile</code> first):</p>
-<pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)) <span class="co"># only create if not already there</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)) <span class="co"># only create if not already there</span>
   <span class="kw">file.create</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)    <span class="co"># (don&#39;t overwrite it)</span>
-<span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre>
+<span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</code></pre></div>
 </div>
 <div id="example-.rprofile-settings" class="section level3">
 <h3><span class="header-section-number">2.3.2</span> Example <code>.Rprofile</code> settings</h3>
 <p>An <code>.Rprofile</code> file is just an R script that is run at start-up. The examples at the bottom of the <code>.Rprofile</code> help file</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help</span>(<span class="st">&quot;Rprofile&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help</span>(<span class="st">&quot;Rprofile&quot;</span>)</code></pre></div>
 <p>give clues as to the types of things we could place in our profile.</p>
 <div id="setting-options" class="section level4">
 <h4><span class="header-section-number">2.3.2.1</span> Setting options</h4>
 <p>The function <code>options</code> is a list that contains a number of default options. See <code>help(&quot;options&quot;)</code> or simply type <code>options()</code> to get an idea of what we can configure. In my <code>.Rprofile</code> file, we have the line</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt=</span><span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits=</span><span class="dv">4</span>, <span class="dt">show.signif.stars=</span><span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt=</span><span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits=</span><span class="dv">4</span>, <span class="dt">show.signif.stars=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>This changes three features.</p>
 <ul>
 <li>The R prompt, from the boring <code>&gt;</code> to the exciting <code>R&gt;</code>.</li>
 <li>The number of digits displayed.</li>
-<li>Removing the stars after significant <span class="math">\(p\)</span>-values.</li>
+<li>Removing the stars after significant <span class="math inline">\(p\)</span>-values.</li>
 </ul>
 <p>Typically we want to avoid adding options to the start-up file that make our code non-portable. For example, adding</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>to your start-up script has knock-on effects for <code>read.table</code> and related functions including <code>read.csv</code>, making them convert text strings into characters rather than into factors as is default. This may be useful for you, but it is dangerous as it may make your code less portable.</p>
 </div>
 <div id="setting-the-cran-mirror" class="section level4">
 <h4><span class="header-section-number">2.3.2.2</span> Setting the CRAN mirror</h4>
 <p>To avoid setting the CRAN mirror each time you run <code>install.packages</code> you can permanently set the mirror in your <code>.Rprofile</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">## local creates a new, empty environment
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## local creates a new, empty environment
 ## This avoids polluting the global environment with
 ## the object r
 <span class="kw">local</span>({
   r =<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)             
   r[<span class="st">&quot;CRAN&quot;</span>] =<span class="st"> &quot;https://cran.rstudio.com/&quot;</span>
   <span class="kw">options</span>(<span class="dt">repos =</span> r)
-})</code></pre>
+})</code></pre></div>
 <p>The RStudio mirror is a virtual machine run by Amazon’s EC2 service, and it syncs with the main CRAN mirror in Austria once per day. Since RStudio is using Amazon’s CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn’t need to travel very far, and is therefore fast to download.</p>
 </div>
 <div id="the-fortunes-package" class="section level4">
 <h4><span class="header-section-number">2.3.2.3</span> The <code>fortunes</code> package</h4>
 <p>This section illustrate what <code>.Rprofile</code> does with reference to a package that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.</p>
-<p>The <code>fortunes</code> package contains a number of memorable quotes that the community has collected over many years, called <code>R fortunes</code>. Each fortune has a number. To get fortune number <span class="math">\(50\)</span>, for example, enter</p>
-<pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">50</span>)</code></pre>
+<p>The <code>fortunes</code> package contains a number of memorable quotes that the community has collected over many years, called <code>R fortunes</code>. Each fortune has a number. To get fortune number <span class="math inline">\(50\)</span>, for example, enter</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">50</span>)</code></pre></div>
 <p>It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to <code>~/.Rprofile</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">interactive</span>()) 
-  <span class="kw">try</span>(fortunes::<span class="kw">fortune</span>(), <span class="dt">silent=</span><span class="ot">TRUE</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">interactive</span>()) 
+  <span class="kw">try</span>(fortunes::<span class="kw">fortune</span>(), <span class="dt">silent=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p>The <code>interactive</code> function tests whether R is being used interactively in a terminal. The <code>fortune</code> function is called within <code>try</code>. If the <code>fortunes</code> package is not available, we avoid raising an error and move on. By using <code>::</code> we avoid adding the fortunes package to our list of attached packages..</p>
 <p>The function <code>.Last</code>, if it exists in the <code>.Rprofile</code>, is always run at the end of the session. We can use it to install the <code>fortunes</code> package if needed. To load the package, we use <code>require</code>, since if the package isn’t installed, the <code>require</code> function returns <code>FALSE</code> and raises a warning.</p>
-<pre class="sourceCode r"><code class="sourceCode r">.Last =<span class="st"> </span>function() {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.Last =<span class="st"> </span>function() {
   cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(!<span class="kw">require</span>(fortunes, <span class="dt">quietly=</span><span class="ot">TRUE</span>))
   if(cond) 
     <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
   <span class="kw">message</span>(<span class="st">&quot;Goodbye at &quot;</span>, <span class="kw">date</span>(), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-}</code></pre>
+}</code></pre></div>
 </div>
 <div id="useful-functions" class="section level4">
 <h4><span class="header-section-number">2.3.2.4</span> Useful functions</h4>
 <p>You can also load useful functions in <code>.Rprofile</code>. For example, we could load the following two functions for examining data frames:</p>
-<pre class="sourceCode r"><code class="sourceCode r">## ht == headtail
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## ht == headtail
 ht =<span class="st"> </span>function(d, <span class="dt">n=</span><span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))
   
 ## Show the first 5 rows &amp; first 5 columns of a data frame
-hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">1</span>:<span class="dv">5</span>]</code></pre>
+hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">1</span>:<span class="dv">5</span>]</code></pre></div>
 <p>and a function for setting a nice plotting window:</p>
-<pre class="sourceCode r"><code class="sourceCode r">setnicepar =<span class="st"> </span>function(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>, <span class="dv">0</span>), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">setnicepar =<span class="st"> </span>function(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>, <span class="dv">0</span>), 
                       <span class="dt">tck =</span> -.<span class="dv">01</span>, <span class="dt">cex.axis =</span> <span class="fl">0.9</span>, 
                       <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), ...) {
     <span class="kw">par</span>(<span class="dt">mar =</span> mar, <span class="dt">mgp =</span> mgp, <span class="dt">tck =</span> tck,
         <span class="dt">cex.axis =</span> cex.axis, <span class="dt">las =</span> las, 
         <span class="dt">mfrow =</span> mfrow, ...)
-}</code></pre>
+}</code></pre></div>
 <p>Note that these functions are for personal use and are unlikely to interfere with code from other people. For this reason even if you use a certain package every day, we don’t recommend loading it in your <code>.Rprofile</code>. Also beware the dangers of loading many functions by default: it may make your code less portable. Another downside of putting functions in your <code>.Rprofile</code> is that it can clutter-up your work space: when you run the <code>ls()</code> command, your <code>.Rprofile</code> functions will appear. Also if you run <code>rm(list=ls())</code>, your functions will be deleted.</p>
 <p>One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with <code>.</code>, by default it doesn’t appear in the output of the <code>ls()</code> function</p>
-<pre class="sourceCode r"><code class="sourceCode r">.obj =<span class="st"> </span><span class="dv">1</span>
-<span class="st">&quot;.obj&quot;</span> %in%<span class="st"> </span><span class="kw">ls</span>()</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.obj =<span class="st"> </span><span class="dv">1</span>
+<span class="st">&quot;.obj&quot;</span> %in%<span class="st"> </span><span class="kw">ls</span>()</code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>This concept also works with environments. In the <code>.Rprofile</code> file we can create a <em>hidden</em> environment</p>
-<pre class="sourceCode r"><code class="sourceCode r">.env =<span class="st"> </span><span class="kw">new.env</span>()</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.env =<span class="st"> </span><span class="kw">new.env</span>()</code></pre></div>
 <p>and then add functions to this environment</p>
-<pre class="sourceCode r"><code class="sourceCode r">.env$ht =<span class="st"> </span>function(d, <span class="dt">n =</span> <span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.env$ht =<span class="st"> </span>function(d, <span class="dt">n =</span> <span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</code></pre></div>
 <p>At the end of the <code>.Rprofile</code> file, we use <code>attach</code>, which makes it possible to refer to objects in the environment by their names alone.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">attach</span>(.env)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">attach</span>(.env)</code></pre></div>
 <!--
 \sidenote{I also have a function that shows the size of
   objects in my R session (\url{http://stackoverflow.com/q/1358003/203420}).}-->
@@ -422,7 +444,7 @@ R_LIBS=C:/R/library</code></pre>
 <p>Another common use of <code>.Renviron</code> is to store API keys that will be available from one session to another.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> The following line in <code>.Renviron</code>, for example, sets the <code>ZEIT_KEY</code> environment variable which is used in the package <a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a> package:</p>
 <pre><code>ZEIT_KEY=PUT_YOUR_KEY_HERE</code></pre>
 <p>You will need to sign-in and start a new R session for the environment variable (accessed by <code>Sys.getenv</code>) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</code></pre></div>
 <p>Use of the <code>.Renviron</code> file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session. Furthermore, the same <code>.Renviron</code> file will work across different platforms so keep it stored safely.</p>
 </div>
 <div id="exercises-2" class="section level3">
@@ -465,7 +487,8 @@ R_LIBS=C:/R/library</code></pre>
 <li><p>The <strong>Files pane</strong> (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML ‘widgets’.</p></li>
 </ul>
 <div class="figure">
-<img src="https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png" />
+<img src="https://support.rstudio.com/hc/en-us/article_attachments/202195467/Screen_Shot_2015-06-25_at_4.57.29_PM.png" alt="" />
+
 </div>
 <p>Figure 2-2. RStudio Panels.</p>
 <p>Using each of the panels effectively and navigating between them quickly is a skill that will develop over time, and will only improve with practice.</p>
@@ -477,14 +500,15 @@ R_LIBS=C:/R/library</code></pre>
 <li><p>Create a new folder for the input data using the <strong>Files pane</strong>.</p></li>
 <li>Type in <code>downl</code> in the <strong>Source pane</strong> and hit <code>Enter</code> to make the function <code>download.file()</code> autocomplete. Then type <code>&quot;</code>, which will autocomplete to <code>&quot;&quot;</code>, paste the URL of a file to download (e.g. <code>https://www.census.gov/2010census/csv/pop_change.csv</code>) and a file name (e.g. <code>pop_change.csv</code>).</li>
 <li><p>Execute the full command with <code>Ctl-Enter</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,
-              <span class="st">&quot;data/pop_change.csv&quot;</span>)</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,
+              <span class="st">&quot;data/pop_change.csv&quot;</span>)</code></pre></div></li>
 <li><p>Write and execute a command to read-in the data, such as</p>
-<pre class="sourceCode r"><code class="sourceCode r">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</code></pre></div></li>
 <li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure 2-3).</p></li>
 </ol>
 <div class="figure">
-<img src="figures/View.png" alt="Data Viewer" /><p class="caption">Data Viewer</p>
+<img src="figures/View.png" alt="Data Viewer" />
+<p class="caption">Data Viewer</p>
 </div>
 <p>Figure 2-3. The data viewing tab in RStudio.</p>
 <ol start="5" style="list-style-type: decimal">
@@ -510,7 +534,7 @@ R_LIBS=C:/R/library</code></pre>
 <p>R provides some basic autocompletion functionality. Typing the beginning of a function name, for example <code>rn</code> (short for <code>rnorm()</code>), and hitting <code>Tab</code> will result in the full function names associated with this text string being printed. In this case two options would be displayed: <code>rnbinom</code> and <code>rnorm</code>, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing <code>te</code> in the console in a project which contains a file called <code>test.R</code> should result in the full name <code>&quot;test.R&quot;</code> being auto-completed. RStudio builds on this functionality and takes it to a new level.</p>
 <p>Instead of only auto completing options when <code>Tab</code> is pressed, RStudio auto completes them at any point. Building on the previous example, RStudio’s autocompletion triggers when the first three characters are typed: <code>rno</code>. The same functionality works when only the first characters are typed, followed by <code>Tab</code>: automatic auto-completion does not replace <code>Tab</code> autocompletion but supplements it. Note that in RStudio two more options are provided to the user after entering <code>rn Tab</code> compared with entering the same text into base R’s console described in the previous paragraph: <code>RNGkind</code> and <code>RNGversion</code>. This illustrates that RStudio’s autocompletion functionality is not case sensitive in the same way that R is. This is a good thing because R has no consistent function name style!</p>
 <p>RStudio also has more intelligent auto-completion of objects and file names than R’s built-in command line. To test this functionality, try typing <code>US</code>, followed by the Tab key. After pressing down until <code>USArrests</code> is selected, press Enter so it autocompletes. Finally, typing <code>$</code> should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.</p>
-<pre class="sourceCode r"><code class="sourceCode r">USArrests$<span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">USArrests$<span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></code></pre></div>
 <p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form <code>spdf@data$varname</code>.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name. RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>. Another example is RStudio’s ability to find files hidden away in sub-folders. Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>. There are a number of other clever auto-completion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
 </div>
 <div id="keyboard-shortcuts" class="section level3">
@@ -545,13 +569,13 @@ R_LIBS=C:/R/library</code></pre>
 <li><p>Any settings associated with the project, such as Git settings, are loaded. This assists with collaboration and project-specific set-up.</p></li>
 </ul>
 <p>Each project is different but most contain input data, R code and outputs. To keep things tidy, we recommend a sub-directory structure resembling the following:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">project/</span>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">project/</span>
   <span class="kw">-</span> README.rmd <span class="co"># Project description</span>
   <span class="kw">-</span> set-up.R  <span class="co"># Required packages</span>
   <span class="kw">-</span> R/ <span class="co"># For R code</span>
   <span class="kw">-</span> input <span class="co"># Data files</span>
   <span class="kw">-</span> graphics/
-  <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre>
+  <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre></div>
 <p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
 <p>Another approach to project management is to treat projects as R packages. Creating R packages is easier than ever before, with tools such as <code>devtools</code> for managing R’s quirks and making the process user friendly. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
 <p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
@@ -584,7 +608,7 @@ benchmarkme::get_linear_algebra()
 <div id="revolution-r" class="section level3">
 <h3><span class="header-section-number">2.5.1</span> Revolution R</h3>
 <p>Revolution R is the main software product offered by Revolution Analytics. It is “100%” compatible with R“, supporting all available packages through the MRAN package repository. Revolution R provides faster performance on for certain functions than base R, through its use of MKL, an implementation of BLAS (as described above). Revolution R is available as a free and open source product, ‘Revolution R Open’ (RRO), and is reported to be faster than base R installations.<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
-<p>Additional benchmarks reported by <span class="citation">Eddelbuettel (2010)</span> show the MKL implementations of R used in RRO and the commercial edition to be substantially faster than the reference case.</p>
+<p>Additional benchmarks reported by <span class="citation">Eddelbuettel (<a href="#ref-eddelbuettel2010benchmarking">2010</a>)</span> show the MKL implementations of R used in RRO and the commercial edition to be substantially faster than the reference case.</p>
 </div>
 <div id="other-interpreters" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Other interpreters</h3>
@@ -625,8 +649,8 @@ benchmarkme::get_linear_algebra()
 <p>We’ll begin with an introductory section on computer storage and memory and how it is measured, before moving on to individual computer components.</p>
 <div id="introduction-what-is-a-byte" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction: what is a byte?</h2>
-<p>A computer cannot store “numbers” or “letters”. The only thing a computer can store and work with is bits. A bit is binary, it is either a <span class="math">\(0\)</span> or a <span class="math">\(1\)</span>. In fact from a physics perspective, a bit is just a blip of electricity that either is or isn’t there.</p>
-<p>In the past the ASCII character set dominated computing. This set defines <span class="math">\(128\)</span> characters including <span class="math">\(0\)</span> to <span class="math">\(9\)</span>, upper and lower case alpha-numeric and a few control characters such as a new line. To store these characters required <span class="math">\(7\)</span> bits since <span class="math">\(2^7 = 128\)</span>, but <span class="math">\(8\)</span> bits were typically used for performance <a href="http://stackoverflow.com/q/14690159/203420">reasons</a>. Table 3.1 gives the binary representation of the first few characters.</p>
+<p>A computer cannot store “numbers” or “letters”. The only thing a computer can store and work with is bits. A bit is binary, it is either a <span class="math inline">\(0\)</span> or a <span class="math inline">\(1\)</span>. In fact from a physics perspective, a bit is just a blip of electricity that either is or isn’t there.</p>
+<p>In the past the ASCII character set dominated computing. This set defines <span class="math inline">\(128\)</span> characters including <span class="math inline">\(0\)</span> to <span class="math inline">\(9\)</span>, upper and lower case alpha-numeric and a few control characters such as a new line. To store these characters required <span class="math inline">\(7\)</span> bits since <span class="math inline">\(2^7 = 128\)</span>, but <span class="math inline">\(8\)</span> bits were typically used for performance <a href="http://stackoverflow.com/q/14690159/203420">reasons</a>. Table 3.1 gives the binary representation of the first few characters.</p>
 <table>
 <thead>
 <tr class="header">
@@ -636,37 +660,45 @@ benchmarkme::get_linear_algebra()
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><span class="math">\(01000001\)</span></td>
+<td align="left"><span class="math inline">\(01000001\)</span></td>
 <td align="left">A</td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math">\(01000010\)</span></td>
+<td align="left"><span class="math inline">\(01000010\)</span></td>
 <td align="left">B</td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math">\(01000011\)</span></td>
+<td align="left"><span class="math inline">\(01000011\)</span></td>
 <td align="left">C</td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math">\(01000100\)</span></td>
+<td align="left"><span class="math inline">\(01000100\)</span></td>
 <td align="left">D</td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math">\(01000101\)</span></td>
+<td align="left"><span class="math inline">\(01000101\)</span></td>
 <td align="left">E</td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math">\(01010010\)</span></td>
+<td align="left"><span class="math inline">\(01010010\)</span></td>
 <td align="left">R</td>
 </tr>
 </tbody>
 </table>
 <p>Table 3.1: The bit representation of a few ASCII characters.</p>
-<p>The limitation of only gives having <span class="math">\(256\)</span> characters led to the development of Unicode, a standard framework aimed at creating a single character set for every reasonable writing system. Typically, Unicode characters require sixteen bits of storage.</p>
-<p>Eight bits is one byte, or ASCII character. So two ASCII characters would use two bytes or <span class="math">\(16\)</span> bits. A pure text document containing <span class="math">\(100\)</span> characters would use <span class="math">\(100\)</span> bytes (<span class="math">\(800\)</span> bits). Note that mark-up, such as font information or meta-data, can impose a substantial memory overhead: an empty <code>.docx</code> file requires about <span class="math">\(3,700\)</span> bytes of storage.</p>
-<p>When computer scientists first started to think about computer memory, they noticed that <span class="math">\(2^{10} = 1024 \simeq 10^3\)</span> and <span class="math">\(2^{20} =1,048,576\simeq 10^6\)</span>, so they adopted the short hand of kilo- and mega-bytes. Of course, <em>everyone</em> knew that it was just a short hand, and it was really a binary power. When computers became more wide spread, foolish people like you and me just assumed that kilo actually meant <span class="math">\(10^3\)</span> bytes.</p>
-<p>Fortunately the IEEE Standards Board intervened and created conventional, internationally adopted definitions of the International System of Units (SI) prefixes. So a kilobyte (KB) is <span class="math">\(10^3 = 1000\)</span> bytes and a megabyte (MB) is <span class="math">\(10^6\)</span> bytes or <span class="math">\(10^3\)</span> kilobytes (see table 3.2). A petabyte is approximately <span class="math">\(100\)</span> million drawers filled with text. Astonishingly Google processes around <span class="math">\(20\)</span> petabytes of data every day.</p>
-<table>
+<p>The limitation of only gives having <span class="math inline">\(256\)</span> characters led to the development of Unicode, a standard framework aimed at creating a single character set for every reasonable writing system. Typically, Unicode characters require sixteen bits of storage.</p>
+<p>Eight bits is one byte, or ASCII character. So two ASCII characters would use two bytes or <span class="math inline">\(16\)</span> bits. A pure text document containing <span class="math inline">\(100\)</span> characters would use <span class="math inline">\(100\)</span> bytes (<span class="math inline">\(800\)</span> bits). Note that mark-up, such as font information or meta-data, can impose a substantial memory overhead: an empty <code>.docx</code> file requires about <span class="math inline">\(3,700\)</span> bytes of storage.</p>
+<p>When computer scientists first started to think about computer memory, they noticed that <span class="math inline">\(2^{10} = 1024 \simeq 10^3\)</span> and <span class="math inline">\(2^{20} =1,048,576\simeq 10^6\)</span>, so they adopted the short hand of kilo- and mega-bytes. Of course, <em>everyone</em> knew that it was just a short hand, and it was really a binary power. When computers became more wide spread, foolish people like you and me just assumed that kilo actually meant <span class="math inline">\(10^3\)</span> bytes.</p>
+<p>Fortunately the IEEE Standards Board intervened and created conventional, internationally adopted definitions of the International System of Units (SI) prefixes. So a kilobyte (KB) is <span class="math inline">\(10^3 = 1000\)</span> bytes and a megabyte (MB) is <span class="math inline">\(10^6\)</span> bytes or <span class="math inline">\(10^3\)</span> kilobytes (see table 3.2). A petabyte is approximately <span class="math inline">\(100\)</span> million drawers filled with text. Astonishingly Google processes around <span class="math inline">\(20\)</span> petabytes of data every day.</p>
+<table style="width:68%;">
+<colgroup>
+<col width="11%" />
+<col width="11%" />
+<col width="13%" />
+<col width="12%" />
+<col width="2%" />
+<col width="16%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Factor</th>
@@ -679,71 +711,72 @@ benchmarkme::get_linear_algebra()
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><span class="math">\(2^{10}\)</span></td>
+<td align="left"><span class="math inline">\(2^{10}\)</span></td>
 <td align="left">kibi</td>
 <td align="left">Ki</td>
 <td align="left">Kilobinary:</td>
-<td align="left"><span class="math">\((2^{10})^1\)</span></td>
-<td align="left">Kilo: <span class="math">\((10^3)^1\)</span></td>
+<td align="left"><span class="math inline">\((2^{10})^1\)</span></td>
+<td align="left">Kilo: <span class="math inline">\((10^3)^1\)</span></td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math">\(2^{20}\)</span></td>
+<td align="left"><span class="math inline">\(2^{20}\)</span></td>
 <td align="left">mebi</td>
 <td align="left">Mi</td>
 <td align="left">Megabinary:</td>
-<td align="left"><span class="math">\((2^{10})^2\)</span></td>
-<td align="left">Mega: <span class="math">\((10^3)^2\)</span></td>
+<td align="left"><span class="math inline">\((2^{10})^2\)</span></td>
+<td align="left">Mega: <span class="math inline">\((10^3)^2\)</span></td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math">\(2^{30}\)</span></td>
+<td align="left"><span class="math inline">\(2^{30}\)</span></td>
 <td align="left">gibi</td>
 <td align="left">Gi</td>
 <td align="left">Gigabinary:</td>
-<td align="left"><span class="math">\((2^{10})^3\)</span></td>
-<td align="left">Giga: <span class="math">\((10^3)^3\)</span></td>
+<td align="left"><span class="math inline">\((2^{10})^3\)</span></td>
+<td align="left">Giga: <span class="math inline">\((10^3)^3\)</span></td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math">\(2^{40}\)</span></td>
+<td align="left"><span class="math inline">\(2^{40}\)</span></td>
 <td align="left">tebi</td>
 <td align="left">Ti</td>
 <td align="left">Terabinary:</td>
-<td align="left"><span class="math">\((2^{10})^4\)</span></td>
-<td align="left">Tera: <span class="math">\((10^3)^4\)</span></td>
+<td align="left"><span class="math inline">\((2^{10})^4\)</span></td>
+<td align="left">Tera: <span class="math inline">\((10^3)^4\)</span></td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math">\(2^{50}\)</span></td>
+<td align="left"><span class="math inline">\(2^{50}\)</span></td>
 <td align="left">pebi</td>
 <td align="left">Pi</td>
 <td align="left">Petabinary:</td>
-<td align="left"><span class="math">\((2^{10})^5\)</span></td>
-<td align="left">Peta: <span class="math">\((10^3)^5\)</span></td>
+<td align="left"><span class="math inline">\((2^{10})^5\)</span></td>
+<td align="left">Peta: <span class="math inline">\((10^3)^5\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Table 3.2: Data conversion table. Credit: <a href="physics.nist.gov/cuu/Units/binary.html"><a href="http://physics.nist.gov/cuu/Units/binary.html" class="uri">http://physics.nist.gov/cuu/Units/binary.html</a></a></p>
-<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it. Microsoft Windows, for example, uses 1MB to mean <span class="math">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math">\(1.44\)</span>MB floppy disk is a mixture, <span class="math">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B.</p>
+<p>Table 3.2: Data conversion table. Credit: <a href="physics.nist.gov/cuu/Units/binary.html">http://physics.nist.gov/cuu/Units/binary.html</a></p>
+<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it. Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B.</p>
 </div>
 <div id="random-access-memory-ram" class="section level2">
 <h2><span class="header-section-number">3.2</span> Random access memory: RAM</h2>
 <p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is directly related to the size of data sets that it can process. As the amount of RAM your machine has increases, the size of datasets you can analyse also increases, so it is important to have sufficient RAM for your work.</p>
 <div class="figure">
-<img src="figures/ram.jpg" />
+<img src="figures/ram.jpg" alt="" />
+
 </div>
-<p>Figure 3.1: Two <span class="math">\(8\)</span>GB RAM cards. Credit: <a href="https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg" class="uri">https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg</a></p>
-<p>Even if the original data set is relatively small, the analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math">\(50\)</span> rows and <span class="math">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</code></pre>
+<p>Figure 3.1: Two <span class="math inline">\(8\)</span>GB RAM cards. Credit: <a href="https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg" class="uri">https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg</a></p>
+<p>Even if the original data set is relatively small, the analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</code></pre></div>
 <pre><code>##         Murder Assault UrbanPop Rape
 ## Alabama   13.2     236       58 21.2
 ## Alaska    10.0     263       48 44.5
 ## Arizona    8.1     294       80 31.0</code></pre>
 <p>If we want to group states that have similar crime statistics, a standard first step is to calculate the distance or similarity matrix</p>
-<pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
 <p>When we inspect the object size of the original data set and the distance object using the <code>pryr</code> package</p>
-<pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(USArrests)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(USArrests)</code></pre></div>
 <pre><code>## 5.23 kB</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(d)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(d)</code></pre></div>
 <pre><code>## 14.3 kB</code></pre>
-<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math">\(n \times n\)</span> matrix, where <span class="math">\(n\)</span> is the number of rows in <code>USAarrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math">\(O(n^2)\)</span>. So if our original data set contained <span class="math">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math">\(50\)</span> million unique values. A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
+<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math inline">\(n \times n\)</span> matrix, where <span class="math inline">\(n\)</span> is the number of rows in <code>USAarrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math inline">\(O(n^2)\)</span>. So if our original data set contained <span class="math inline">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math inline">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math inline">\(50\)</span> million unique values. A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
 <p>Another benefit of having increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often (we will cover this in more detail in chapter XXX).</p>
 <p>It is straightforward to determine how much RAM you have. Under Windows,</p>
 <ol style="list-style-type: decimal">
@@ -755,14 +788,14 @@ benchmarkme::get_linear_algebra()
 <pre><code>$ free -h
              total       used       free     
 Mem:           15G       4.0G        11G </code></pre>
-<p>It is sometimes possible to increase your computer’s RAM. On the computer motherboard, there are typically <span class="math">\(2\)</span> or <span class="math">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more RAM. However, it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the RAM will have to be removed. To go from <span class="math">\(8\)</span>GB to <span class="math">\(16\)</span>GB, for example, you may have to discard the two <span class="math">\(4\)</span>GB RAM cards and replace them with two <span class="math">\(8\)</span>GB cards. Increasing your laptop/desktop from 4GB to <span class="math">\(16\)</span>GB or <span class="math">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
-<pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)</code></pre>
+<p>It is sometimes possible to increase your computer’s RAM. On the computer motherboard, there are typically <span class="math inline">\(2\)</span> or <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more RAM. However, it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the RAM will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from 4GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)</code></pre></div>
 <pre><code>## 
 ## RAM is cheap and thinking hurts.
 ##    -- Uwe Ligges (about memory requirements in R)
 ##       R-help (June 2007)</code></pre>
 <p>It is a testament to the design of R that it is still relevant and its popularity is growing. Ross Ihaka, one of the originators of the R programming language, made a throw-away comment in 2003:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">21</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">21</span>)</code></pre></div>
 <pre><code>## 
 ## I seem to recall that we were targetting 512k Macintoshes. In our dreams
 ## we might have seen 16Mb Sun.
@@ -770,7 +803,7 @@ Mem:           15G       4.0G        11G </code></pre>
 ##       started out that they would see R using 16G memory on a dual Opteron
 ##       computer)
 ##       R-help (November 2003)</code></pre>
-<p>Considering that a standard smart phone now contains <span class="math">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive. R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
+<p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive. R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
 <div id="exercises-6" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Exercises</h3>
 <p>The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.</p>
@@ -782,24 +815,25 @@ Mem:           15G       4.0G        11G </code></pre>
 </div>
 <div id="hard-drives-hdd-vs-ssd" class="section level2">
 <h2><span class="header-section-number">3.3</span> Hard drives: HDD vs SSD</h2>
-<p>Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure 3.2. The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either <span class="math">\(5400\)</span>RPM (Revolutions per Minute) or <span class="math">\(7200\)</span>RPM. The major advantage of HDDs is that they are cheap, making a <span class="math">\(1\)</span>TB laptop standard.</p>
+<p>Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure 3.2. The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either <span class="math inline">\(5400\)</span>RPM (Revolutions per Minute) or <span class="math inline">\(7200\)</span>RPM. The major advantage of HDDs is that they are cheap, making a <span class="math inline">\(1\)</span>TB laptop standard.</p>
 <div class="figure">
-<img src="figures/627px-Laptop-hard-drive-exposed.jpg" />
+<img src="figures/627px-Laptop-hard-drive-exposed.jpg" alt="" />
+
 </div>
 <p>Figure 3.2: A standard 2.5&quot; hard drive, found in most laptops. Credit: <a href="https://en.wikipedia.org/wiki/Hard_disk_drive" class="uri">https://en.wikipedia.org/wiki/Hard_disk_drive</a></p>
 <p>Solid state drives (SSDs) can be thought of as large, but more sophisticated versions of USB sticks. They have no moving parts and information is stored in microchips. Since there are no moving parts, reading/writing is much quicker. SSDs have other benefits: they are quieter, allow faster boot time (no ‘spin up’ time) and require less power (more battery life).</p>
-<p>The read/write speed for a standard HDD is usually in the region of <span class="math">\(50-120\)</span>MB/s (usually closer to <span class="math">\(50\)</span>MB). For SSDs, speeds are typically over <span class="math">\(200\)</span>MB/s. For top-of-the-range models this can approach <span class="math">\(500\)</span>MB/s. If you’re wondering, read/write speeds for RAM is around <span class="math">\(2-20\)</span>GB/s. So at best SSDs are at least one order of magnitude slower than RAM, but still faster than standard HDDs.</p>
+<p>The read/write speed for a standard HDD is usually in the region of <span class="math inline">\(50-120\)</span>MB/s (usually closer to <span class="math inline">\(50\)</span>MB). For SSDs, speeds are typically over <span class="math inline">\(200\)</span>MB/s. For top-of-the-range models this can approach <span class="math inline">\(500\)</span>MB/s. If you’re wondering, read/write speeds for RAM is around <span class="math inline">\(2-20\)</span>GB/s. So at best SSDs are at least one order of magnitude slower than RAM, but still faster than standard HDDs.</p>
 </div>
 <div id="operating-systems-32-bit-or-64-bit" class="section level2">
 <h2><span class="header-section-number">3.4</span> Operating systems: 32-bit or 64-bit</h2>
-<p>When we suggest that you should just buy more RAM, this assumes that you are using a <span class="math">\(64\)</span>-bit operating system. A <span class="math">\(32\)</span>-bit machine can access at most only <span class="math">\(4\)</span>GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a <span class="math">\(32\)</span>-bit operating system, then R is limited to around <span class="math">\(3\)</span>GB RAM. If you are running a <span class="math">\(64\)</span>-bit operating system, but only a <span class="math">\(32\)</span>-bit version of R, then you have access to slightly more memory (but not much). Modern systems should run a <span class="math">\(64\)</span>-bit operating system, with a <span class="math">\(64\)</span>-bit version of R. Your memory limit is now measured as <span class="math">\(8\)</span> terabytes for Windows machines and <span class="math">\(128\)</span>TB for Unix-based OSs.</p>
+<p>When we suggest that you should just buy more RAM, this assumes that you are using a <span class="math inline">\(64\)</span>-bit operating system. A <span class="math inline">\(32\)</span>-bit machine can access at most only <span class="math inline">\(4\)</span>GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a <span class="math inline">\(32\)</span>-bit operating system, then R is limited to around <span class="math inline">\(3\)</span>GB RAM. If you are running a <span class="math inline">\(64\)</span>-bit operating system, but only a <span class="math inline">\(32\)</span>-bit version of R, then you have access to slightly more memory (but not much). Modern systems should run a <span class="math inline">\(64\)</span>-bit operating system, with a <span class="math inline">\(64\)</span>-bit version of R. Your memory limit is now measured as <span class="math inline">\(8\)</span> terabytes for Windows machines and <span class="math inline">\(128\)</span>TB for Unix-based OSs.</p>
 <p>To find precise details consult the R help pages <code>help(&quot;Memory-limits&quot;)</code> and <code>help(&quot;Memory&quot;)</code>.</p>
 <div id="exercises-7" class="section level3">
 <h3><span class="header-section-number">3.4.1</span> Exercises</h3>
 <p>These exercises aim to condense the previous section into the key points.</p>
 <ol style="list-style-type: decimal">
-<li>Are you using a <span class="math">\(32\)</span>-bit or <span class="math">\(64\)</span>-bit operating system?</li>
-<li>Are you using <span class="math">\(32\)</span>-bit or <span class="math">\(64\)</span>-bit version of R?</li>
+<li>Are you using a <span class="math inline">\(32\)</span>-bit or <span class="math inline">\(64\)</span>-bit operating system?</li>
+<li>Are you using <span class="math inline">\(32\)</span>-bit or <span class="math inline">\(64\)</span>-bit version of R?</li>
 <li>What are the results of running the command <code>memory.limit()</code>?</li>
 </ol>
 </div>
@@ -807,10 +841,10 @@ Mem:           15G       4.0G        11G </code></pre>
 <div id="central-processing-unit-cpu" class="section level2">
 <h2><span class="header-section-number">3.5</span> Central processing unit (CPU)</h2>
 <p>The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster our code will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure 3.3).</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-47-1.png" /><!-- --></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-47-1.png" alt="" /><!-- --></p>
 <p>Figure 3.3: CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed.</p>
 <p>Unfortunately we can’t simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package <code>benchmarkme</code> provides functions for benchmarking your system and contains data from previous benchmarks. Figure 3.4 shows the relative performance for eight different CPUs. All eight processors are Intel. The fastest processor in this benchmark study was the i7 CPU 870, which was released in 2009. In comparison, the Xeon Processor X3220, released in 2007, is over three times slower.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-48-1.png" /><!-- --></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-48-1.png" alt="" /><!-- --></p>
 <p>Figure 3.4: CPU benchmarks from the R package, <code>benchmarkme</code>. Each point represents an individual CPU result.</p>
 </div>
 <div id="cloud-computing" class="section level2">
@@ -883,15 +917,19 @@ mathjax. This is a dummy chapter.
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 <!--chapter:end:100-->
-<div class="references">
+<div id="refs" class="references">
+<div id="ref-eddelbuettel2010benchmarking">
 <p>Eddelbuettel, Dirk. 2010. “Benchmarking Single-and Multi-Core BLAS Implementations and GPUs for Use with R.” Mathematica.</p>
+</div>
+<div id="ref-sekhon2006art">
 <p>Sekhon, Jasjeet S. 2006. “The Art of Benchmarking: Evaluating the Performance of R on Linux and OS X.” <em>The Political Methodologist</em> 14 (1): 15–19.</p>
+</div>
 </div>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon 2006)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <code>benchmarkme</code> package also suggests that running code under the Linux OS is faster.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon <a href="#ref-sekhon2006art">2006</a>)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <code>benchmarkme</code> package also suggests that running code under the Linux OS is faster.<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>In the previous section we specified only a few packages to update.<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette(&quot;api-packages&quot;)</code></a> from the <code>httr</code> package for more on this.<a href="#fnref4">↩</a></p></li>
