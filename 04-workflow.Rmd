@@ -607,7 +607,7 @@ A quirk of R is that the grouping variable must be supplied as a list.
 Next we'll see a way of writing this that is neater.]
 
 ```{r}
-e_ems = aggregate(df$ECO2, list(df$Country), mean, na.rm = T)
+e_ems = aggregate(df$ECO2, list(df$Country), mean, na.rm  = TRUE)
 nrow(e_ems)
 ```
 
@@ -623,7 +623,7 @@ Another way to specify the `by` argument is with the tilde (`~`).
 The following command creates the same object as `e_ems`, but with less typing.
 
 ```{r}
-e_ems = aggregate(ECO2 ~ Country, df, mean, na.rm = T)
+e_ems = aggregate(ECO2 ~ Country, df, mean, na.rm  = TRUE)
 ```
 
 The final way to aggregate the dataset uses a totally different syntax, from the **dplyr** package.
@@ -632,7 +632,7 @@ Without worrying exactly how it works (this is described in the next section), t
 ```{r, message=FALSE}
 library(dplyr)
 group_by(df, Country) %>%
-  summarise(mean_eco2 =mean(ECO2, na.rm = T))
+  summarise(mean_eco2 =mean(ECO2, na.rm  = TRUE))
 ```
 
 ## Data processing {#dplyr}
@@ -735,7 +735,7 @@ idata[5:9] = apply(idata[5:9], 2,
 
 ```{r}
 countries = group_by(idata, Country)
-summarise(countries, gini = mean(gini, na.rm = T))
+summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
 Note that `summarise` is highly versatile, and can
@@ -745,14 +745,14 @@ be used to return a customised range of summary statistics:
 summarise(countries,
   # number of rows per country
   obs = n(), 
-  med_t10 = median(top10, na.rm = T),
+  med_t10 = median(top10, na.rm  = TRUE),
   # standard deviation
-  sdev = sd(gini, na.rm = T), 
+  sdev = sd(gini, na.rm  = TRUE), 
   # number with gini > 30
-  n30 = sum(gini > 30, na.rm = T), 
-  sdn30 = sd(gini[ gini > 30 ], na.rm = T),
+  n30 = sum(gini > 30, na.rm  = TRUE), 
+  sdn30 = sd(gini[ gini > 30 ], na.rm  = TRUE),
   # range
-  dif = max(gini, na.rm = T) - min(gini, na.rm = T)
+  dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
   )
 ```
 
@@ -789,7 +789,7 @@ logical step-by-step manner:
 idata %>% 
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
-  summarise(gini = mean(gini, na.rm = T)) %>%
+  summarise(gini = mean(gini, na.rm  = TRUE)) %>%
   arrange(desc(gini)) %>%
   top_n(n = 5)
 ```
@@ -815,7 +815,7 @@ top_n(
       group_by(
         filter(idata, grepl("g", Country)),
         Year),
-      gini = mean(gini, na.rm = T)),
+      gini = mean(gini, na.rm  = TRUE)),
     desc(gini)),
   n = 5)
 ```
