@@ -64,7 +64,7 @@ Breaking a large project into smaller chunks is highly recommended, making huge,
 
 ```{r phases, echo=FALSE, fig.height=3, fig.cap="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."}
 x = seq(0, 1, length.out=100)
-df <- rbind(
+df = rbind(
   data.frame(
     Phase = "Planning",
     Time = dbeta(x, 2, 6),
@@ -81,7 +81,7 @@ df <- rbind(
     x
   )
 )
-m <- ggplot(df, aes(x, Time)) + 
+m = ggplot(df, aes(x, Time)) + 
   geom_line(aes(color=Phase)) + xlab("Time")
 m + 
   theme(axis.text = element_blank(),
@@ -228,17 +228,17 @@ is a multi-table dataset on shipping records used with permission from the CWI D
 illustrating how R can be used to automate processes that are conventionally done by hand. The result is data stored in the `data` directory ready to be read-in (note the data is also provided in the efficient package).
 
 ```{r, eval=FALSE}
-url <- "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
+url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
 download.file(url, "voc_tsvs.zip") # download file
 unzip("voc_tsvs.zip", exdir = "data") # unzip files
-file.remove("voc_tsvs.zip") # tidy up by removing he zip file
+file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
 To avoid the file download stage, many functions for reading in data can accept urls and read directly from the internet. This is illustrated below for `read.csv()`:
 
 ```{r, eval=FALSE}
-url <- "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
-df <- read.csv(url)
+url = "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
+df = read.csv(url)
 ```
 
 There are now many R packages designed specifically to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
@@ -247,7 +247,7 @@ The example below illustrates this using the WDI package (not supported by ROpen
 ```{r, eval=FALSE}
 library("WDI") # load the WDI library (must be installed)
 WDIsearch("CO2") # search for data on a topic
-df <- WDI(indicator = "EN.CO2.TRAN.ZS" ) # import data
+df = WDI(indicator = "EN.CO2.TRAN.ZS" ) # import data
 ```
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
@@ -257,7 +257,7 @@ There will be situations where you cannot download the data directly or when the
 # download data from nasa, as described here:
 # http://disc.sci.gsfc.nasa.gov/recipes/?q=recipes/How-to-Read-Data-in-netCDF-Format-with-R
 library("raster") # requires the ncdf4 package to be installed
-r <- raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
+r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
 
 ### Fast data reading
@@ -271,14 +271,14 @@ Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains
 For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.csv`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
 ```{r, eval=FALSE, echo=FALSE}
-rows <- 10^(seq(3,7, length.out = 20))
-cols <- 2 * 10^(0:2)
-res <- NULL
+rows = 10^(seq(3,7, length.out = 20))
+cols = 2 * 10^(0:2)
+res = NULL
 for(i in seq_along(rows)) {
   for(j in seq_along(cols)) {
     no_of_rows = floor(rows[i]/(10^(j-1)))
     m = matrix(runif(no_of_rows * cols[j]), nrow = no_of_rows, ncol = cols[j])
-    fname <- tempfile()
+    fname = tempfile()
     write.csv(m, file = fname, row.names = FALSE)
     mb = microbenchmark(times = 10,
                         base_default = read.csv(fname),
@@ -295,18 +295,18 @@ for(i in seq_along(rows)) {
     res_tmp = data.frame(exp = names(tab),
                          time = as.vector(tab), rows = no_of_rows,
                          cols = cols[j], MB = file.size(fname) / 1000000)
-    res <- rbind(res, res_tmp)
+    res = rbind(res, res_tmp)
   }
   message(i)
 }
 
 # Plot the result
-res$cells <- res$rows * res$cols
-res$Time <- NA
+res$cells = res$rows * res$cols
+res$Time = NA
 head(res)
 for(i in res$cells){
-  sel <- res$cells == i
-  res$Time[sel] <- res$time[sel] / min(res$time[sel])
+  sel = res$cells == i
+  res$Time[sel] = res$time[sel] / min(res$time[sel])
 }
 i
 res$type = c("std", "std", "type", "type", "std", "type")
@@ -316,7 +316,7 @@ saveRDS(res, "data/res.Rds")
 ```
 
 ```{r readr-vs-base, fig.cap="Benchmarks of base vs data.table vs readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE}
-res <- readRDS("data/res.Rds")
+res = readRDS("data/res.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) + facet_wrap(~ facet_cols) +
   scale_x_log10() + 
@@ -329,7 +329,7 @@ When tested on a large (4 GB) .csv file it was found that `fread` and `read_csv`
 ```{r, eval=FALSE, echo=FALSE}
 # This script illustrates the download and processing of a massive (~4 Gb) csv file
 # Aim is to test read times on large datasets
-url <- "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
+url = "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
 
 # download a large dataset - don't run
 download.file(url, "data/largefile.zip")
@@ -340,13 +340,13 @@ system.time(
 ##    user  system elapsed 
 ##  34.380  22.428 193.145
 
-bigfile <- "data/npidata_20050523-20150809.csv"
+bigfile = "data/npidata_20050523-20150809.csv"
 file.info(bigfile) # file info (not all shown)
 ##       size: 5647444347
 
-system.time(df1 <- read.csv(bigfile))
-system.time(df2 <- fread(bigfile))
-system.time(df3 <- read_csv(bigfile))
+system.time(df1 = read.csv(bigfile))
+system.time(df2 = fread(bigfile))
+system.time(df3 = read_csv(bigfile))
 ## Error (from 32 bit machine): cannot allocate vector of 32.0 Mb
 ```
 
@@ -357,7 +357,7 @@ It is important to be aware that in many cases a compromise must be struck betwe
 
 ```{r, warning=FALSE}
 library("readr")
-fname <- system.file("extdata/voc_voyages.tsv", package = "efficient")
+fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 microbenchmark(times = 10,
   base_read = df3 <- read.csv(fname, sep = "\t"),
   readr_read = df4 <- read_tsv(fname))
@@ -377,10 +377,10 @@ df4$built[2841] # an NA: text cannot be converted to numeric
 
 ```{r, eval=FALSE, tidy=FALSE, echo=FALSE}
 # I've removed this for now as it's such a large and unwieldy dataset
-url <- "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
+url = "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
 download.file(url, "largefile.zip") # takes many minutes
 unzip("largefile.zip", exdir = "data") # many minutes
-bigfile <- "npidata_20050523-20150809.csv"
+bigfile = "npidata_20050523-20150809.csv"
 file.info(bigfile) # file info (4 GB+)
 # split -b1000m npidata_20050523-20150809.csv # original command commented out
 ```
@@ -447,8 +447,8 @@ unzip("v59i10-data.zip", exdir = "data/reshape/")
 
 ```{r tpew, echo=FALSE}
 # generate pew dataset
-raw <- read_csv("data/reshape-pew.csv")
-raw <- raw[-c(1,ncol(raw))] # remove excess cols
+raw = read_csv("data/reshape-pew.csv")
+raw = raw[-c(1,ncol(raw))] # remove excess cols
 names(raw) <- c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k", "$40--50k",
 "$50--75k", "$75--100k", "$100--150k", ">150k")
 # write_csv(raw, "data/pew.csv")
@@ -457,7 +457,7 @@ knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' datas
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-rawt <- gather(raw, Income, Count, -religion)
+rawt = gather(raw, Income, Count, -religion)
 rawt$Count <- as.character(rawt$Count)
 rawt$Income <- as.character(rawt$Income)
 rawtp <- rawt[c(1:3, nrow(rawt)),]
@@ -503,7 +503,7 @@ This is because `read_csv` uses the `tbl` class from the **dplyr** package (desc
 ]
 
 ```{r}
-raw <- read_csv("data/pew.csv") # read in the 'wide' dataset
+raw = read_csv("data/pew.csv") # read in the 'wide' dataset
 dim(raw)
 rawt <- gather(raw, Income, Count, -religion)
 dim(rawt)
@@ -513,9 +513,9 @@ rawt[1:3,]
 - Splitting compound variables in two. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with `separate`, as illustrated in the difference between Table \@ref(tab:to-separate) and \@ref(tab:separated):
 
 ```{r}
-agesex <- c("m0-10", "f0-10") # create compound variable
+agesex = c("m0-10", "f0-10") # create compound variable
 n <- c(3, 5) # create a value for each observation
-df <- data.frame(agesex, n) # create a data frame
+df = data.frame(agesex, n) # create a data frame
 separate(df, agesex, c("sex", "age"), 1)
 ```
 
@@ -542,8 +542,8 @@ Imagine that the tiny subset of the 'NPI' data, created using Unix tools in [Cha
 We are running a machine of the future, is powerful enough to load the data in a fraction of a second, not the 15 minutes that it took a desktop in 2015.
 
 ```{r}
-fname <- system.file("extdata/miniaa", package = "efficient")
-df <- read_csv(fname) # load imaginary large data
+fname = system.file("extdata/miniaa", package = "efficient")
+df = read_csv(fname) # load imaginary large data
 dim(df)
 ```
 
@@ -567,9 +567,9 @@ To clean the giant dataset, removing the empty columns, we need to identify whic
 
 ```{r}
 # Identify the variable which are all NA
-all_na <- sapply(df, function(x) all(is.na(x)))
+all_na = sapply(df, function(x) all(is.na(x)))
 summary(all_na) # summary of the results
-df <- df[!all_na] # subset the dataframe
+df = df[!all_na] # subset the dataframe
 ```
 
 The new `df` object has fewer than a third of the original columns.
@@ -589,8 +589,8 @@ Because aggregation is a way of condensing datasets it can be a very useful tech
 The following code finds the average emissions per country (country being the grouping variable) from the 'GHG' dataset rescued from a spreadsheet and converted into a .csv file in the previous chapter.
 
 ```{r, warning=FALSE}
-fname <- system.file("extdata/ghg-ems.csv", package = "efficient")
-df <- read.csv(fname)
+fname = system.file("extdata/ghg-ems.csv", package = "efficient")
+df = read.csv(fname)
 names(df)
 nrow(df)
 length(unique(df$Country))
@@ -599,7 +599,7 @@ length(unique(df$Country))
 > **Challenge:** rename the variables 4 to 8 so they are much shorter, following the pattern `ECO2`, `MCO2` etc. That will make the code for manipulating the dataset easier to write
 
 ```{r, echo=FALSE}
-names(df)[4:8] <- c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
+names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
 ```
 
 After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
@@ -607,7 +607,7 @@ A quirk of R is that the grouping variable must be supplied as a list.
 Next we'll see a way of writing this that is neater.]
 
 ```{r}
-e_ems <- aggregate(df$ECO2, list(df$Country), mean, na.rm = T)
+e_ems = aggregate(df$ECO2, list(df$Country), mean, na.rm = T)
 nrow(e_ems)
 ```
 
@@ -623,7 +623,7 @@ Another way to specify the `by` argument is with the tilde (`~`).
 The following command creates the same object as `e_ems`, but with less typing.
 
 ```{r}
-e_ems <- aggregate(ECO2 ~ Country, df, mean, na.rm = T)
+e_ems = aggregate(ECO2 ~ Country, df, mean, na.rm = T)
 ```
 
 The final way to aggregate the dataset uses a totally different syntax, from the **dplyr** package.
@@ -651,8 +651,8 @@ objects a useful glimpse of the dataset, rather than the whole thing.]
 
 ```{r, message=FALSE, results='hide'}
 library(readr)
-fname <- system.file("extdata/world-bank-ineq.csv", package = "efficient")
-idata <- read_csv(fname)
+fname = system.file("extdata/world-bank-ineq.csv", package = "efficient")
+idata = read_csv(fname)
 idata # print the dataset in the dplyr way
 ```
 
@@ -676,19 +676,19 @@ Note also the syntax:
 `rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
 
 ```{r}
-idata <- rename(idata, Country = `Country Name`)
+idata = rename(idata, Country = `Country Name`)
 ```
 
 The standard way to subset data by rows in R is with square brackets, for example:
 
 ```{r}
-aus1 <- idata[idata$Country == "Australia",]
+aus1 = idata[idata$Country == "Australia",]
 ```
 
 **dplyr** offers an alternative and more flexible way of filtering data, using `filter()`.
 
 ```{r}
-aus2 <- filter(idata, Country == "Australia")
+aus2 = filter(idata, Country == "Australia")
 ```
 
 Note that we did not need to use the `$` to tell R
@@ -718,7 +718,7 @@ We can re-assign the classes of the numeric variables
 one-by one:
 
 ```{r}
-idata$gini <- as.numeric(as.character(idata$gini))
+idata$gini = as.numeric(as.character(idata$gini))
 mean(idata$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
@@ -729,12 +729,12 @@ the `apply` function (we'll seem more of `apply`'s relatives
 later):
 
 ```{r, warning=FALSE}
-idata[5:9] <- apply(idata[5:9], 2,
+idata[5:9] = apply(idata[5:9], 2,
   function(x) as.numeric(as.character(x)))
 ```
 
 ```{r}
-countries <- group_by(idata, Country)
+countries = group_by(idata, Country)
 summarise(countries, gini = mean(gini, na.rm = T))
 ```
 
