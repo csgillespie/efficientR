@@ -55,8 +55,9 @@ Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing 
 
 Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is directly related to the size of data sets that it can process. As the amount of RAM your machine has increases, the size of datasets you can analyse also increases, so it is important to have sufficient RAM for your work.
 
-![Two $8$GB RAM cards. Credit: https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg
-](figures/ram.jpg)
+```{r 3-1, fig.cap="Two $8$GB RAM cards. Credit: https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg", echo=FALSE}
+knitr::include_graphics("figures/ram.jpg")
+```
 
 Even if the original data set is relatively small, the analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
@@ -120,10 +121,11 @@ The following two exercises aim to help you determine if it is worthwhile upgrad
 
 ## Hard drives: HDD vs SSD
 
-Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure 3.2. The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either $5400$RPM (Revolutions per Minute) or $7200$RPM. The major advantage of HDDs is that they are cheap, making a $1$TB laptop standard.
+Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure \@ref(fig:3-2). The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either $5400$RPM (Revolutions per Minute) or $7200$RPM. The major advantage of HDDs is that they are cheap, making a $1$TB laptop standard.
 
-![A standard 2.5" hard drive, found in most laptops. Credit: https://en.wikipedia.org/wiki/Hard_disk_drive
-](figures/627px-Laptop-hard-drive-exposed.jpg)
+```{r 3-2, fig.cap='A standard 2.5" hard drive, found in most laptops. Credit: https://en.wikipedia.org/wiki/Hard_disk_drive', echo=FALSE}
+knitr::include_graphics("figures/627px-Laptop-hard-drive-exposed.jpg")
+```
 
 Solid state drives (SSDs) can be thought of as large, but more sophisticated versions of USB sticks. They have no moving parts and information is stored in microchips. Since there are no moving parts, reading/writing is much quicker. SSDs have other benefits: they are quieter, allow faster boot time (no 'spin up' time) and require less power (more battery life).
 
@@ -147,9 +149,9 @@ These exercises aim to condense the previous section into the key points.
 
 ## Central processing unit (CPU)
 
-The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster our code will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure 3.3).
+The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster our code will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:3-3)).
 
-```{r echo=FALSE, fig.width=4, fig.height=4} 
+```{r 3-3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed."} 
 library("ggplot2")
 #data("clock_speed", package="efficient")
 clock_speed = readRDS("data/clock_speed.RData")
@@ -161,17 +163,12 @@ ggplot(clock_speed, aes(Year, MIPS)) +
   theme_bw() + ylab("CPU clock speed (GHz)")
 ```
 
-Figure 3.3: CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to 
-indicate general trends in CPU speed.
+Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package `benchmarkme` provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref{fig:3-4} shows the relative performance for eight different CPUs. All eight processors are Intel. The fastest processor in this benchmark study was the i7 CPU 870, which was released in 2009. In comparison, the Xeon Processor X3220, released in 2007, is over three times slower.
 
-Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package `benchmarkme` provides functions for benchmarking your system and contains data from previous benchmarks. Figure 3.4 shows the relative performance for eight different CPUs. All eight processors are Intel. The fastest processor in this benchmark study was the i7 CPU 870, which was released in 2009. In comparison, the Xeon Processor X3220, released in 2007, is over three times slower.
-
-```{r echo=FALSE, fig.width=8, fig.height=4}
+```{r 3-4, echo=FALSE, fig.width=8, fig.height=4, fig.cap="CPU benchmarks from the R package, `benchmarkme`. Each point represents an individual CPU result."}
 library("benchmarkme")
 plot_past()
 ```
-
-Figure 3.4: CPU benchmarks from the R package, `benchmarkme`. Each point represents an individual CPU result.
 
 ## Cloud computing
 
