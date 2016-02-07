@@ -247,9 +247,9 @@ image.dist = function(x, ...) {
 }
 ```
 
-The `...` argument allows us to pass arguments to the main image method, such as `axes`:
+The `...` argument allows us to pass arguments to the main image method, such as `axes` (see figure \@ref(fig:6_1).
 
-```{r echo=2}
+```{r fig:6_1, fig.cap="S3 image method for data of class `dist`.", echo=2}
 par(mar=c(1,1,2,1), mgp=c(0,0,0))
 image(dist(USArrests), axes=FALSE)
 ```
@@ -521,7 +521,7 @@ This of course can be done simply with
 ans = x[x < 0]
 ```
 
-```{r echo=FALSE,fig.width=4, fig.height=4}
+```{r fig:6_2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=4, fig.height=4}
 set.seed(1)
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
     cex.axis=0.9, las=1)
@@ -533,7 +533,6 @@ points(px[py < px^2], py[py < px^2], pch=19, col=1)
 points(px[py > px^2], py[py > px^2], pch=19, col=2)
 ```
 
-Figure 6.2 Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
 
 #### Example: Monte-Carlo integration
 
@@ -543,7 +542,7 @@ example, suppose we wish to estimate
 \int_0^1 x^2 dx
 \]
 using a basic Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts
-that fall below the curve (as in figure 6.2).
+that fall below the curve (as in \@ref(fig:6_2)).
 
 _Monte Carlo Integration_
 
@@ -616,9 +615,9 @@ This function, amongst other things, specifies the number of processors to use.
 
 ### Example: parallel bootstraping
 
-In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore's law. A scatter plot (figure 6.3) of processors over the last thirty years shows that that this law seems to hold
+In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore's law. A scatter plot (figure \@ref(fig:6_3)) of processors over the last thirty years shows that that this law seems to hold.
 
-```{r echo=FALSE, fig.width=4, fig.height=4, fig.cap="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"}
+```{r fig:6_3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"}
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01, cex.axis=0.9, las=1)
 data("transistors", package="efficient")
 plot(transistors$Year, log2(transistors$Count), 
@@ -627,8 +626,6 @@ plot(transistors$Year, log2(transistors$Count),
      panel.first=grid(), pch=21, bg=3)
 abline((lm(log2(Count) ~ Year, data=transistors)), col=4, lty=3, lwd=2)
 ```
-
-Figure 6.3: Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count
 
 We can estimate the trend using simple linear regression. A standard algorithm for obtaining uncertainty estimates on regression coefficients is bootstrapping. This is a simple algorithm; at each iteration we sample with replacement from the original data set and estimate the parameters of the new data set. The distribution of the parameters gives us our uncertainty estimate. We begin by loading the data set and creating a function for performing a single bootstrap
 
@@ -722,14 +719,11 @@ benchmark(my_mean(x), cmp_mean(x), mean(x),
           order="relative", replications=5000)
 ```
 
-The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference.
+The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference (figure \@ref(fig:6_4)).
 
-```{r echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
+```{r fig:6_4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
 dd = readRDS(file="data/mean_comparison.RData")
 library("ggplot2")
-
-
-
 g = ggplot(dd, aes(p, relative)) + 
   geom_line(aes(colour=test), lwd=1) + 
   theme_bw() + 
@@ -744,7 +738,6 @@ g + annotate("text", x=1000, y=90, label="Pure R", col=colours[3], size=3) +
   annotate("text", x=8000, y=10, label="mean", col=colours[2], size=3)
 ```
 
-Figure 6.4: Comparison of mean functions.
 
 ### Compiling code
 
