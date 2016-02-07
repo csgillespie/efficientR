@@ -280,16 +280,17 @@ for(i in seq_along(rows)) {
     m = matrix(runif(no_of_rows * cols[j]), nrow = no_of_rows, ncol = cols[j])
     fname <- tempfile()
     write.csv(m, file = fname, row.names = FALSE)
-    mb = microbenchmark(times = 1,
-                base_default = read.csv(fname),
-                readr_default = read_csv(fname), 
-                base_numeric = read.csv(fname, colClasses = rep("numeric", cols[j])), 
-                readr_double = read_csv(fname, col_types = 
-                                          paste(replicate(cols[j], "d"), collapse = "")),
-                fread_default = fread(fname),
-                fread_numeric = fread(fname, colClasses = rep("numeric", cols[j]))
-                )
-
+    mb = microbenchmark(times = 10,
+                        base_default = read.csv(fname),
+                        readr_default = read_csv(fname), 
+                        base_numeric = read.csv(fname, colClasses = rep("numeric", cols[j])), 
+                        readr_double = read_csv(fname, col_types = 
+                                                  paste(replicate(cols[j], "d"), collapse = "")),
+                        fread_default = fread(fname),
+                        fread_numeric = fread(fname, colClasses = rep("numeric", cols[j]))
+    )
+    unlink(fname)
+    
     tab = tapply(mb$time/1000, mb$expr, mean)
     res_tmp = data.frame(exp = names(tab),
                          time = as.vector(tab), rows = no_of_rows,
@@ -308,6 +309,7 @@ for(i in res$cells){
   res$Time[sel] <- res$time[sel] / min(res$time[sel])
 }
 i
+res$type = c("std", "std", "type", "type", "std", "type")
 library(ggplot2)
 res$facet_cols = paste("No of columns:", res$cols)
 saveRDS(res, "data/res.Rds")
