@@ -22,24 +22,29 @@ link-citations: yes
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
+```{r 1_setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
 
 ![](figures/front_scale.png)
 
 The text and code for the forthcoming O'Reilly book: [Efficient R programming](https://csgillespie.github.io/efficientR/). Pull requests and general comments are welcome.
 
-__Dependencies for this book__
+## Dependencies for this book
 
-To build this book on your own system, you will need to install the following packages.
+To build this book on your own system, you will need to install the following packages from CRAN:
 
-```{r eval=FALSE}
-pkgs = c("dplyr", "readxl",
-  "readr", "grid", "png",
-  "rbenchmark", "microbenchmark",
-  "fortunes", "pryr", "ggplot2")
-
-to_install = pkgs[!pkgs %in% installed.packages()]
-if(length(to_install))
-  install.packages(to_install)
+```{r echo=FALSE}
+desc = read.dcf("DESCRIPTION")
+headings = dimnames(desc)[[2]]
+fields = which(headings %in% c("Depends", "Imports", "Suggests"))
+pkgs = paste(desc[fields], collapse = ", ")
+pkgs = gsub("\n", " ", pkgs)
+pkgs = strsplit(pkgs, ",")[[1]]
+gsub(" ", "", pkgs)
 ```
 
 GitHub packages to install.
@@ -52,7 +57,10 @@ devtools::install_github(gh_pkgs)
 Then run the command
 
 ```{r eval=FALSE}
-bookdown::render_book("index.Rmd",  bookdown::html_chapters())
+## For html
+bookdown::render_book(output_format = bookdown::html_chapters())
+## For pdf
+bookdown::render_book(output_format = bookdown::pdf_book())
 ```
 
 
