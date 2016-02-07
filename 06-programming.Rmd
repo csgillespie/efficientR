@@ -247,9 +247,9 @@ image.dist = function(x, ...) {
 }
 ```
 
-The `...` argument allows us to pass arguments to the main image method, such as `axes` (see figure \@ref(fig:6_1).
+The `...` argument allows us to pass arguments to the main image method, such as `axes` (see figure \@ref(fig:6-1).
 
-```{r fig:6_1, fig.cap="S3 image method for data of class `dist`.", echo=2}
+```{r 6-1, fig.cap="S3 image method for data of class `dist`.", echo=FALSE, fig.asp=0.7, fig.width=5,fig.align="center"}
 par(mar=c(1,1,2,1), mgp=c(0,0,0))
 image(dist(USArrests), axes=FALSE)
 ```
@@ -359,7 +359,7 @@ A straightforward method for speeding up code is to calculate objects once and r
 A more advanced form of caching is use the `memoise` package.
 If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The `memoise` package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the `memoise` function.
 
-```{r ch6_load_memoise, echo=FALSE, message=FALSE}
+```{r ch6-load_memoise, echo=FALSE, message=FALSE}
 library("memoise")
 library("rbenchmark")
 ```
@@ -521,7 +521,7 @@ This of course can be done simply with
 ans = x[x < 0]
 ```
 
-```{r fig:6_2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=4, fig.height=4}
+```{r 6-2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=4, fig.height=4, fig.align="center"}
 set.seed(1)
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
     cex.axis=0.9, las=1)
@@ -542,7 +542,7 @@ example, suppose we wish to estimate
 \int_0^1 x^2 dx
 \]
 using a basic Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts
-that fall below the curve (as in \@ref(fig:6_2)).
+that fall below the curve (as in \@ref(fig:6-2)).
 
 _Monte Carlo Integration_
 
@@ -615,9 +615,9 @@ This function, amongst other things, specifies the number of processors to use.
 
 ### Example: parallel bootstraping
 
-In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore's law. A scatter plot (figure \@ref(fig:6_3)) of processors over the last thirty years shows that that this law seems to hold.
+In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore's law. A scatter plot (figure \@ref(fig:6-3)) of processors over the last thirty years shows that that this law seems to hold.
 
-```{r fig:6_3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"}
+```{r 6-3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"}
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01, cex.axis=0.9, las=1)
 data("transistors", package="efficient")
 plot(transistors$Year, log2(transistors$Count), 
@@ -719,9 +719,9 @@ benchmark(my_mean(x), cmp_mean(x), mean(x),
           order="relative", replications=5000)
 ```
 
-The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference (figure \@ref(fig:6_4)).
+The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference (figure \@ref(fig:6-4)).
 
-```{r fig:6_4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
+```{r 6-4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
 dd = readRDS(file="data/mean_comparison.RData")
 library("ggplot2")
 g = ggplot(dd, aes(p, relative)) + 
