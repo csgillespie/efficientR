@@ -11,7 +11,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-02-07" />
+<meta name="date" content="2016-02-09" />
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
@@ -69,6 +69,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </style>
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -95,14 +96,14 @@ img {
 <div id="header">
 <h1 class="title">Efficient R programming</h1>
 <h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-07</em></h4>
+<h4 class="date"><em>2016-02-09</em></h4>
 </div>
 <!--bookdown:title:end-->
 
 <!--bookdown:toc:start-->
 <div id="TOC">
 <ul>
-<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a><ul>
+<li><a href="#building-the-book"><span class="toc-section-number">1</span> Building the book</a><ul>
 <li><a href="#dependencies-for-this-book"><span class="toc-section-number">1.1</span> Dependencies for this book</a></li>
 </ul></li>
 <li><a href="#efficient-set-up"><span class="toc-section-number">2</span> Efficient set-up</a><ul>
@@ -215,8 +216,8 @@ img {
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-<div id="overview" class="section level1">
-<h1><span class="header-section-number">1</span> Overview</h1>
+<div id="building-the-book" class="section level1">
+<h1><span class="header-section-number">1</span> Building the book</h1>
 <p><img src="figures/full.png" title="" alt="" width="33%" /></p>
 <p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p>
 <div id="dependencies-for-this-book" class="section level2">
@@ -273,12 +274,13 @@ TODO: Reinstate with correct numbers.
 <p>Minor differences aside,<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> R’s computational efficiency is the same across different operating systems. This is important as it means the techniques will, in general, work equally well on different OSs. Beyond the <span class="math inline">\(32\)</span> vs <span class="math inline">\(64\)</span> bit issue (covered in the next chapter) and <em>process forking</em> (covered in Chapter 6) the main issue for many will be user friendliness and compatibility other programs used alongside R for work. Changing operating system can be a time consuming process so our advice is usually to stick to whatever OS you are most comfortable with.</p>
 <p>Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using <code>install.packages</code>) on Linux systems. On Debian-based operating systems such as Ubuntu, these are named with the prefix <code>r-cran-</code> (see <a href="#deps">Section 2.4</a>).</p>
 <p>Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming tasks. Alongside R profiling functions such as <code>profvis</code> (see Section <strong>XXX</strong>), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.</p>
-<p>A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter 3). System monitors also report the percentage of CPU resource allocated over time. On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter 6 on parallel programming). Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure 2-1).</p>
+<p>A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter 3). System monitors also report the percentage of CPU resource allocated over time. On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter 6 on parallel programming). Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure @ref{2-1}).</p>
 <div class="figure">
-<img src="figures/sysmon.png" alt="" />
-
+<img src="figures/sysmon.png" alt="(\#fig:2-1)Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded."  />
+<p class="caption">
+(#fig:2-1)Output from a system monitor (<code>gnome-system-monitor</code> running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.
+</p>
 </div>
-<p>Figure 2-1. Output from a system monitor (<code>gnome-system-monitor</code> running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.</p>
 <p>System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring all major operating systems.</p>
 <ul>
 <li>On Linux, the shell command <code>top</code> displays key resource use figures for most distributions. <code>htop</code> and Gnome’s <strong>System Monitor</strong> (<code>gnome-system-monitor</code>, see Figure 2-1) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as <code>nethogs</code> monitor internet usage.</li>
@@ -556,14 +558,13 @@ R_LIBS=C:/R/library</code></pre>
               <span class="st">&quot;data/pop_change.csv&quot;</span>)</code></pre></div></li>
 <li><p>Write and execute a command to read-in the data, such as</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</code></pre></div></li>
-<li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure 2-3).</p></li>
-</ol>
+<li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure 2-3).</p>
 <div class="figure">
-<img src="figures/View.png" alt="Data Viewer" />
-<p class="caption">Data Viewer</p>
-</div>
-<p>Figure 2-3. The data viewing tab in RStudio.</p>
-<ol start="5" style="list-style-type: decimal">
+<img src="figures/View.png" alt="(\#fig:2-3)The data viewing tab in RStudio."  />
+<p class="caption">
+(#fig:2-3)The data viewing tab in RStudio.
+</p>
+</div></li>
 <li><p>Use the <strong>Console</strong> to test different plot commands to visualise the data, saving the code you want to keep back into the <strong>Source pane</strong>, as <code>pop_change.R</code>.</p></li>
 <li><p>Use the <strong>Plots tab</strong> in the Files pane to scroll through past plots. Save the best using the Export dropdown button.</p></li>
 </ol>
@@ -830,7 +831,7 @@ benchmarkme::get_linear_algebra()
 <li>In the <code>System</code> section, you can see the amount of RAM your computer has next to the <code>Installed memory (RAM)</code> section. Windows reports how much RAM it can use, not the amount installed. This is only an issue if you are using a 32-bit version of Windows.</li>
 </ol>
 <p>In Mac, click the Apple menu. Select <code>About This Mac</code> and a window appears with the relevant information.</p>
-<p>On almost all Unix-based OSs, you can find out how much RAM you have using the code <code>vmstat</code>, whilst on all Linux distributions, you can use the command <code>free</code>. Using this in conjuction with the <code>-h</code> tag will provide the answer in human readable format, as illustrated below for a 16 Gb machine:</p>
+<p>On almost all Unix-based OSs, you can find out how much RAM you have using the code <code>vmstat</code>, whilst on all Linux distributions, you can use the command <code>free</code>. Using this in conjunction with the <code>-h</code> tag will provide the answer in human readable format, as illustrated below for a 16 GB machine:</p>
 <pre><code>$ free -h
              total       used       free     
 Mem:           15G       4.0G        11G </code></pre>
@@ -1035,9 +1036,9 @@ fname =<span class="st"> </span><span class="kw">system.file</span>(<span class=
   <span class="dt">base_read =</span> df3 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(fname, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>),
   <span class="dt">readr_read =</span> df4 &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(fname))</code></pre></div>
 <pre><code>## Unit: milliseconds
-##        expr       min        lq      mean    median        uq       max
-##   base_read 124.86033 126.44827 164.75410 128.30822 250.37506 252.96465
-##  readr_read  44.32102  44.73187  46.99977  45.58577  50.16101  51.82171
+##        expr       min        lq      mean    median        uq      max
+##   base_read 118.18186 122.77024 140.62772 126.54047 133.65665 257.7078
+##  readr_read  44.28813  45.42117  59.42825  47.93329  49.75758 168.3559
 ##  neval
 ##     10
 ##     10</code></pre>
@@ -1464,7 +1465,7 @@ src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 <p>We begin this chapter by discussing key data types, how they are used and potential computational gains available. Once we understand these objects, we will look at key R programming idioms, before covering techniques for speeding up code.</p>
 <div id="data-types" class="section level2">
 <h2><span class="header-section-number">6.1</span> Data types</h2>
-<p>A data type is an object that has a set of predifined characteristics, such as a number or a character. When programming in C or FORTRAN, the data type of every object must be specified by the user. he advantage is that it allows the compiler to perform type-specific optimisation. The downside is verbose and fragile code, which is inefficient to type. In R data types are less critical, but understanding them will help you debug and optimize for computational efficiency. Essentially, we have a trade-off between CPU run time and developer thinking time. However an understanding of data types can help when debugging and optimizing for computational efficiency. In this chapter, we will pick out the key point data types from an efficiency perspective. Chapter 2 of Advanced R Programming <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a more comprehensive treatment.</p>
+<p>A data type is an object that has a set of predefined characteristics, such as a number or a character. When programming in C or FORTRAN, the data type of every object must be specified by the user. he advantage is that it allows the compiler to perform type-specific optimisation. The downside is verbose and fragile code, which is inefficient to type. In R data types are less critical, but understanding them will help you debug and optimize for computational efficiency. Essentially, we have a trade-off between CPU run time and developer thinking time. However an understanding of data types can help when debugging and optimizing for computational efficiency. In this chapter, we will pick out the key point data types from an efficiency perspective. Chapter 2 of Advanced R Programming <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a more comprehensive treatment.</p>
 <div id="vectors" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> Vectors</h3>
 <p>The vector is a fundamental data structure in R. Confusingly there are two varieties:</p>
@@ -1608,8 +1609,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
 <pre><code>##          test elapsed relative
-## 2  ex_df[1, ]   5.826  126.652
-## 1 ex_mat[1, ]   0.046    1.000</code></pre>
+## 2  ex_df[1, ]   5.858  112.654
+## 1 ex_mat[1, ]   0.052    1.000</code></pre>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
@@ -1621,7 +1622,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
 <pre><code>## function (object, ...) 
 ## UseMethod(&quot;summary&quot;)
-## &lt;bytecode: 0x50423e8&gt;
+## &lt;bytecode: 0x754bf48&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
@@ -1630,7 +1631,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;image&quot;)
-## &lt;bytecode: 0x6e2d1b0&gt;
+## &lt;bytecode: 0x68a9138&gt;
 ## &lt;environment: namespace:graphics&gt;</code></pre>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
@@ -1703,8 +1704,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
 <pre><code>##         test elapsed
-## 1 method1(n)   1.218
-## 2 method2(n)   0.078
+## 1 method1(n)   1.257
+## 2 method2(n)   0.074
 ## 3 method3(n)   0.000</code></pre>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
@@ -1761,7 +1762,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 </div>
 <div id="function-closures" class="section level3">
 <h3><span class="header-section-number">6.2.3</span> Function closures</h3>
-<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technicially all functions in R have this property, but we use the term function closure to denote functions where the environment is not <code>.GlobalEnv</code>. One of the environments associated with function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using the <code>environment</code> function</p>
+<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not <code>.GlobalEnv</code>. One of the environments associated with function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using the <code>environment</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)</code></pre></div>
 <pre><code>## &lt;environment: R_GlobalEnv&gt;</code></pre>
 <p>The <code>plot_mpg</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
@@ -1774,7 +1775,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)</code></pre></div>
-<pre><code>## &lt;environment: 0x8556ed8&gt;</code></pre>
+<pre><code>## &lt;environment: 0x923dd18&gt;</code></pre>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()</code></pre></div>
@@ -1882,7 +1883,7 @@ f =<span class="st"> </span>function(N){
 <p>In R this takes a few seconds:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   1.746   0.000   1.747</code></pre>
+##   1.838   0.000   1.838</code></pre>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
@@ -1891,7 +1892,7 @@ f =<span class="st"> </span>function(N){
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.036   0.000   0.035</code></pre>
+##   0.033   0.000   0.033</code></pre>
 </div>
 </div>
 </div>
@@ -1949,7 +1950,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;mean&quot;)
-## &lt;bytecode: 0x6f36fa0&gt;
+## &lt;bytecode: 0x6ed6290&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <code>compiler</code> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
 <p>The <code>compiler</code> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
