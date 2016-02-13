@@ -417,9 +417,9 @@ A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGu
 
 ## Tidying data with tidyr
 
-A key skill in data analysis is understanding the 'shape' of datasets and being able to 'reshape' them. This is also important from a programming efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. In some projects the analysis and modelling phases seem like the easy part! This section is motivated by this observation.
+A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. Converting data into a 'tidy' form (described below) is also advantageous from a computational efficiency perspective: it usually faster to run analysis and plotting commands on a few large vectors than many short vectors.
 
-An example of the various shapes that the same datasets can assume is provided by @Wickham_2014 and illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt).
+This is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014.
 
 ```{r, echo=FALSE, eval=FALSE}
 # Download data from its original source - an academic paper
@@ -459,8 +459,8 @@ rawtp <- insertRow(existingDF = rawtp, newrow = rep("...", 3), r = 4)
 knitr::kable(rawtp, caption = "First 3 and last rows of the 'tidied' Pew dataset.")
 ```
 
-These tables may look very different, but they contain precisely the same data.
-They have been reshaped, such that column names in the 'flat' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
+These tables may look different, but they contain precisely the same information
+Column names in the 'flat' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
 Note that 'correct' here is used in the context of data analysis and graphical visualisation.
 For tabular presentation (i.e. tables) the 'wide' or 'untidy' form may be better.
@@ -472,14 +472,9 @@ Tidy data has the following characteristics [@Wickham_2014]:
 3. Each type of observational unit forms a table.
 
 Because there is only one observational unit in the example (religions), it can be described in a single table.
-Large and complex datasets are usually represented by multiple tables, with unique identifiers or 'keys' to join them together [@Codd1979].
-Being able to manipulate your data into a tidy and relational form is important for Big Data work because this form minimises data duplication and facilitates fast
-code.^[Because
-R is a vectorised language, it adept at handling long 1 dimensional vectors but less so at handling many interrelated
-columns.]
-Due to the importance of tidying data, an entire package, aptly named tidyr has been developed for the purpose.
-Two common operations needed to tidy datasets are reshaping and splitting.
-Each of these has its own tidyr function:
+Large and complex datasets are usually represented by multiple tables, with unique identifiers or 'keys' to join them together [@Codd1979]. 
+
+Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns, as illustrated below.
 
 - 'Wide' tables can become 'long', so that column names become a new variable. This is illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and can be achieved with the function
 `gather`:^[Note
@@ -515,9 +510,8 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the funtion `separate`.")
 ```
 
-Note there are other tidying operations that tidyr can performed in addition to the two described in this section.
-These are described in the `tidy-data` vignette, which can be called by entering `vignette("tidy-data")` once the package has been installed.
-Moreover, data manipulation and cleaning is a Big topic that extends beyond the tidyr approach and about which much has been written [e.g. @Spector2008].
+There are other tidying operations that tidyr can perform, as described in the package's vignette (`vignette("tidy-data")`).
+Data manipulation is a large topic with major potential implications for efficiency and there is an entire book written on the subject [@Spector2008].
 
 ## Data processing {#dplyr}
 
