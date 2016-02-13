@@ -11,17 +11,17 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-02-09" />
+<meta name="date" content="2016-02-13" />
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -357,8 +357,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
 <pre><code>##          test elapsed relative
-## 2  ex_df[1, ]   5.858  112.654
-## 1 ex_mat[1, ]   0.052    1.000</code></pre>
+## 2  ex_df[1, ]   5.410  122.955
+## 1 ex_mat[1, ]   0.044    1.000</code></pre>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
@@ -370,7 +370,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
 <pre><code>## function (object, ...) 
 ## UseMethod(&quot;summary&quot;)
-## &lt;bytecode: 0x754bf48&gt;
+## &lt;bytecode: 0x6522300&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
@@ -379,7 +379,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;image&quot;)
-## &lt;bytecode: 0x68a9138&gt;
+## &lt;bytecode: 0x6e3aa70&gt;
 ## &lt;environment: namespace:graphics&gt;</code></pre>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
@@ -452,8 +452,8 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
 <pre><code>##         test elapsed
-## 1 method1(n)   1.257
-## 2 method2(n)   0.074
+## 1 method1(n)   1.239
+## 2 method2(n)   0.071
 ## 3 method3(n)   0.000</code></pre>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
@@ -523,7 +523,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)</code></pre></div>
-<pre><code>## &lt;environment: 0x923dd18&gt;</code></pre>
+<pre><code>## &lt;environment: 0x8a641a8&gt;</code></pre>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()</code></pre></div>
@@ -631,7 +631,7 @@ f =<span class="st"> </span>function(N){
 <p>In R this takes a few seconds:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   1.838   0.000   1.838</code></pre>
+##   1.749   0.000   1.749</code></pre>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
@@ -640,7 +640,7 @@ f =<span class="st"> </span>function(N){
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.033   0.000   0.033</code></pre>
+##   0.034   0.000   0.034</code></pre>
 </div>
 </div>
 </div>
@@ -698,7 +698,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;mean&quot;)
-## &lt;bytecode: 0x6ed6290&gt;
+## &lt;bytecode: 0x6fe1630&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <code>compiler</code> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
 <p>The <code>compiler</code> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="100.html#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>

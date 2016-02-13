@@ -11,17 +11,17 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-02-09" />
+<meta name="date" content="2016-02-13" />
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -320,9 +320,9 @@ fname =<span class="st"> </span><span class="kw">system.file</span>(<span class=
   <span class="dt">base_read =</span> df3 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(fname, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>),
   <span class="dt">readr_read =</span> df4 &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(fname))</code></pre></div>
 <pre><code>## Unit: milliseconds
-##        expr       min        lq      mean    median        uq      max
-##   base_read 118.18186 122.77024 140.62772 126.54047 133.65665 257.7078
-##  readr_read  44.28813  45.42117  59.42825  47.93329  49.75758 168.3559
+##        expr       min       lq      mean   median        uq       max
+##   base_read 158.62303 163.6361 194.39286 171.2095 176.91504 310.27202
+##  readr_read  46.05421  47.5333  49.63275  48.9637  51.03859  56.13925
 ##  neval
 ##     10
 ##     10</code></pre>
@@ -333,7 +333,7 @@ fname =<span class="st"> </span><span class="kw">system.file</span>(<span class=
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df3$built[<span class="dv">2841</span>] <span class="co"># contains the text responsible for coercion</span></code></pre></div>
 <pre><code>## [1] 1721-01-01
-## 182 Levels:  1135 1594 1600 1612 1613 1614 1615 1619 1620 1621 ... taken 1672</code></pre>
+## 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df4$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p>Apart from being faster and slightly less robust (coercing the data based on the 1st 1000 rows), <code>read_*</code> functions also differ subtley from <code>read.*</code> functions in terms of the data that they generate: <code>read_*</code> generates an object of <code>tbl_df</code> format, which is an extension of the base class <code>data.frame</code>, as discussed in Section <a href="04-workflow.html#dplyr">4.5</a>.</p>
