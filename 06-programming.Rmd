@@ -4,7 +4,7 @@ output: pdf_document
 # Efficient programming
 
 ```{r echo=FALSE}
-source("R/initialise.R")
+source("code/initialise.R")
 ```
 <!--# Efficient programming  {#programming}-->
 
@@ -722,7 +722,8 @@ benchmark(my_mean(x), cmp_mean(x), mean(x),
 The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference (figure \@ref(fig:6-4)).
 
 ```{r 6-4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
-dd = readRDS(file="data/mean_comparison.RData")
+load(file="data/mean_comparison.RData")
+dd = mean_comparison
 library("ggplot2")
 g = ggplot(dd, aes(p, relative)) + 
   geom_line(aes(colour=test), lwd=1) + 
@@ -762,5 +763,6 @@ for(i in seq(2, 4, length.out=12)) {
 }
 dd$p = 10^dd$i
 dir.create("data", showWarnings = FALSE)
-saveRDS(dd, file="data/mean_comparison.RData")
+mean_comparison = dd
+save(mean_comparison, file="data/mean_comparison.RData")
 ```
