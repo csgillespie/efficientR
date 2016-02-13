@@ -164,7 +164,7 @@ for more detailed documentation.
 
 1. Bonus exercise: modify the code to create a very basic Gantt chart of an R project you are working on.
 
-## Package selection
+## Package selection {#pkgs}
 
 A good example of the importance of prior planning to minimise effort is package selection.
 An inefficient, poorly supported or simply outdated package can waste hours.
@@ -378,23 +378,16 @@ Apart from being faster and slightly less robust (coercing the data based on the
 
 There are circumstances when datasets become too large to read directly into R.
 Reading in 4 GB text file using the functions tested above, for example, consumed all available RAM on an 16 GB machine!
-To overcome the limitation that R reads all data directly into RAM, we can use external *stream processing* tools to interact with large text files such as the `npidata` file.
+To overcome the limitation that R reads all data directly into RAM, external *stream processing* tools can be used to preprocess large text files.
 The following command, using the shell command `split`, for example, would break a large multi GB file many one GB chunks, each of which is more maneageble for R:
 
 ```{r, engine='bash', eval=FALSE}
-split -b1000m bigfile.csv
+split -b100m bigfile.csv
 ```
 
-The result is a series of files called `xaa`, `xab`etc, which allow them to be read into R using `read.csv` and `read_csv`, without crashing most modern computers.
-Using a test dataset, reading-in the 1 GB file `xaa` using the function `read_csv` was found to be more than 5 times faster than `read.csv` on 4th Generation Pentium maching (30 seconds vs almost 3 minutes).
+The result is a series of files, set to 100 MB each with the `-b100m` argument in the above code. By default these will be called `xaa`, `xab` and which could be read in *one chunk at a time* (e.g. using `read.csv`, `fread` or `read_csv`, described in Section \@ref(fast-data-reading)) without crashing most modern computers.
 
-```{r bigfile-read, eval=FALSE, echo=FALSE}
-# Not printed as it assumes split has been run
-system.time(df3 <- read.csv("xaa"))
-system.time(df4 <- read_csv("xaa"))
-```
-
-Splitting a large file into individual chunks may allow it to be read into R *one chunk at a time*.
+Splitting a large file into individual chunks may allow it to be read into R .
 But is not an efficient way to import large datasets because you will only ever have access to a non-random sample of the data this way.
 A more efficient way to work with very large datasets is via databases.
 
@@ -511,11 +504,11 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
 ```
 
 There are other tidying operations that tidyr can perform, as described in the package's vignette (`vignette("tidy-data")`).
-Data manipulation is a large topic with major potential implications for efficiency and there is an entire book written on the subject [@Spector2008].
+Data manipulation is a large topic with major potential implications for efficiency [@Spector2008].
 
 ## Data processing {#dplyr}
 
-After the data has been tidied it is much easier to process. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. The focus is on the recently developed dplyr package, which  has a number of advantages compared with base R and in the package `data.table`:
+Tidy data is easier to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice to decide appropriate packages for the work early on (see Section \@ref(pkgs)) uses dplyr, which has a number of advantages compared with base R and data.table:
 
 - dplyr is fast to run and intuitive to type
 - dplyr works well with tidy data, as described above
@@ -538,14 +531,64 @@ the package is large and can be seen as
 a language in its own right. Following the 'walk before you run' principle,
 we'll start simple, by filtering and aggregating rows, building on the previous section on tidying data.
 
+### Renaming columns
+
+Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The dplyr function `rename()` makes this easy.^[Note
+in this code block the variable name is surrounded by back-quotes (`).
+This allows R to refer to column names that are non-standard.
+Note also the syntax:
+`rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
+
+```{r}
+idata = rename(idata, Country = `Country Name`)
+```
+
+To rename multiple columns the variable names are simply separated by commas. The base R and dplyr way of doing this is illustrated for clarity.
+
+```{r}
+# The dplyr way (rename two variables)
+idata <- rename(idata,
+ top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
+ bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
+# The base R way (rename five variables)
+names(idata)[5:9] =
+  c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
+```
+
+
+### Filtering rows
+
+The standard way to subset data by rows in R is with square brackets, for example:
+
+```{r}
+aus1 = idata[idata$Country == "Australia",]
+```
+
+dplyr offers an alternative and more flexible way of filtering data, using `filter()`.
+
+```{r}
+aus2 = filter(idata, Country == "Australia")
+```
+
+Note that dplyr does not rely on the `$` symbol: it knows that
+that `Country` is a variable of `idata`
+Because `idata` was the first argument, dplyr assumes
+that any subsequent are variables.^[Note that this syntax is a defining feature of dplyr
+and many of its functions work in the same way.
+Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
+] 
+
+The dplyr equivalent of aggregate is to use
+the grouping function `group_by` in combination with
+the general purpose function `summarise` (not to
+be confused with `summary` in base R).
+
 ### Filtering columns
 
 Large datasets often contain much worthless or blank information, clogging up RAM and reducing computational efficiency.
-An example of this is provided in the huge 'NPI' dataset presented in the introduction.
 Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
 
-Imagine that the tiny subset of the 'NPI' data, created using Unix tools in [Chapter 3](#pre), is the full 5+ GB file.
-We are running a machine of the future, is powerful enough to load the data in a fraction of a second, not the 15 minutes that it took a desktop in 2015.
+Imagine that we have large (4+ GB) text file called `miniaa` which is loaded with the following command:
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
@@ -605,6 +648,13 @@ length(unique(df$Country))
 > **Challenge:** rename the variables 4 to 8 so they are much shorter, following the pattern `ECO2`, `MCO2` etc. That will make the code for manipulating the dataset easier to write
 
 ```{r, echo=FALSE}
+# Method 1: using dplyr::rename
+df <- rename(df,
+             ECO2 = Electricity.Heat..CO2...MtCO2.,
+             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
+             TCO2 = Transportation..CO2...MtCO2.,
+             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
+# Method 2: using names assignment
 names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
 ```
 
@@ -632,55 +682,12 @@ The following command creates the same object as `e_ems`, but with less typing.
 e_ems = aggregate(ECO2 ~ Country, df, mean, na.rm  = TRUE)
 ```
 
-The final way to aggregate the dataset uses a totally different syntax, from the dplyr package.
-Without worrying exactly how it works (this is described in the next section), try the following.
+To aggregate the dataset using dplyr package one would divide the task in two: to *group* the dataset first and then to summarise, as illustrated below:
 
 ```{r, message=FALSE}
 library("dplyr")
 group_by(df, Country) %>%
-  summarise(mean_eco2 =mean(ECO2, na.rm  = TRUE))
-```
-
-### Renaming columns
-
-Renaming data columns is a common data manipulation task made easy with dplyr'r function `rename()`.^[Note
-in this code block the variable name is surrounded by back-quotes (`).
-This allows R to refer to column names that are non-standard.
-Note also the syntax:
-`rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
-
-```{r}
-idata = rename(idata, Country = `Country Name`)
-```
-
-The standard way to subset data by rows in R is with square brackets, for example:
-
-```{r}
-aus1 = idata[idata$Country == "Australia",]
-```
-
-dplyr offers an alternative and more flexible way of filtering data, using `filter()`.
-
-```{r}
-aus2 = filter(idata, Country == "Australia")
-```
-
-Note that we did not need to use the `$` to tell R
-that `Country` is a variable of the `idata` object.
-Because `idata` was the first argument, dplyr 'knew'
-that any subsequent names would be variables.^[Note that this syntax is a defining feature of dplyr
-and many of its functions work in the same way.
-Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
-] 
-
-The dplyr equivalent of aggregate is to use
-the grouping function `group_by` in combination with
-the general purpose function `summarise` (not to
-be confused with `summary` in base R).
-
-```{r}
-names(idata)[5:9] =
-  c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
+  summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
 ```
 
 ## Updating column classes
