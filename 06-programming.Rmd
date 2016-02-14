@@ -88,7 +88,7 @@ Although using double precision objects is the most common type, R does have oth
 args(head.matrix)
 ```
 
-The default argument is `6L` (the `L`, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first $100$ rows from a data frame (`clock_speed`, from the `efficient` package). The speed increase is illustrated below, using the `microbenchmark` package:
+The default argument is `6L` (the `L`, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first $100$ rows from a data frame (`clock_speed`, from the **efficient** package). The speed increase is illustrated below, using the **microbenchmark** package:
 
 ```{r, matrix_timing, eval=FALSE}
 s_int = 1:100; s = seq(1, 100, 1.0)
@@ -188,7 +188,7 @@ When loading a dataset called `df` into R, a typical workflow would be:
 A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix columns must have the same type. 
 Matrices tend to be used during statistical calculations. Linear regression using `lm()`, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.
 
-Matrices are generally faster than data frames. The datasets `ex_mat` and `ex_df` from the efficient package each have $1000$ rows and $100$ columns. They contain the same random numbers. However, selecting rows from a data frame is around $150$ times slower than a matrix. This illustrates the reason for using matrices instead of data frames for efficient modelling in R:
+Matrices are generally faster than data frames. The datasets `ex_mat` and `ex_df` from the **efficient** package each have $1000$ rows and $100$ columns. They contain the same random numbers. However, selecting rows from a data frame is around $150$ times slower than a matrix. This illustrates the reason for using matrices instead of data frames for efficient modelling in R:
 
 ```{r mat_vs_df, echo=2:4, cache=TRUE}
 library("rbenchmark")
@@ -271,7 +271,7 @@ dist_usa = dist(USArrests)
 
 The resulting object `dist_usa` measures the similarity between two states with respect to the input data. Since there are $50$ states in the `USAarrests` data set, this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this characteristic for efficiency, allowing storage to be halved. If we examine the object `dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently stored as a vector with some attributes.
 
-Another efficient data structure is a sparse matrix. This is simply a matrix in where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn't sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the `Matrix` package. For this `dist` object, since the structure is regular.
+Another efficient data structure is a sparse matrix. This is simply a matrix in where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn't sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the **Matrix** package. For this `dist` object, since the structure is regular.
 
 ## Good programming techniques
 
@@ -356,8 +356,8 @@ Table: Time in seconds to create sequences. When $n=10^7$, method 1 takes around
 
 A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing `log(x)` in multiple function calls with the object `log_x` that is defined once and reused. This small saving in time, quickly multiplies when the cached variable is used inside a `for` loop. 
 
-A more advanced form of caching is use the `memoise` package.
-If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The `memoise` package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the `memoise` function.
+A more advanced form of caching is use the **memoise** package.
+If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The **memoise** package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the **memoise** function.
 
 ```{r ch6-load_memoise, echo=FALSE, message=FALSE}
 library("memoise")
@@ -376,7 +376,7 @@ plot_mpg = function(row_to_remove) {
 }
 ```
 
-We can use  `memoise` speed up by caching results. A quick benchmark
+We can use  **memoise** speed up by caching results. A quick benchmark
 
 ```{r benchmark_memoise, fig.keep="none", cache=TRUE, results="hide"}
 m_plot = memoise(plot_mpg)
@@ -591,7 +591,7 @@ system.time(f1(N))
 
 ## Parallel computing
 
-In recent R versions (since R 2.14.0) `parallel` package comes pre-installed with base R. The `parallel` package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.
+In recent R versions (since R 2.14.0) ** parallel** package comes pre-installed with base R. The ** parallel** package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.
 
 ```{r echo=1:2}
 library("parallel")
@@ -645,7 +645,7 @@ N = 10000
 sapply(1:N, bs)
 ```
 
-Rewriting this code to make use of the `parallel` package is straightforward. We begin by making a cluster and exporting the data set
+Rewriting this code to make use of the ** parallel** package is straightforward. We begin by making a cluster and exporting the data set
 
 ```{r, eval=FALSE}
 library("parallel")
@@ -673,19 +673,19 @@ forking, that is creating a new copy of a process running on the CPU. However, W
 
 ## The byte compiler
 
-The compiler package, written by R Core member Luke Tierney has been part of R since version 2.13.0. Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function `mean`:
+The ** compiler** package, written by R Core member Luke Tierney has been part of R since version 2.13.0. Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function `mean`:
 
 ```{r}
 mean
 ```
 
-The third line contains the `bytecode` of the function. This means that the `compiler` package has translated the R function into another language that can be interpreted by a very fast interpreter.  
+The third line contains the `bytecode` of the function. This means that the **compiler** package has translated the R function into another language that can be interpreted by a very fast interpreter.  
 
-The `compiler` package allows R functions to be compiled, resulting in a byte code version that may run faster^[The authors have yet to find a situation where byte compiled code runs significantly slower.]. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines. 
+The **compiler** package allows R functions to be compiled, resulting in a byte code version that may run faster^[The authors have yet to find a situation where byte compiled code runs significantly slower.]. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines. 
 
 ### Example: the mean function
 
-The compiler package comes with R, so we just need to load the package in the usual way
+The **compiler** package comes with R, so we just need to load the package in the usual way
 
 ```{r}
 library("compiler")
