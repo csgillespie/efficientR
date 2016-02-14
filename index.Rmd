@@ -45,7 +45,16 @@ fields = which(headings %in% c("Depends", "Imports", "Suggests"))
 pkgs = paste(desc[fields], collapse = ", ")
 pkgs = gsub("\n", " ", pkgs)
 pkgs = strsplit(pkgs, ",")[[1]]
-gsub(" ", "", pkgs)
+pkgs = gsub(" ", "", pkgs)
+pkgs_df = data.frame(Name = pkgs, Title = NA)
+for(i in seq_along(pkgs)){
+  f = system.file(package = pkgs[i], "DESCRIPTION")
+  # Title is always on 3rd line
+  title = readLines(f)
+  title = title[grep("Title: ", title)]
+  pkgs_df$Title[i] = gsub("Title: ", "", title)
+}
+knitr::kable(pkgs_df)
 ```
 
 GitHub packages to install.
