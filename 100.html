@@ -11,7 +11,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace" />
 
-<meta name="date" content="2016-02-13" />
+<meta name="date" content="2016-02-14" />
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <title>Efficient R programming</title>
@@ -155,21 +155,24 @@ img {
 <li class="has-sub"><a href="04-workflow.html#project-planning"><span class="toc-section-number">4.1</span> Project planning</a><ul>
 <li><a href="04-workflow.html#exercises-8"><span class="toc-section-number">4.1.1</span> Exercises</a></li>
 </ul></li>
-<li><a href="04-workflow.html#package-selection"><span class="toc-section-number">4.2</span> Package selection</a></li>
+<li><a href="04-workflow.html#pkgs"><span class="toc-section-number">4.2</span> Package selection</a></li>
 <li class="has-sub"><a href="04-workflow.html#importing-data"><span class="toc-section-number">4.3</span> Importing data</a><ul>
 <li><a href="04-workflow.html#fast-data-reading"><span class="toc-section-number">4.3.1</span> Fast data reading</a></li>
 <li><a href="04-workflow.html#preprocessing-outside-r"><span class="toc-section-number">4.3.2</span> Preprocessing outside R</a></li>
 <li><a href="04-workflow.html#working-with-databases"><span class="toc-section-number">4.3.3</span> Working with databases</a></li>
 </ul></li>
-<li class="has-sub"><a href="04-workflow.html#tidying-data-with-tidyr"><span class="toc-section-number">4.4</span> Tidying data with tidyr</a><ul>
-<li><a href="04-workflow.html#filtering-columns"><span class="toc-section-number">4.4.1</span> Filtering columns</a></li>
-<li><a href="04-workflow.html#data-aggregation"><span class="toc-section-number">4.4.2</span> Data aggregation</a></li>
-</ul></li>
+<li><a href="04-workflow.html#tidying-data-with-tidyr"><span class="toc-section-number">4.4</span> Tidying data with <strong>tidyr</strong></a></li>
 <li class="has-sub"><a href="04-workflow.html#dplyr"><span class="toc-section-number">4.5</span> Data processing</a><ul>
-<li><a href="04-workflow.html#chaining-operations-with-dplyr"><span class="toc-section-number">4.5.1</span> Chaining operations with dplyr</a></li>
-<li><a href="04-workflow.html#data.table"><span class="toc-section-number">4.5.2</span> data.table</a></li>
+<li><a href="04-workflow.html#renaming-columns"><span class="toc-section-number">4.5.1</span> Renaming columns</a></li>
+<li><a href="04-workflow.html#filtering-rows"><span class="toc-section-number">4.5.2</span> Filtering rows</a></li>
+<li><a href="04-workflow.html#filtering-columns"><span class="toc-section-number">4.5.3</span> Filtering columns</a></li>
+<li><a href="04-workflow.html#data-aggregation"><span class="toc-section-number">4.5.4</span> Data aggregation</a></li>
 </ul></li>
-<li><a href="04-workflow.html#publication"><span class="toc-section-number">4.6</span> Publication</a></li>
+<li class="has-sub"><a href="04-workflow.html#updating-column-classes"><span class="toc-section-number">4.6</span> Updating column classes</a><ul>
+<li><a href="04-workflow.html#chaining-operations-with-dplyr"><span class="toc-section-number">4.6.1</span> Chaining operations with <strong>dplyr</strong></a></li>
+<li><a href="04-workflow.html#data.table"><span class="toc-section-number">4.6.2</span> <strong>data.table</strong></a></li>
+</ul></li>
+<li><a href="04-workflow.html#publication"><span class="toc-section-number">4.7</span> Publication</a></li>
 </ul></li>
 <li><a href="05-collaboration.html#efficient-collaboration"><span class="toc-section-number">5</span> Efficient collaboration</a></li>
 <li class="has-sub"><a href="06-programming.html#efficient-programming"><span class="toc-section-number">6</span> Efficient programming</a><ul>
@@ -268,13 +271,11 @@ img {
 <li id="fn12"><p>An excellent overview of the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="04-workflow.html#fnref12">↩</a></p></li>
 <li id="fn13"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="04-workflow.html#fnref13">↩</a></p></li>
 <li id="fn14"><p>This is a multi-table dataset on shipping records used with permission from the CWI Database Architectures Group and described more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>.<a href="04-workflow.html#fnref14">↩</a></p></li>
-<li id="fn15"><p>Because R is a vectorised language, it adept at handling long 1 dimensional vectors but less so at handling many interrelated columns.<a href="04-workflow.html#fnref15">↩</a></p></li>
-<li id="fn16"><p>Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).<a href="04-workflow.html#fnref16">↩</a></p></li>
-<li id="fn17"><p>Note the first argument in the function is the vector we’re aiming to aggregate and the second is the grouping variable (in this case Countries). A quirk of R is that the grouping variable must be supplied as a list. Next we’ll see a way of writing this that is neater.<a href="04-workflow.html#fnref17">↩</a></p></li>
-<li id="fn18"><p>As an interesting aside, <strong>dplyr</strong> works perfectly on <code>data.frames</code> but its default object is the <code>tbl</code>, which is identical to a <code>data.frame</code> but prints objects a useful glimpse of the dataset, rather than the whole thing.<a href="04-workflow.html#fnref18">↩</a></p></li>
-<li id="fn19"><p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.<a href="04-workflow.html#fnref19">↩</a></p></li>
-<li id="fn20"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="04-workflow.html#fnref20">↩</a></p></li>
-<li id="fn21"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="06-programming.html#fnref21">↩</a></p></li>
+<li id="fn15"><p>Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).<a href="04-workflow.html#fnref15">↩</a></p></li>
+<li id="fn16"><p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.<a href="04-workflow.html#fnref16">↩</a></p></li>
+<li id="fn17"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="04-workflow.html#fnref17">↩</a></p></li>
+<li id="fn18"><p>Note the first argument in the function is the vector we’re aiming to aggregate and the second is the grouping variable (in this case Countries). A quirk of R is that the grouping variable must be supplied as a list. Next we’ll see a way of writing this that is neater.<a href="04-workflow.html#fnref18">↩</a></p></li>
+<li id="fn19"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="06-programming.html#fnref19">↩</a></p></li>
 </ol>
 </div>
 <p style="text-align: center;">
