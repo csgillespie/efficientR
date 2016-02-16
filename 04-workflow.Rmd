@@ -587,11 +587,17 @@ To rename multiple columns the variable names are simply separated by commas. Th
 idata <- rename(idata,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
+
 # The base R way (rename five variables)
 names(idata)[5:9] =
   c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ```
 
+Now we have usefully renamed the object we save the result for future reference:
+
+```{r, eval=FALSE}
+saveRDS(idata, "data/idata-renamed.Rds")
+```
 
 ### Filtering rows
 
@@ -852,33 +858,60 @@ This section has provided only a taster of what is possible **dplyr** and why it
 ### **data.table**
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
-tasks.^[
-
+tasks^[One
+[question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' has received much attention and sets out the advantages of each approach. The question and subsequent responses do not provide a conclusive answer to the issue and the responses may be out of date in some cases but it certainly makes for interesting reading and delves into the philosophy underlying each approach.
 ]
-It is worth stating that **dplyr** and **data.table** need not be seen as mutually exclusive competitors or that one is 'better' than another: the important thing from an efficiency perspective is that both can help speed up data processing tasks.
+so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors or that must be 'better' than another. These are both excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
 
 ```{r, echo=FALSE}
 # This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 ```
 
-
-
-**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of. 
+**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of, however. Building on the `filter()` example above, we'll see **data.tables**'s unique approach to subsetting.
 
 ```{r}
-
+library(data.table)
+idata = readRDS("data/idata-renamed.Rds")
+idata_dt = data.table(idata)
+setkey(idata_dt, Country)
+aus3 = idata_dt["Australia",]
 ```
 
-```{r}
-
+```{r, eval=FALSE, echo=FALSE}
+res = NULL
+for(i in seq(10, 300, length.out = 10)){
+  idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
+  idata_dt = data.table(idata_big)
+  idata_key = idata_dt
+  setkey(idata_key, Country)
+  mb = microbenchmark(
+    times = 2,
+    base = idata_big[idata_big$Country == "Australia", ],
+    dplyr = filter(idata_big, Country == "Australia"),
+    data.table = idata_dt[list("Australia"), ]
+    # data.table_key = idata_key[list("Australia"), ]
+  )
+  tab = tapply(mb$time / 1000, mb$expr, mean)
+  res_tmp = data.frame(
+    exp = names(tab),
+    time = as.vector(tab),
+    rows = nrow(idata_big),
+    MB = as.numeric(object.size(idata_big) / 1000000)
+  )
+  res_tmp$Time = res_tmp$time / min(res_tmp$time)
+  res = rbind(res, res_tmp)
+}
+saveRDS(res, "data/res-datatable.Rds")
 ```
 
-```{r}
-
+```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE}
+res <- readRDS("data/res-datatable.Rds")
+ggplot(res, aes(MB, Time)) + 
+  geom_line(aes(colour = exp)) +
+  xlab("Size (MB)") + ylab("Time (relative to fastest)")
 ```
 
-
-
+Figure \@ref(fig:dtplot) illustrates the speed improvement benefits of data.table for different datasets sizes. As with the **readr** vs base R issue, the results show that the relative benefits of **data.table** improve with dataset size.
 
 ## Publication
 
