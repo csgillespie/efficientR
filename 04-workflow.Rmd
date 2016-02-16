@@ -2,11 +2,6 @@
 knit: "bookdown::preview_chapter"
 ---
 
-<link rel="stylesheet" type="text/css" href="style.css">
-<script type="text/javascript" async
-src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
 # Efficient workflow
 
 ```{r, echo=FALSE, message=FALSE}
@@ -177,7 +172,7 @@ There are many poor packages on CRAN and much duplication so it's easy to go wro
 Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
 
 However, used well, packages can greatly improve productivity.
-Due to the conservative nature base R development, which prioritises stability, much of the innovation and performance gains in the 'R ecosystem' has occured in recent years in the packages.
+Due to the conservative nature base R development, which prioritises stability, much of the innovation and performance gains in the 'R ecosystem' has occurred in recent years in the packages.
 The increased ease of package development [@Wickham_2015] and interfacing with other languages [e.g. @Eddelbuettel_2011] has accelerated their number, quality and efficiency.
 An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as [ROpenSci](https://ropensci.org/) for peer reviewing code.
 
@@ -199,7 +194,7 @@ reaching 1 or 2 in the first digit of package versions is usually an indication 
 
 - Is it actively developed? It is a good sign if packages are frequently updated. A frequently updated package will have its latest version 'published' recently on CRAN. The CRAN package page for **ggplot2**, for example, said `Published: 2015-12-18`, less than a month old at the time of writing.
 
-- Is it well documented? This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documentated package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. `?ggplot`), try the examples (e.g. `example(ggplot)`) and search for package vignettes (e.g. `vignette(package = "ggplot2")`).
+- Is it well documented? This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. `?ggplot`), try the examples (e.g. `example(ggplot)`) and search for package vignettes (e.g. `vignette(package = "ggplot2")`).
 
 - Is it well used? This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google's. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely visible GitHub. At the time of writing a search for [**ggplot2**](https://github.com/search?utf8=%E2%9C%93&q=ggplot2) on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
 Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, **ggplot2** scores extremely well in this measure, with over 5000 hits).
@@ -214,9 +209,9 @@ R 3.2.3 the base function `download.file()` can be used to download from secure 
 ]
 and `unzip` to download and unzip the
 dataset,^[This
-is a multi-table dataset on shipping records used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R).
+is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R).
 ]
-illustrating how R can be used to automate processes that are conventionally done by hand. The result is data stored in the `data` directory ready to be read-in (note the data is also provided in the efficient package).
+illustrating how R can be used to automate processes that are conventionally done by hand. The result is data stored in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
 
 ```{r, eval=FALSE}
 url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
@@ -341,32 +336,66 @@ system.time(df3 = read_csv(bigfile))
 ## Error (from 32 bit machine): cannot allocate vector of 32.0 Mb
 ```
 
-
 <!-- Idea: test the functions on text data -->
 
-It is important to be aware that in many cases a compromise must be struck between speed and robustness. This is illustrated below with reference to differences in how **readr** and base R approaches handle unexpected values.
+In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:readr-vs-base)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
 
 ```{r, warning=FALSE}
-library("readr")
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
-microbenchmark(times = 10,
-  base_read = df3 <- read.csv(fname, sep = "\t"),
-  readr_read = df4 <- read_tsv(fname))
+res_v <- microbenchmark(times = 10,
+  base_read = voyages_base <- read.csv(fname, sep = "\t"),
+  readr_read = voyages_readr <- read_tsv(fname),
+  dt_fread = voyages_dt <- fread(fname))
 ```
 
-In this case `read_tsv` is around 3 times faster, illustrating that the benefits of efficient read functions scale with dataset size: the relative speed increases to more than a factor of 5 for 1 GB files.
-Note that **readr** generates a warning for row 2841 in the `built` variable.
-This is because `readr()` decides what class each variable is based on the first 1000 rows, rather than all rows as base `read.*` functions do.
-As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is probably more sensible than the `read.csv` output: the latter coerced the date field into a factor based on a single entry which is a text whereas the latter coerced the variable into a numeric data, as illustrated below.
+```{r voyages-pre, echo=FALSE, results='hide'}
+df <- print(res_v)
+df <- dplyr::select(df, Function = expr, min, mean, max)
+df[2:ncol(df)] <- df[2:ncol(df)] / df$mean[3]
+```
+
+```{r voyages, echo=FALSE}
+knitr::kable(df, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset relative to the mean execution time of `fread`, around 0.02 seconds on a modern computer.", digits = 1)
+```
+
+The benchmark above produces warning messages (not shown) for the `read_tsv` and `fread` functions but not the slowest base function `read.csv`. An exploration of these can shed light on the speed/robustness trade-off.
+
+- The **readr** function generates a warning for row 2841 in the `built` variable.
+This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows as base `read.*` functions do.
+As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is probably more sensible than the `read.csv` output: the latter coerced the date field into a factor based on a single entry which is a text whereas the latter coerced the variable into a numeric data, as illustrated below. 
 
 ```{r}
-class(df3$built) # coerced to a factor
-class(df4$built) # numeric based on first 1000 rows
-df3$built[2841] # contains the text responsible for coercion
-df4$built[2841] # an NA: text cannot be converted to numeric
+class(voyages_base$built) # coerced to a factor
+class(voyages_readr$built) # numeric based on first 1000 rows
+voyages_base$built[2841] # contains the text responsible for coercion
+voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 ```
 
+- The **data.table** function `fread` generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread` automatically converts any columns it thought of as numeric into characters.
+
+To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses), which shows 4 main similarities and differences:
+
+- For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
+- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread` and `read_csv` functions return characters.
+- For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread` coerces the result to characters.
+`read_csv` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`.
+- `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
+
+```{r colclasses, echo=FALSE}
+vcols <- as.data.frame(rbind(
+  sapply(voyages_base, class),
+  sapply(voyages_readr, class),
+  sapply(voyages_dt, class)))
+vcols <- cbind(df[1], vcols)
+vcols <- dplyr::select(vcols, Function, number, boatname, built, departure_date)
+knitr::kable(vcols, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset")
+```
+
+The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
+
 ```{r, eval=FALSE, tidy=FALSE, echo=FALSE}
+# # This was a final sentence from the previous paragraph that I've removed for now: 
+# In some cases there will be no knock-on consequences of using faster functions provided by packages but you should be aware that it is a possibility. 
 # I've removed this for now as it's such a large and unwieldy dataset
 url = "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
 download.file(url, "largefile.zip") # takes many minutes
@@ -376,14 +405,12 @@ file.info(bigfile) # file info (4 GB+)
 # split -b1000m npidata_20050523-20150809.csv # original command commented out
 ```
 
-Apart from being faster and slightly less robust (coercing the data based on the 1st 1000 rows), `read_*` functions also differ subtley from `read.*` functions in terms of the data that they generate: `read_*` generates an object of `tbl_df` format, which is an extension of the base class `data.frame`, as discussed in Section  \@ref(dplyr).
-
 ### Preprocessing outside R
 
 There are circumstances when datasets become too large to read directly into R.
 Reading in 4 GB text file using the functions tested above, for example, consumed all available RAM on an 16 GB machine!
 To overcome the limitation that R reads all data directly into RAM, external *stream processing* tools can be used to preprocess large text files.
-The following command, using the shell command `split`, for example, would break a large multi GB file many one GB chunks, each of which is more maneageble for R:
+The following command, using the shell command `split`, for example, would break a large multi GB file many one GB chunks, each of which is more manageable for R:
 
 ```{r, engine='bash', eval=FALSE}
 split -b100m bigfile.csv
@@ -397,17 +424,17 @@ A more efficient way to work with very large datasets is via databases.
 
 ### Working with databases
 
-Insead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
+Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
 
 R can connect to databases in a number of ways. The most mature of these is via the RODBC package, which sets up links to external databases using the Open Database Connectivity (ODBC) API, as described in the packages vignette (which can be accessed with `vignette("RODBC")`, once the package has been installed).
 RODBC connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite.
 
-The function used to set-up a connection to an external database with RODBC is `odbcConnect`, which takes Data Source Name (`dsn =`), User ID (`uid =`) and passwork (`pwd`) as required arguments.
+The function used to set-up a connection to an external database with RODBC is `odbcConnect`, which takes Data Source Name (`dsn =`), User ID (`uid =`) and password (`pwd`) as required arguments.
 Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in \@ref(renviron).
 Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
 
 Recently there has been a shift 'noSQL' approach to data storage for handling large datasets.
-This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source complient with the Java Database Connectivity (JDBC) API.
+This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
 
 MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
@@ -499,7 +526,7 @@ df = data.frame(agesex, n) # create a data frame
 separate(df, agesex, c("sex", "age"), 1)
 ```
 
-```{r to-separate, echo=FALSE}
+```{r to-separate, echo=FALSE,}
 knitr::kable(df, caption = "Joined age and sex variables in one column")
 ```
 
@@ -555,11 +582,17 @@ To rename multiple columns the variable names are simply separated by commas. Th
 idata <- rename(idata,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
+
 # The base R way (rename five variables)
 names(idata)[5:9] =
   c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ```
 
+Now we have usefully renamed the object we save the result for future reference:
+
+```{r, eval=FALSE}
+saveRDS(idata, "data/idata-renamed.Rds")
+```
 
 ### Filtering rows
 
@@ -815,13 +848,65 @@ top_n(
 # people the **dplyr** approach is the most agreeable to write.
 ```
 
+This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
 ### **data.table**
 
-Any well-informed discussion of how to speed-up data processing in R is likely to eventually touch on the **dplyr** vs **data.table** debate. It's a debate that has generated some controversey and much hot air. Before venturing into the pros and cons of each approach it's therefore worth stating that **dplyr** and **data.table** needn't be seen as mutually exclusive competitors or that one is 'better' than another: the important thing from an efficiency perspective is that both can help speed up your code. This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
+**data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
+tasks^[One
+[question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' has received much attention and sets out the advantages of each approach. The question and subsequent responses do not provide a conclusive answer to the issue and the responses may be out of date in some cases but it certainly makes for interesting reading and delves into the philosophy underlying each approach.
+]
+so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors or that must be 'better' than another. These are both excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
 
-**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of. 
+```{r, echo=FALSE}
+# This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
+```
 
+**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of, however. Building on the `filter()` example above, we'll see **data.tables**'s unique approach to subsetting.
+
+```{r}
+library(data.table)
+idata = readRDS("data/idata-renamed.Rds")
+idata_dt = data.table(idata)
+setkey(idata_dt, Country)
+aus3 = idata_dt["Australia",]
+```
+
+```{r, eval=FALSE, echo=FALSE}
+res = NULL
+for(i in seq(10, 300, length.out = 10)){
+  idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
+  idata_dt = data.table(idata_big)
+  idata_key = idata_dt
+  setkey(idata_key, Country)
+  mb = microbenchmark(
+    times = 2,
+    base = idata_big[idata_big$Country == "Australia", ],
+    dplyr = filter(idata_big, Country == "Australia"),
+    data.table = idata_dt[list("Australia"), ]
+    # data.table_key = idata_key[list("Australia"), ]
+  )
+  tab = tapply(mb$time / 1000, mb$expr, mean)
+  res_tmp = data.frame(
+    exp = names(tab),
+    time = as.vector(tab),
+    rows = nrow(idata_big),
+    MB = as.numeric(object.size(idata_big) / 1000000)
+  )
+  res_tmp$Time = res_tmp$time / min(res_tmp$time)
+  res = rbind(res, res_tmp)
+}
+saveRDS(res, "data/res-datatable.Rds")
+```
+
+```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE}
+res <- readRDS("data/res-datatable.Rds")
+ggplot(res, aes(MB, Time)) + 
+  geom_line(aes(colour = exp)) +
+  xlab("Size (MB)") + ylab("Time (relative to fastest)")
+```
+
+Figure \@ref(fig:dtplot) illustrates the speed improvement benefits of data.table for different datasets sizes. As with the **readr** vs base R issue, the results show that the relative benefits of **data.table** improve with dataset size.
 
 ## Publication
 
