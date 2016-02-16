@@ -210,18 +210,160 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
-</div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="tidying-data-with-tidyr" class="section level2">
+<h2><span class="header-section-number">5.4</span> Tidying data with <strong>tidyr</strong></h2>
+<p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(Wickham <a href="10-efficient-learning.html#ref-Wickham_2014">2014</a><a href="10-efficient-learning.html#ref-Wickham_2014">b</a>)</span>. Converting data into a ‘tidy’ form (described below) is also advantageous from a computational efficiency perspective: it usually faster to run analysis and plotting commands on a few large vectors than many short vectors.</p>
+<p>This is illustrated by Tables <a href="5-4-tidying-data-with-tidyr.html#tab:tpew">5.3</a> and <a href="5-4-tidying-data-with-tidyr.html#tab:tpewt">5.4</a>, provided by <span class="citation">Wickham (<a href="10-efficient-learning.html#ref-Wickham_2014">2014</a><a href="10-efficient-learning.html#ref-Wickham_2014">b</a>)</span>.</p>
+<table>
+<caption><span id="tab:tpew">Table 5.3: </span>First 6 rows of the aggregated ‘pew’ dataset from Wickham (2014a) in an ‘untidy’ form.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="right">&lt;$10k</th>
+<th align="right">$10–20k</th>
+<th align="right">$20–30k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="right">27</td>
+<td align="right">34</td>
+<td align="right">60</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="right">12</td>
+<td align="right">27</td>
+<td align="right">37</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="right">27</td>
+<td align="right">21</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:tpewt">Table 5.4: </span>First 3 and last rows of the ‘tidied’ Pew dataset.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="left">Income</th>
+<th align="left">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="left">&lt;$10k</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="left">&lt;$10k</td>
+<td align="left">12</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="left">&lt;$10k</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr class="odd">
+<td align="left">Unaffiliated</td>
+<td align="left">&gt;150k</td>
+<td align="left">258</td>
+</tr>
+</tbody>
+</table>
+<p>These tables may look different, but they contain precisely the same information Column names in the ‘flat’ form in Table <a href="5-4-tidying-data-with-tidyr.html#tab:tpew">5.3</a> became a new variable in the ‘long’ form in Table <a href="5-4-tidying-data-with-tidyr.html#tab:tpewt">5.4</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. For tabular presentation (i.e. tables) the ‘wide’ or ‘untidy’ form may be better.</p>
+<p>Tidy data has the following characteristics <span class="citation">(Wickham <a href="10-efficient-learning.html#ref-Wickham_2014">2014</a><a href="10-efficient-learning.html#ref-Wickham_2014">b</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li>Each variable forms a column.</li>
+<li>Each observation forms a row.</li>
+<li>Each type of observational unit forms a table.</li>
+</ol>
+<p>Because there is only one observational unit in the example (religions), it can be described in a single table. Large and complex datasets are usually represented by multiple tables, with unique identifiers or ‘keys’ to join them together <span class="citation">(Codd <a href="10-efficient-learning.html#ref-Codd1979">1979</a>)</span>.</p>
+<p>Two common operations facilitated by <strong>tidyr</strong> are <em>gathering</em> and <em>splitting</em> columns, as illustrated below.</p>
+<ul>
+<li>‘Wide’ tables can become ‘long’, so that column names become a new variable. This is illustrated in Table <a href="5-4-tidying-data-with-tidyr.html#tab:tpew">5.3</a> and Table <a href="5-4-tidying-data-with-tidyr.html#tab:tpewt">5.4</a> and can be achieved with the function <code>gather</code>:<a href="10-efficient-learning.html#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
+<span class="kw">dim</span>(raw)</code></pre></div>
+<pre><code>## [1] 18 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
+<span class="kw">dim</span>(rawt)</code></pre></div>
+<pre><code>## [1] 162   3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rawt[<span class="dv">1</span>:<span class="dv">3</span>,]</code></pre></div>
+<pre><code>## Source: local data frame [3 x 3]
+## 
+##   religion Income Count
+##      (chr)  (chr) (int)
+## 1 Agnostic  &lt;$10k    27
+## 2  Atheist  &lt;$10k    12
+## 3 Buddhist  &lt;$10k    27</code></pre>
+<ul>
+<li>Splitting compound variables in two. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-15</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with <code>separate</code>, as illustrated in the difference between Table <a href="5-4-tidying-data-with-tidyr.html#tab:to-separate">5.5</a> and <a href="#tab:separated"><strong>??</strong></a>:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
+n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
+df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span class="co"># create a data frame</span>
+<span class="kw">separate</span>(df, agesex, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)</code></pre></div>
+<pre><code>##   sex  age n
+## 1   m 0-10 3
+## 2   f 0-10 5</code></pre>
+<table>
+<caption><span id="tab:to-separate">Table 5.5: </span>Joined age and sex variables in one column</caption>
+<thead>
+<tr class="header">
+<th align="left">agesex</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:seperated">Table 5.6: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
+<thead>
+<tr class="header">
+<th align="left">sex</th>
+<th align="left">age</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m</td>
+<td align="left">0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f</td>
+<td align="left">0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). Data manipulation is a large topic with major potential implications for efficiency <span class="citation">(<span class="citeproc-not-found" data-reference-id="Spector2008"><strong>???</strong></span>)</span>.</p>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="5-3-importing-data.html">Previous</a></button>
+<button class="btn btn-default"><a href="5-5-dplyr.html">Next</a></button>
 </p>
 </div>
 </div>

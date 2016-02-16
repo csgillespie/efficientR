@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Colin Gillespie and Robin Lovelace" />
+
+<meta name="date" content="2016-02-16" />
+
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<title>Efficient R programming</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+
+<div class="row">
+<div class="col-sm-12">
+<div id="TOC">
+<ul>
+<li class="has-sub"><a href="index.html#building-the-book"><span class="toc-section-number">1</span> Building the book</a><ul>
+<li><a href="1-1-dependencies-for-this-book.html#dependencies-for-this-book"><span class="toc-section-number">1.1</span> Dependencies for this book</a></li>
+</ul></li>
+<li><a href="2-introduction.html#introduction"><span class="toc-section-number">2</span> Introduction</a></li>
+<li class="has-sub"><a href="3-efficient-set-up.html#efficient-set-up"><span class="toc-section-number">3</span> Efficient set-up</a><ul>
+<li class="has-sub"><a href="3-1-operating-system.html#operating-system"><span class="toc-section-number">3.1</span> Operating system</a><ul>
+<li><a href="3-1-operating-system.html#operating-system-and-resource-monitoring"><span class="toc-section-number">3.1.1</span> Operating system and resource monitoring</a></li>
+<li><a href="3-1-operating-system.html#exercises"><span class="toc-section-number">3.1.2</span> Exercises</a></li>
+</ul></li>
+<li class="has-sub"><a href="3-2-r-version.html#r-version"><span class="toc-section-number">3.2</span> R version</a><ul>
+<li><a href="3-2-r-version.html#installing-r"><span class="toc-section-number">3.2.1</span> Installing R</a></li>
+<li><a href="3-2-r-version.html#updating-r"><span class="toc-section-number">3.2.2</span> Updating R</a></li>
+<li><a href="3-2-r-version.html#installing-r-packages"><span class="toc-section-number">3.2.3</span> Installing R packages</a></li>
+<li><a href="3-2-r-version.html#deps"><span class="toc-section-number">3.2.4</span> Installing R packages with dependencies</a></li>
+<li><a href="3-2-r-version.html#updating-r-packages"><span class="toc-section-number">3.2.5</span> Updating R packages</a></li>
+<li><a href="3-2-r-version.html#exercises-1"><span class="toc-section-number">3.2.6</span> Exercises</a></li>
+</ul></li>
+<li class="has-sub"><a href="3-3-r-startup.html#r-startup"><span class="toc-section-number">3.3</span> R startup</a><ul>
+<li><a href="3-3-r-startup.html#rprofile"><span class="toc-section-number">3.3.1</span> The <code>.Rprofile</code> file</a></li>
+<li><a href="3-3-r-startup.html#example-.rprofile-settings"><span class="toc-section-number">3.3.2</span> Example <code>.Rprofile</code> settings</a></li>
+<li><a href="3-3-r-startup.html#renviron"><span class="toc-section-number">3.3.3</span> The <code>.Renviron</code> file</a></li>
+<li><a href="3-3-r-startup.html#exercises-2"><span class="toc-section-number">3.3.4</span> Exercises</a></li>
+</ul></li>
+<li class="has-sub"><a href="3-4-rstudio.html#rstudio"><span class="toc-section-number">3.4</span> RStudio</a><ul>
+<li><a href="3-4-rstudio.html#install-rstudio"><span class="toc-section-number">3.4.1</span> Installing and updating RStudio</a></li>
+<li><a href="3-4-rstudio.html#window-pane-layout"><span class="toc-section-number">3.4.2</span> Window pane layout</a></li>
+<li><a href="3-4-rstudio.html#exercises-3"><span class="toc-section-number">3.4.3</span> Exercises</a></li>
+<li><a href="3-4-rstudio.html#rstudio-options"><span class="toc-section-number">3.4.4</span> RStudio options</a></li>
+<li><a href="3-4-rstudio.html#auto-completion"><span class="toc-section-number">3.4.5</span> Auto-completion</a></li>
+<li><a href="3-4-rstudio.html#keyboard-shortcuts"><span class="toc-section-number">3.4.6</span> Keyboard shortcuts</a></li>
+<li><a href="3-4-rstudio.html#object-display-and-output-table"><span class="toc-section-number">3.4.7</span> Object display and output table</a></li>
+<li><a href="3-4-rstudio.html#project-management"><span class="toc-section-number">3.4.8</span> Project management</a></li>
+<li><a href="3-4-rstudio.html#exercises-4"><span class="toc-section-number">3.4.9</span> Exercises</a></li>
+</ul></li>
+<li class="has-sub"><a href="3-5-blas-and-alternative-r-interpreters.html#blas-and-alternative-r-interpreters"><span class="toc-section-number">3.5</span> BLAS and alternative R interpreters</a><ul>
+<li><a href="3-5-blas-and-alternative-r-interpreters.html#revolution-r"><span class="toc-section-number">3.5.1</span> Revolution R</a></li>
+<li><a href="3-5-blas-and-alternative-r-interpreters.html#other-interpreters"><span class="toc-section-number">3.5.2</span> Other interpreters</a></li>
+<li><a href="3-5-blas-and-alternative-r-interpreters.html#useful-blasbenchmarking-resources"><span class="toc-section-number">3.5.3</span> Useful BLAS/benchmarking resources</a></li>
+<li><a href="3-5-blas-and-alternative-r-interpreters.html#exercises-5"><span class="toc-section-number">3.5.4</span> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="has-sub"><a href="4-efficient-hardware.html#efficient-hardware"><span class="toc-section-number">4</span> Efficient hardware</a><ul>
+<li><a href="4-1-introduction-what-is-a-byte.html#introduction-what-is-a-byte"><span class="toc-section-number">4.1</span> Introduction: what is a byte?</a></li>
+<li class="has-sub"><a href="4-2-ram.html#ram"><span class="toc-section-number">4.2</span> Random access memory: RAM</a><ul>
+<li><a href="4-2-ram.html#exercises-6"><span class="toc-section-number">4.2.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="4-3-hard-drives-hdd-vs-ssd.html#hard-drives-hdd-vs-ssd"><span class="toc-section-number">4.3</span> Hard drives: HDD vs SSD</a></li>
+<li class="has-sub"><a href="4-4-operating-systems-32-bit-or-64-bit.html#operating-systems-32-bit-or-64-bit"><span class="toc-section-number">4.4</span> Operating systems: 32-bit or 64-bit</a><ul>
+<li><a href="4-4-operating-systems-32-bit-or-64-bit.html#exercises-7"><span class="toc-section-number">4.4.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="4-5-central-processing-unit-cpu.html#central-processing-unit-cpu"><span class="toc-section-number">4.5</span> Central processing unit (CPU)</a></li>
+<li class="has-sub"><a href="4-6-cloud-computing.html#cloud-computing"><span class="toc-section-number">4.6</span> Cloud computing</a><ul>
+<li><a href="4-6-cloud-computing.html#amazon-ec2"><span class="toc-section-number">4.6.1</span> Amazon EC2</a></li>
+<li><a href="4-6-cloud-computing.html#exercise"><span class="toc-section-number">4.6.2</span> Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="has-sub"><a href="5-efficient-workflow.html#efficient-workflow"><span class="toc-section-number">5</span> Efficient workflow</a><ul>
+<li class="has-sub"><a href="5-1-project-planning.html#project-planning"><span class="toc-section-number">5.1</span> Project planning</a><ul>
+<li><a href="5-1-project-planning.html#exercises-8"><span class="toc-section-number">5.1.1</span> Exercises</a></li>
+</ul></li>
+<li><a href="5-2-pkgs.html#pkgs"><span class="toc-section-number">5.2</span> Package selection</a></li>
+<li class="has-sub"><a href="5-3-importing-data.html#importing-data"><span class="toc-section-number">5.3</span> Importing data</a><ul>
+<li><a href="5-3-importing-data.html#fast-data-reading"><span class="toc-section-number">5.3.1</span> Fast data reading</a></li>
+<li><a href="5-3-importing-data.html#preprocessing-outside-r"><span class="toc-section-number">5.3.2</span> Preprocessing outside R</a></li>
+<li><a href="5-3-importing-data.html#working-with-databases"><span class="toc-section-number">5.3.3</span> Working with databases</a></li>
+</ul></li>
+<li><a href="5-4-tidying-data-with-tidyr.html#tidying-data-with-tidyr"><span class="toc-section-number">5.4</span> Tidying data with <strong>tidyr</strong></a></li>
+<li class="has-sub"><a href="5-5-dplyr.html#dplyr"><span class="toc-section-number">5.5</span> Data processing</a><ul>
+<li><a href="5-5-dplyr.html#renaming-columns"><span class="toc-section-number">5.5.1</span> Renaming columns</a></li>
+<li><a href="5-5-dplyr.html#filtering-rows"><span class="toc-section-number">5.5.2</span> Filtering rows</a></li>
+<li><a href="5-5-dplyr.html#filtering-columns"><span class="toc-section-number">5.5.3</span> Filtering columns</a></li>
+<li><a href="5-5-dplyr.html#data-aggregation"><span class="toc-section-number">5.5.4</span> Data aggregation</a></li>
+</ul></li>
+<li class="has-sub"><a href="5-6-updating-column-classes.html#updating-column-classes"><span class="toc-section-number">5.6</span> Updating column classes</a><ul>
+<li><a href="5-6-updating-column-classes.html#chaining-operations-with-dplyr"><span class="toc-section-number">5.6.1</span> Chaining operations with <strong>dplyr</strong></a></li>
+<li><a href="5-6-updating-column-classes.html#data.table"><span class="toc-section-number">5.6.2</span> <strong>data.table</strong></a></li>
+</ul></li>
+<li><a href="5-7-publication.html#publication"><span class="toc-section-number">5.7</span> Publication</a></li>
+</ul></li>
+<li><a href="6-efficient-collaboration.html#efficient-collaboration"><span class="toc-section-number">6</span> Efficient collaboration</a></li>
+<li class="has-sub"><a href="7-efficient-programming.html#efficient-programming"><span class="toc-section-number">7</span> Efficient programming</a><ul>
+<li class="has-sub"><a href="7-1-data-types.html#data-types"><span class="toc-section-number">7.1</span> Data types</a><ul>
+<li><a href="7-1-data-types.html#vectors"><span class="toc-section-number">7.1.1</span> Vectors</a></li>
+<li><a href="7-1-data-types.html#factors"><span class="toc-section-number">7.1.2</span> Factors</a></li>
+<li><a href="7-1-data-types.html#data-frames"><span class="toc-section-number">7.1.3</span> Data frames</a></li>
+<li><a href="7-1-data-types.html#matrix"><span class="toc-section-number">7.1.4</span> Matrix</a></li>
+<li><a href="7-1-data-types.html#S3"><span class="toc-section-number">7.1.5</span> S3 objects</a></li>
+<li><a href="7-1-data-types.html#efficient-data-structures"><span class="toc-section-number">7.1.6</span> Efficient data structures</a></li>
+</ul></li>
+<li class="has-sub"><a href="7-2-good-programming-techniques.html#good-programming-techniques"><span class="toc-section-number">7.2</span> Good programming techniques</a><ul>
+<li><a href="7-2-good-programming-techniques.html#general-tips"><span class="toc-section-number">7.2.1</span> General tips</a></li>
+<li><a href="7-2-good-programming-techniques.html#caching-variables"><span class="toc-section-number">7.2.2</span> Caching variables</a></li>
+<li><a href="7-2-good-programming-techniques.html#function-closures"><span class="toc-section-number">7.2.3</span> Function closures</a></li>
+<li><a href="7-2-good-programming-techniques.html#vectorised-code"><span class="toc-section-number">7.2.4</span> Vectorised code</a></li>
+</ul></li>
+<li class="has-sub"><a href="7-3-parallel-computing.html#parallel-computing"><span class="toc-section-number">7.3</span> Parallel computing</a><ul>
+<li><a href="7-3-parallel-computing.html#parallel-versions-of-apply-functions"><span class="toc-section-number">7.3.1</span> Parallel versions of apply functions</a></li>
+<li><a href="7-3-parallel-computing.html#example-parallel-bootstraping"><span class="toc-section-number">7.3.2</span> Example: parallel bootstraping</a></li>
+<li><a href="7-3-parallel-computing.html#process-forking"><span class="toc-section-number">7.3.3</span> Process forking</a></li>
+</ul></li>
+<li class="has-sub"><a href="7-4-the-byte-compiler.html#the-byte-compiler"><span class="toc-section-number">7.4</span> The byte compiler</a><ul>
+<li><a href="7-4-the-byte-compiler.html#example-the-mean-function"><span class="toc-section-number">7.4.1</span> Example: the mean function</a></li>
+<li><a href="7-4-the-byte-compiler.html#compiling-code"><span class="toc-section-number">7.4.2</span> Compiling code</a></li>
+</ul></li>
+</ul></li>
+<li><a href="8-efficient-rcpp.html#efficient-rcpp"><span class="toc-section-number">8</span> Efficient Rcpp</a></li>
+<li><a href="9-efficient-memory.html#efficient-memory"><span class="toc-section-number">9</span> Efficient Memory</a></li>
+<li><a href="10-efficient-learning.html#efficient-learning"><span class="toc-section-number">10</span> Efficient Learning</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="rstudio" class="section level2">
+<h2><span class="header-section-number">3.4</span> RStudio</h2>
+<p>RStudio is an Integrated Development Environment (IDE) for R. It makes life easy for R users and developers with its intuitive and flexible interface. RStudio encourages good programming practice. Through its wide range of features RStudio can help make you a more efficient and productive R programmer, for example by reducing the amount of time spent remembering and typing function names thanks to intelligent autocompletion. Some of the most important features of RStudio include:</p>
+<ul>
+<li>Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.</li>
+<li>Intelligent auto-completion of function names, packages and R objects.</li>
+<li>A wide range of keyboard shortcuts.</li>
+<li>Visual display of objects, including a searchable data display table.</li>
+<li>Real-time code checking and error detection.</li>
+<li>Menus to install and update packages.</li>
+<li>Project management and integration with version control.</li>
+</ul>
+<p>The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.<a href="10-efficient-learning.html#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> As with R itself, the best way to learn about RStudio is by using it. It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.</p>
+<div id="install-rstudio" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> Installing and updating RStudio</h3>
+<p>RStudio can be installed from the RStudio website <a href="https://www.rstudio.com/products/rstudio/download/">rstudio.com</a> and is available for all major operating systems. Updating RStudio is simple: click on <code>Help &gt; Check for Updates</code> in the menu. For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse. RStudio has many keyboard shortcuts that will help with this. To get into good habits early, try accessing the RStudio Update interface without touching the mouse. On Linux and Windows dropdown menus are activated with the <code>Alt</code> button, so the menu item can be found with:</p>
+<pre><code>Alt+H U</code></pre>
+<p>On Mac it works differently. <code>Cmd+?</code> should activate a search across menu items, allowing the same operation can be achieved with:</p>
+<pre><code>Cmd+? update</code></pre>
+<p><strong>Note:</strong> in RStudio the keyboard shortcuts differ between Linux and Windows versions on one hand and Mac on the other. In this section we generally only use the Windows/Linux shortcut keys for brevity. The Mac equivalent is usually found by simply replacing <code>Ctl</code> and <code>Alt</code> with the Mac-specific <code>Cmd</code> button.</p>
+</div>
+<div id="window-pane-layout" class="section level3">
+<h3><span class="header-section-number">3.4.2</span> Window pane layout</h3>
+<p>RStudio has four main window ‘panes’ (see Figure <a href="3-4-rstudio.html#fig:rstudio">3.2</a>), each of which serves a range of purposes:</p>
+<ul>
+<li><p>The <strong>Source pane</strong>, for editing, saving, and dispatching R code to the console (top left). Note that this pane does not exist by default when you start RStudio: it appears when you open an R script, e.g. via File -&gt; New File -&gt; R Script. A common task in this pane is to send code on the current line to the console, via <code>Ctl-Enter</code> (or <code>Cmd-Enter</code> on Mac).</p></li>
+<li><p>The <strong>Console pane</strong>. Any code entered here is processed by R, line by line. This pane is ideal for interactively testing ideas before saving the final results in the Source pane above.</p></li>
+<li><p>The <strong>Environment pane</strong> (top right) contains information about the current objects loaded in the workspace including their class, dimension (if they are a data frame) and name. This pane also contains tabbed sub-panes with a searchable history that was dispatched to the console and (if applicable to the project) Build and Git options.</p></li>
+<li><p>The <strong>Files pane</strong> (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML ‘widgets’.</p></li>
+</ul>
+<div class="figure"><span id="fig:rstudio"></span>
+<img src="figures/rstudio.png" alt="RStudio Panels"  />
+<p class="caption">
+Figure 3.2: RStudio Panels
+</p>
+</div>
+<p>Using each of the panels effectively and navigating between them quickly is a skill that will develop over time, and will only improve with practice.</p>
+</div>
+<div id="exercises-3" class="section level3">
+<h3><span class="header-section-number">3.4.3</span> Exercises</h3>
+<p>You are developing a project to visualise data. Test out the multi-panel RStudio workflow by following the steps below:</p>
+<ol style="list-style-type: decimal">
+<li><p>Create a new folder for the input data using the <strong>Files pane</strong>.</p></li>
+<li>Type in <code>downl</code> in the <strong>Source pane</strong> and hit <code>Enter</code> to make the function <code>download.file()</code> autocomplete. Then type <code>&quot;</code>, which will autocomplete to <code>&quot;&quot;</code>, paste the URL of a file to download (e.g. <code>https://www.census.gov/2010census/csv/pop_change.csv</code>) and a file name (e.g. <code>pop_change.csv</code>).</li>
+<li><p>Execute the full command with <code>Ctl-Enter</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,
+              <span class="st">&quot;data/pop_change.csv&quot;</span>)</code></pre></div></li>
+<li><p>Write and execute a command to read-in the data, such as</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</code></pre></div></li>
+<li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure 2-3).</p>
+<div class="figure"><span id="fig:2-3"></span>
+<img src="figures/View.png" alt="The data viewing tab in RStudio."  />
+<p class="caption">
+Figure 3.3: The data viewing tab in RStudio.
+</p>
+</div></li>
+<li><p>Use the <strong>Console</strong> to test different plot commands to visualise the data, saving the code you want to keep back into the <strong>Source pane</strong>, as <code>pop_change.R</code>.</p></li>
+<li><p>Use the <strong>Plots tab</strong> in the Files pane to scroll through past plots. Save the best using the Export dropdown button.</p></li>
+</ol>
+<p>The above example shows understanding of these panes and how to use them interactively can help with the speed and productivity of you R programming. Further, there are a number of RStudio settings that can help ensure that it works for your needs.</p>
+</div>
+<div id="rstudio-options" class="section level3">
+<h3><span class="header-section-number">3.4.4</span> RStudio options</h3>
+<p>A range of <code>Project Options</code> and <code>Global Options</code> are available in RStudio from the <code>Tools</code> menu (accessible in Linux and Windows from the keyboard via <code>Alt+T</code>). Most of these are self-explanatory but it is worth mentioning a few that can boost your programming efficiency:</p>
+<ul>
+<li><p>GIT/SVN project settings allow RStudio to provide a graphical interface to your version control system, described in Chapter XX.</p></li>
+<li><p>R version settings allow RStudio to ‘point’ to different R versions/interpreters, which may be faster for some projects.</p></li>
+<li><p><code>Restore .RData</code>: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the change of getting bugs due to previously created objects.</p></li>
+<li><p>Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling <code>Vim mode</code> makes RStudio act as a (partial) Vim emulator.</p></li>
+<li><p>Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work. This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.</p></li>
+<li><p>Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics, which are also important because feeling comfortable in your programming environment can boost productivity.</p></li>
+</ul>
+</div>
+<div id="auto-completion" class="section level3">
+<h3><span class="header-section-number">3.4.5</span> Auto-completion</h3>
+<p>R provides some basic autocompletion functionality. Typing the beginning of a function name, for example <code>rn</code> (short for <code>rnorm()</code>), and hitting <code>Tab</code> will result in the full function names associated with this text string being printed. In this case two options would be displayed: <code>rnbinom</code> and <code>rnorm</code>, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing <code>te</code> in the console in a project which contains a file called <code>test.R</code> should result in the full name <code>&quot;test.R&quot;</code> being auto-completed. RStudio builds on this functionality and takes it to a new level.</p>
+<p>Instead of only auto completing options when <code>Tab</code> is pressed, RStudio auto completes them at any point. Building on the previous example, RStudio’s autocompletion triggers when the first three characters are typed: <code>rno</code>. The same functionality works when only the first characters are typed, followed by <code>Tab</code>: automatic auto-completion does not replace <code>Tab</code> autocompletion but supplements it. Note that in RStudio two more options are provided to the user after entering <code>rn Tab</code> compared with entering the same text into base R’s console described in the previous paragraph: <code>RNGkind</code> and <code>RNGversion</code>. This illustrates that RStudio’s autocompletion functionality is not case sensitive in the same way that R is. This is a good thing because R has no consistent function name style!</p>
+<p>RStudio also has more intelligent auto-completion of objects and file names than R’s built-in command line. To test this functionality, try typing <code>US</code>, followed by the Tab key. After pressing down until <code>USArrests</code> is selected, press Enter so it autocompletes. Finally, typing <code>$</code> should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">USArrests$<span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></code></pre></div>
+<p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form <code>spdf@data$varname</code>.<a href="10-efficient-learning.html#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name. RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>. Another example is RStudio’s ability to find files hidden away in sub-folders. Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>. There are a number of other clever auto-completion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
+</div>
+<div id="keyboard-shortcuts" class="section level3">
+<h3><span class="header-section-number">3.4.6</span> Keyboard shortcuts</h3>
+<p>RStudio has many useful shortcuts that can help make your programming more efficient by reducing the need to reach for the mouse and point and click your way around code and RStudio. These can be viewed by using a little known but extremely useful keyboard shortcut:</p>
+<pre><code>Alt+Shift+K</code></pre>
+<p>This will display the default shortcuts in RStudio. It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse. Some more <a href="http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/">useful</a> shortcuts are listed below. There are many more gems to find that could boost your R writing productivity:</p>
+<ul>
+<li><code>Ctl+Z/Shift+Z</code>: Undo/Redo.</li>
+<li><code>Ctl+Enter</code>: Execute the current line or code selection in the Source pane.</li>
+<li><code>Ctl+Alt+R</code>: Execute all the R code in the currently open file in the Source pane.</li>
+<li><code>Ctl+Left/Right</code>: Navigate code quickly, word by word.</li>
+<li><code>Home/End</code>: Navigate to the beginning/end of the current line.</li>
+<li><code>Alt+Shift+Up/Down</code>: Duplicate the current line up or down.</li>
+<li><code>Ctl+D</code>: Delete the current line.</li>
+</ul>
+</div>
+<div id="object-display-and-output-table" class="section level3">
+<h3><span class="header-section-number">3.4.7</span> Object display and output table</h3>
+<p>It is useful to know what is in your current R environment. This information can be revealed with <code>ls()</code>, but this function only provides object names. RStudio provides an efficient mechanism to show currently loaded objects, and their details, in real-time: the Environment tab in the top right corner. It makes sense to keep an eye on which objects are loaded and to delete objects that are no longer useful. Doing so will minimise the probability of confusion in your workflow (e.g. by using the wrong version of an object) and reduce the amount of RAM R needs. The details provided in the Environment tab include the object’s dimension and some additional details depending on the object’s class (e.g. size in MB for large datasets).</p>
+<p>A very useful feature of RStudio is its advanced viewing functionality. This is triggered either by executing <code>View(object)</code> or by double clicking on the object name in the Environment tab. Although you cannot edit data in the Viewer (this should be considered a good thing from a data integrity perspective), recent versions of RStudio provide an efficient search mechanism to rapidly filter and view the records that are of most interest (see Figure 2-3 above).</p>
+</div>
+<div id="project-management" class="section level3">
+<h3><span class="header-section-number">3.4.8</span> Project management</h3>
+<p>In the far top-right of RStudio there is a diminutive drop-down menu illustrated with R inside a transparent box. This menu may be small and simple, but it is hugely efficient in terms of organising large, complex and long-term projects.</p>
+<p>The idea of RStudio projects is that the bulk of R programming work is part of a wider task, which will likely consist of input data, R code, graphical and numerical outputs and documents describing the work. It is possible to scatter each of these elements at random across your hard-discs but this is not recommended. Instead, the concept of projects encourages reproducible working, such that anyone who opens the particular project folder that you are working from should be able to repeat your analyses and replicate your results.</p>
+<p>It is therefore <em>highly recommended</em> that you use projects to organise your work. It could save hours in the long-run. Organizing data, code and outputs also makes sense from a portability perspective: if you copy the folder (e.g. via GitHub) your can work on it from any computer without worrying about having the right files on your current machine. These tasks are implemented using RStudio’s simple project system, in which the following things happen each time you open an existing project:</p>
+<ul>
+<li><p>The working directory automatically switches to the project’s folder. This enables data and script files to be referred to using relative file paths, which are much shorter than absolute file paths. This means that switching directory using <code>setwd()</code>, a common source of error for R users, is rarely if ever needed.</p></li>
+<li><p>The last previously open file is loaded into the Source pane. The history of R commands executed in previous sessions is also loaded into the History tab. This assists with continuity between one session and the next.</p></li>
+<li><p>The <code>File</code> tab displays the associated files and folders in the project, allowing you to quickly find your previous work.</p></li>
+<li><p>Any settings associated with the project, such as Git settings, are loaded. This assists with collaboration and project-specific set-up.</p></li>
+</ul>
+<p>Each project is different but most contain input data, R code and outputs. To keep things tidy, we recommend a sub-directory structure resembling the following:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">project/</span>
+  <span class="kw">-</span> README.rmd <span class="co"># Project description</span>
+  <span class="kw">-</span> set-up.R  <span class="co"># Required packages</span>
+  <span class="kw">-</span> R/ <span class="co"># For R code</span>
+  <span class="kw">-</span> input <span class="co"># Data files</span>
+  <span class="kw">-</span> graphics/
+  <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre></div>
+<p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
+<p>Another approach to project management is to treat projects as R packages. Creating R packages is easier than ever before, with tools such as <strong>devtools</strong> for managing R’s quirks and making the process user friendly. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
+<p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
+</div>
+<div id="exercises-4" class="section level3">
+<h3><span class="header-section-number">3.4.9</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li><p>Try modifying the look and appearance of your RStudio setup.</p></li>
+<li><p>What is the keyboard shortcut to show the other shortcut? (Hint: it begins with <code>Alt+Shift</code>.)</p></li>
+<li><p>Try as many of the shortcuts revealed by the previous step as you like. Write down the ones that you think will save you time, perhaps on a post-it note to go on your computer.</p></li>
+</ol>
+</div>
+</div>
+<p style="text-align: center;">
+<button class="btn btn-default"><a href="3-3-r-startup.html">Previous</a></button>
+<button class="btn btn-default"><a href="3-5-blas-and-alternative-r-interpreters.html">Next</a></button>
+</p>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

@@ -210,18 +210,138 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="updating-column-classes" class="section level2">
+<h2><span class="header-section-number">5.6</span> Updating column classes</h2>
+<p>The <em>class</em> of R objects is critical to how it performs. If a class is incorrectly specified (if numbers are treated as factors, for example), R will likely generate error messages. Try typing <code>mean(idata$gini)</code>, for example.</p>
+<p>We can re-assign the classes of the numeric variables one-by one:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)</code></pre></div>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span></code></pre></div>
+<pre><code>## [1] 40.50363</code></pre>
+<p>However, the purpose of programming languages is to <em>automate</em> arduous tasks and reduce typing. The following command re-classifies all of the numeric variables using the <code>apply</code> function (we’ll seem more of <code>apply</code>’s relatives later):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata[<span class="dv">5</span>:<span class="dv">9</span>] =<span class="st"> </span><span class="kw">apply</span>(idata[<span class="dv">5</span>:<span class="dv">9</span>], <span class="dv">2</span>,
+  function(x) <span class="kw">as.numeric</span>(x))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
+<span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<pre><code>## Source: local data frame [176 x 2]
+## 
+##         Country     gini
+##           (chr)    (dbl)
+## 1   Afghanistan      NaN
+## 2       Albania 30.43167
+## 3       Algeria 37.76000
+## 4        Angola 50.65000
+## 5     Argentina 48.06739
+## 6       Armenia 33.72929
+## 7     Australia 33.14167
+## 8       Austria 29.15167
+## 9    Azerbaijan 24.79000
+## 10 Bahamas, The      NaN
+## ..          ...      ...</code></pre>
+<p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
+  <span class="co"># number of rows per country</span>
+  <span class="dt">obs =</span> <span class="kw">n</span>(), 
+  <span class="dt">med_t10 =</span> <span class="kw">median</span>(top10, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
+  <span class="co"># standard deviation</span>
+  <span class="dt">sdev =</span> <span class="kw">sd</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
+  <span class="co"># number with gini &gt; 30</span>
+  <span class="dt">n30 =</span> <span class="kw">sum</span>(gini &gt;<span class="st"> </span><span class="dv">30</span>, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
+  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini &gt;<span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
+  <span class="co"># range</span>
+  <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) -<span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
+  )</code></pre></div>
+<pre><code>## Source: local data frame [176 x 7]
+## 
+##         Country   obs med_t10      sdev   n30      sdn30   dif
+##           (chr) (int)   (dbl)     (dbl) (int)      (dbl) (dbl)
+## 1   Afghanistan    40      NA       NaN     0         NA    NA
+## 2       Albania    40  24.435  1.252524     3  0.3642801  2.78
+## 3       Algeria    40  29.780  3.436539     2  3.4365390  4.86
+## 4        Angola    40  38.555 11.299566     2 11.2995664 15.98
+## 5     Argentina    40  36.320  3.182462    23  3.1824622 11.00
+## 6       Armenia    40  27.835  4.019532    12  3.9567778 14.84
+## 7     Australia    40  24.785  1.075089     6  1.0750891  2.81
+## 8       Austria    40  23.120  3.120849     4  0.6859300  8.48
+## 9    Azerbaijan    40  17.960  9.479029     3  1.7386489 20.27
+## 10 Bahamas, The    40      NA       NaN     0         NA    NA
+## ..          ...   ...     ...       ...   ...        ...   ...</code></pre>
+<p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
+<ul>
+<li>the number of rows in each country group</li>
+<li>standard deviation of gini indices</li>
+<li>median proportion of income earned by the top 10%</li>
+<li>the number of years in which the gini index was greater than 30</li>
+<li>the standard deviation of gini index values over 30</li>
+<li>the range of gini index values reported for each country.</li>
+</ul>
+<blockquote>
+<p><strong>Challenge</strong>: explore the <strong>dplyr</strong>’s documentation, starting with the introductory vignette, accessed by entering <code>vignette(&quot;introduction&quot;)</code> and test out its capabilities on the <code>idata</code> dataset. (More vignette names can be discovered by typing <code>vignette(package = &quot;dplyr&quot;)</code>)</p>
+</blockquote>
+<div id="chaining-operations-with-dplyr" class="section level3">
+<h3><span class="header-section-number">5.6.1</span> Chaining operations with <strong>dplyr</strong></h3>
+<p>Another interesting feature of <strong>dplyr</strong> is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end end-up with very long commands with many functions nested inside each other to answer relatively simple questions.</p>
+<blockquote>
+<p>What were, on average, the 5 most unequal years for countries containing the letter g?</p>
+</blockquote>
+<p>Here’s how chains work to organise the analysis in a logical step-by-step manner:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(Year) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) %&gt;%
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>## Selecting by gini</code></pre>
+<pre><code>## Source: local data frame [5 x 2]
+## 
+##    Year   gini
+##   (int)  (dbl)
+## 1  1980 46.850
+## 2  1993 45.996
+## 3  2013 44.550
+## 4  1981 43.650
+## 5  2012 43.560</code></pre>
+<p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
+<ol style="list-style-type: decimal">
+<li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
+<li>Group the output by year.</li>
+<li>Summarise, for each year, the mean gini index.</li>
+<li>Arrange the results by average gini index</li>
+<li>Select only the top 5 most unequal years.</li>
+</ol>
+<p>To see why this method is preferable to the nested function approach, take a look at the latter. Even after indenting properly it looks terrible and is almost impossible to understand!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(
+  <span class="kw">arrange</span>(
+    <span class="kw">summarise</span>(
+      <span class="kw">group_by</span>(
+        <span class="kw">filter</span>(idata, <span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)),
+        Year),
+      <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)),
+    <span class="kw">desc</span>(gini)),
+  <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham <a href="10-efficient-learning.html#ref-grolemund_r_2016">2016</a>)</span>.</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="data.table" class="section level3">
+<h3><span class="header-section-number">5.6.2</span> <strong>data.table</strong></h3>
+<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="10-efficient-learning.html#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a> so it should be stated at the outset that <strong>dplyr</strong> and <strong>data.table</strong> are not mutually exclusive competitors or that must be ‘better’ than another. These are both excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.</p>
+<p><strong>data.table</strong> does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of, however. Building on the <code>filter()</code> example above, we’ll see <strong>data.tables</strong>’s unique approach to subsetting.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
+idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
+idata_dt =<span class="st"> </span><span class="kw">data.table</span>(idata)
+<span class="kw">setkey</span>(idata_dt, Country)
+aus3 =<span class="st"> </span>idata_dt[<span class="st">&quot;Australia&quot;</span>,]</code></pre></div>
+<div class="figure"><span id="fig:dtplot"></span>
+<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes."  />
+<p class="caption">
+Figure 5.4: Benchmark illustrating the performance gains to be expected for different dataset sizes.
+</p>
+</div>
+<p>Figure <a href="5-6-updating-column-classes.html#fig:dtplot">5.4</a> illustrates the speed improvement benefits of data.table for different datasets sizes. As with the <strong>readr</strong> vs base R issue, the results show that the relative benefits of <strong>data.table</strong> improve with dataset size.</p>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="5-5-dplyr.html">Previous</a></button>
+<button class="btn btn-default"><a href="5-7-publication.html">Next</a></button>
 </p>
 </div>
 </div>

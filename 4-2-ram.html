@@ -210,18 +210,68 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="ram" class="section level2">
+<h2><span class="header-section-number">4.2</span> Random access memory: RAM</h2>
+<p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is directly related to the size of data sets that it can process. As the amount of RAM your machine has increases, the size of datasets you can analyse also increases, so it is important to have sufficient RAM for your work.</p>
+<div class="figure"><span id="fig:3-1"></span>
+<img src="figures/ram.jpg" alt="Two $8$GB RAM cards. Credit: https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg"  />
+<p class="caption">
+Figure 4.1: Two <span class="math inline">\(8\)</span>GB RAM cards. Credit: <a href="https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg" class="uri">https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg</a>
+</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<p>Even if the original data set is relatively small, the analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</code></pre></div>
+<pre><code>##         Murder Assault UrbanPop Rape
+## Alabama   13.2     236       58 21.2
+## Alaska    10.0     263       48 44.5
+## Arizona    8.1     294       80 31.0</code></pre>
+<p>If we want to group states that have similar crime statistics, a standard first step is to calculate the distance or similarity matrix</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
+<p>When we inspect the object size of the original data set and the distance object using the <strong>pryr</strong> package</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(USArrests)</code></pre></div>
+<pre><code>## 5.23 kB</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(d)</code></pre></div>
+<pre><code>## 14.3 kB</code></pre>
+<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math inline">\(n \times n\)</span> matrix, where <span class="math inline">\(n\)</span> is the number of rows in <code>USAarrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math inline">\(O(n^2)\)</span>. So if our original data set contained <span class="math inline">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math inline">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math inline">\(50\)</span> million unique values. A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
+<p>Another benefit of having increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often (we will cover this in more detail in chapter XXX).</p>
+<p>It is straightforward to determine how much RAM you have. Under Windows,</p>
+<ol style="list-style-type: decimal">
+<li>Clicking the <code>Start</code> button picture of the Start button, then right-clicking Computer. Next click on <code>Properties</code>.</li>
+<li>In the <code>System</code> section, you can see the amount of RAM your computer has next to the <code>Installed memory (RAM)</code> section. Windows reports how much RAM it can use, not the amount installed. This is only an issue if you are using a 32-bit version of Windows.</li>
+</ol>
+<p>In Mac, click the Apple menu. Select <code>About This Mac</code> and a window appears with the relevant information.</p>
+<p>On almost all Unix-based OSs, you can find out how much RAM you have using the code <code>vmstat</code>, whilst on all Linux distributions, you can use the command <code>free</code>. Using this in conjunction with the <code>-h</code> tag will provide the answer in human readable format, as illustrated below for a 16 GB machine:</p>
+<pre><code>$ free -h
+             total       used       free     
+Mem:           15G       4.0G        11G </code></pre>
+<p>It is sometimes possible to increase your computer’s RAM. On the computer motherboard, there are typically <span class="math inline">\(2\)</span> or <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more RAM. However, it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the RAM will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from 4GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)</code></pre></div>
+<pre><code>## 
+## RAM is cheap and thinking hurts.
+##    -- Uwe Ligges (about memory requirements in R)
+##       R-help (June 2007)</code></pre>
+<p>It is a testament to the design of R that it is still relevant and its popularity is growing. Ross Ihaka, one of the originators of the R programming language, made a throw-away comment in 2003:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">21</span>)</code></pre></div>
+<pre><code>## 
+## I seem to recall that we were targetting 512k Macintoshes. In our dreams
+## we might have seen 16Mb Sun.
+##    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they
+##       started out that they would see R using 16G memory on a dual Opteron
+##       computer)
+##       R-help (November 2003)</code></pre>
+<p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive. R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
+<div id="exercises-6" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Exercises</h3>
+<p>The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.</p>
+<ol style="list-style-type: decimal">
+<li>R loads everything into memory, i.e. your computers RAM. How much RAM do you have?</li>
+<li>Using Google, how much does it cost (in pounds) to double the amount of available RAM on your system?</li>
+</ol>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="4-1-introduction-what-is-a-byte.html">Previous</a></button>
+<button class="btn btn-default"><a href="4-3-hard-drives-hdd-vs-ssd.html">Next</a></button>
 </p>
 </div>
 </div>

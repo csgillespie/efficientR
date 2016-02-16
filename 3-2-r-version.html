@@ -210,18 +210,74 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="r-version" class="section level2">
+<h2><span class="header-section-number">3.2</span> R version</h2>
+<p>It is important to keep your R installation and packages up-to-date. This section explains how.</p>
+<div id="installing-r" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Installing R</h3>
+<p>The method of installing R varies for Windows, Linux and Mac.</p>
+<p>On Windows, a single <code>.exe</code> file (hosted at <a href="https://cran.r-project.org/bin/windows/base/">cran.r-project.org/bin/windows/base/</a>) will install the base R package.</p>
+<p>On a Mac, the latest version should be installed by downloading the <code>.pkg</code> files hosted at <a href="https://cran.r-project.org/bin/macosx/">cran.r-project.org/bin/macosx/</a>.</p>
+<p>On Debian-based systems adding the CRAN repository in the format. To add the RStudio mirror for Ubuntu 14.04 (codenamed Trusty), for example, add the following line to <code>/etc/apt/sources.list</code>:</p>
+<pre><code>echo &#39;deb https://cran.rstudio.com/bin/linux/ubuntu trusty`</code></pre>
+<p>In the above code <code>cran.rstudio.com</code> is the mirror and <code>trusty</code> is the Ubuntu version. Then <code>r-base</code> and other <code>r-</code> packages can be installed. R also works on FreeBSD and other Unix-based systems.<a href="10-efficient-learning.html#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>Once R is installed it should be kept up-to-date.</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="updating-r" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Updating R</h3>
+<p>R is a mature and stable language so well-written code in base R should work on most versions. However, it is important to keep your R version relatively up-to-date, because:</p>
+<ul>
+<li>Bug fixes are introduced in each version, making errors less likely;</li>
+<li>Performance enhancements are made from one version to the next, meaning your code may run faster in later versions;</li>
+<li>Many R packages only work on recent versions on R.</li>
+</ul>
+<p>Release notes with details on each of these issues are hosted at <a href="https://cran.r-project.org/src/base/NEWS">cran.r-project.org/src/base/NEWS</a>. R release versions have 3 components corresponding to major.minor.patch changes. Generally 2 or 3 patches are released before the next minor increment. R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.</p>
+<ul>
+<li>On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with <code>apt-get upgrade</code>.</li>
+<li>On Mac, the latest version should be installed by the user from the <code>.pkg</code> files mentioned above.</li>
+<li><p>On Windows <strong>installr</strong> package makes updating easy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check and install the latest R version</span>
+installr::<span class="kw">updateR</span>() </code></pre></div></li>
+</ul>
+<p>For information about changes to expect in the next version, you can subscribe to the R’s NEWS RSS feed: <a href="http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss">developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss</a>. It’s a good way of keeping up to date.</p>
+</div>
+<div id="installing-r-packages" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Installing R packages</h3>
+<p>Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span>
+<span class="kw">install.packages</span>(pkgs)</code></pre></div>
+<p>In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the <code>pkgs</code> object to load them all:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></code></pre></div>
+<p>In the above code <code>library(pkg[i])</code> is executed for every package stored in the text string vector. We use <code>library</code> here instead of <code>require</code> because the former produces an error if the package is not available.</p>
+<p>Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed <em>before</em> time is spent executing code. Storing package names in a character vector object such as <code>pkgs</code> is also useful because it allows us to refer back to them again and again. To provide another example, we can update only the packages named in <code>pkgs</code> with the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>(<span class="dt">oldPkgs =</span> pkgs)</code></pre></div>
+</div>
+<div id="deps" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Installing R packages with dependencies</h3>
+<p>Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing <code>install.packages</code>. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with <code>r-cran-</code> can be search for and installed as follows (see <a href="https://cran.r-project.org/bin/linux/ubuntu/">cran.r-project.org/bin/linux/ubuntu/</a> for a list of these):</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span>
+<span class="kw">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></code></pre></div>
+<p>On Windows the <strong>installr</strong> package helps manage and update R packages with system-level dependencies. For example the <strong>Rtools</strong> package for compiling C/C++ code on Window can be installed with the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">installr::<span class="kw">install.rtools</span>() </code></pre></div>
+</div>
+<div id="updating-r-packages" class="section level3">
+<h3><span class="header-section-number">3.2.5</span> Updating R packages</h3>
+<p>An efficient R set-up will contain up-to-date packages. This can be done <em>for all packages</em> with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></code></pre></div>
+<p>The default for this function is for the <code>ask</code> argument to be set to <code>TRUE</code>, giving control over what is downloaded onto your system.<a href="10-efficient-learning.html#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> This is a good thing: updating dozens of large packages can consume a large proportion of available system resources and much time!</p>
+<p>An even more interactive method for updating packages in R is provided by RStudio via Tools &gt; Check for Package Updates. Many such time saving tricks are enabled by RStudio, as described in <a href="3-4-rstudio.html#install-rstudio">a subsequent section</a>. Next (after the exercises) we take a look at how to configure R using start-up files.</p>
+</div>
+<div id="exercises-1" class="section level3">
+<h3><span class="header-section-number">3.2.6</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>What version of R are you using? Is it the most up-to-date?</li>
+<li>Do any of your packages need updating?</li>
+</ol>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="3-1-operating-system.html">Previous</a></button>
+<button class="btn btn-default"><a href="3-3-r-startup.html">Next</a></button>
 </p>
 </div>
 </div>

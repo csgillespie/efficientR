@@ -210,18 +210,57 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="parallel-computing" class="section level2">
+<h2><span class="header-section-number">7.3</span> Parallel computing</h2>
+<p>In recent R versions (since R 2.14.0) ** parallel** package comes pre-installed with base R. The ** parallel** package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
+no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
+<p>The computer used to compile the published version of this book chapter has 2 CPUs/Cores.</p>
+<div id="parallel-versions-of-apply-functions" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Parallel versions of apply functions</h3>
+<p>The most commonly used parallel applications are parallelized replacements of <code>lapply</code>, <code>sapply</code> and <code>apply</code>. The parallel implementations and their arguments are shown below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
+<span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
+<span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
+<p>Note that each function has an argument <code>cl</code> which must be created by <code>makeCluster</code>. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="example-parallel-bootstraping" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Example: parallel bootstraping</h3>
+<p>In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore’s law. A scatter plot (figure <a href="7-3-parallel-computing.html#fig:6-3">7.3</a>) of processors over the last thirty years shows that that this law seems to hold.</p>
+<div class="figure"><span id="fig:6-3"></span>
+<img src="_main_files/figure-html/6-3-1.png" alt="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"  />
+<p class="caption">
+Figure 7.3: Transistor counts against introduction date. Credit: <a href="https://en.wikipedia.org/wiki/Transistor_count" class="uri">https://en.wikipedia.org/wiki/Transistor_count</a>
+</p>
+</div>
+<p>We can estimate the trend using simple linear regression. A standard algorithm for obtaining uncertainty estimates on regression coefficients is bootstrapping. This is a simple algorithm; at each iteration we sample with replacement from the original data set and estimate the parameters of the new data set. The distribution of the parameters gives us our uncertainty estimate. We begin by loading the data set and creating a function for performing a single bootstrap</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;transistors&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+bs =<span class="st"> </span>function(i) {
+  s =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">NROW</span>(transistors), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+  trans_samp =<span class="st"> </span>transistors[s,]
+  <span class="kw">coef</span>(<span class="kw">lm</span>(<span class="kw">log2</span>(Count) ~<span class="st"> </span>Year, <span class="dt">data=</span>trans_samp))
+}</code></pre></div>
+<p>We can then perform <span class="math inline">\(N=10^4\)</span> bootstraps using <code>sapply</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10000</span>
+<span class="kw">sapply</span>(<span class="dv">1</span>:N, bs)</code></pre></div>
+<p>Rewriting this code to make use of the ** parallel** package is straightforward. We begin by making a cluster and exporting the data set</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
+cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">6</span>)
+<span class="kw">clusterExport</span>(cl, <span class="st">&quot;transistors&quot;</span>)</code></pre></div>
+<p>Then use <code>parSapply</code> and stop the cluster</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, bs)
+<span class="kw">stopCluster</span>(cl)</code></pre></div>
+<p>On this computer, we get a four-fold speed-up.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
+</div>
+<div id="process-forking" class="section level3">
+<h3><span class="header-section-number">7.3.3</span> Process forking</h3>
+<p>Another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions. These functions use forking forking, that is creating a new copy of a process running on the CPU. However, Windows does not support this low-level functionality in the way that Linux does.</p>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="7-2-good-programming-techniques.html">Previous</a></button>
+<button class="btn btn-default"><a href="7-4-the-byte-compiler.html">Next</a></button>
 </p>
 </div>
 </div>

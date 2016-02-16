@@ -210,18 +210,128 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="dplyr" class="section level2">
+<h2><span class="header-section-number">5.5</span> Data processing</h2>
+<p>Tidy data is easier to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice to decide appropriate packages for the work early on (see Section <a href="5-2-pkgs.html#pkgs">5.2</a>) uses <strong>dplyr</strong>, which has a number of advantages compared with base R and <strong>data.table</strong>:</p>
+<ul>
+<li><strong>dplyr</strong> is fast to run and intuitive to type</li>
+<li><strong>dplyr</strong> works well with tidy data, as described above</li>
+<li><strong>dplyr</strong> works well with databases, providing efficiency gains on large datasets</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
+fname &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+idata &lt;-<span class="st"> </span><span class="kw">read_csv</span>(fname)
+idata <span class="co"># print the dataset in the **dplyr** way</span></code></pre></div>
+<p><strong>dplyr</strong> is much faster than base implementations of various operations, but it has the potential to be even faster, as <em>parallelisation</em> is <a href="https://github.com/hadley/dplyr/issues/145">planned</a> and the <a href="https://github.com/hadley/multidplyr">multidplyr</a> package, a parallel backend for <strong>dplyr</strong>, is under development.</p>
+<p>You should not be expecting to learn the <strong>dplyr</strong> package in one sitting: the package is large and can be seen as a language in its own right. Following the ‘walk before you run’ principle, we’ll start simple, by filtering and aggregating rows, building on the previous section on tidying data.</p>
+<div id="renaming-columns" class="section level3">
+<h3><span class="header-section-number">5.5.1</span> Renaming columns</h3>
+<p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.<a href="10-efficient-learning.html#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
+<p>To rename multiple columns the variable names are simply separated by commas. The base R and <strong>dplyr</strong> way of doing this is illustrated for clarity.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The dplyr way (rename two variables)</span>
+idata &lt;-<span class="st"> </span><span class="kw">rename</span>(idata,
+ <span class="dt">top10 =</span> <span class="st">`</span><span class="dt">Income share held by highest 10% [SI.DST.10TH.10]</span><span class="st">`</span>,
+ <span class="dt">bot10 =</span> <span class="st">`</span><span class="dt">Income share held by lowest 10% [SI.DST.FRST.10]</span><span class="st">`</span>)
+
+<span class="co"># The base R way (rename five variables)</span>
+<span class="kw">names</span>(idata)[<span class="dv">5</span>:<span class="dv">9</span>] =
+<span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;top10&quot;</span>, <span class="st">&quot;bot10&quot;</span>, <span class="st">&quot;gini&quot;</span>, <span class="st">&quot;b40_cons&quot;</span>, <span class="st">&quot;gdp_percap&quot;</span>)</code></pre></div>
+<p>Now we have usefully renamed the object we save the result for future reference:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(idata, <span class="st">&quot;data/idata-renamed.Rds&quot;</span>)</code></pre></div>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="filtering-rows" class="section level3">
+<h3><span class="header-section-number">5.5.2</span> Filtering rows</h3>
+<p>The standard way to subset data by rows in R is with square brackets, for example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aus1 =<span class="st"> </span>idata[idata$Country ==<span class="st"> &quot;Australia&quot;</span>,]</code></pre></div>
+<p><strong>dplyr</strong> offers an alternative and more flexible way of filtering data, using <code>filter()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aus2 =<span class="st"> </span><span class="kw">filter</span>(idata, Country ==<span class="st"> &quot;Australia&quot;</span>)</code></pre></div>
+<p>Note that <strong>dplyr</strong> does not rely on the <code>$</code> symbol: it knows that that <code>Country</code> is a variable of <code>idata</code> Because <code>idata</code> was the first argument, <strong>dplyr</strong> assumes that any subsequent are variables.<a href="10-efficient-learning.html#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
+<p>The <strong>dplyr</strong> equivalent of aggregate is to use the grouping function <code>group_by</code> in combination with the general purpose function <code>summarise</code> (not to be confused with <code>summary</code> in base R).</p>
+</div>
+<div id="filtering-columns" class="section level3">
+<h3><span class="header-section-number">5.5.3</span> Filtering columns</h3>
+<p>Large datasets often contain much worthless or blank information, clogging up RAM and reducing computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.</p>
+<p>Imagine that we have large (4+ GB) text file called <code>miniaa</code> which is loaded with the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/miniaa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+df =<span class="st"> </span><span class="kw">read_csv</span>(fname) <span class="co"># load imaginary large data</span>
+<span class="kw">dim</span>(df)</code></pre></div>
+<pre><code>## [1]   9 329</code></pre>
+<p>Note that the data frame has 329 columns (and imagine it has 4 million+ rows as the original does). That’s a lot of variables. Do we need them all? It’s worth taking a glimpse at this dataset to find out:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df)</code></pre></div>
+<pre><code># $ NPI                   (int) 1679576722, ...
+# $ Entity Type Code      (int) 1, 1, 2,    ...
+# $ Replacement NPI       (lgl) NA, NA, NA, ...
+# ...</code></pre>
+<p>Looking at the output, it becomes clear that the majority of the variables only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
+all_na =<span class="st"> </span><span class="kw">sapply</span>(df, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)))
+<span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span></code></pre></div>
+<pre><code>##    Mode   FALSE    NA&#39;s 
+## logical     329       0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span>df[!all_na] <span class="co"># subset the dataframe</span></code></pre></div>
+<p>The new <code>df</code> object has fewer than a third of the original columns.</p>
+<blockquote>
+<p><strong>Challenge:</strong> find out how much space was saved by the above operation using <code>object.size()</code></p>
+</blockquote>
+</div>
+<div id="data-aggregation" class="section level3">
+<h3><span class="header-section-number">5.5.4</span> Data aggregation</h3>
+<p>Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the average emissions per country (country being the grouping variable) from the ‘GHG’ dataset rescued from a spreadsheet and converted into a .csv file in the previous chapter.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
+<span class="kw">names</span>(df)</code></pre></div>
+<pre><code>## [1] &quot;X&quot;                                       
+## [2] &quot;Country&quot;                                 
+## [3] &quot;Year&quot;                                    
+## [4] &quot;Electricity.Heat..CO2...MtCO2.&quot;          
+## [5] &quot;Manufacturing.Construction..CO2...MtCO2.&quot;
+## [6] &quot;Transportation..CO2...MtCO2.&quot;            
+## [7] &quot;Other.Fuel.Combustion..CO2...MtCO2.&quot;     
+## [8] &quot;Fugitive.Emissions..CO2...MtCO2.&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(df)</code></pre></div>
+<pre><code>## [1] 7896</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(df$Country))</code></pre></div>
+<pre><code>## [1] 188</code></pre>
+<blockquote>
+<p><strong>Challenge:</strong> rename the variables 4 to 8 so they are much shorter, following the pattern <code>ECO2</code>, <code>MCO2</code> etc. That will make the code for manipulating the dataset easier to write</p>
+</blockquote>
+<p>After the variable names have been updated, we can aggregate.<a href="10-efficient-learning.html#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(df$ECO2, <span class="kw">list</span>(df$Country), mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
+<span class="kw">nrow</span>(e_ems)</code></pre></div>
+<pre><code>## [1] 188</code></pre>
+<p>Note that the resulting data frame has the same number of rows as there are countries: the aggregation has successfully reduced the number of rows we need to deal with. Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)</code></pre></div>
+<pre><code>##     Group.1          x
+## 77  Iceland 0.01785714
+## 121   Nepal 0.02333333
+## 18    Benin 0.04642857</code></pre>
+<p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). The following command creates the same object as <code>e_ems</code>, but with less typing.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(ECO2 ~<span class="st"> </span>Country, df, mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+<span class="kw">group_by</span>(df, Country) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(ECO2, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<pre><code>## Source: local data frame [188 x 2]
+## 
+##              Country   mean_eco2
+##               (fctr)       (dbl)
+## 1        Afghanistan         NaN
+## 2            Albania   0.6411905
+## 3            Algeria  23.0147619
+## 4             Angola   0.7914286
+## 5  Antigua &amp; Barbuda         NaN
+## 6          Argentina  39.1054762
+## 7            Armenia   1.8000000
+## 8          Australia 150.5961905
+## 9            Austria  17.3202381
+## 10        Azerbaijan  16.0430435
+## ..               ...         ...</code></pre>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="5-4-tidying-data-with-tidyr.html">Previous</a></button>
+<button class="btn btn-default"><a href="5-6-updating-column-classes.html">Next</a></button>
 </p>
 </div>
 </div>

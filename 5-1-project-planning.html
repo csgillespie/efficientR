@@ -210,18 +210,61 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="project-planning" class="section level2">
+<h2><span class="header-section-number">5.1</span> Project planning</h2>
+<p>Good programmers embarking on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: “smart preparation minimizes work” <span class="citation">(Berkun <a href="10-efficient-learning.html#ref-berkun2005art">2005</a>)</span>. Although search engines are useful for identifying the appropriate strategy, the trail-and-error approach — typing code at random and Googling the inevitable error messages — is usually highly <em>inefficient</em>. Strategic thinking is necessary.</p>
+<p>Often the best place to start is often with a pen and paper. Project planning is a non-linear, open-ended and creative process not always well-suited to the linear logic of computing.<a href="10-efficient-learning.html#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a> Planning simply involves thinking about the project’s aims in the context of available resources (e.g. computational vs programming skill), the project’s scope, timelines and suitable software (i.e. R packages, covered in the next section). Minutes spent before a single line of code is written have the potential to save hours later on. There are many excellent guides available that will help you develop a project plan.</p>
+<p>Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up. The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next. Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track. Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">PMBoK (<a href="10-efficient-learning.html#ref-PMBoK_2000">2000</a>)</span>. ‘Chunking’ the work will also make collaboration easier, as we shall see in Chapter 5.</p>
+<div class="figure"><span id="fig:phases"></span>
+<img src="_main_files/figure-html/phases-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."  />
+<p class="caption">
+Figure 5.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="10-efficient-learning.html#ref-PMBoK_2000">2000</a>)</span>.
+</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<p>The tasks that a project should be split into will depend the nature of the work and the phases illustrated in Figure <a href="5-1-project-planning.html#fig:phases">5.1</a> represent a rough starting point, not a template and the ‘programming’ phase will usually need to be split into at least ‘data tidying’, ‘processing’, and ‘visualisation’.</p>
+<p>A more rigorous (but potentially onerous) way to project plan is to divide the work into a series of objectives and tracking their progress throughout the project’s duration. One way to check if an objective is appropriate for action and review is by using the SMART criteria.</p>
+<ul>
+<li>Specific: is the objective clearly defined and self-contained?</li>
+<li>Measurable: is there a clear indication of its completion?</li>
+<li>Attainable: can the target be achieved?</li>
+<li>Realistic: have sufficient resources been allocated to the task?</li>
+<li>Time-bound: is there an associated completion date or milestone?</li>
+</ul>
+<p>If the answer to each of these questions is ‘yes’, the task is likely to be suitable to include in the project’s plan. Note that this does not mean all project plans need to be uniform. A project plan can take many forms, including a short document, a Gantt chart (see Figure <a href="5-1-project-planning.html#fig:timeline">5.2</a> or simply a clear vision of the project’s steps in mind.</p>
+<div class="figure"><span id="fig:timeline"></span>
+<img src="figures/DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development."  />
+<p class="caption">
+Figure 5.2: A Gantt chart created using <strong>DiagrammeR</strong> illustrating the steps needed to complete this book at an early stage of its development.
+</p>
+</div>
+<p>A number of R packages can assist with this process of formalising and visualising the project plan, including:<a href="10-efficient-learning.html#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a></p>
+<ul>
+<li><p><a href="https://cran.r-project.org/web/packages/plan/">plan</a> provides basic tools to create burndown charts (which concisely show whether a project is on-time or not) and Gantt charts.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/plotrix/index.html">plotrix</a>, a general purpose plotting package, provides basic Gantt chart plotting functionality. See <code>example(gantt.chart)</code> for details.</p></li>
+<li><p><a href="http://rich-iannone.github.io/DiagrammeR/"><strong>DiagrammeR</strong></a>, a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as <a href="https://github.com/knsv/mermaid">mermaid</a> and <a href="https://github.com/ellson/graphviz">GraphViz</a>.</p></li>
+</ul>
+<p>The small example below (which provides the basis for creating charts like Figure <a href="5-1-project-planning.html#fig:timeline">5.2</a> illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts. Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>) <span class="co"># load the necessary package</span>
+
+<span class="co"># define the Gantt chart and plot the result (not shown)</span>
+<span class="kw">mermaid</span>(<span class="st">&quot;gantt</span>
+<span class="st">        Section Initiation</span>
+<span class="st">        Planning           :a1, 2016-01-01, 10d</span>
+<span class="st">        Data processing    :after a1  , 30d&quot;</span>)</code></pre></div>
+<p>In the above code <code>gantt</code> defines the subsequent data layout. <code>Section</code> refers to the project’s section (useful for large projects, with milestones) and each new line refers to a discrete task. <code>Planning</code>, for example, has the code <code>a</code>, begins on the first day of 2016 and lasts for 10 days. See <a href="http://knsv.github.io/mermaid/gantt.html">knsv.github.io/mermaid/gantt.html</a> for more detailed documentation.</p>
+<div id="exercises-8" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li><p>What are the three most important work ‘chunks’ of your current R project?</p></li>
+<li><p>What is the meaning of ‘SMART’ objectives?</p></li>
+<li><p>Run the code chunk at the end of this section to see the output.</p></li>
+<li><p>Bonus exercise: modify the code to create a very basic Gantt chart of an R project you are working on.</p></li>
+</ol>
+</div>
 </div>
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="5-efficient-workflow.html">Previous</a></button>
+<button class="btn btn-default"><a href="5-2-pkgs.html">Next</a></button>
 </p>
 </div>
 </div>

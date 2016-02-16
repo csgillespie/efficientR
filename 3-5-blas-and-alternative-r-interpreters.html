@@ -210,18 +210,59 @@ img {
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Efficient R programming</h1>
-<h4 class="author"><em>Colin Gillespie and Robin Lovelace</em></h4>
-<h4 class="date"><em>2016-02-16</em></h4>
+<div id="blas-and-alternative-r-interpreters" class="section level2">
+<h2><span class="header-section-number">3.5</span> BLAS and alternative R interpreters</h2>
+<p>In this section we cover a few system-level options available to speed-up R’s performance. Note that for many applications stability rather than speed is a priority, so these should only be considered if a) you have exhausted options for writing your R code more efficiently and b) you are confident tweaking system-level settings. This should therefore be seen as an advanced section: if you are not interested in speeding-up base R, feel free to skip to the next section of hardware.</p>
+<p>Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.</p>
+<p>The two open source alternative BLAS libraries are <a href="http://math-atlas.sourceforge.net/">ATLAS</a> and <a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a>. The <a href="https://software.intel.com/en-us/intel-mkl">Intel MKL</a> is another implementation, designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching you BLAS library, linear algebra operations can run several times faster than with the base BLAS routines.</p>
+<!--
+ Currently only works for linux.
+ 
+To find out what BLAS library you are using on Linux the following function, from the [benchmarkme](https://github.com/csgillespie/benchmarkme) package can be used:
+
+
+```r
+# devtools::install_github("csgillespie/benchmarkme")
+benchmarkme::get_linear_algebra()
+```
+-->
+<div id="revolution-r" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Revolution R</h3>
+<p>Revolution R is the main software product offered by Revolution Analytics. It is “100%” compatible with R“, supporting all available packages through the MRAN package repository. Revolution R provides faster performance on for certain functions than base R, through its use of MKL, an implementation of BLAS (as described above). Revolution R is available as a free and open source product, ‘Revolution R Open’ (RRO), and is reported to be faster than base R installations.<a href="10-efficient-learning.html#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<p>Additional benchmarks reported by <span class="citation">Eddelbuettel (<a href="10-efficient-learning.html#ref-eddelbuettel2010benchmarking">2010</a>)</span> show the MKL implementations of R used in RRO and the commercial edition to be substantially faster than the reference case.</p>
 </div>
-<div id="building-the-book" class="section level1">
-<h1><span class="header-section-number">1</span> Building the book</h1>
-<p><img src="figures/full.png" title="" alt="" width="33%" /></p>
-<p>The text and code for the forthcoming O’Reilly book: <a href="https://csgillespie.github.io/efficientR/">Efficient R programming</a>. Pull requests and general comments are welcome.</p> 
+<div id="other-interpreters" class="section level3">
+<h3><span class="header-section-number">3.5.2</span> Other interpreters</h3>
+<p>The R <em>language</em> can be separated from the R <em>interpreter</em>. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.</p>
+<ul>
+<li><p><a href="http://www.pqr-project.org/">pqrR</a> (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. <strong>pqR</strong> is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.</p></li>
+<li><p><a href="http://www.renjin.org/">Renjin</a> reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.</p></li>
+<li><p><a href="http://spotfire.tibco.com/">Tibco</a> created a C++ based interpreter called TERR.</p></li>
+<li><p>Oracle also offer an R-interpreter that uses Intel’s mathematics library and therefore achieves a higher performance without changing R’s core.</p></li>
+</ul>
+<p>At the time of writing, switching interpreters is something to consider carefully. But in the future, it may become more routine.</p>
+<p>In this context it is also worth mentioning <a href="http://julialang.org/">Julia</a>. This is a fast language and interpreter which aims to provide “a high-level, high-performance dynamic programming language for technical computing” that will be familiar to R and Python users.</p>
 </div>
+<div id="useful-blasbenchmarking-resources" class="section level3">
+<h3><span class="header-section-number">3.5.3</span> Useful BLAS/benchmarking resources</h3>
+<ul>
+<li>The <a href="https://cran.r-project.org/web/packages/gcbd/">gcbd</a> package benchmarks performance of a few standard linear algebra operations across a number of different BLAS libraries as well as a GPU implementation. It has an excellent vignette summarising the results.</li>
+<li><a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Brett Klamer</a> provides a nice comparison of ATLAS, OpenBLAS and Intel MKL BLAS libraries. He also gives a description of how to install the different libraries.</li>
+<li>The official R manual <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#BLAS">section</a> on BLAS.</li>
+</ul>
+</div>
+<div id="exercises-5" class="section level3">
+<h3><span class="header-section-number">3.5.4</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>What BLAS system is your version of R using?</li>
+</ol>
+
+</div>
+</div>
+<!-- </div> -->
 <p style="text-align: center;">
-<button class="btn btn-default"><a href="1-1-dependencies-for-this-book.html">Next</a></button>
+<button class="btn btn-default"><a href="3-4-rstudio.html">Previous</a></button>
+<button class="btn btn-default"><a href="4-efficient-hardware.html">Next</a></button>
 </p>
 </div>
 </div>
