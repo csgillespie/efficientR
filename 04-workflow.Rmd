@@ -246,7 +246,7 @@ library("raster") # requires the ncdf4 package to be installed
 r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
 
-### Fast data reading
+### Fast data reading {#fread}
 
 There is often more than one way to read data into R. Even a simple `.csv` file can be imported using a range of methods, with implications for computational efficiency. This section looks at three approaches: base R's reading functions such as `read.csv`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the new **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
 
@@ -728,7 +728,7 @@ group_by(df, Country) %>%
   summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
 ```
 
-## Updating column classes
+### Updating column classes
 
 The *class* of R objects is critical to how it performs.
 If a class is incorrectly specified (if numbers are treated
@@ -850,7 +850,7 @@ top_n(
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
-### **data.table**
+## **data.table**
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
 tasks^[One
@@ -862,29 +862,39 @@ so it should be stated at the outset that **dplyr** and **data.table** are not m
 # This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 ```
 
-**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of, however. Building on the `filter()` example above, we'll see **data.tables**'s unique approach to subsetting.
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df` `data.table` objects will behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
 library(data.table)
 idata = readRDS("data/idata-renamed.Rds")
-idata_dt = data.table(idata)
-setkey(idata_dt, Country)
-aus3 = idata_dt["Australia",]
+idata_dt = data.table(idata) # convert to data.table class
+aus3a = idata_dt[Country == "Australia"]
 ```
+
+To boost performance, one can set 'keys'. These are
+'[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
+which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see `vignette("datatable-keys-fast-subset")`). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
+
+```{r}
+setkey(idata_dt, Country)
+aus3b = idata_dt[.("Australia")]
+```
+
+The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:dtplot), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
-for(i in seq(10, 300, length.out = 10)){
+for(i in seq(10, 1000, length.out = 10)){
   idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
-  idata_dt = data.table(idata_big)
-  idata_key = idata_dt
-  setkey(idata_key, Country)
+  idata_dt = as.data.table(idata_big)
+  idata_key = copy(idata_dt) # copy the object
+  setkey(idata_key, "Country")
   mb = microbenchmark(
-    times = 2,
-    base = idata_big[idata_big$Country == "Australia", ],
-    dplyr = filter(idata_big, Country == "Australia"),
-    data.table = idata_dt[list("Australia"), ]
-    # data.table_key = idata_key[list("Australia"), ]
+    times = 1,
+    base_sqrbrkt = idata_big[idata_big$Country == "Australia", ],
+    dplyr_filter = filter(idata_big, Country == "Australia"),
+    dt_standard = idata_dt[Country == "Australia"],
+    dt_key = idata_key[list("Australia"), ]
   )
   tab = tapply(mb$time / 1000, mb$expr, mean)
   res_tmp = data.frame(
@@ -906,10 +916,13 @@ ggplot(res, aes(MB, Time)) +
   xlab("Size (MB)") + ylab("Time (relative to fastest)")
 ```
 
-Figure \@ref(fig:dtplot) illustrates the speed improvement benefits of data.table for different datasets sizes. As with the **readr** vs base R issue, the results show that the relative benefits of **data.table** improve with dataset size.
+Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement speed gain on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
+
+This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing and illustrated the performance gains of using *keys* for subsetting tables. **data.table** is a mature and powerful package which uses clever computational principles implemented in C to provide efficient methods for a number of other operations for data analysis. These include highly efficient data reshaping, dataset merging (also known as joining, as with `left_join` in **dplyr**) and grouping. These are explained in the vignettes `[datatable-intro](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf)`,  `[datatable-reshape](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html)`. The `[datatable-reference-semantics](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html)` vignette explains **data.table**'s unique syntax.
 
 ## Publication
 
 <!-- Thought: this should be more about 'getting your work out there' than packages-->
 
 This section describes a strict approach to project management and workflow: treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects and should provide a strong foundation for generalising your code for use by others.
+A strict approach to project management and workflow: treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects and should provide a strong foundation for generalising your code for use by others.
