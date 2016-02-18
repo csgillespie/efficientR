@@ -246,7 +246,7 @@ library("raster") # requires the ncdf4 package to be installed
 r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
 
-### Fast data reading
+### Fast data reading {#fread}
 
 There is often more than one way to read data into R. Even a simple `.csv` file can be imported using a range of methods, with implications for computational efficiency. This section looks at three approaches: base R's reading functions such as `read.csv`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the new **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
 
@@ -728,7 +728,7 @@ group_by(df, Country) %>%
   summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
 ```
 
-## Updating column classes
+### Updating column classes
 
 The *class* of R objects is critical to how it performs.
 If a class is incorrectly specified (if numbers are treated
@@ -850,11 +850,11 @@ top_n(
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
-### **data.table**
+## **data.table**
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
 tasks^[One
-[question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' has received much attention and sets out the advantages of each approach. The question and subsequent responses do not provide a conclusive answer to the issue and the responses may be out of date in some cases but it certainly makes for interesting reading and delves into the philosophy underlying each approach.
+[question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversey and delves into the philosophy underlying each approach.
 ]
 so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors or that must be 'better' than another. These are both excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
 
@@ -862,29 +862,39 @@ so it should be stated at the outset that **dplyr** and **data.table** are not m
 # This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 ```
 
-**data.table** does have some unique features that make it very fast at accomplishing some tasks very efficiently that it is worth being aware of, however. Building on the `filter()` example above, we'll see **data.tables**'s unique approach to subsetting.
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df` `data.table` objects will behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
 library(data.table)
 idata = readRDS("data/idata-renamed.Rds")
-idata_dt = data.table(idata)
-setkey(idata_dt, Country)
-aus3 = idata_dt["Australia",]
+idata_dt = data.table(idata) # convert to data.table class
+aus3a = idata_dt[Country == "Australia"]
 ```
+
+To boost performance, one can set 'keys'. These are
+'[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
+which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see `vignette("datatable-keys-fast-subset")`). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
+
+```{r}
+setkey(idata_dt, Country)
+aus3b = idata_dt[.("Australia")]
+```
+
+The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:dtplot), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
-for(i in seq(10, 300, length.out = 10)){
+for(i in seq(10, 1000, length.out = 10)){
   idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
-  idata_dt = data.table(idata_big)
-  idata_key = idata_dt
-  setkey(idata_key, Country)
+  idata_dt = as.data.table(idata_big)
+  idata_key = copy(idata_dt) # copy the object
+  setkey(idata_key, "Country")
   mb = microbenchmark(
-    times = 2,
-    base = idata_big[idata_big$Country == "Australia", ],
-    dplyr = filter(idata_big, Country == "Australia"),
-    data.table = idata_dt[list("Australia"), ]
-    # data.table_key = idata_key[list("Australia"), ]
+    times = 1,
+    base_sqrbrkt = idata_big[idata_big$Country == "Australia", ],
+    dplyr_filter = filter(idata_big, Country == "Australia"),
+    dt_standard = idata_dt[Country == "Australia"],
+    dt_key = idata_key[list("Australia"), ]
   )
   tab = tapply(mb$time / 1000, mb$expr, mean)
   res_tmp = data.frame(
@@ -906,10 +916,44 @@ ggplot(res, aes(MB, Time)) +
   xlab("Size (MB)") + ylab("Time (relative to fastest)")
 ```
 
-Figure \@ref(fig:dtplot) illustrates the speed improvement benefits of data.table for different datasets sizes. As with the **readr** vs base R issue, the results show that the relative benefits of **data.table** improve with dataset size.
+Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement speed gain on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
+
+This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing and illustrated the performance gains of using *keys* for subsetting tables. **data.table** is a mature and powerful package which uses clever computational principles implemented in C to provide efficient methods for a number of other operations for data analysis. These include highly efficient data reshaping, dataset merging (also known as joining, as with `left_join` in **dplyr**) and grouping. These are explained in the vignettes [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html). The [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignette explains **data.table**'s unique syntax.
 
 ## Publication
 
 <!-- Thought: this should be more about 'getting your work out there' than packages-->
 
-This section describes a strict approach to project management and workflow: treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects and should provide a strong foundation for generalising your code for use by others.
+The final stage in a typical project workflow is publication. This could be a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow. In every case the programming principles of reproducibility, modularity and DRY discussed in \@ref(efficient-programming) will make your publications faster to write, easier to maintain and more useful to others.
+
+Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exits on each of these; to avoid duplication of effort (following the DRY principle) the focus is on documentation from a workflow efficiency perspective.
+
+### Dynamic documents
+
+When writing a report using R outputs a typical workflow has historically been to a) do the analysis b) save the resulting graphics and record the main results outside the R project and c) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps a to c will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
+
+To overcome this source of inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically. Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
+
+```{r}
+(1:5)^2
+```
+
+The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated it must by ` ```{r} ` on the line before the R code and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts make it easy to create and modify code chunks. When the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs.
+
+Furthermore dynamic documents written in RMarkdown can compile into a range of output formats including html, pdf and Microsoft's docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio's excellent website on RMarkdown hosted at [rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) and, for a more detailed account of dynamic documents with R, [@xie2015dynamic].
+
+### R packages
+
+A strict approach to project management and workflow is treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN.
+
+The a number of key elements of an R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
+
+- The [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using `Imports:`. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.
+
+- The `R/` folder contains all the R code that defines your package's functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through [Roxygen tags](http://r-pkgs.had.co.nz/man.html#man-workflow) such as `#' This function does this...` makes it easy for others to use your work.
+
+- The `data/` folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the **devtools** package, with `devtools::use_data()`. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function `data('data_set_name)`.
+
+As with dynamic documents, package development is a large topic. For small 'one-off' projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigourous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see [@Wickham_2015].
+
+
