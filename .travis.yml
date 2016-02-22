@@ -5,7 +5,7 @@ install_r:
   - devtools
 
 script:
-  - Rscript -e 'bookdown::render_book("index.Rmd", bookdown::html_chapters())'
+  - Rscript build.R
   
 after_success:
   - BASE_REPO=$PWD
@@ -17,11 +17,10 @@ after_success:
   - git remote add upstream "https://$GH_TOKEN@github.com/csgillespie/efficientR.git"
   - git fetch upstream 2>err.txt
   - git checkout gh-pages
-  - cp -fvr $BASE_REPO/*html $BASE_REPO/libs/ $BASE_REPO/figures/ $BASE_REPO/style.css .
-  - cp -fvr $BASE_REPO/_main_files/ .
+  - cp -fvr $BASE_REPO/_book/* .
   - git add *.html; git add libs/; git add figures/; git add style.css
   - git add _main_files/*
-  - git commit -a -m "Updating book"
+  - git commit -a -m "Updating book (${TRAVIS_BUILD_NUMBER})"
   - git status
   - git push
 
