@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Efficient R programming</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Documentation for using GitBook and gitbook.com">
+  <meta name="generator" content="GitBook 2.6.5">
+
+<meta name="author" content="Colin Gillespie and Robin Lovelace">
+
+<meta name="date" content="2016-02-22">
+
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <meta name="HandheldFriendly" content="true">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="efficient-collaboration.html">
+<link rel="next" href="efficient-rcpp.html">
+
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<style type="text/css">
+.book .book-header h1 {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.book .book-header.fixed {
+  position: fixed;
+  right: 0;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid rgba(0,0,0,.07);
+}
+span.search-highlight {
+  background-color: #ffff88;
+}
+@media (min-width: 600px) {
+  .book.with-summary .book-header.fixed {
+    left: 300px;
+  }
+}
+</style>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Building the book</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#dependencies-for-this-book"><i class="fa fa-check"></i><b>1.1</b> Dependencies for this book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="efficient-set-up.html"><a href="efficient-set-up.html"><i class="fa fa-check"></i><b>3</b> Efficient set-up</a><ul>
+<li class="chapter" data-level="3.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#operating-system"><i class="fa fa-check"></i><b>3.1</b> Operating system</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#operating-system-and-resource-monitoring"><i class="fa fa-check"></i><b>3.1.1</b> Operating system and resource monitoring</a></li>
+<li class="chapter" data-level="3.1.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises"><i class="fa fa-check"></i><b>3.1.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#r-version"><i class="fa fa-check"></i><b>3.2</b> R version</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#installing-r"><i class="fa fa-check"></i><b>3.2.1</b> Installing R</a></li>
+<li class="chapter" data-level="3.2.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#updating-r"><i class="fa fa-check"></i><b>3.2.2</b> Updating R</a></li>
+<li class="chapter" data-level="3.2.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#installing-r-packages"><i class="fa fa-check"></i><b>3.2.3</b> Installing R packages</a></li>
+<li class="chapter" data-level="3.2.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#deps"><i class="fa fa-check"></i><b>3.2.4</b> Installing R packages with dependencies</a></li>
+<li class="chapter" data-level="3.2.5" data-path="efficient-set-up.html"><a href="efficient-set-up.html#updating-r-packages"><i class="fa fa-check"></i><b>3.2.5</b> Updating R packages</a></li>
+<li class="chapter" data-level="3.2.6" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-1"><i class="fa fa-check"></i><b>3.2.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#r-startup"><i class="fa fa-check"></i><b>3.3</b> R startup</a><ul>
+<li><a href="efficient-set-up.html#rprofile"><span class="toc-section-number">3.3.1</span> The <code>.Rprofile</code> file</a></li>
+<li><a href="efficient-set-up.html#example-.rprofile-settings"><span class="toc-section-number">3.3.2</span> Example <code>.Rprofile</code> settings</a></li>
+<li><a href="efficient-set-up.html#renviron"><span class="toc-section-number">3.3.3</span> The <code>.Renviron</code> file</a></li>
+<li class="chapter" data-level="3.3.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-2"><i class="fa fa-check"></i><b>3.3.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#rstudio"><i class="fa fa-check"></i><b>3.4</b> RStudio</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#install-rstudio"><i class="fa fa-check"></i><b>3.4.1</b> Installing and updating RStudio</a></li>
+<li class="chapter" data-level="3.4.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#window-pane-layout"><i class="fa fa-check"></i><b>3.4.2</b> Window pane layout</a></li>
+<li class="chapter" data-level="3.4.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-3"><i class="fa fa-check"></i><b>3.4.3</b> Exercises</a></li>
+<li class="chapter" data-level="3.4.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#rstudio-options"><i class="fa fa-check"></i><b>3.4.4</b> RStudio options</a></li>
+<li class="chapter" data-level="3.4.5" data-path="efficient-set-up.html"><a href="efficient-set-up.html#auto-completion"><i class="fa fa-check"></i><b>3.4.5</b> Auto-completion</a></li>
+<li class="chapter" data-level="3.4.6" data-path="efficient-set-up.html"><a href="efficient-set-up.html#keyboard-shortcuts"><i class="fa fa-check"></i><b>3.4.6</b> Keyboard shortcuts</a></li>
+<li class="chapter" data-level="3.4.7" data-path="efficient-set-up.html"><a href="efficient-set-up.html#object-display-and-output-table"><i class="fa fa-check"></i><b>3.4.7</b> Object display and output table</a></li>
+<li class="chapter" data-level="3.4.8" data-path="efficient-set-up.html"><a href="efficient-set-up.html#project-management"><i class="fa fa-check"></i><b>3.4.8</b> Project management</a></li>
+<li class="chapter" data-level="3.4.9" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-4"><i class="fa fa-check"></i><b>3.4.9</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="efficient-set-up.html"><a href="efficient-set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>3.5</b> BLAS and alternative R interpreters</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#revolution-r"><i class="fa fa-check"></i><b>3.5.1</b> Revolution R</a></li>
+<li class="chapter" data-level="3.5.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#other-interpreters"><i class="fa fa-check"></i><b>3.5.2</b> Other interpreters</a></li>
+<li class="chapter" data-level="3.5.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>3.5.3</b> Useful BLAS/benchmarking resources</a></li>
+<li class="chapter" data-level="3.5.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-5"><i class="fa fa-check"></i><b>3.5.4</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="efficient-hardware.html"><a href="efficient-hardware.html"><i class="fa fa-check"></i><b>4</b> Efficient hardware</a><ul>
+<li class="chapter" data-level="4.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#introduction-what-is-a-byte"><i class="fa fa-check"></i><b>4.1</b> Introduction: what is a byte?</a></li>
+<li class="chapter" data-level="4.2" data-path="efficient-hardware.html"><a href="efficient-hardware.html#ram"><i class="fa fa-check"></i><b>4.2</b> Random access memory: RAM</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#exercises-6"><i class="fa fa-check"></i><b>4.2.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="efficient-hardware.html"><a href="efficient-hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>4.3</b> Hard drives: HDD vs SSD</a></li>
+<li class="chapter" data-level="4.4" data-path="efficient-hardware.html"><a href="efficient-hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>4.4</b> Operating systems: 32-bit or 64-bit</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#exercises-7"><i class="fa fa-check"></i><b>4.4.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="efficient-hardware.html"><a href="efficient-hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>4.5</b> Central processing unit (CPU)</a></li>
+<li class="chapter" data-level="4.6" data-path="efficient-hardware.html"><a href="efficient-hardware.html#cloud-computing"><i class="fa fa-check"></i><b>4.6</b> Cloud computing</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>4.6.1</b> Amazon EC2</a></li>
+<li class="chapter" data-level="4.6.2" data-path="efficient-hardware.html"><a href="efficient-hardware.html#exercise"><i class="fa fa-check"></i><b>4.6.2</b> Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="efficient-workflow.html"><a href="efficient-workflow.html"><i class="fa fa-check"></i><b>5</b> Efficient workflow</a><ul>
+<li class="chapter" data-level="5.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#project-planning"><i class="fa fa-check"></i><b>5.1</b> Project planning</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#exercises-8"><i class="fa fa-check"></i><b>5.1.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="efficient-workflow.html"><a href="efficient-workflow.html#pkgs"><i class="fa fa-check"></i><b>5.2</b> Package selection</a></li>
+<li class="chapter" data-level="5.3" data-path="efficient-workflow.html"><a href="efficient-workflow.html#importing-data"><i class="fa fa-check"></i><b>5.3</b> Importing data</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#fread"><i class="fa fa-check"></i><b>5.3.1</b> Fast data reading</a></li>
+<li class="chapter" data-level="5.3.2" data-path="efficient-workflow.html"><a href="efficient-workflow.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.3.2</b> Preprocessing outside R</a></li>
+<li class="chapter" data-level="5.3.3" data-path="efficient-workflow.html"><a href="efficient-workflow.html#working-with-databases"><i class="fa fa-check"></i><b>5.3.3</b> Working with databases</a></li>
+</ul></li>
+<li><a href="efficient-workflow.html#tidying-data-with-tidyr"><span class="toc-section-number">5.4</span> Tidying data with <strong>tidyr</strong></a></li>
+<li class="chapter" data-level="5.5" data-path="efficient-workflow.html"><a href="efficient-workflow.html#dplyr"><i class="fa fa-check"></i><b>5.5</b> Data processing</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#renaming-columns"><i class="fa fa-check"></i><b>5.5.1</b> Renaming columns</a></li>
+<li class="chapter" data-level="5.5.2" data-path="efficient-workflow.html"><a href="efficient-workflow.html#filtering-rows"><i class="fa fa-check"></i><b>5.5.2</b> Filtering rows</a></li>
+<li class="chapter" data-level="5.5.3" data-path="efficient-workflow.html"><a href="efficient-workflow.html#filtering-columns"><i class="fa fa-check"></i><b>5.5.3</b> Filtering columns</a></li>
+<li class="chapter" data-level="5.5.4" data-path="efficient-workflow.html"><a href="efficient-workflow.html#data-aggregation"><i class="fa fa-check"></i><b>5.5.4</b> Data aggregation</a></li>
+<li class="chapter" data-level="5.5.5" data-path="efficient-workflow.html"><a href="efficient-workflow.html#updating-column-classes"><i class="fa fa-check"></i><b>5.5.5</b> Updating column classes</a></li>
+<li><a href="efficient-workflow.html#chaining-operations-with-dplyr"><span class="toc-section-number">5.5.6</span> Chaining operations with <strong>dplyr</strong></a></li>
+</ul></li>
+<li><a href="efficient-workflow.html#data.table"><span class="toc-section-number">5.6</span> <strong>data.table</strong></a></li>
+<li class="chapter" data-level="5.7" data-path="efficient-workflow.html"><a href="efficient-workflow.html#publication"><i class="fa fa-check"></i><b>5.7</b> Publication</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#dynamic-documents"><i class="fa fa-check"></i><b>5.7.1</b> Dynamic documents</a></li>
+<li class="chapter" data-level="5.7.2" data-path="efficient-workflow.html"><a href="efficient-workflow.html#r-packages"><i class="fa fa-check"></i><b>5.7.2</b> R packages</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html"><i class="fa fa-check"></i><b>6</b> Efficient collaboration</a></li>
+<li class="chapter" data-level="7" data-path="efficient-programming.html"><a href="efficient-programming.html"><i class="fa fa-check"></i><b>7</b> Efficient programming</a><ul>
+<li class="chapter" data-level="7.1" data-path="efficient-programming.html"><a href="efficient-programming.html#data-types"><i class="fa fa-check"></i><b>7.1</b> Data types</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="efficient-programming.html"><a href="efficient-programming.html#vectors"><i class="fa fa-check"></i><b>7.1.1</b> Vectors</a></li>
+<li class="chapter" data-level="7.1.2" data-path="efficient-programming.html"><a href="efficient-programming.html#factors"><i class="fa fa-check"></i><b>7.1.2</b> Factors</a></li>
+<li class="chapter" data-level="7.1.3" data-path="efficient-programming.html"><a href="efficient-programming.html#data-frames"><i class="fa fa-check"></i><b>7.1.3</b> Data frames</a></li>
+<li class="chapter" data-level="7.1.4" data-path="efficient-programming.html"><a href="efficient-programming.html#matrix"><i class="fa fa-check"></i><b>7.1.4</b> Matrix</a></li>
+<li class="chapter" data-level="7.1.5" data-path="efficient-programming.html"><a href="efficient-programming.html#S3"><i class="fa fa-check"></i><b>7.1.5</b> S3 objects</a></li>
+<li class="chapter" data-level="7.1.6" data-path="efficient-programming.html"><a href="efficient-programming.html#efficient-data-structures"><i class="fa fa-check"></i><b>7.1.6</b> Efficient data structures</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="efficient-programming.html"><a href="efficient-programming.html#good-programming-techniques"><i class="fa fa-check"></i><b>7.2</b> Good programming techniques</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="efficient-programming.html"><a href="efficient-programming.html#general-tips"><i class="fa fa-check"></i><b>7.2.1</b> General tips</a></li>
+<li class="chapter" data-level="7.2.2" data-path="efficient-programming.html"><a href="efficient-programming.html#caching-variables"><i class="fa fa-check"></i><b>7.2.2</b> Caching variables</a></li>
+<li class="chapter" data-level="7.2.3" data-path="efficient-programming.html"><a href="efficient-programming.html#function-closures"><i class="fa fa-check"></i><b>7.2.3</b> Function closures</a></li>
+<li class="chapter" data-level="7.2.4" data-path="efficient-programming.html"><a href="efficient-programming.html#vectorised-code"><i class="fa fa-check"></i><b>7.2.4</b> Vectorised code</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="efficient-programming.html"><a href="efficient-programming.html#parallel-computing"><i class="fa fa-check"></i><b>7.3</b> Parallel computing</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="efficient-programming.html"><a href="efficient-programming.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.3.1</b> Parallel versions of apply functions</a></li>
+<li class="chapter" data-level="7.3.2" data-path="efficient-programming.html"><a href="efficient-programming.html#example-parallel-bootstraping"><i class="fa fa-check"></i><b>7.3.2</b> Example: parallel bootstraping</a></li>
+<li class="chapter" data-level="7.3.3" data-path="efficient-programming.html"><a href="efficient-programming.html#process-forking"><i class="fa fa-check"></i><b>7.3.3</b> Process forking</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="efficient-programming.html"><a href="efficient-programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>7.4</b> The byte compiler</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="efficient-programming.html"><a href="efficient-programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>7.4.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="7.4.2" data-path="efficient-programming.html"><a href="efficient-programming.html#compiling-code"><i class="fa fa-check"></i><b>7.4.2</b> Compiling code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="efficient-rcpp.html"><a href="efficient-rcpp.html"><i class="fa fa-check"></i><b>8</b> Efficient Rcpp</a></li>
+<li class="chapter" data-level="9" data-path="efficient-memory.html"><a href="efficient-memory.html"><i class="fa fa-check"></i><b>9</b> Efficient Memory</a></li>
+<li class="chapter" data-level="10" data-path="efficient-learning.html"><a href="efficient-learning.html"><i class="fa fa-check"></i><b>10</b> Efficient Learning</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Efficient R programming</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="efficient-programming" class="section level1">
+<h1><span class="header-section-number">7</span> Efficient programming</h1>
+<!--# Efficient programming  {#programming}-->
+<p>In this chapter we will discuss key R data types and idiomatic programming style. Many people that use R would not describe themselves as “programmers”. Instead, they have advanced domain level knowledge, but little formal training in programming. This chapter comes from their point of view; someone who has use standard R data structures, such as vectors and data frames, but has never looked as the inner workings of these objects.</p>
+<p>We begin this chapter by discussing key data types, how they are used and potential computational gains available. Once we understand these objects, we will look at key R programming idioms, before covering techniques for speeding up code.</p>
+<div id="data-types" class="section level2">
+<h2><span class="header-section-number">7.1</span> Data types</h2>
+<p>A data type is an object that has a set of predefined characteristics, such as a number or a character. When programming in C or FORTRAN, the data type of every object must be specified by the user. he advantage is that it allows the compiler to perform type-specific optimisation. The downside is verbose and fragile code, which is inefficient to type. In R data types are less critical, but understanding them will help you debug and optimize for computational efficiency. Essentially, we have a trade-off between CPU run time and developer thinking time. However an understanding of data types can help when debugging and optimizing for computational efficiency. In this chapter, we will pick out the key point data types from an efficiency perspective. Chapter 2 of Advanced R Programming <span class="citation">(Wickham <a href="efficient-learning.html#ref-Wickham2014">2014</a><a href="efficient-learning.html#ref-Wickham2014">a</a>)</span> provides a more comprehensive treatment.</p>
+<div id="vectors" class="section level3">
+<h3><span class="header-section-number">7.1.1</span> Vectors</h3>
+<p>The vector is a fundamental data structure in R. Confusingly there are two varieties:</p>
+<ul>
+<li>Atomic vectors are where all elements have the same type and are usually created using the <code>c()</code> function;</li>
+<li>Lists are where elements can have different types.</li>
+</ul>
+<p>To test if an object is a vector, we must use <code>is.atomic(x) || is.list(x)</code>. The more obvious choice for determining if an object is a vector, <code>is.vector(x)</code>, only returns <code>TRUE</code> is an object is a vector with no attributes other than names. For example, when we use the <code>table</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">table</span>(<span class="kw">rpois</span>(<span class="dv">100</span>, <span class="dv">5</span>))</code></pre></div>
+<p>the object <code>x</code> has additional attributes (such as <code>dim</code>), so <code>is.vector(x)</code> return <code>FALSE</code>. But the contents <code>x</code> is clearly a vector, so <code>is.atomic(x)</code> returns <code>TRUE</code>.</p>
+<p>The core vector data types are logicals, integers, doubles and characters. When an atomic vector is created with a mixture of types, the output type is coerced to highest type in the following hierarchy:</p>
+<pre><code>logical &lt; integer &lt; double &lt; character </code></pre>
+<p>This means that any vector containing a character string will be coerced to class, as illustrated below.</p>
+<div id="numerics-doubles-and-integers" class="section level4">
+<h4><span class="header-section-number">7.1.1.1</span> Numerics: doubles and integers</h4>
+<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a> - see <span class="citation">Braun and Murdoch (<a href="efficient-learning.html#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="efficient-learning.html#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number occupies <span class="math inline">\(8\)</span> bytes and is accurate to around <span class="math inline">\(17\)</span> decimal places (R does not print all of these, as you will see by typing <code>pi</code>). Somewhat surprisingly, when we run the command</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<p>we have created an atomic vector, contain a single double-precision floating point number. When comparing floating point numbers, we should be particularly careful, since</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span>)*<span class="kw">sqrt</span>(<span class="dv">2</span>)
+y ==<span class="st"> </span><span class="dv">2</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>This is because the value of <code>y</code> is not exactly <span class="math inline">\(2\)</span>, instead it’s <strong>almost</strong> <span class="math inline">\(2\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sprintf</span>(<span class="st">&quot;%.16f&quot;</span>, y)</code></pre></div>
+<pre><code>## [1] &quot;2.0000000000000004&quot;</code></pre>
+<p>To compare numbers in R it is advisable to use <code>all.equal</code> and set an appropriate tolerance, e.g.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(y, <span class="dv">2</span>, <span class="dt">tolerance =</span> <span class="fl">1e-9</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Although using double precision objects is the most common type, R does have other ways of storing numbers:</p>
+<ul>
+<li><p><code>single</code>: R doesn’t have a single precision data type. Instead, all real numbers are stored in double precision format. The functions <code>as.single</code> and <code>single</code> are identical to <code>as.double</code> and <code>double</code> except they set the attribute <code>Csingle</code> that is used in the <code>.C</code> and <code>.Fortran</code> interface.</p></li>
+<li><p><code>integer</code>: Integers primarily exist to be passed to C or Fortran code. Typically we don’t worry about creating integers. However they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)</code></pre></div>
+<pre><code>## function (x, n = 6L, ...) 
+## NULL</code></pre>
+<p>The default argument is <code>6L</code> (the <code>L</code>, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package). The speed increase is illustrated below, using the <strong>microbenchmark</strong> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s_int =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span>; s =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="fl">1.0</span>)
+<span class="kw">microbenchmark</span>(clock_speed[s_int, 2L], clock_speed[s, <span class="fl">2.0</span>], <span class="dt">times=</span>1000000L)</code></pre></div>
+<pre><code>## Unit: microseconds
+## expr   min    lq  mean median    uq   max neval cld
+## clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
+## clock_speed[s, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b</code></pre>
+<p>The above result shows that using integers is slightly faster, but probably not worth worrying about.</p>
+<ul>
+<li><code>numeric</code>: The function <code>numeric()</code> is identical to <code>double()</code>; it creates is a double-precision number. However, <code>is.numeric()</code> isn’t the same as <code>as.double()</code>, instead <code>is.numeric()</code> returns <code>TRUE</code> for both numeric and double types.</li>
+</ul>
+<p>To find out the type of data stored in an R vector use the command <code>typeof()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))</code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+</div>
+<div id="exercises-9" class="section level4">
+<h4><span class="header-section-number">7.1.1.2</span> Exercises</h4>
+<p>A good way of determining how to use more advanced programming concepts, is to examine the source code of R.</p>
+<ol style="list-style-type: decimal">
+<li>What are the data types of <code>c(1, 2, 3)</code> and <code>1:3</code>?</li>
+<li>Have a look at the following function definitions:
+<ul>
+<li><code>tail.matrix</code></li>
+<li><code>lm</code></li>
+</ul></li>
+<li>How does the function <code>seq.int</code>, which was used in the <code>tail.matrix</code> function, differ to the standard <code>seq</code> function?</li>
+</ol>
+</div>
+</div>
+<div id="factors" class="section level3">
+<h3><span class="header-section-number">7.1.2</span> Factors</h3>
+<p>A factor is useful when you know all of the possible values a variable may take. For example, suppose our data set related to months of the year</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;January&quot;</span>, <span class="st">&quot;December&quot;</span>, <span class="st">&quot;March&quot;</span>)</code></pre></div>
+<p>If we sort <code>m</code> in the usual way <code>sort(m)</code>, we use standard alpha-numeric ordering, placing December first. While this is completely correct, it is also not that helpful. We can use factors to remedy this problem by specifying the admissible levels</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## month.name contains the 12 months
+fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="dt">levels=</span>month.name)
+<span class="kw">sort</span>(fac_m)</code></pre></div>
+<pre><code>## [1] January  March    December
+## 12 Levels: January February March April May June July August ... December</code></pre>
+<p>Most users interact with factors via the <code>read.csv</code> function where character columns are automatically converted to factors. It is generally recommended to avoid this feature using the <code>stringsAsFactors=FALSE</code> argument. Although this argument can be also placed in the global <code>options()</code> list, this leads to non-portable code, so should be avoided.</p>
+<p>Although factors look similar to character vectors, they are actually integers. This leads to initially surprising behaviour</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(m)</code></pre></div>
+<pre><code>## [1] &quot;January&quot;  &quot;December&quot; &quot;March&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(fac_m)</code></pre></div>
+<pre><code>## [1]  1 12  3</code></pre>
+<p>In this case the <code>c()</code> function is using the underlying integer representation of the factor. Overall factors are useful, but can lead to unwanted side-effects if we are not careful.</p>
+<p>In early versions of R, storing character data as a factor was more space efficient. However since identical character strings now share storage, the space gain in factors is now space.</p>
+</div>
+<div id="data-frames" class="section level3">
+<h3><span class="header-section-number">7.1.3</span> Data frames</h3>
+<p>A data frame is a tabular (two dimensional or ‘rectangular’) object in which the columns may be composed of differing vector types such as <code>numeric</code>, <code>logical</code>, <code>character</code> and so on. Matrices can only accept a single data type for all cells as explained in the next section. Data frames are the workhorses of R. Many R functions, such as <code>boxplot</code>, <code>lm</code> and <code>ggplot</code>, expect your data set to be in a data frame. As a general rule, columns in your data should be variables and rows should be the thing of interest. This is illustrated in the <code>USAarrests</code> data set:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">2</span>)</code></pre></div>
+<pre><code>##         Murder Assault UrbanPop Rape
+## Alabama   13.2     236       58 21.2
+## Alaska    10.0     263       48 44.5</code></pre>
+<p>Note that each row corresponds to a particular state and each column to a variable. One particular trap to be wary of is when using <code>read.csv</code> and <code>read.table</code> characters are automatically converted to factors. One can avoid this pitfall by using the argument <code>stringsAsFactors = FALSE</code>.</p>
+<p>Since working with R frequently involves interacting with data frames, it’s useful to be fluent a few key functions:</p>
+<table>
+<caption>Useful data frame functions.</caption>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>dim</code></td>
+<td align="left">Data frame dimensions</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ncol</code>/<code>nrow</code></td>
+<td align="left">No. of columns/rows</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>NCOL</code>/<code>NROW</code></td>
+<td align="left">As above, but also works with vectors</td>
+</tr>
+<tr class="even">
+<td align="left"><code>cbind</code>/<code>rbind</code></td>
+<td align="left">Column/row bind</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>head</code>/<code>tail</code></td>
+<td align="left">Select the first/last few rows</td>
+</tr>
+<tr class="even">
+<td align="left"><code>colnames</code>/<code>rownames</code></td>
+<td align="left">Column and row</td>
+</tr>
+</tbody>
+</table>
+<p>When loading a dataset called <code>df</code> into R, a typical workflow would be:</p>
+<ul>
+<li>Check dimensions using <code>dim(df)</code>;</li>
+<li>Look at the first/last few rows using <code>head(df)</code> and <code>tail(df)</code>;</li>
+<li>Rename columns using <code>colnames(df) =</code>.</li>
+</ul>
+</div>
+<div id="matrix" class="section level3">
+<h3><span class="header-section-number">7.1.4</span> Matrix</h3>
+<p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix columns must have the same type. Matrices tend to be used during statistical calculations. Linear regression using <code>lm()</code>, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
+<p>Matrices are generally faster than data frames. The datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns. They contain the same random numbers. However, selecting rows from a data frame is around <span class="math inline">\(150\)</span> times slower than a matrix. This illustrates the reason for using matrices instead of data frames for efficient modelling in R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10000</span>, 
+          ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
+<pre><code>##          test elapsed relative
+## 2  ex_df[1, ]   5.745  133.605
+## 1 ex_mat[1, ]   0.043    1.000</code></pre>
+</div>
+<div id="S3" class="section level3">
+<h3><span class="header-section-number">7.1.5</span> S3 objects</h3>
+<p>R has three built-in object oriented systems. These systems differ in how classes and methods are defined. The easiest and oldest system is the S3 system. S3 refers to the third version of S. The syntax of R is largely based on this version of S. In R there has never been S1 and S2 classes.</p>
+<p>The S3 system implements a generic-function object oriented (OO) system. This type of OO is different to the message-passing style of Java and C++. In a message-passing framework, messages/methods are sent to objects and the object determines which function to call, e.g. <code>normal.rand(1)</code>. The S3 class system is different. In S3, the generic function decides which method to call - it would have the form <code>rand(normal, 1)</code>.</p>
+<p>The S3 system is based on the class of an object. In this system, a class is just an attribute. The S3 class(es) of a object can be determined with the <code>class</code> function.</p>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<p>The S3 system can be used to great effect. For example, a <code>data.frame</code> is simply a standard R list, with class <code>data.frame</code>. When we pass an object to a <em>generic</em> function, the function first examines the class of the object, and then decides what to do: it dispatches to another method. The generic <code>summary</code> function, for example, contains the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
+<pre><code>## function (object, ...) 
+## UseMethod(&quot;summary&quot;)
+## &lt;bytecode: 0x71bccc0&gt;
+## &lt;environment: namespace:base&gt;</code></pre>
+<p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
+<p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_usa =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
+<p><code>dist_usa</code> has class <code>dist</code>. To visualise the distances, we can create an image method. First we’ll check if the existing <code>image</code> function is generic, via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
+<pre><code>## function (x, ...) 
+## UseMethod(&quot;image&quot;)
+## &lt;bytecode: 0x7a4c4e8&gt;
+## &lt;environment: namespace:graphics&gt;</code></pre>
+<p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
+  x_mat =<span class="st"> </span><span class="kw">as.matrix</span>(x)
+  <span class="kw">image</span>(x_mat, <span class="dt">main=</span><span class="kw">attr</span>(x, <span class="st">&quot;method&quot;</span>), ...)  
+}</code></pre></div>
+<p>The <code>...</code> argument allows us to pass arguments to the main image method, such as <code>axes</code> (see figure <a href="efficient-programming.html#fig:6-1">7.1</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:6-1"></span>
+<img src="_main_files/figure-html/6-1-1.png" alt="S3 image method for data of class `dist`."  />
+<p class="caption">
+Figure 7.1: S3 image method for data of class <code>dist</code>.
+</p>
+</div>
+<p>Many S3 methods work in the same way as the simple <code>image.dist</code> function created above: the object is converted into a standard format, then passed to the standard method. Creating S3 methods for standard functions such as <code>summary</code>, <code>mean</code>, and <code>plot</code> provides a nice uniform interface to a wide variety of data types.</p>
+<div id="exercises-10" class="section level4">
+<h4><span class="header-section-number">7.1.5.1</span> Exercises</h4>
+<ol style="list-style-type: decimal">
+<li>Use a combination of <code>unclass</code> and <code>str</code> on a data frame to confirm that it is a list.</li>
+<li>Use the function <code>length</code> on a data frame. What is return? Why?</li>
+</ol>
+</div>
+</div>
+<div id="efficient-data-structures" class="section level3">
+<h3><span class="header-section-number">7.1.6</span> Efficient data structures</h3>
+<p>Even when our data set is small, the analysis can generate large objects. For example suppose we want to perform standard cluster analysis. Using the built-in data set <code>USAarrests</code>, we calculate a distance matrix:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_usa =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
+<p>The resulting object <code>dist_usa</code> measures the similarity between two states with respect to the input data. Since there are <span class="math inline">\(50\)</span> states in the <code>USAarrests</code> data set, this results in a matrix with <span class="math inline">\(50\)</span> columns and <span class="math inline">\(50\)</span> rows. Intuitively, since the matrix <code>dist_usa</code> is symmetric around the diagonal, it makes sense to exploit this characteristic for efficiency, allowing storage to be halved. If we examine the object <code>dist_usa</code>, with <code>str(dist_usa)</code>, it becomes apparent that the data is efficiently stored as a vector with some attributes.</p>
+<p>Another efficient data structure is a sparse matrix. This is simply a matrix in where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package. For this <code>dist</code> object, since the structure is regular.</p>
+</div>
+</div>
+<div id="good-programming-techniques" class="section level2">
+<h2><span class="header-section-number">7.2</span> Good programming techniques</h2>
+<p>A major benefit of using R (as opposed to C or Fortran, say), is that coding time is greatly reduced. However if we are not careful, it’s very easy to write programs that are incredibly slow. While optimisations such as going parallel can easily double speed, poor code can easily run 100s of times slower. For this reason a priority of an efficient programmer should be to avoid the following common mistakes. If you spend any time programming in R, then reading <span class="citation">(Burns <a href="efficient-learning.html#ref-Burns2011">2011</a>)</span> should be considered essential reading.</p>
+<div id="general-tips" class="section level3">
+<h3><span class="header-section-number">7.2.1</span> General tips</h3>
+<p>The key to making R code run fast is to access the underlying C/Fortran routines as quickly as possible. For example, suppose that <code>x</code> is a standard R vector of length <code>n</code>. Then</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span>x +<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<p>involves a single function call to the <code>+</code> function. Whereas,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(i in <span class="dv">1</span>:n) {
+  x[i] =<span class="st"> </span>x[i] +<span class="st"> </span><span class="dv">1</span> 
+}</code></pre></div>
+<p>has</p>
+<ul>
+<li><code>n</code> function calls to <code>+</code>;</li>
+<li><code>n</code> function calls to the <code>[</code> function;</li>
+<li><code>n</code> function calls to the <code>[&lt;-</code> function (used in the assignment operation);</li>
+<li>A function call to <code>for</code> and the <code>:</code> operator.</li>
+</ul>
+<p>It isn’t that the <code>for</code> loop is slow, rather it is because we calling many more functions. This point is indirectly tackled again in the section on vectorised code.</p>
+<p>Another general technique is to be careful with memory allocation. In fact this could be considered the number <span class="math inline">\(1\)</span> rule when programming in R. If possible always pre-allocate your vector or data frame then fill in the values. Let’s consider three methods of creating a sequence of numbers.</p>
+<p><strong>Method 1</strong> creates an empty vector, and grows the object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method1 =<span class="st"> </span>function(n) {
+  myvec =<span class="st"> </span><span class="ot">NULL</span>
+  for(i in <span class="dv">1</span>:n)
+    myvec =<span class="st"> </span><span class="kw">c</span>(myvec, i)
+  myvec
+}</code></pre></div>
+<p><strong>Method 2</strong> creates an object of the final length and then changes the values in the object by subscripting:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method2 =<span class="st"> </span>function(n) {
+  myvec =<span class="st"> </span><span class="kw">numeric</span>(n)
+  for(i in <span class="dv">1</span>:n)
+    myvec[i] =<span class="st"> </span>i
+  myvec
+}</code></pre></div>
+<p><strong>Method 3</strong> directly creates the final object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="dv">1</span>:n</code></pre></div>
+<p>To compare the three methods we use the <code>benchmark</code> function from the previous chapter</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="fl">1e4</span>
+<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10</span>, 
+          <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
+<pre><code>##         test elapsed
+## 1 method1(n)   1.409
+## 2 method2(n)   0.074
+## 3 method3(n)   0.000</code></pre>
+<p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
+<table>
+<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour while methods 2 takes 2 seconds and method 3 almost instantaneous.</caption>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(n\)</span></th>
+<th align="left">Method 1</th>
+<th align="left">Method 2</th>
+<th align="left">Method 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(10^5\)</span></td>
+<td align="left"><span class="math inline">\(\phantom{000}0.208\)</span></td>
+<td align="left"><span class="math inline">\(0.024\)</span></td>
+<td align="left"><span class="math inline">\(0.000\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(10^6\)</span></td>
+<td align="left"><span class="math inline">\(\phantom{00}25.500\)</span></td>
+<td align="left"><span class="math inline">\(0.220\)</span></td>
+<td align="left"><span class="math inline">\(0.000\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(10^7\)</span></td>
+<td align="left"><span class="math inline">\(3827.0000\)</span></td>
+<td align="left"><span class="math inline">\(2.212\)</span></td>
+<td align="left"><span class="math inline">\(0.000\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="caching-variables" class="section level3">
+<h3><span class="header-section-number">7.2.2</span> Caching variables</h3>
+<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>log(x)</code> in multiple function calls with the object <code>log_x</code> that is defined once and reused. This small saving in time, quickly multiplies when the cached variable is used inside a <code>for</code> loop.</p>
+<p>A more advanced form of caching is use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
+<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit regression line to data. The user can remove points and refit the line. An example function would be</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Argument indicates row to remove
+plot_mpg =<span class="st"> </span>function(row_to_remove) {
+  <span class="kw">data</span>(mpg, <span class="dt">package=</span><span class="st">&quot;ggplot2&quot;</span>)
+  mpg =<span class="st"> </span>mpg[-row_to_remove,]
+  <span class="kw">plot</span>(mpg$cty, mpg$hwy)
+  <span class="kw">lines</span>(<span class="kw">lowess</span>(mpg$cty, mpg$hwy), <span class="dt">col=</span><span class="dv">2</span>)
+}</code></pre></div>
+<p>We can use <strong>memoise</strong> speed up by caching results. A quick benchmark</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_plot =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)
+<span class="kw">benchmark</span>(<span class="kw">m_plot</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>), <span class="dt">columns =</span> <span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;relative&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
+<span class="co">#         test relative elapsed</span>
+<span class="co">#1   m_plot(10)    1.000   0.007</span>
+<span class="co">#2 plot_mpg(10)  481.857   3.373</span></code></pre></div>
+<p>suggests that we can obtain a 500-fold speed-up.</p>
+</div>
+<div id="function-closures" class="section level3">
+<h3><span class="header-section-number">7.2.3</span> Function closures</h3>
+<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not <code>.GlobalEnv</code>. One of the environments associated with function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using the <code>environment</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)</code></pre></div>
+<pre><code>## &lt;environment: R_GlobalEnv&gt;</code></pre>
+<p>The <code>plot_mpg</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f =<span class="st"> </span>function() {
+  x =<span class="st"> </span><span class="dv">5</span>
+  function() {
+    x
+  }
+}</code></pre></div>
+<p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
+<span class="kw">environment</span>(g)</code></pre></div>
+<pre><code>## &lt;environment: 0x885c908&gt;</code></pre>
+<p>When we call this new function <code>g</code>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
+<span class="kw">g</span>()</code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<p>The value returned is obtained from <code>environment(g)</code> is 5, not <code>.GlobalEnv</code>. This environment allows to cache variables between function calls. The <code>counter</code> function is basic example of this feature</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counter =<span class="st"> </span>function() {
+  no =<span class="st"> </span><span class="dv">0</span>
+  count =<span class="st"> </span>function() {
+    no &lt;&lt;-<span class="st"> </span>no +<span class="st"> </span><span class="dv">1</span>
+    no
+  }
+}</code></pre></div>
+<p>When we call the function, we retain object values between function calls</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">counter</span>()
+<span class="kw">sc</span>()</code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sc</span>()</code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>The key points of the <code>counter</code> function are</p>
+<ul>
+<li><p>The counter function returns a function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">counter</span>()
+<span class="kw">sc</span>()</code></pre></div>
+<pre><code>## [1] 1</code></pre></li>
+<li>The enclosing environment of <code>sc</code> is not <code>.GlobalEnv</code> instead, it’s the binding environment of <code>sc</code>.</li>
+<li>The function <code>sc</code> has an environment that can be used to store/cache values</li>
+<li><p>The operator <code>&lt;&lt;-</code> is used to alter the <code>no</code>.</p></li>
+</ul>
+<p>We can exploit function closures to simplify our code. Suppose we wished to simulate a games of Snakes and Ladders. We could have function that checked if we landed on a Snake, and if so move</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">check_snake =<span class="st"> </span>function(square) {
+   switch(<span class="kw">as.character</span>(square), 
+       <span class="st">&#39;16&#39;</span>=<span class="dv">6</span>,  <span class="st">&#39;49&#39;</span>=<span class="dv">12</span>, <span class="st">&#39;47&#39;</span>=<span class="dv">26</span>, <span class="st">&#39;56&#39;</span>=<span class="dv">48</span>, <span class="st">&#39;62&#39;</span>=<span class="dv">19</span>, 
+       <span class="st">&#39;64&#39;</span>=<span class="dv">60</span>, <span class="st">&#39;87&#39;</span>=<span class="dv">24</span>, <span class="st">&#39;93&#39;</span>=<span class="dv">73</span>, <span class="st">&#39;96&#39;</span>=<span class="dv">76</span>, <span class="st">&#39;98&#39;</span>=<span class="dv">78</span>, 
+       square)
+}</code></pre></div>
+<p>If we then wanted to determine how often we landed on a Snake, we could use a function closure to keep track</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">check_snake =<span class="st"> </span>function() {
+  no_of_snakes =<span class="st"> </span><span class="dv">0</span>
+  function(square) {
+    new_square =<span class="st"> </span>switch(<span class="kw">as.character</span>(square), 
+       <span class="st">&#39;16&#39;</span>=<span class="dv">6</span>,  <span class="st">&#39;49&#39;</span>=<span class="dv">12</span>, <span class="st">&#39;47&#39;</span>=<span class="dv">26</span>, <span class="st">&#39;56&#39;</span>=<span class="dv">48</span>, <span class="st">&#39;62&#39;</span>=<span class="dv">19</span>, 
+       <span class="st">&#39;64&#39;</span>=<span class="dv">60</span>, <span class="st">&#39;87&#39;</span>=<span class="dv">24</span>, <span class="st">&#39;93&#39;</span>=<span class="dv">73</span>, <span class="st">&#39;96&#39;</span>=<span class="dv">76</span>, <span class="st">&#39;98&#39;</span>=<span class="dv">78</span>, 
+       square)
+    no_of_snakes =<span class="st"> </span>no_of_snakes +<span class="st"> </span>(new_square !=<span class="st"> </span>square)
+    new_square
+  }
+}</code></pre></div>
+<p>By keeping the variable <code>no_of_snakes</code> attached to the <code>check_snake</code> function, enables us to have cleaner code.</p>
+</div>
+<div id="vectorised-code" class="section level3">
+<h3><span class="header-section-number">7.2.4</span> Vectorised code</h3>
+<p>When writing code in R, you need to remember that you are using R and not C (or even Fortran 77!). For example,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Change 1000 uniform random numbers
+x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>) +<span class="st"> </span><span class="dv">1</span>
+logsum =<span class="st"> </span><span class="dv">0</span>
+for(i in <span class="dv">1</span>:<span class="kw">length</span>(x))
+  logsum =<span class="st"> </span>logsum +<span class="st"> </span><span class="kw">log</span>(x[i])</code></pre></div>
+<p>is a piece R code that has a strong, unhealthy influence from C. Instead we should write</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">logsum =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">log</span>(x))</code></pre></div>
+<p>Writing code this way has a number of benefits.</p>
+<ul>
+<li>It’s faster. When <span class="math inline">\(n = 10^7\)</span> the ``R way’’ is about forty times faster.</li>
+<li>It’s neater.</li>
+<li>It doesn’t contain a bug when <code>x</code> is of length <span class="math inline">\(0\)</span>.</li>
+</ul>
+<p>Another common example is sub-setting a vector. When writing in C, we would have something like:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ans =<span class="st"> </span><span class="ot">NULL</span>
+for(i in <span class="dv">1</span>:<span class="kw">length</span>(x)) {
+  if(x[i] &lt;<span class="st"> </span><span class="dv">0</span>) 
+    ans =<span class="st"> </span><span class="kw">c</span>(ans, x[i])
+}</code></pre></div>
+<p>This of course can be done simply with</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ans =<span class="st"> </span>x[x &lt;<span class="st"> </span><span class="dv">0</span>]</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:6-2"></span>
+<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve."  />
+<p class="caption">
+Figure 7.2: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
+</p>
+</div>
+<div id="example-monte-carlo-integration" class="section level4">
+<h4><span class="header-section-number">7.2.4.1</span> Example: Monte-Carlo integration</h4>
+<p>It’s also important to make full use of R functions that use vectors. For example, suppose we wish to estimate <span class="math display">\[
+\int_0^1 x^2 dx
+\]</span> using a basic Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in <a href="efficient-programming.html#fig:6-2">7.2</a>).</p>
+<p><em>Monte Carlo Integration</em></p>
+<ol style="list-style-type: decimal">
+<li>Initialise: <code>hits = 0</code></li>
+<li><strong>for i in 1:N</strong></li>
+<li><span class="math inline">\(~~~\)</span> Generate two random numbers, <span class="math inline">\(U_1, U_2\)</span>, between 0 and 1</li>
+<li><span class="math inline">\(~~~\)</span> If <span class="math inline">\(U_2 &lt; U_1^2\)</span>, then <code>hits = hits + 1</code></li>
+<li><strong>end for</strong></li>
+<li>Area estimate = <code>hits/N</code></li>
+</ol>
+<p>A standard C approach to implementing this Monte-Carlo algorithm would be something like:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
+f =<span class="st"> </span>function(N){
+  hits =<span class="st"> </span><span class="dv">0</span>
+  for(i in <span class="dv">1</span>:N)  {
+    u1 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>); u2 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)
+    if(u1^<span class="dv">2</span> &gt;<span class="st"> </span>u2)
+      hits =<span class="st"> </span>hits +<span class="st"> </span><span class="dv">1</span>
+  }
+  <span class="kw">return</span>(hits/N)
+}</code></pre></div>
+<p>In R this takes a few seconds:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
+<pre><code>##    user  system elapsed 
+##   2.005   0.000   2.006</code></pre>
+<p>In contrast, a more R-centric approach would be the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
+  hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
+  <span class="kw">return</span>(hits/N)
+}</code></pre></div>
+<p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
+<pre><code>##    user  system elapsed 
+##   0.036   0.000   0.036</code></pre>
+</div>
+</div>
+</div>
+<div id="parallel-computing" class="section level2">
+<h2><span class="header-section-number">7.3</span> Parallel computing</h2>
+<p>In recent R versions (since R 2.14.0) ** parallel** package comes pre-installed with base R. The ** parallel** package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
+no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
+<p>The computer used to compile the published version of this book chapter has 2 CPUs/Cores.</p>
+<div id="parallel-versions-of-apply-functions" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Parallel versions of apply functions</h3>
+<p>The most commonly used parallel applications are parallelized replacements of <code>lapply</code>, <code>sapply</code> and <code>apply</code>. The parallel implementations and their arguments are shown below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
+<span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
+<span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
+<p>Note that each function has an argument <code>cl</code> which must be created by <code>makeCluster</code>. This function, amongst other things, specifies the number of processors to use.</p>
+</div>
+<div id="example-parallel-bootstraping" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Example: parallel bootstraping</h3>
+<p>In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore’s law. A scatter plot (figure <a href="efficient-programming.html#fig:6-3">7.3</a>) of processors over the last thirty years shows that that this law seems to hold.</p>
+<div class="figure"><span id="fig:6-3"></span>
+<img src="_main_files/figure-html/6-3-1.png" alt="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"  />
+<p class="caption">
+Figure 7.3: Transistor counts against introduction date. Credit: <a href="https://en.wikipedia.org/wiki/Transistor_count" class="uri">https://en.wikipedia.org/wiki/Transistor_count</a>
+</p>
+</div>
+<p>We can estimate the trend using simple linear regression. A standard algorithm for obtaining uncertainty estimates on regression coefficients is bootstrapping. This is a simple algorithm; at each iteration we sample with replacement from the original data set and estimate the parameters of the new data set. The distribution of the parameters gives us our uncertainty estimate. We begin by loading the data set and creating a function for performing a single bootstrap</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;transistors&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+bs =<span class="st"> </span>function(i) {
+  s =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">NROW</span>(transistors), <span class="dt">replace=</span><span class="ot">TRUE</span>)
+  trans_samp =<span class="st"> </span>transistors[s,]
+  <span class="kw">coef</span>(<span class="kw">lm</span>(<span class="kw">log2</span>(Count) ~<span class="st"> </span>Year, <span class="dt">data=</span>trans_samp))
+}</code></pre></div>
+<p>We can then perform <span class="math inline">\(N=10^4\)</span> bootstraps using <code>sapply</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10000</span>
+<span class="kw">sapply</span>(<span class="dv">1</span>:N, bs)</code></pre></div>
+<p>Rewriting this code to make use of the ** parallel** package is straightforward. We begin by making a cluster and exporting the data set</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
+cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">6</span>)
+<span class="kw">clusterExport</span>(cl, <span class="st">&quot;transistors&quot;</span>)</code></pre></div>
+<p>Then use <code>parSapply</code> and stop the cluster</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, bs)
+<span class="kw">stopCluster</span>(cl)</code></pre></div>
+<p>On this computer, we get a four-fold speed-up.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
+</div>
+<div id="process-forking" class="section level3">
+<h3><span class="header-section-number">7.3.3</span> Process forking</h3>
+<p>Another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions. These functions use forking forking, that is creating a new copy of a process running on the CPU. However, Windows does not support this low-level functionality in the way that Linux does.</p>
+</div>
+</div>
+<div id="the-byte-compiler" class="section level2">
+<h2><span class="header-section-number">7.4</span> The byte compiler</h2>
+<p>The ** compiler** package, written by R Core member Luke Tierney has been part of R since version 2.13.0. Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
+<pre><code>## function (x, ...) 
+## UseMethod(&quot;mean&quot;)
+## &lt;bytecode: 0x9241f98&gt;
+## &lt;environment: namespace:base&gt;</code></pre>
+<p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
+<p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="efficient-learning.html#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
+<div id="example-the-mean-function" class="section level3">
+<h3><span class="header-section-number">7.4.1</span> Example: the mean function</h3>
+<p>The <strong>compiler</strong> package comes with R, so we just need to load the package in the usual way</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)</code></pre></div>
+<p>Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the <code>total</code> variable.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_mean =<span class="st"> </span>function(x) {
+  total =<span class="st"> </span><span class="dv">0</span>
+  n =<span class="st"> </span><span class="kw">length</span>(x)
+  for(i in <span class="dv">1</span>:n)
+    total =<span class="st"> </span>total +<span class="st"> </span>x[i]/n
+  total
+}</code></pre></div>
+<p>This is clearly a bad function and we should just <code>mean</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean =<span class="st"> </span><span class="kw">cmpfun</span>(my_mean)</code></pre></div>
+<p>Then we use the <code>benchmark</code> function to compare the three variants</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Generate some data
+x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
+<span class="kw">benchmark</span>(<span class="kw">my_mean</span>(x), <span class="kw">cmp_mean</span>(x), <span class="kw">mean</span>(x), 
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>),
+          <span class="dt">order=</span><span class="st">&quot;relative&quot;</span>, <span class="dt">replications=</span><span class="dv">5000</span>)</code></pre></div>
+<p>The compiled function is around seven times faster than the uncompiled function. Of course, the native <code>mean</code> function is faster, but the compiling does make a significant difference (figure <a href="efficient-programming.html#fig:6-4">7.4</a>).</p>
+<div class="figure"><span id="fig:6-4"></span>
+<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions."  />
+<p class="caption">
+Figure 7.4: Comparsion of mean functions.
+</p>
+</div>
+</div>
+<div id="compiling-code" class="section level3">
+<h3><span class="header-section-number">7.4.2</span> Compiling code</h3>
+<p>There are a number of ways to compile code. The easiest is to compile individual function using <code>cmpfun</code>, but this obviously doesn’t scale. If you create a package, then you automatically compile the package on installation by adding</p>
+<pre><code>ByteCompile: true</code></pre>
+<p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value.</p>
+<p>A final option to use just-in-time (JIT) compilation. The <code>enableJIT</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="efficient-collaboration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-rcpp.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
+"text": "Edit"
+},
+"download": ["_main.pdf"]
+});
+});
+</script>
+
+
+</body>
+
+</html>
