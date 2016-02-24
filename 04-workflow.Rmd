@@ -340,12 +340,17 @@ system.time(df3 = read_csv(bigfile))
 
 In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:readr-vs-base)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
 
-```{r, warning=FALSE}
+```{r, eval=FALSE}
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 res_v <- microbenchmark(times = 10,
   base_read = voyages_base <- read.csv(fname, sep = "\t"),
   readr_read = voyages_readr <- read_tsv(fname),
   dt_fread = voyages_dt <- fread(fname))
+```
+
+```{r, echo=FALSE}
+# saveRDS(res_v, "data/res_v.Rds") # re-save if updated
+res_v <- readRDS("data/res_v.Rds")
 ```
 
 ```{r voyages-pre, echo=FALSE, results='hide'}
