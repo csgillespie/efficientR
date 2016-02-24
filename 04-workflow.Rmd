@@ -550,7 +550,7 @@ Tidy data is easier to process than messy data. As with many aspects of R progra
 library("readr")
 fname <- system.file("extdata/world-bank-ineq.csv", package = "efficient")
 idata <- read_csv(fname)
-idata # print the dataset in the **dplyr** way
+idata # print the dataset 
 ```
 
 **dplyr** is much faster than base implementations of various
@@ -594,6 +594,54 @@ Now we have usefully renamed the object we save the result for future reference:
 saveRDS(idata, "data/idata-renamed.Rds")
 ```
 
+### Changing column classes
+
+The *class* of R objects is critical to performance.
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `sapply()`, as illustrated below, with the inequality data loaded previously.
+
+```{r}
+idata <- readRDS("data/idata-renamed.Rds")
+sapply(idata, class)
+```
+
+This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
+
+Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 ("Country", "Country Code", "Year" and "Year Code") should be numeric. We can re-assign the classes of the numeric variables one-by one:
+
+```{r}
+idata$gini = as.numeric(idata$gini)
+mean(idata$gini, na.rm = TRUE) # now the mean is calculated
+```
+
+However, the purpose of programming languages is to *automate* tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using the `unlist` function:
+
+```{r, warning=FALSE}
+id <- 5:9 # column ids to change
+idata[id] <- as.numeric(unlist(idata[id]))
+sapply(idata, class)
+```
+
+This can also be done concisely using **dplyr**'s `mutate_each` function: 
+
+```{r, warning=FALSE}
+idata <- mutate_each(idata, funs(as.numeric), id)
+```
+
+As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
+
+```{r, echo=FALSE}
+# Idea: these 4 methods could be benchmarked
+# An alternative method for changing the column class
+idata[id] = apply(idata[id], 2,
+  function(x) as.numeric(x))
+
+# Another alternative method using a for loop
+idata.df <- as.data.frame(idata)
+for(i in id){
+  idata.df[,i] <- as.numeric(idata.df[,i])
+}
+```
+
 ### Filtering rows
 
 The standard way to subset data by rows in R is with square brackets, for example:
@@ -608,23 +656,22 @@ aus1 = idata[idata$Country == "Australia",]
 aus2 = filter(idata, Country == "Australia")
 ```
 
-Note that **dplyr** does not rely on the `$` symbol: it knows that
-that `Country` is a variable of `idata`
-Because `idata` was the first argument, **dplyr** assumes
-that any subsequent are variables.^[Note that this syntax is a defining feature of **dplyr**
+In addition to being more flexible (see the documentation provided by `?filter`), `filter` is slightly faster than base R's notation.  Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
+the first argument of **dplyr** functions usually a `data.frame`, and
+subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
 and many of its functions work in the same way.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 ] 
 
-The **dplyr** equivalent of aggregate is to use
-the grouping function `group_by` in combination with
-the general purpose function `summarise` (not to
-be confused with `summary` in base R).
+There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). For consistency, however, we next look at filtering columns.
 
 ### Filtering columns
 
-Large datasets often contain much worthless or blank information, clogging up RAM and reducing computational efficiency.
-Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
+```{r, echo=FALSE}
+# TODO: demonstrate dplyr::select
+```
+
+Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
 
 Imagine that we have large (4+ GB) text file called `miniaa` which is loaded with the following command:
 
@@ -670,10 +717,7 @@ object.size(read_csv(fname))
 
 ### Data aggregation
 
-Data aggregation is the process of creating summaries of data based on a grouping variable.
-The end result usually has the same number of rows as there are groups.
-Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets.
-The following code finds the average emissions per country (country being the grouping variable) from the 'GHG' dataset rescued from a spreadsheet and converted into a .csv file in the previous chapter.
+Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the 'GHG' dataset stored in the **efficient** package.
 
 ```{r, warning=FALSE}
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
@@ -683,17 +727,21 @@ nrow(df)
 length(unique(df$Country))
 ```
 
-> **Challenge:** rename the variables 4 to 8 so they are much shorter, following the pattern `ECO2`, `MCO2` etc. That will make the code for manipulating the dataset easier to write
+Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can be done in base R using the following command:
+
+```{r}
+names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
+```
+
+> **Challenge:** referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the dplyr function rename. Follow the pattern `ECO2`, `MCO2` etc.
 
 ```{r, echo=FALSE}
-# Method 1: using dplyr::rename
+# Using dplyr::rename
 df <- rename(df,
              ECO2 = Electricity.Heat..CO2...MtCO2.,
              MCO2 = Manufacturing.Construction..CO2...MtCO2.,
              TCO2 = Transportation..CO2...MtCO2.,
              FCO2 = Fugitive.Emissions..CO2...MtCO2.)
-# Method 2: using names assignment
-names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
 ```
 
 After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
@@ -728,39 +776,13 @@ group_by(df, Country) %>%
   summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
 ```
 
-### Updating column classes
-
-The *class* of R objects is critical to how it performs.
-If a class is incorrectly specified (if numbers are treated
-as factors, for example), R will likely generate error messages.
-Try typing `mean(idata$gini)`, for example.
-
-We can re-assign the classes of the numeric variables
-one-by one:
-
-```{r}
-idata$gini = as.numeric(idata$gini)
-mean(idata$gini, na.rm = TRUE) # now the mean is calculated
-```
-
-However, the purpose of programming languages is to *automate*
-arduous tasks and reduce typing. The following command
-re-classifies all of the numeric variables using
-the `apply` function (we'll seem more of `apply`'s relatives
-later):
-
-```{r, warning=FALSE}
-idata[5:9] = apply(idata[5:9], 2,
-  function(x) as.numeric(x))
-```
 
 ```{r}
 countries = group_by(idata, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
-Note that `summarise` is highly versatile, and can
-be used to return a customised range of summary statistics:
+Note that `summarise` is highly versatile, and can be used to return a customised range of summary statistics:
 
 ```{r tidy=FALSE}
 summarise(countries,
