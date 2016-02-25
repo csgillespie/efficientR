@@ -4,16 +4,6 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow
 
-```{r, echo=FALSE, message=FALSE}
-library("ggplot2")
-library("DiagrammeR")
-library("microbenchmark")
-library("tidyr")
-library("data.table")
-library("readr")
-library("dplyr")
-```
-
 - **Note to reviewers:** We are planning to split this chapter in two and create a separate one on "Efficient data carpentry" to discuss data manipulation and possibly loading as a self-standing and very important part of a typical R project workflow. Feedback on this suggestion would be very welcome.
 
 Efficient programming is an important and sometimes vital skill for generating the correct result, on time.
@@ -68,6 +58,7 @@ x = seq(0, 1, length.out=100)
 df = data.frame(Phase = rep(c("Planning", "Programming", "Write-up"), each=length(x)), 
                 Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)+0.4), 
                 x = c(x, x, x))
+library("ggplot2")
 m = ggplot(df, aes(x, Time)) + 
   geom_line(aes(color=Phase)) + xlab("Time")
 m + 
@@ -259,6 +250,7 @@ Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains
 For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.csv`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
 ```{r, eval=FALSE, echo=FALSE, warning=FALSE}
+library("microbenchmark")
 rows = 10^(seq(3,7, length.out = 20))
 cols = 2 * 10^(0:2)
 res = NULL
@@ -298,7 +290,7 @@ for(i in res$cells){
 }
 i
 res$type = c("std", "std", "type", "type", "std", "type")
-library(ggplot2)
+library("ggplot2")
 res$facet_cols = paste("No of columns:", res$cols)
 saveRDS(res, "data/res.Rds")
 ```
@@ -343,6 +335,9 @@ system.time(df3 = read_csv(bigfile))
 In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:readr-vs-base)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
 
 ```{r, eval=FALSE}
+library("microbenchmark")
+library("readr")
+library("data.table")
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 res_v <- microbenchmark(times = 10,
   base_read = voyages_base <- read.csv(fname, sep = "\t"),
@@ -355,7 +350,15 @@ res_v <- microbenchmark(times = 10,
 res_v <- readRDS("data/res_v.Rds")
 ```
 
-```{r voyages-pre, echo=FALSE, results='hide'}
+```{r voyages-pre, echo=FALSE, results='hide', warning=FALSE}
+# Running results here (not in benchmark) for fast build
+library("microbenchmark")
+library("readr")
+library("data.table")
+fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
+voyages_base <- read.csv(fname, sep = "\t")
+voyages_readr <- read_tsv(fname)
+voyages_dt <- fread(fname)
 df <- print(res_v)
 df <- dplyr::select(df, Function = expr, min, mean, max)
 df[2:ncol(df)] <- df[2:ncol(df)] / df$mean[3]
@@ -579,6 +582,7 @@ Note also the syntax:
 `rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
 
 ```{r}
+library("dplyr")
 idata = rename(idata, Country = `Country Name`)
 ```
 
@@ -904,7 +908,7 @@ so it should be stated at the outset that **dplyr** and **data.table** are not m
 The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df` `data.table` objects will behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
-library(data.table)
+library("data.table")
 idata = readRDS("data/idata-renamed.Rds")
 idata_dt = data.table(idata) # convert to data.table class
 aus3a = idata_dt[Country == "Australia"]
