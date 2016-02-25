@@ -684,13 +684,11 @@ Imagine that we have large (4+ GB) text file called `miniaa` which is loaded wit
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
-df = read_csv(fname) # load imaginary large data
+df = read.csv(fname) # load imaginary large data
 dim(df)
 ```
 
-Note that the data frame has 329 columns (and imagine it has 4 million+ rows as the original does).
-That's a lot of variables. Do we need them all?
-It's worth taking a glimpse at this dataset to find out:
+Note that the data frame has 329 columns (and imagine it has 4 million+ rows instead of 9). That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
 ```{r, eval=FALSE}
 glimpse(df)
@@ -703,23 +701,31 @@ glimpse(df)
 # ...
 ```
 
-Looking at the output, it becomes clear that the majority of the variables only contain `NA`.
-To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
 
 ```{r}
 # Identify the variable which are all NA
 all_na = sapply(df, function(x) all(is.na(x)))
 summary(all_na) # summary of the results
-df = df[!all_na] # subset the dataframe
+df1 = df[!all_na] # subset the dataframe
 ```
 
-The new `df` object has fewer than a third of the original columns.
+The new `df` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
 
-> **Challenge:** find out how much space was saved by the above operation using `object.size()`
+```{r}
+saveRDS(df1, "data/miniaa.Rds")
+```
+
+
+#### Exercises
+
+1. How much space was saved by reducing the number of columns? (Hint: use `object.size()`.)
+
+2. How many times smaller is the .Rds file saved above compared with the .csv file? (Hint: use `file.size()`.)
 
 ```{r, include=FALSE}
-object.size(df)
-object.size(read_csv(fname))
+object.size(df1) / object.size(df)
+file.size(fname) / file.size("data/miniaa.Rds")
 ```
 
 ### Data aggregation
@@ -738,17 +744,6 @@ Note that while there are almost 8000 rows, there are less than 200 countries. R
 
 ```{r}
 names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
-```
-
-> **Challenge:** referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the dplyr function rename. Follow the pattern `ECO2`, `MCO2` etc.
-
-```{r, echo=FALSE, eval=FALSE}
-# Using dplyr::rename
-df <- rename(df,
-             ECO2 = Electricity.Heat..CO2...MtCO2.,
-             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
-             TCO2 = Transportation..CO2...MtCO2.,
-             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
 ```
 
 After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
@@ -819,7 +814,22 @@ summary statistics
 - the standard deviation of gini index values over 30
 - the range of gini index values reported for each country.
 
-> **Challenge**: explore the **dplyr**'s documentation, starting with the introductory vignette, accessed by entering `vignette("introduction")` and test out its capabilities on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`)
+#### Exercises
+
+1. Referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the **dplyr** function `rename`. Follow the pattern `ECO2`, `MCO2` etc.
+
+```{r, echo=FALSE, eval=FALSE}
+# Using dplyr::rename
+df <- rename(df,
+             ECO2 = Electricity.Heat..CO2...MtCO2.,
+             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
+             TCO2 = Transportation..CO2...MtCO2.,
+             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
+```
+
+2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering `vignette("introduction")`.
+
+3. Test additional **dplyr** 'verbs' on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
 
 ### Chaining operations
 
