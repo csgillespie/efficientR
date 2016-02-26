@@ -684,13 +684,9 @@ There are **dplyr** equivalents of many base R functions but these usually work 
 
 ### Filtering columns
 
-```{r, echo=FALSE}
-# TODO: demonstrate dplyr::select
-```
-
 Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
 
-Imagine that we have large (4+ GB) text file called `miniaa` which is loaded with the following command:
+Imagine that we have a text file called `miniaa` which is large enough to consume most of your computer's RAM. We can load it with the following command:
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
@@ -698,7 +694,7 @@ df = read.csv(fname) # load imaginary large data
 dim(df)
 ```
 
-Note that the data frame has 329 columns (and imagine it has 4 million+ rows instead of 9). That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
+Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
 ```{r, eval=FALSE}
 glimpse(df)
@@ -712,6 +708,10 @@ glimpse(df)
 ```
 
 Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+
+```{r, echo=FALSE}
+# TODO: demonstrate dplyr::select
+```
 
 ```{r}
 # Identify the variable which are all NA
