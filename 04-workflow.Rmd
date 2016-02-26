@@ -624,15 +624,21 @@ idata$gini = as.numeric(idata$gini)
 mean(idata$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
-However, the purpose of programming languages is to *automate* tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using the `unlist` function:
+However, the purpose of programming languages is to *automate* tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts a `data.frame` to a numeric `matrix`:
 
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
-idata[id] = as.numeric(unlist(idata[id]))
+idata[id] = data.matrix(idata[id])
 sapply(idata, class)
 ```
 
-This can also be done concisely using **dplyr**'s `mutate_each` function: 
+As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
+
+```{r, warning=FALSE}
+idata[id] = as.numeric(unlist(idata[id]))
+```
+
+*Another* one-liner to acheive the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE}
 idata = mutate_each(idata, funs(as.numeric), id)
@@ -640,11 +646,10 @@ idata = mutate_each(idata, funs(as.numeric), id)
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Idea: these 4 methods could be benchmarked
 # An alternative method for changing the column class
-idata[id] = apply(idata[id], 2,
-  function(x) as.numeric(x))
+idata[id] = apply(idata[id], 2, as.numeric)
 
 # Another alternative method using a for loop
 idata.df = as.data.frame(idata)
