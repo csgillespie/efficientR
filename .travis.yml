@@ -1,11 +1,12 @@
 language: r
-sudo: required
+cache: packges
 
 install_r:
   - devtools
 
 script:
-  - make build
+  - make html
+  - make pdf
   
 after_success:
   - BASE_REPO=$PWD
@@ -22,7 +23,7 @@ after_success:
   - git add _main_files/*; git add _main.pdf; git add *.json
   - git commit -a -m "Updating book (Travis build: ${TRAVIS_BUILD_NUMBER})"
   - git status
-  - git push
+  - git push 2>err.txt
 
 notifications:
   email:
