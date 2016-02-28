@@ -4,15 +4,7 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow
 
-```{r, echo=FALSE, message=FALSE}
-library("ggplot2")
-library("DiagrammeR")
-library("microbenchmark")
-library("tidyr")
-library("data.table")
-library("readr")
-library("dplyr")
-```
+- **Note to reviewers:** We are planning to split this chapter in two and create a separate one on "Efficient data carpentry" to discuss data manipulation and possibly loading as a self-standing and very important part of a typical R project workflow. Feedback on this suggestion would be very welcome.
 
 Efficient programming is an important and sometimes vital skill for generating the correct result, on time.
 Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R programming. 
@@ -66,6 +58,7 @@ x = seq(0, 1, length.out=100)
 df = data.frame(Phase = rep(c("Planning", "Programming", "Write-up"), each=length(x)), 
                 Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)+0.4), 
                 x = c(x, x, x))
+library("ggplot2")
 m = ggplot(df, aes(x, Time)) + 
   geom_line(aes(color=Phase)) + xlab("Time")
 m + 
@@ -257,6 +250,7 @@ Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains
 For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.csv`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
 ```{r, eval=FALSE, echo=FALSE, warning=FALSE}
+library("microbenchmark")
 rows = 10^(seq(3,7, length.out = 20))
 cols = 2 * 10^(0:2)
 res = NULL
@@ -296,7 +290,7 @@ for(i in res$cells){
 }
 i
 res$type = c("std", "std", "type", "type", "std", "type")
-library(ggplot2)
+library("ggplot2")
 res$facet_cols = paste("No of columns:", res$cols)
 saveRDS(res, "data/res.Rds")
 ```
@@ -340,18 +334,34 @@ system.time(df3 = read_csv(bigfile))
 
 In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:readr-vs-base)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
 
-```{r, warning=FALSE}
+```{r, eval=FALSE}
+library("microbenchmark")
+library("readr")
+library("data.table")
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
-res_v <- microbenchmark(times = 10,
-  base_read = voyages_base <- read.csv(fname, sep = "\t"),
+res_v = microbenchmark(times = 10,
+  base_read = voyages_base <- read.delim(fname),
   readr_read = voyages_readr <- read_tsv(fname),
   dt_fread = voyages_dt <- fread(fname))
 ```
 
-```{r voyages-pre, echo=FALSE, results='hide'}
-df <- print(res_v)
-df <- dplyr::select(df, Function = expr, min, mean, max)
-df[2:ncol(df)] <- df[2:ncol(df)] / df$mean[3]
+```{r, echo=FALSE}
+# saveRDS(res_v, "data/res_v.Rds") # re-save if updated
+res_v = readRDS("data/res_v.Rds")
+```
+
+```{r voyages-pre, echo=FALSE, results='hide', warning=FALSE}
+# Running results here (not in benchmark) for fast build
+library("microbenchmark")
+library("readr")
+library("data.table")
+fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
+voyages_base = read.csv(fname, sep = "\t")
+voyages_readr = read_tsv(fname)
+voyages_dt = fread(fname)
+df = print(res_v)
+df = dplyr::select(df, Function = expr, min, mean, max)
+df[2:ncol(df)] = df[2:ncol(df)] / df$mean[3]
 ```
 
 ```{r voyages, echo=FALSE}
@@ -382,12 +392,12 @@ To summarise, the differences between base, **readr** and **data.table** functio
 - `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
 
 ```{r colclasses, echo=FALSE}
-vcols <- as.data.frame(rbind(
+vcols = as.data.frame(rbind(
   sapply(voyages_base, class),
   sapply(voyages_readr, class),
   sapply(voyages_dt, class)))
-vcols <- cbind(df[1], vcols)
-vcols <- dplyr::select(vcols, Function, number, boatname, built, departure_date)
+vcols = cbind(df[1], vcols)
+vcols = dplyr::select(vcols, Function, number, boatname, built, departure_date)
 knitr::kable(vcols, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset")
 ```
 
@@ -440,7 +450,7 @@ MonetDB is a recent alternative to traditional and noSQL approaches which offers
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
 (see Section \@ref(dplyr)).
 
-## Tidying data with **tidyr**
+## Tidying with tidyr
 
 A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. Converting data into a 'tidy' form (described below) is also advantageous from a computational efficiency perspective: it usually faster to run analysis and plotting commands on a few large vectors than many short vectors.
 
@@ -461,8 +471,8 @@ unzip("v59i10-data.zip", exdir = "data/reshape/")
 # generate pew dataset
 raw = read_csv("data/reshape-pew.csv")
 raw = raw[-c(1,ncol(raw))] # remove excess cols
-names(raw) <- c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k", "$40--50k",
-"$50--75k", "$75--100k", "$100--150k", ">150k")
+names(raw) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
+               "$40--50k", "$50--75k", "$75--100k", "$100--150k", ">150k")
 # write_csv(raw, "data/pew.csv")
 knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
 ```
@@ -470,17 +480,17 @@ knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' datas
 ```{r tpewt, echo=FALSE}
 library("tidyr")
 rawt = gather(raw, Income, Count, -religion)
-rawt$Count <- as.character(rawt$Count)
-rawt$Income <- as.character(rawt$Income)
-rawtp <- rawt[c(1:3, nrow(rawt)),]
+rawt$Count = as.character(rawt$Count)
+rawt$Income = as.character(rawt$Income)
+rawtp = rawt[c(1:3, nrow(rawt)),]
 
-insertRow <- function(existingDF, newrow, r) {
+insertRow = function(existingDF, newrow, r) {
   existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
   existingDF[r,] <- newrow
   existingDF
 }
 
-rawtp <- insertRow(existingDF = rawtp, newrow = rep("...", 3), r = 4)
+rawtp = insertRow(existingDF = rawtp, newrow = rep("...", 3), r = 4)
 knitr::kable(rawtp, caption = "First 3 and last rows of the 'tidied' Pew dataset.")
 ```
 
@@ -536,7 +546,7 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
 ```
 
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
-Data manipulation is a large topic with major potential implications for efficiency [@Spector2008].
+Data manipulation is a large topic with major potential implications for efficiency [@Spector_2008].
 
 ## Data processing {#dplyr}
 
@@ -548,9 +558,9 @@ Tidy data is easier to process than messy data. As with many aspects of R progra
 
 ```{r, message=FALSE, results='hide'}
 library("readr")
-fname <- system.file("extdata/world-bank-ineq.csv", package = "efficient")
-idata <- read_csv(fname)
-idata # print the dataset in the **dplyr** way
+fname = system.file("extdata/world-bank-ineq.csv", package = "efficient")
+idata = read_csv(fname)
+idata # print the dataset 
 ```
 
 **dplyr** is much faster than base implementations of various
@@ -572,6 +582,7 @@ Note also the syntax:
 `rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
 
 ```{r}
+library("dplyr")
 idata = rename(idata, Country = `Country Name`)
 ```
 
@@ -579,7 +590,7 @@ To rename multiple columns the variable names are simply separated by commas. Th
 
 ```{r}
 # The dplyr way (rename two variables)
-idata <- rename(idata,
+idata = rename(idata,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
 
@@ -592,6 +603,59 @@ Now we have usefully renamed the object we save the result for future reference:
 
 ```{r, eval=FALSE}
 saveRDS(idata, "data/idata-renamed.Rds")
+```
+
+### Changing column classes
+
+The *class* of R objects is critical to performance.
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `sapply()`, as illustrated below, with the inequality data loaded previously.
+
+```{r}
+idata = readRDS("data/idata-renamed.Rds")
+sapply(idata, class)
+```
+
+This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
+
+Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 ("Country", "Country Code", "Year" and "Year Code") should be numeric. We can re-assign the classes of the numeric variables one-by one:
+
+```{r}
+idata$gini = as.numeric(idata$gini)
+mean(idata$gini, na.rm = TRUE) # now the mean is calculated
+```
+
+However, the purpose of programming languages is to *automate* tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts a `data.frame` to a numeric `matrix`:
+
+```{r, warning=FALSE}
+id = 5:9 # column ids to change
+idata[id] = data.matrix(idata[id])
+sapply(idata, class)
+```
+
+As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
+
+```{r, warning=FALSE}
+idata[id] = as.numeric(unlist(idata[id]))
+```
+
+*Another* one-liner to acheive the same result uses **dplyr**'s `mutate_each` function: 
+
+```{r, warning=FALSE}
+idata = mutate_each(idata, funs(as.numeric), id)
+```
+
+As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
+
+```{r, echo=FALSE, warning=FALSE}
+# Idea: these 4 methods could be benchmarked
+# An alternative method for changing the column class
+idata[id] = apply(idata[id], 2, as.numeric)
+
+# Another alternative method using a for loop
+idata.df = as.data.frame(idata)
+for(i in id){
+  idata.df[,i] = as.numeric(idata.df[,i])
+}
 ```
 
 ### Filtering rows
@@ -608,35 +672,29 @@ aus1 = idata[idata$Country == "Australia",]
 aus2 = filter(idata, Country == "Australia")
 ```
 
-Note that **dplyr** does not rely on the `$` symbol: it knows that
-that `Country` is a variable of `idata`
-Because `idata` was the first argument, **dplyr** assumes
-that any subsequent are variables.^[Note that this syntax is a defining feature of **dplyr**
+In addition to being more flexible (see the documentation provided by `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
+the first argument of **dplyr** functions usually a `data.frame`, and
+subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
 and many of its functions work in the same way.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 ] 
 
-The **dplyr** equivalent of aggregate is to use
-the grouping function `group_by` in combination with
-the general purpose function `summarise` (not to
-be confused with `summary` in base R).
+There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). For consistency, however, we next look at filtering columns.
 
 ### Filtering columns
 
-Large datasets often contain much worthless or blank information, clogging up RAM and reducing computational efficiency.
-Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
+Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
 
-Imagine that we have large (4+ GB) text file called `miniaa` which is loaded with the following command:
+Imagine that we have a text file called `miniaa` which is large enough to consume most of your computer's RAM. We can load it with the following command:
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
-df = read_csv(fname) # load imaginary large data
+df = read.csv(fname) # load imaginary large data
 dim(df)
 ```
 
-Note that the data frame has 329 columns (and imagine it has 4 million+ rows as the original does).
-That's a lot of variables. Do we need them all?
-It's worth taking a glimpse at this dataset to find out:
+Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
 ```{r, eval=FALSE}
 glimpse(df)
@@ -649,31 +707,40 @@ glimpse(df)
 # ...
 ```
 
-Looking at the output, it becomes clear that the majority of the variables only contain `NA`.
-To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+
+```{r, echo=FALSE}
+# TODO: demonstrate dplyr::select
+```
 
 ```{r}
 # Identify the variable which are all NA
 all_na = sapply(df, function(x) all(is.na(x)))
 summary(all_na) # summary of the results
-df = df[!all_na] # subset the dataframe
+df1 = df[!all_na] # subset the dataframe
 ```
 
-The new `df` object has fewer than a third of the original columns.
+The new `df` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
 
-> **Challenge:** find out how much space was saved by the above operation using `object.size()`
+```{r}
+saveRDS(df1, "data/miniaa.Rds")
+```
+
+
+#### Exercises
+
+1. How much space was saved by reducing the number of columns? (Hint: use `object.size()`.)
+
+2. How many times smaller is the .Rds file saved above compared with the .csv file? (Hint: use `file.size()`.)
 
 ```{r, include=FALSE}
-object.size(df)
-object.size(read_csv(fname))
+object.size(df1) / object.size(df)
+file.size(fname) / file.size("data/miniaa.Rds")
 ```
 
 ### Data aggregation
 
-Data aggregation is the process of creating summaries of data based on a grouping variable.
-The end result usually has the same number of rows as there are groups.
-Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets.
-The following code finds the average emissions per country (country being the grouping variable) from the 'GHG' dataset rescued from a spreadsheet and converted into a .csv file in the previous chapter.
+Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the 'GHG' dataset stored in the **efficient** package.
 
 ```{r, warning=FALSE}
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
@@ -683,16 +750,9 @@ nrow(df)
 length(unique(df$Country))
 ```
 
-> **Challenge:** rename the variables 4 to 8 so they are much shorter, following the pattern `ECO2`, `MCO2` etc. That will make the code for manipulating the dataset easier to write
+Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can be done in base R using the following command:
 
-```{r, echo=FALSE}
-# Method 1: using dplyr::rename
-df <- rename(df,
-             ECO2 = Electricity.Heat..CO2...MtCO2.,
-             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
-             TCO2 = Transportation..CO2...MtCO2.,
-             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
-# Method 2: using names assignment
+```{r}
 names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
 ```
 
@@ -728,39 +788,13 @@ group_by(df, Country) %>%
   summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
 ```
 
-### Updating column classes
-
-The *class* of R objects is critical to how it performs.
-If a class is incorrectly specified (if numbers are treated
-as factors, for example), R will likely generate error messages.
-Try typing `mean(idata$gini)`, for example.
-
-We can re-assign the classes of the numeric variables
-one-by one:
-
-```{r}
-idata$gini = as.numeric(idata$gini)
-mean(idata$gini, na.rm = TRUE) # now the mean is calculated
-```
-
-However, the purpose of programming languages is to *automate*
-arduous tasks and reduce typing. The following command
-re-classifies all of the numeric variables using
-the `apply` function (we'll seem more of `apply`'s relatives
-later):
-
-```{r, warning=FALSE}
-idata[5:9] = apply(idata[5:9], 2,
-  function(x) as.numeric(x))
-```
 
 ```{r}
 countries = group_by(idata, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
-Note that `summarise` is highly versatile, and can
-be used to return a customised range of summary statistics:
+Note that `summarise` is highly versatile, and can be used to return a customised range of summary statistics:
 
 ```{r tidy=FALSE}
 summarise(countries,
@@ -790,9 +824,24 @@ summary statistics
 - the standard deviation of gini index values over 30
 - the range of gini index values reported for each country.
 
-> **Challenge**: explore the **dplyr**'s documentation, starting with the introductory vignette, accessed by entering `vignette("introduction")` and test out its capabilities on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`)
+#### Exercises
 
-### Chaining operations with **dplyr**
+1. Referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the **dplyr** function `rename`. Follow the pattern `ECO2`, `MCO2` etc.
+
+```{r, echo=FALSE, eval=FALSE}
+# Using dplyr::rename
+df = rename(df,
+             ECO2 = Electricity.Heat..CO2...MtCO2.,
+             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
+             TCO2 = Transportation..CO2...MtCO2.,
+             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
+```
+
+2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering `vignette("introduction")`.
+
+3. Test additional **dplyr** 'verbs' on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
+
+### Chaining operations
 
 Another interesting feature of **dplyr** is its ability
 to chain operations together. This overcomes one of the
@@ -850,7 +899,7 @@ top_n(
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
-## **data.table**
+## data.table
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
 tasks^[One
@@ -865,7 +914,7 @@ so it should be stated at the outset that **dplyr** and **data.table** are not m
 The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df` `data.table` objects will behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
-library(data.table)
+library("data.table")
 idata = readRDS("data/idata-renamed.Rds")
 idata_dt = data.table(idata) # convert to data.table class
 aus3a = idata_dt[Country == "Australia"]
@@ -910,7 +959,7 @@ saveRDS(res, "data/res-datatable.Rds")
 ```
 
 ```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE}
-res <- readRDS("data/res-datatable.Rds")
+res = readRDS("data/res-datatable.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) +
   xlab("Size (MB)") + ylab("Time (relative to fastest)")
