@@ -540,7 +540,7 @@ separate(df, agesex, c("sex", "age"), 1)
 knitr::kable(df, caption = "Joined age and sex variables in one column")
 ```
 
-```{r seperated, echo=FALSE}
+```{r separated, echo=FALSE}
 knitr::kable(separate(df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the funtion `separate`.")
 ```
@@ -958,11 +958,12 @@ for(i in seq(10, 1000, length.out = 10)){
 saveRDS(res, "data/res-datatable.Rds")
 ```
 
-```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE}
+```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4}
 res = readRDS("data/res-datatable.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) +
-  xlab("Size (MB)") + ylab("Time (relative to fastest)")
+  xlab("Size (MB)") + ylab("Time (relative to fastest)") + 
+  theme_bw()
 ```
 
 Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement speed gain on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
@@ -1001,7 +1002,7 @@ The a number of key elements of an R packages differentiate them from other R pr
 
 - The `R/` folder contains all the R code that defines your package's functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through [Roxygen tags](http://r-pkgs.had.co.nz/man.html#man-workflow) such as `#' This function does this...` makes it easy for others to use your work.
 
-- The `data/` folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the **devtools** package, with `devtools::use_data()`. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function `data('data_set_name)`.
+- The `data/` folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the **devtools** package, with `devtools::use_data()`. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function `data('data_set_name')`.
 
 As with dynamic documents, package development is a large topic. For small 'one-off' projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigourous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see [@Wickham_2015].
 

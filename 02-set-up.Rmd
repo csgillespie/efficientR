@@ -91,7 +91,7 @@ Alongside R profiling functions such as `profvis` (see Section __XXX__), system 
 A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter 3).
 System monitors also report the percentage of CPU resource allocated over time.
 On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter 6 on parallel programming).
-Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure \@ref{2-1}).
+Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure \@ref(fig:2-1)).
 
 ```{r 2-1, echo=FALSE, fig.cap="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded."}
 knitr::include_graphics("figures/sysmon.png")
@@ -101,7 +101,7 @@ System monitoring is a complex topic that spills over into system administration
 server management. Fortunately there are many tools designed to ease monitoring all major operating systems.
 
 - On Linux, the shell command `top` displays key resource use figures for most
-distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see Figure 2-1) are more refined alternatives which use command-line and graphical user interfaces respectively.
+distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see Figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively.
 A number of options such as `nethogs` monitor internet usage.
 - On Windows the **Task Manager** provides key information on RAM and CPU use by
 process. This can be started in modern Windows versions by typing `Ctl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
@@ -448,9 +448,8 @@ and a function for setting a nice plotting window:
 setnicepar = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), 
                       tck = -.01, cex.axis = 0.9, 
                       las = 1, mfrow = c(1, 1), ...) {
-    par(mar = mar, mgp = mgp, tck = tck,
-        cex.axis = cex.axis, las = las, 
-        mfrow = mfrow, ...)
+    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, 
+        las = las, mfrow = mfrow, ...)
 }
 ```
 
@@ -501,8 +500,8 @@ start up routine to the `.Rprofile` file: R first looks for a global `.Renviron`
 local versions. A typical use of the `.Renviron` file is to
 specify the `R_LIBS` path
 
-```
-# Linux
+```{r, engine='bash', eval=FALSE}
+## Linux
 R_LIBS=~/R/library
 
 # Windows
@@ -519,7 +518,7 @@ this.] The following line in `.Renviron`, for example,
 sets the `ZEIT_KEY` environment variable which is used in the package
 [diezeit](https://cran.r-project.org/web/packages/diezeit/) package:
 
-```
+```{r,n engine='bash', eval=FALSE}
 ZEIT_KEY=PUT_YOUR_KEY_HERE
 ```
 
