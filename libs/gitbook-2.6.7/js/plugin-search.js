@@ -65,7 +65,8 @@ require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
       if (n === 0) return;
       var $p = $highlighted.eq(hi), p = $p[0], rect = p.getBoundingClientRect();
       if (rect.top < 0 || rect.bottom > $(window).height()) {
-        $('.body-inner').scrollTop(p.offsetTop - 100);
+        ($(window).width() >= 1240 ? $('.body-inner') : $('.book-body'))
+          .scrollTop(p.offsetTop - 100);
       }
       $highlighted.css('background-color', '');
       // an orange background color on the current item and removed later
@@ -117,6 +118,7 @@ require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
     // Toggle the search
     function toggleSearch(_state) {
         if (isSearchOpen() === _state) return;
+        if (!$searchInput) return;
 
         gitbook.state.$book.toggleClass("with-search", _state);
 
@@ -150,7 +152,8 @@ require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
 
 
     gitbook.events.bind("start", function(e, config) {
-        collapse = config.toc && config.toc.collapse;
+        collapse = !config.toc || config.toc.collapse === 'section' ||
+          config.toc.collapse === 'subsection';
 
         // Pre-fetch search index and create the form
         fetchIndex()

@@ -7,12 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Documentation for using GitBook and gitbook.com">
-  <meta name="generator" content="GitBook 2.6.5">
+  <meta name="description" content="Efficient R programming">
+  <meta name="generator" content="bookdown 0.0.40 and GitBook 2.6.7">
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-02-28">
+<meta name="date" content="2016-03-01">
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
@@ -26,6 +26,7 @@
 <link rel="next" href="efficient-collaboration.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
@@ -36,28 +37,6 @@
 
 
 
-
-<style type="text/css">
-.book .book-header h1 {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.book .book-header.fixed {
-  position: fixed;
-  right: 0;
-  top: 0;
-  left: 0;
-  border-bottom: 1px solid rgba(0,0,0,.07);
-}
-span.search-highlight {
-  background-color: #ffff88;
-}
-@media (min-width: 600px) {
-  .book.with-summary .book-header.fixed {
-    left: 300px;
-  }
-}
-</style>
 
 
 <style type="text/css">
@@ -396,7 +375,7 @@ res_v =<span class="st"> </span><span class="kw">microbenchmark</span>(<span cla
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_base$built[<span class="dv">2841</span>] <span class="co"># contains the text responsible for coercion</span></code></pre></div>
 <pre><code>## [1] 1721-01-01
-## 182 Levels:  1135 1594 1600 1612 1613 1614 1615 1619 1620 1621 ... taken 1672</code></pre>
+## 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <ul>
@@ -561,7 +540,7 @@ res_v =<span class="st"> </span><span class="kw">microbenchmark</span>(<span cla
 ## 2  Atheist  &lt;$10k    12
 ## 3 Buddhist  &lt;$10k    27</code></pre>
 <ul>
-<li>Splitting compound variables in two. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-15</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with <code>separate</code>, as illustrated in the difference between Table <a href="efficient-workflow.html#tab:to-separate">4.5</a> and <a href="#tab:separated"><strong>??</strong></a>:</li>
+<li>Splitting compound variables in two. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-15</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with <code>separate</code>, as illustrated in the difference between Table <a href="efficient-workflow.html#tab:to-separate">4.5</a> and <a href="efficient-workflow.html#tab:separated">4.6</a>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
 n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
@@ -590,7 +569,7 @@ df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span
 </tbody>
 </table>
 <table>
-<caption><span id="tab:seperated">Table 4.6: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
+<caption><span id="tab:separated">Table 4.6: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
 <thead>
 <tr class="header">
 <th align="left">sex</th>
@@ -669,7 +648,7 @@ idata =<span class="st"> </span><span class="kw">rename</span>(idata,
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)</code></pre></div>
 <pre><code>## Warning: NAs introduced by coercion</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span></code></pre></div>
-<pre><code>## [1] 40.5</code></pre>
+<pre><code>## [1] 40.50363</code></pre>
 <p>However, the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts a <code>data.frame</code> to a numeric <code>matrix</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id =<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
 idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id])
@@ -750,10 +729,10 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <pre><code>## [1] 188</code></pre>
 <p>Note that the resulting data frame has the same number of rows as there are countries: the aggregation has successfully reduced the number of rows we need to deal with. Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)</code></pre></div>
-<pre><code>##     Group.1       x
-## 77  Iceland 0.01786
-## 121   Nepal 0.02333
-## 18    Benin 0.04643</code></pre>
+<pre><code>##     Group.1          x
+## 77  Iceland 0.01785714
+## 121   Nepal 0.02333333
+## 18    Benin 0.04642857</code></pre>
 <p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). The following command creates the same object as <code>e_ems</code>, but with less typing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(ECO2 ~<span class="st"> </span>Country, df, mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below:</p>
@@ -762,36 +741,36 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(ECO2, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
 <pre><code>## Source: local data frame [188 x 2]
 ## 
-##              Country mean_eco2
-##               (fctr)     (dbl)
-## 1        Afghanistan       NaN
-## 2            Albania    0.6412
-## 3            Algeria   23.0148
-## 4             Angola    0.7914
-## 5  Antigua &amp; Barbuda       NaN
-## 6          Argentina   39.1055
-## 7            Armenia    1.8000
-## 8          Australia  150.5962
-## 9            Austria   17.3202
-## 10        Azerbaijan   16.0430
-## ..               ...       ...</code></pre>
+##              Country   mean_eco2
+##               (fctr)       (dbl)
+## 1        Afghanistan         NaN
+## 2            Albania   0.6411905
+## 3            Algeria  23.0147619
+## 4             Angola   0.7914286
+## 5  Antigua &amp; Barbuda         NaN
+## 6          Argentina  39.1054762
+## 7            Armenia   1.8000000
+## 8          Australia 150.5961905
+## 9            Austria  17.3202381
+## 10        Azerbaijan  16.0430435
+## ..               ...         ...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
 <span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
 <pre><code>## Source: local data frame [176 x 2]
 ## 
-##         Country  gini
-##           (chr) (dbl)
-## 1   Afghanistan   NaN
-## 2       Albania 30.43
-## 3       Algeria 37.76
-## 4        Angola 50.65
-## 5     Argentina 48.07
-## 6       Armenia 33.73
-## 7     Australia 33.14
-## 8       Austria 29.15
-## 9    Azerbaijan 24.79
-## 10 Bahamas, The   NaN
-## ..          ...   ...</code></pre>
+##         Country     gini
+##           (chr)    (dbl)
+## 1   Afghanistan      NaN
+## 2       Albania 30.43167
+## 3       Algeria 37.76000
+## 4        Angola 50.65000
+## 5     Argentina 48.06739
+## 6       Armenia 33.72929
+## 7     Australia 33.14167
+## 8       Austria 29.15167
+## 9    Azerbaijan 24.79000
+## 10 Bahamas, The      NaN
+## ..          ...      ...</code></pre>
 <p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
   <span class="co"># number of rows per country</span>
@@ -807,19 +786,19 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
   )</code></pre></div>
 <pre><code>## Source: local data frame [176 x 7]
 ## 
-##         Country   obs med_t10   sdev   n30   sdn30   dif
-##           (chr) (int)   (dbl)  (dbl) (int)   (dbl) (dbl)
-## 1   Afghanistan    40      NA    NaN     0      NA    NA
-## 2       Albania    40   24.44  1.253     3  0.3643  2.78
-## 3       Algeria    40   29.78  3.437     2  3.4365  4.86
-## 4        Angola    40   38.55 11.300     2 11.2996 15.98
-## 5     Argentina    40   36.32  3.182    23  3.1825 11.00
-## 6       Armenia    40   27.84  4.020    12  3.9568 14.84
-## 7     Australia    40   24.79  1.075     6  1.0751  2.81
-## 8       Austria    40   23.12  3.121     4  0.6859  8.48
-## 9    Azerbaijan    40   17.96  9.479     3  1.7386 20.27
-## 10 Bahamas, The    40      NA    NaN     0      NA    NA
-## ..          ...   ...     ...    ...   ...     ...   ...</code></pre>
+##         Country   obs med_t10      sdev   n30      sdn30   dif
+##           (chr) (int)   (dbl)     (dbl) (int)      (dbl) (dbl)
+## 1   Afghanistan    40      NA       NaN     0         NA    NA
+## 2       Albania    40  24.435  1.252524     3  0.3642801  2.78
+## 3       Algeria    40  29.780  3.436539     2  3.4365390  4.86
+## 4        Angola    40  38.555 11.299566     2 11.2995664 15.98
+## 5     Argentina    40  36.320  3.182462    23  3.1824622 11.00
+## 6       Armenia    40  27.835  4.019532    12  3.9567778 14.84
+## 7     Australia    40  24.785  1.075089     6  1.0750891  2.81
+## 8       Austria    40  23.120  3.120849     4  0.6859300  8.48
+## 9    Azerbaijan    40  17.960  9.479029     3  1.7386489 20.27
+## 10 Bahamas, The    40      NA       NaN     0         NA    NA
+## ..          ...   ...     ...       ...   ...        ...   ...</code></pre>
 <p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
 <ul>
 <li>the number of rows in each country group</li>
@@ -854,13 +833,13 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <pre><code>## Selecting by gini</code></pre>
 <pre><code>## Source: local data frame [5 x 2]
 ## 
-##    Year  gini
-##   (int) (dbl)
-## 1  1980 46.85
-## 2  1993 46.00
-## 3  2013 44.55
-## 4  1981 43.65
-## 5  2012 43.56</code></pre>
+##    Year   gini
+##   (int)  (dbl)
+## 1  1980 46.850
+## 2  1993 45.996
+## 3  2013 44.550
+## 4  1981 43.650
+## 5  2012 43.560</code></pre>
 <p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
 <ol style="list-style-type: decimal">
 <li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
@@ -924,7 +903,7 @@ Figure 4.4: Benchmark illustrating the performance gains to be expected for diff
 <ul>
 <li><p>The <a href="http://r-pkgs.had.co.nz/description.html"><code>DESCRIPTION</code></a> file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using <code>Imports:</code>. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.</p></li>
 <li><p>The <code>R/</code> folder contains all the R code that defines your package’s functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through <a href="http://r-pkgs.had.co.nz/man.html#man-workflow">Roxygen tags</a> such as <code>#' This function does this...</code> makes it easy for others to use your work.</p></li>
-<li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data('data_set_name)</code>.</p></li>
+<li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data('data_set_name')</code>.</p></li>
 </ul>
 <p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigourous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(Wickham <a href="efficient-learning.html#ref-Wickham_2015">2015</a>)</span>.</p>
 
@@ -967,7 +946,10 @@ gitbook.start({
 "link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
 "text": "Edit"
 },
-"download": ["_main.pdf"]
+"download": ["_main.pdf"],
+"toc": {
+"collapse": "subsection"
+}
 });
 });
 </script>

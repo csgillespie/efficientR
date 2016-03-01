@@ -7,12 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Documentation for using GitBook and gitbook.com">
-  <meta name="generator" content="GitBook 2.6.5">
+  <meta name="description" content="Efficient R programming">
+  <meta name="generator" content="bookdown 0.0.40 and GitBook 2.6.7">
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-02-28">
+<meta name="date" content="2016-03-01">
 
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
@@ -26,6 +26,7 @@
 <link rel="next" href="efficient-rcpp.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
@@ -36,28 +37,6 @@
 
 
 
-
-<style type="text/css">
-.book .book-header h1 {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.book .book-header.fixed {
-  position: fixed;
-  right: 0;
-  top: 0;
-  left: 0;
-  border-bottom: 1px solid rgba(0,0,0,.07);
-}
-span.search-highlight {
-  background-color: #ffff88;
-}
-@media (min-width: 600px) {
-  .book.with-summary .book-header.fixed {
-    left: 300px;
-  }
-}
-</style>
 
 
 <style type="text/css">
@@ -313,7 +292,7 @@ y ==<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <p>A factor is useful when you know all of the possible values a variable may take. For example, suppose our data set related to months of the year</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;January&quot;</span>, <span class="st">&quot;December&quot;</span>, <span class="st">&quot;March&quot;</span>)</code></pre></div>
 <p>If we sort <code>m</code> in the usual way <code>sort(m)</code>, we use standard alpha-numeric ordering, placing December first. While this is completely correct, it is also not that helpful. We can use factors to remedy this problem by specifying the admissible levels</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## month.name contains the 12 months
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># month.name contains the 12 months</span>
 fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="dt">levels=</span>month.name)
 <span class="kw">sort</span>(fac_m)</code></pre></div>
 <pre><code>## [1] January  March    December
@@ -387,8 +366,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
 <pre><code>##          test elapsed relative
-## 2  ex_df[1, ]   5.395    134.9
-## 1 ex_mat[1, ]   0.040      1.0</code></pre>
+## 2  ex_df[1, ]   7.921  134.254
+## 1 ex_mat[1, ]   0.059    1.000</code></pre>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
@@ -400,7 +379,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
 <pre><code>## function (object, ...) 
 ## UseMethod(&quot;summary&quot;)
-## &lt;bytecode: 0xffadc8&gt;
+## &lt;bytecode: 0x5e20e30&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
@@ -409,7 +388,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;image&quot;)
-## &lt;bytecode: 0x5dbd5d0&gt;
+## &lt;bytecode: 0x6716d20&gt;
 ## &lt;environment: namespace:graphics&gt;</code></pre>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
@@ -482,8 +461,8 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
 <pre><code>##         test elapsed
-## 1 method1(n)   1.540
-## 2 method2(n)   0.064
+## 1 method1(n)   1.837
+## 2 method2(n)   0.089
 ## 3 method3(n)   0.000</code></pre>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
@@ -523,7 +502,7 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
 <p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>log(x)</code> in multiple function calls with the object <code>log_x</code> that is defined once and reused. This small saving in time, quickly multiplies when the cached variable is used inside a <code>for</code> loop.</p>
 <p>A more advanced form of caching is use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
 <p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit regression line to data. The user can remove points and refit the line. An example function would be</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Argument indicates row to remove
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Argument indicates row to remove</span>
 plot_mpg =<span class="st"> </span>function(row_to_remove) {
   <span class="kw">data</span>(mpg, <span class="dt">package=</span><span class="st">&quot;ggplot2&quot;</span>)
   mpg =<span class="st"> </span>mpg[-row_to_remove,]
@@ -553,7 +532,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)</code></pre></div>
-<pre><code>## &lt;environment: 0x6fb2860&gt;</code></pre>
+<pre><code>## &lt;environment: 0x7471d00&gt;</code></pre>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()</code></pre></div>
@@ -606,7 +585,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <div id="vectorised-code" class="section level3">
 <h3><span class="header-section-number">6.2.4</span> Vectorised code</h3>
 <p>When writing code in R, you need to remember that you are using R and not C (or even Fortran 77!). For example,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Change 1000 uniform random numbers
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Change 1000 uniform random numbers</span>
 x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>) +<span class="st"> </span><span class="dv">1</span>
 logsum =<span class="st"> </span><span class="dv">0</span>
 for(i in <span class="dv">1</span>:<span class="kw">length</span>(x))
@@ -661,7 +640,7 @@ f =<span class="st"> </span>function(N){
 <p>In R this takes a few seconds:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   2.288   0.000   2.284</code></pre>
+##   3.082   0.004   3.086</code></pre>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
@@ -670,7 +649,7 @@ f =<span class="st"> </span>function(N){
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.040   0.000   0.044</code></pre>
+##   0.039   0.004   0.044</code></pre>
 </div>
 </div>
 </div>
@@ -679,7 +658,7 @@ f =<span class="st"> </span>function(N){
 <p>In recent R versions (since R 2.14.0) ** parallel** package comes pre-installed with base R. The ** parallel** package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
 no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
-<p>The computer used to compile the published version of this book chapter has 8 CPUs/Cores.</p>
+<p>The computer used to compile the published version of this book chapter has 32 CPUs/Cores.</p>
 <div id="parallel-versions-of-apply-functions" class="section level3">
 <h3><span class="header-section-number">6.3.1</span> Parallel versions of apply functions</h3>
 <p>The most commonly used parallel applications are parallelized replacements of <code>lapply</code>, <code>sapply</code> and <code>apply</code>. The parallel implementations and their arguments are shown below.</p>
@@ -728,7 +707,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;mean&quot;)
-## &lt;bytecode: 0x7749608&gt;
+## &lt;bytecode: 0x7f1abd8&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
 <p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="efficient-learning.html#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
@@ -747,7 +726,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <p>This is clearly a bad function and we should just <code>mean</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean =<span class="st"> </span><span class="kw">cmpfun</span>(my_mean)</code></pre></div>
 <p>Then we use the <code>benchmark</code> function to compare the three variants</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Generate some data
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
 x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
 <span class="kw">benchmark</span>(<span class="kw">my_mean</span>(x), <span class="kw">cmp_mean</span>(x), <span class="kw">mean</span>(x), 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>),
@@ -806,7 +785,10 @@ gitbook.start({
 "link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
 "text": "Edit"
 },
-"download": ["_main.pdf"]
+"download": ["_main.pdf"],
+"toc": {
+"collapse": "subsection"
+}
 });
 });
 </script>
