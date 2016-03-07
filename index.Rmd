@@ -22,9 +22,9 @@ knitr::include_graphics("figures/full.png")
 
 This website contain text and code for the forthcoming O'Reilly book: [Efficient R programming](https://csgillespie.github.io/efficientR/). Pull requests and general comments are welcome.
 
-## Dependencies for this book
+## Package Dependencies
 
-The book depends on the following packages from CRAN:
+The book depends on the following packages:
 
 ```{r echo=FALSE}
 desc = read.dcf("DESCRIPTION")
@@ -34,6 +34,8 @@ pkgs = paste(desc[fields], collapse = ", ")
 pkgs = gsub("\n", " ", pkgs)
 pkgs = strsplit(pkgs, ",")[[1]]
 pkgs = gsub(" ", "", pkgs)
+pkgs = c(pkgs, "efficient", "bookdown")
+
 pkgs = pkgs[order(pkgs)]
 pkgs_df = data.frame(Name = pkgs, Title = NA)
 for(i in seq_along(pkgs)){
@@ -51,15 +53,3 @@ These packages can be installed via
 devtools::install_github("csgillespie/efficientR")
 ```
 
-Two additional github packages are required for building the book:
-
-```{r eval=FALSE}
-gh_pkgs = c("csgillespie/efficient_pkg", "rstudio/bookdown")
-devtools::install_github(gh_pkgs)
-```
-
-Then run the following command.
-
-```{r eval=FALSE}
-bookdown::render_book("index.Rmd", output_format = bookdown::pdf_book())
-```
