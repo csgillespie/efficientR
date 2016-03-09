@@ -692,22 +692,22 @@ The **compiler** package comes with R, so we just need to load the package in th
 library("compiler")
 ```
 
-Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the `total` variable.
+Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the `m` variable.
 
 ```{r}
-my_mean = function(x) {
-  total = 0
+mean_r = function(x) {
+  m = 0
   n = length(x)
   for(i in 1:n)
-    total = total + x[i]/n
-  total
+    m = m + x[i]/n
+  m
 }
 ```
 
 This is clearly a bad function and we should just `mean` function, but it's a useful comparison. Compiling the function is straightforward
 
 ```{r}
-cmp_mean = cmpfun(my_mean)
+cmp_mean_r = cmpfun(mean_r)
 ```
 
 Then we use the `benchmark` function to compare the three variants
@@ -715,7 +715,7 @@ Then we use the `benchmark` function to compare the three variants
 ```{r results="hide", cache=TRUE}
 # Generate some data
 x = rnorm(100)
-benchmark(my_mean(x), cmp_mean(x), mean(x), 
+benchmark(mean_r(x), cmp_mean_r(x), mean(x), 
           columns=c("test", "elapsed", "relative"),
           order="relative", replications=5000)
 ```
