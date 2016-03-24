@@ -8,16 +8,20 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R programming">
-  <meta name="generator" content="bookdown 0.0.44 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.53 and GitBook 2.6.7">
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-03-09">
+<meta name="date" content="2016-03-24">
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-  <meta name="HandheldFriendly" content="true">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
@@ -280,19 +284,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li id="fn6"><p>‘Slots’ are sub-elements of an object analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="efficient-set-up.html#fnref6">↩</a></p></li>
 <li id="fn7"><p>See <a href="http://www.brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/">brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/</a>, which finds Revolution R to be marginally faster than R using OpenBLAS and ATLAS BLAS implementations and <a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Faster BLAS in R</a>, which does not.<a href="efficient-set-up.html#fnref7">↩</a></p></li>
 <li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>A number of programs have been developed to assist project management and planning, however. These include <a href="http://sourceforge.net/projects/projectlibre/">ProjectLibre</a> and <a href="http://sourceforge.net/projects/projectlibre/">GanttProject</a>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-<li id="fn11"><p>For a more comprehensive discussion of Gantt charts in R, please refer to <a href="http://stackoverflow.com/questions/3550341/gantt-charts-with-r">stackoverflow.com/questions/3550341</a>.<a href="efficient-workflow.html#fnref11">↩</a></p></li>
-<li id="fn12"><p>An excellent overview of the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="efficient-workflow.html#fnref12">↩</a></p></li>
-<li id="fn13"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="efficient-workflow.html#fnref13">↩</a></p></li>
-<li id="fn14"><p>This is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>.<a href="efficient-workflow.html#fnref14">↩</a></p></li>
-<li id="fn15"><p>Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).<a href="efficient-workflow.html#fnref15">↩</a></p></li>
-<li id="fn16"><p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.<a href="efficient-workflow.html#fnref16">↩</a></p></li>
-<li id="fn17"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="efficient-workflow.html#fnref17">↩</a></p></li>
-<li id="fn18"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="efficient-workflow.html#fnref18">↩</a></p></li>
-<li id="fn19"><p>Note the first argument in the function is the vector we’re aiming to aggregate and the second is the grouping variable (in this case Countries). A quirk of R is that the grouping variable must be supplied as a list. Next we’ll see a way of writing this that is neater.<a href="efficient-workflow.html#fnref19">↩</a></p></li>
-<li id="fn20"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversey and delves into the philosophy underlying each approach.<a href="efficient-workflow.html#fnref20">↩</a></p></li>
-<li id="fn21"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="efficient-programming.html#fnref21">↩</a></p></li>
+<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
+<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<li id="fn11"><p>A number of programs have been developed to assist project management and planning, however. These include <a href="http://sourceforge.net/projects/projectlibre/">ProjectLibre</a> and <a href="http://sourceforge.net/projects/projectlibre/">GanttProject</a>.<a href="efficient-workflow.html#fnref11">↩</a></p></li>
+<li id="fn12"><p>For a more comprehensive discussion of Gantt charts in R, please refer to <a href="http://stackoverflow.com/questions/3550341/gantt-charts-with-r">stackoverflow.com/questions/3550341</a>.<a href="efficient-workflow.html#fnref12">↩</a></p></li>
+<li id="fn13"><p>An excellent overview of the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="efficient-workflow.html#fnref13">↩</a></p></li>
+<li id="fn14"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="efficient-workflow.html#fnref14">↩</a></p></li>
+<li id="fn15"><p>This is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>.<a href="efficient-workflow.html#fnref15">↩</a></p></li>
+<li id="fn16"><p>Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).<a href="efficient-workflow.html#fnref16">↩</a></p></li>
+<li id="fn17"><p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.<a href="efficient-workflow.html#fnref17">↩</a></p></li>
+<li id="fn18"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="efficient-workflow.html#fnref18">↩</a></p></li>
+<li id="fn19"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="efficient-workflow.html#fnref19">↩</a></p></li>
+<li id="fn20"><p>Note the first argument in the function is the vector we’re aiming to aggregate and the second is the grouping variable (in this case Countries). A quirk of R is that the grouping variable must be supplied as a list. Next we’ll see a way of writing this that is neater.<a href="efficient-workflow.html#fnref20">↩</a></p></li>
+<li id="fn21"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversey and delves into the philosophy underlying each approach.<a href="efficient-workflow.html#fnref21">↩</a></p></li>
+<li id="fn22"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="efficient-programming.html#fnref22">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -331,7 +336,7 @@ gitbook.start({
 "link": "https://github.com/csgillespie/efficientR/edit/master/09-learning.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["_main.pdf"],
 "toc": {
 "collapse": "subsection"
 }
