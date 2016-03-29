@@ -7,7 +7,7 @@ pdf:
 
 clean:
 	rm -fvr *.html *.php
-	rm -fvr _main_files
+	rm -fvr _main_files _main_cache
 
 cleaner:
 	make clean
