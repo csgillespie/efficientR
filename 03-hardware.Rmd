@@ -59,14 +59,14 @@ Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing 
 
 ## Random access memory: RAM {#ram}
 
-Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is increbibly important, as it impacts the speed of your analysis and the size of
-your analysis.
+Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have
+available can limit the size of data set you can analysis.
  
 ```{r 3-1, fig.cap="Two $8$GB RAM cards. Credit: https://commons.wikimedia.org/wiki/File:Two_8_GB_DDR4-2133_ECC_1.2_V_RDIMMs.jpg", echo=FALSE}
 knitr::include_graphics("figures/ram.jpg")
 ```
 
-Even if the original data set is relatively small, the analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
+Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
 ```{r}
 head(USArrests, 3)
@@ -85,7 +85,15 @@ pryr::object_size(USArrests)
 pryr::object_size(d)
 ```
 
-we have managed to create an object that is three times larger than the original data set. In fact the object `d` is a symmetric $n \times n$ matrix, where $n$ is the number of rows in `USAarrests`. Clearly, as `n` increases the size of `d` increases at rate $O(n^2)$. So if our original data set contained $10,000$ records, the associated distance matrix would contain almost $10^8$ values. Of course since the matrix is symmetric, this corresponds to around $50$ million unique values. A rough rule of thumb is that your RAM should be three times the size of your data set.
+```{block, type="rmdnote"}
+The distance object `d` is actually a vector that contains the distances in the upper triangular region. 
+```
+
+we have managed to create an object that is three times larger than the original data set. In fact the object `d` is a symmetric $n \times n$ matrix, where $n$ is the number of rows in `USAarrests`. Clearly, as `n` increases the size of `d` increases at rate $O(n^2)$. So if our original data set contained $10,000$ records, the associated distance matrix would contain almost $10^8$ values. Of course since the matrix is symmetric, this corresponds to around $50$ million unique values. 
+
+```{block, type="rmdtip"}
+A rough rule of thumb is that your RAM should be three times the size of your data set.
+```
 
 Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often (we will cover this in more detail in chapter XXX).
 
@@ -123,8 +131,8 @@ R's origins on computers with limited resources helps explain its efficiency at 
 
 The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.
 
-1. R loads everything into memory, i.e. your computers RAM. How much RAM do you have?
-2. Using Google, how much does it cost (in pounds) to double the amount of available RAM on your system? 
+1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?
+2. Using your preferred search engine, how much does it cost (in pounds) to double the amount of available RAM on your system? 
 
 ## Hard drives: HDD vs SSD
 
