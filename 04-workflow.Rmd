@@ -224,7 +224,11 @@ R 3.2.3 the base function `download.file()` can be used to download from secure 
 ]
 and `unzip` to download and unzip the
 dataset.
-These steps illustrate how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+This illustrates how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored neatly in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+
+```{block, read-url, type='rmdnote'}
+The data downloaded below is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
+```
 
 ```{r, eval=FALSE}
 url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
@@ -233,7 +237,7 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-```{block, read-url, type='rmdcaution'}
+```{block, read-url, type='rmdtip'}
 To avoid the file download stage, many functions for reading in data can accept urls and read directly from the internet. This is illustrated below for `read.csv()`:
 ```
 
@@ -411,13 +415,7 @@ voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 
 - The **data.table** function `fread` generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread` automatically converts any columns it thought of as numeric into characters.
 
-To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses), which shows 4 main similarities and differences:
-
-- For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
-- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread` and `read_csv` functions return characters.
-- For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread` coerces the result to characters.
-`read_csv` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`.
-- `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
+To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table \@ref(tab:colclasses).
 
 ```{r colclasses, echo=FALSE}
 vcols = as.data.frame(rbind(
@@ -428,6 +426,16 @@ vcols = cbind(df[1], vcols)
 vcols = dplyr::select(vcols, Function, number, boatname, built, departure_date)
 knitr::kable(vcols, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset")
 ```
+
+Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
+
+- For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
+- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread` and `read_csv` functions return characters.
+- For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread` coerces the result to characters.
+`read_csv` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`. This is illustrated in \@ref(tab:colclasses), where `read_tsv` produces a `numeric` class for the 'built' variable, ignoring the non numeric text in row 2841.
+- `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
+
+
 
 The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
