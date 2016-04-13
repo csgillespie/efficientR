@@ -208,12 +208,33 @@ ggplot(clock_speed, aes(Year, MIPS)) +
   theme_bw() + ylab("CPU clock speed (GHz)")
 ```
 
-Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package **benchmarkme** provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref(fig:3-4) shows the relative performance for eight different CPUs. All eight processors are Intel. The fastest processor in this benchmark study was the i7 CPU 870, which was released in 2009. In comparison, the Xeon Processor X3220, released in 2007, is over three times slower.
+Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package **benchmarkme** provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref(fig:3-4) shows the relative performance for over $150$ CPUs.  
 
-```{r 3-4, echo=FALSE, fig.width=8, fig.height=4, fig.cap="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result."}
+```{r 3-4, echo=FALSE, fig.width=4, fig.height=4,  fig.cap="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result.", fig.keep="last"}
 library("benchmarkme")
-plot_past()
+results = plot_past()
+times = sort(tapply(results$time, results$id, mean))
+times = times/min(times)
+dd_tmp = data.frame(times, rank=1:length(times))
+ggplot(dd_tmp, aes(rank, times)) + 
+  geom_point(alpha=0.5, size=1.5) + 
+  scale_y_log10(limit=c(1, 100)) + 
+  theme_bw() + 
+  xlab("Rank") + ylab("Relative time")
 ```
+
+Running the benchmarks and comparing your CPU to others is straightforward. First load the package
+```{r}
+library("benchmarkme")
+```
+Then run the benchmarks and plot via
+```{r eval=FALSE}
+res = benchmark_std() 
+plot(res)
+# Upload your benchmarks for future users
+upload_results(res) 
+```
+You get the model specifications of the top CPUs using `get_datatable(res)`. 
 
 ## Cloud computing
 
