@@ -136,7 +136,16 @@ The following two exercises aim to help you determine if it is worthwhile upgrad
 
 ## Hard drives: HDD vs SSD
 
-Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure \@ref(fig:3-2). The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either $5400$RPM (Revolutions per Minute) or $7200$RPM. The major advantage of HDDs is that they are cheap, making a $1$TB laptop standard.
+You are using R because you want to analyse data. 
+The data is typically stored on your hard drive; but not all hard drives are equal.
+Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). 
+HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure \@ref(fig:3-2). The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either $5400$RPM (Revolutions per Minute) or $7200$RPM. The major advantage of HDDs is that they are cheap, making a $1$TB laptop standard.
+
+```{block type="rmdnote"}
+In the authors' experience, having an SSD drive doesn't make **much** difference to
+R. However, the reduction in boot time and general tasks makes an SSD drive 
+a wonderful purchase.
+```
 
 ```{r 3-2, fig.cap='A standard 2.5" hard drive, found in most laptops. Credit: https://en.wikipedia.org/wiki/Hard_disk_drive', echo=FALSE}
 knitr::include_graphics("figures/627px-Laptop-hard-drive-exposed.jpg")
@@ -146,11 +155,33 @@ Solid state drives (SSDs) can be thought of as large, but more sophisticated ver
 
 The read/write speed for a standard HDD is usually in the region of $50-120$MB/s (usually closer to $50$MB). For SSDs, speeds are typically over $200$MB/s. For top-of-the-range models this can approach $500$MB/s. If you're wondering, read/write speeds for RAM is around $2-20$GB/s. So at best SSDs are at least one order of magnitude slower than RAM, but still faster than standard HDDs.
 
+```{block type="rmdtip"}
+If you are unsure what type of hard drive you have, then time how long your computer takes to reach the
+log-in screen. If it is less then five seconds, you probably have a SSD. 
+There are links on the book's website detailing more precise methods for each OS.
+```
+
 ## Operating systems: 32-bit or 64-bit
 
-When we suggest that you should just buy more RAM, this assumes that you are using a $64$-bit operating system. A $32$-bit machine can access at most only $4$GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a $32$-bit operating system, then R is limited to around $3$GB RAM. If you are running a $64$-bit operating system, but only a $32$-bit version of R, then you have access to slightly more memory (but not much).
+R comes in two versions: $32$-bit and $64$-bit. 
+Your operating system also comes in two versions, $32$-bit and $64$-bit. 
+Ideally you want $64$-bit versions of both R and the operating system.
+Using a $32$-bit version of either has severe limitations on the amount of RAM R can access.
+So when we suggest that you should just buy more RAM, this assumes that you are using a $64$-bit operating system, with
+a $64$-bit version of R.
+
+```{block type="rmdnote"}
+If you are using an OS version from the last five years, it is unlikely to be $32$-bit OS.
+```
+
+A $32$-bit machine can access at most only $4$GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a $32$-bit operating system, then R is limited to around $3$GB RAM. If you are running a $64$-bit operating system, but only a $32$-bit version of R, then you have access to slightly more memory (but not much).
 Modern systems should run a $64$-bit operating system, with a $64$-bit version of R.
-Your memory limit is now measured as $8$ terabytes for Windows machines and $128$TB for Unix-based OSs.
+Your memory limit is now measured as $8$ terabytes for Windows machines and $128$TB for Unix-based OSs. 
+An easy method for determining if you are running a $64$-bit version of R is to run
+```{r results="hide"}
+.Machine$sizeof.pointer
+```
+which will return $8$ if you a running a $64$-bit version of R.
 
 To find precise details consult the R help pages `help("Memory-limits")` and `help("Memory")`.
 
@@ -158,13 +189,12 @@ To find precise details consult the R help pages `help("Memory-limits")` and `he
 
 These exercises aim to condense the previous section into the key points.
 
-1. Are you using a $32$-bit or $64$-bit operating system?
-2. Are you using $32$-bit or $64$-bit version of R?
-3. What are the results of running the command `memory.limit()`?
+1. Are you using $32$-bit or $64$-bit version of R?
+2. If you are using Windows, what are the results of running the command `memory.limit()`?
 
 ## Central processing unit (CPU)
 
-The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster our code will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:3-3)).
+The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:3-3)).
 
 ```{r 3-3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed."} 
 library("ggplot2")
