@@ -70,11 +70,12 @@ Breaking a large project into smaller chunks is highly recommended, making huge,
 ```{r phases, echo=FALSE, fig.height=3, fig.cap="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."}
 x = seq(0, 1, length.out=100)
 df = data.frame(Phase = rep(c("Planning", "Programming", "Write-up"), each=length(x)), 
-                Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)+0.4), 
+                Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)), 
                 x = c(x, x, x))
+df$x = df$x * 4
 library("ggplot2")
 m = ggplot(df, aes(x, Time)) + 
-  geom_line(aes(color=Phase)) + xlab("Time")
+  geom_line(aes(color=Phase)) + xlab("Time (days)")
 m + 
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
