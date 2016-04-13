@@ -223,10 +223,8 @@ Before reading in data, it is worth considering a general principle for reproduc
 R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
 ]
 and `unzip` to download and unzip the
-dataset,^[This
-is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R).
-]
-illustrating how R can be used to automate processes that are conventionally done by hand. The result is data stored in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+dataset.
+These steps illustrate how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
 
 ```{r, eval=FALSE}
 url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
@@ -400,8 +398,9 @@ knitr::kable(df, caption = "Execution time of base, **readr** and **data.table**
 The benchmark above produces warning messages (not shown) for the `read_tsv` and `fread` functions but not the slowest base function `read.delim`. An exploration of these can shed light on the speed/robustness trade-off.
 
 - The **readr** function generates a warning for row 2841 in the `built` variable.
-This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows as base `read.*` functions do.
-As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is probably more sensible than the `read.delim` output: the latter coerced the date field into a factor based on a single entry which is a text whereas the latter coerced the variable into a numeric data, as illustrated below. 
+This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows, as base `read.*` functions do.
+
+As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is more sensible than the `read.delim` output: `read.delim` coerced the date field into a factor based on a single entry which is a text. `read_tsv` coerced the variable into a numeric vector, as illustrated below. 
 
 ```{r}
 class(voyages_base$built) # coerced to a factor
