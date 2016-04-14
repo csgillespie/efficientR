@@ -719,7 +719,7 @@ aus1 = idata[idata$Country == "Australia",]
 aus2 = filter(idata, Country == "Australia")
 ```
 
-In addition to being more flexible (see the documentation provided by `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
 Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
 the first argument of **dplyr** functions usually a `data.frame`, and
 subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
@@ -754,7 +754,7 @@ glimpse(df)
 # ...
 ```
 
-Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
 
 ```{r, echo=FALSE}
 # TODO: demonstrate dplyr::select
@@ -788,6 +788,10 @@ file.size(fname) / file.size("data/miniaa.Rds")
 ### Data aggregation
 
 Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the 'GHG' dataset stored in the **efficient** package.
+
+```{block, ghg-data, type='rmdnote'}
+The GHG dataset used in the subsequent code reports the amount of greenhouse gas emissions emitted by country and by year for the major economic sectors. It was provided by the World Resources Institute and is available in raw form from their website: [wri.org/resources/data-sets/](http://www.wri.org/resources/data-sets/cait-country-greenhouse-gas-emissions-data).
+```
 
 ```{r, warning=FALSE}
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
