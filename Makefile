@@ -1,6 +1,6 @@
 html:
 	Rscript build.R
-	cp -fvr css/style.css images/ _book/
+	cp -fvr css/style.css _book/
 
 pdf:
 	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")'
