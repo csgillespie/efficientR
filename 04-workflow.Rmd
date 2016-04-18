@@ -4,10 +4,8 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow
 
-- **Note to reviewers:** We are planning to split this chapter in two and create a separate one on "Efficient data carpentry" to discuss data manipulation and possibly loading as a self-standing and very important part of a typical R project workflow. Feedback on this suggestion would be very welcome.
-
 Efficient programming is an important and sometimes vital skill for generating the correct result, on time.
-Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R programming. 
+Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. 
 In this context we define 'workflow' as the sum of practices, habits and systems that enable productivity.^[The Oxford Dictionary's
 definition of workflow is similar, with a more industrial feel: "The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion."
 ]
@@ -37,15 +35,15 @@ Learning them will, in the long-run, improve productivity and reproducibility.
 With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow.
 It builds on the concept of an R/RStudio *project*, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project's lifespan, from its inception to publication:
 
- - Project planning. This should happen before any code has been written, to avoid time wasted using poor packages or a mistaken analysis strategy.
+ - Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.
  
- - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With the burgeoning number of packages available, and the phenomenon that some R packages now perform better than base R for certain functions (`*_join`, for example, is better than `merge`).
+ - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (`*_join` from **dplyr**, for example, is often more appropriate than `merge`), it is more important than ever to consider the range of options at the outset.
 
  - Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.
  
- - Tidying the data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages [@Wickham_2014].
+ - Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages [@Wickham_2014].
  
- - Data processing. This stage involves manipulating data to assist in the answering of hypotheses. The focus is on the **dplyr** and **data.table** packages. These are designed to make this stage both fast to type process.
+ - Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on **dplyr** and **data.table**, which make data analysis code fast to type and fast to run.
 
  - Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section \@ref(publication) touches on documentation using knitr and the much stricter approach to code publication of package development. 
  
@@ -54,12 +52,17 @@ It builds on the concept of an R/RStudio *project*, introduced in Chapter 2, and
 Good programmers embarking on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: "smart preparation minimizes work" [@berkun2005art].
 Although search engines are useful for identifying the appropriate strategy, the trail-and-error approach --- typing code at random and Googling the inevitable error messages --- is usually highly *inefficient*. Strategic thinking is necessary.
 
-Often the best place to start is often with a pen and paper.
-Project planning is a non-linear, open-ended and creative process not always well-suited to the linear logic of computing.^[A
+The best place to start may in fact be pen and blank sheet of paper, allowing you to sketch out your ideas before you begin.
+Project planning is a creative process not always well-suited to the linear logic of computing.^[A
 number of programs have been developed to assist project management and planning, however. These include [ProjectLibre](http://sourceforge.net/projects/projectlibre/) and [GanttProject](http://sourceforge.net/projects/projectlibre/).
 ]
-Planning simply involves thinking about the project's aims in the context of available resources (e.g. computational vs programming skill), the project's scope, timelines and suitable software (i.e. R packages, covered in the next section).
-Minutes spent before a single line of code is written have the potential to save hours later on. There are many excellent guides available that will help you develop a project plan.
+It involves considering the project's aims in the context of available resources (e.g. computational and programmer resources), project scope, timescales and suitable software. And these things should be considered together. To take one example, is it worth the investment of time needed to learn a particular R package which is not essential to completing the project but which will make the code run faster? Does it make more sense to hire another programmer or invest in more computational resources to complete an urgent deadline?
+
+Minutes spent thinking through such issues before writing a single line can save hours in the future. This is emphasised in books such as @berkun2005art and @PMBoK_2000 and useful online resources such those by [teamgantt.com](http://teamgantt.com/guide-to-project-management/) and
+[lasa.org.uk](http://www.lasa.org.uk/uploads/publications/ictpublications/computanews_guides/lcgpm.pdf),
+which focus exclusively on project planning.  This section is not intended to replace such guides. Instead, the aim here is to condense some of the most important lessons from this literature in the context of typical R projects (i.e. which involve data analysis, modelling and visualisation).
+
+### 'Chunking' your work
 
 Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up.
 The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next.
@@ -70,11 +73,12 @@ Breaking a large project into smaller chunks is highly recommended, making huge,
 ```{r phases, echo=FALSE, fig.height=3, fig.cap="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."}
 x = seq(0, 1, length.out=100)
 df = data.frame(Phase = rep(c("Planning", "Programming", "Write-up"), each=length(x)), 
-                Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)+0.4), 
+                Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)), 
                 x = c(x, x, x))
+df$x = df$x * 4
 library("ggplot2")
 m = ggplot(df, aes(x, Time)) + 
-  geom_line(aes(color=Phase)) + xlab("Time")
+  geom_line(aes(color=Phase)) + xlab("Time (days)")
 m + 
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
@@ -85,6 +89,8 @@ m +
 ```
 
 The tasks that a project should be split into will depend the nature of the work and the phases illustrated in Figure \@ref(fig:phases) represent a rough starting point, not a template and the 'programming' phase will usually need to be split into at least 'data tidying', 'processing', and 'visualisation'.
+
+### Making your workflow SMART {#smart}
 
 A more rigorous (but potentially onerous) way to project plan is to divide the work into a series of objectives and tracking their progress throughout the project's duration.
 One way to check if an objective is appropriate for action and review is by using the SMART criteria.
@@ -132,18 +138,20 @@ mermaid("gantt
 ")
 ```
 
+### R packages for planning
+
 A number of R packages can assist with this process of formalising and visualising the project plan, including:^[For
 a more comprehensive discussion of Gantt charts in R,
 please refer to [stackoverflow.com/questions/3550341](http://stackoverflow.com/questions/3550341/gantt-charts-with-r).]
 
-- [plan](https://cran.r-project.org/web/packages/plan/) provides basic tools to create burndown charts (which concisely show whether a project is on-time or not) and Gantt charts.
+- the [**plan**](https://cran.r-project.org/web/packages/plan/) package, which provides basic tools to create burndown charts (which concisely show whether a project is on-time or not) and Gantt charts.
 
-- [plotrix](https://cran.r-project.org/web/packages/plotrix/index.html), a general purpose plotting package, provides basic Gantt chart plotting functionality. See `example(gantt.chart)` for details.
+- [**plotrix**](https://cran.r-project.org/web/packages/plotrix/index.html), a general purpose plotting package, provides basic Gantt chart plotting functionality. Enter `example(gantt.chart)` for details.
 
 - [**DiagrammeR**](http://rich-iannone.github.io/DiagrammeR/), a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as [mermaid](https://github.com/knsv/mermaid) and [GraphViz](https://github.com/ellson/graphviz).
 
 The small example below (which provides the basis for creating charts like Figure \@ref(fig:timeline) illustrates how **DiagrammeR** can take simple text inputs to create informative up-to-date Gantt charts.
-Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives.
+Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. {#DiagrammeR}
 
 ```{r, eval=FALSE}
 library("DiagrammeR") # load the necessary package
@@ -164,11 +172,11 @@ for more detailed documentation.
 
 1. What are the three most important work 'chunks' of your current R project?
 
-1. What is the meaning of 'SMART' objectives?
+1. What is the meaning of 'SMART' objectives (see [Making your workflow SMART](#smart)).
 
-1. Run the code chunk at the end of this section to see the output.
+1. Run the [code chunk](#DiagrammeR) at the end of this section to see the output.
 
-1. Bonus exercise: modify the code to create a very basic Gantt chart of an R project you are working on.
+1. Bonus exercise: modify this code to create a basic Gantt chart of an R project you are working on.
 
 ## Package selection {#pkgs}
 
@@ -179,7 +187,7 @@ There are many poor packages on CRAN and much duplication so it's easy to go wro
 Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
 
 However, used well, packages can greatly improve productivity.
-Due to the conservative nature base R development, which prioritises stability, much of the innovation and performance gains in the 'R ecosystem' has occurred in recent years in the packages.
+Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the 'R ecosystem' has occurred in recent years in the packages.
 The increased ease of package development [@Wickham_2015] and interfacing with other languages [e.g. @Eddelbuettel_2011] has accelerated their number, quality and efficiency.
 An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as [ROpenSci](https://ropensci.org/) for peer reviewing code.
 
@@ -195,15 +203,15 @@ The ultimate test will be empirical evidence:
 does it get the job done on your data?
 However, the following criteria should provide a good indication of whether a package is worth an investment of your precious time, or even installing on your computer:
 
-- Is it mature? The more time a package is available, the more time it will have for obvious bugs to be ironed out. The age of a package on CRAN can be seen from its Archive page on CRAN. We can see from [cran.r-project.org/src/contrib/Archive/ggplot2/](https://cran.r-project.org/src/contrib/Archive/ggplot2/), for example, that **ggplot2** was first released on the 10^th^ June 2007 and that it has had 28 releases.
+- **Is it mature?** The more time a package is available, the more time it will have for obvious bugs to be ironed out. The age of a package on CRAN can be seen from its Archive page on CRAN. We can see from [cran.r-project.org/src/contrib/Archive/ggplot2/](https://cran.r-project.org/src/contrib/Archive/ggplot2/), for example, that **ggplot2** was first released on the 10^th^ June 2007 and that it has had 28 releases.
 The most recent of these at the time of writing was **ggplot2** 2.0.0:
 reaching 1 or 2 in the first digit of package versions is usually an indication from the package author that the package has reached a high level of stability.
 
-- Is it actively developed? It is a good sign if packages are frequently updated. A frequently updated package will have its latest version 'published' recently on CRAN. The CRAN package page for **ggplot2**, for example, said `Published: 2015-12-18`, less than a month old at the time of writing.
+- **Is it actively developed?** It is a good sign if packages are frequently updated. A frequently updated package will have its latest version 'published' recently on CRAN. The CRAN package page for **ggplot2**, for example, said `Published: 2015-12-18`, less than a month old at the time of writing.
 
-- Is it well documented? This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. `?ggplot`), try the examples (e.g. `example(ggplot)`) and search for package vignettes (e.g. `vignette(package = "ggplot2")`).
+- **Is it well documented?** This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. `?ggplot`), try the examples (e.g. `example(ggplot)`) and search for package vignettes (e.g. `vignette(package = "ggplot2")`).
 
-- Is it well used? This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google's. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely visible GitHub. At the time of writing a search for [**ggplot2**](https://github.com/search?utf8=%E2%9C%93&q=ggplot2) on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
+- **Is it well used?** This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google's. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely visible GitHub. At the time of writing a search for [**ggplot2**](https://github.com/search?utf8=%E2%9C%93&q=ggplot2) on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
 Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, **ggplot2** scores extremely well in this measure, with over 5000 hits).
 
 An article in [simplystats](http://simplystatistics.org/2015/11/06/how-i-decide-when-to-trust-an-r-package/) discusses this issue with reference to the proliferation of GitHub packages (those that are not available on CRAN). In this context well-regarded and experienced package creators and 'indirect data' such as amount of GitHub activity are also highlighted as reasons to trust a package.
@@ -215,10 +223,12 @@ Before reading in data, it is worth considering a general principle for reproduc
 R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
 ]
 and `unzip` to download and unzip the
-dataset,^[This
-is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R).
-]
-illustrating how R can be used to automate processes that are conventionally done by hand. The result is data stored in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+dataset.
+This illustrates how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored neatly in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+
+```{block, read-url, type='rmdnote'}
+The data downloaded below is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
+```
 
 ```{r, eval=FALSE}
 url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
@@ -227,14 +237,16 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
+```{block, read-url, type='rmdtip'}
 To avoid the file download stage, many functions for reading in data can accept urls and read directly from the internet. This is illustrated below for `read.csv()`:
+```
 
 ```{r, eval=FALSE}
 url = "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
 df = read.csv(url)
 ```
 
-There are now many R packages designed specifically to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
+There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
 The example below illustrates this using the WDI package (not supported by ROpenSci) which accesses the World Bank's World Development Indicators:
 
 ```{r, eval=FALSE}
@@ -255,13 +267,18 @@ r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 
 ### Fast data reading {#fread}
 
-There is often more than one way to read data into R. Even a simple `.csv` file can be imported using a range of methods, with implications for computational efficiency. This section looks at three approaches: base R's reading functions such as `read.csv`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the new **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
+There is often more than one way to read data into R. Even a simple `.csv` file can be imported using a range of methods, with implications for computational efficiency. This section looks at three approaches: base R's plain text reading functions such as `read.delim`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
+
+```{block, read-table-csv, type='rmdnote'}
+Note that a function 'derived from' another in this context means that it calls another function. The functions such as `read.csv` and `read.delim` in fact are *wrappers* for the more generic function `read.table`. This can be seen in the source code of `read.csv`, for example, which shows that the function is roughly the equivalent of `read.table(file, header = TRUE, sep = ","`.
+```
+
 
 Although this section is focussed on reading text files, it demonstrate the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantages of addition package dependency (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that *require* a certain package to load in R: the readstata13 package, for example, was developed solely to read in `.dta` files generated by versions of Stata 13 and above.
 
-Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains of the **data.table** and **readr** approaches increase with data size, especially so for data with many rows. Below around 1 MB `read.csv` is actually *faster* than `read_csv` while `fread` is much faster than both, although these savings are likely to be inconsequential for such small datasets.
+Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains of the **data.table** and **readr** approaches increase with data size, especially so for data with many rows. Below around 1 MB `read.delim` is actually *faster* than `read_csv` while `fread` is much faster than both, although these savings are likely to be inconsequential for such small datasets.
 
-For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.csv`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
+For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.delim`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
 ```{r, eval=FALSE, echo=FALSE, warning=FALSE}
 library("microbenchmark")
@@ -309,7 +326,7 @@ res$facet_cols = paste("No of columns:", res$cols)
 saveRDS(res, "data/res.Rds")
 ```
 
-```{r readr-vs-base, fig.cap="Benchmarks of base vs **data.table** vs **readr** functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
+```{r readr-vs-base, fig.cap="Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
 res = readRDS("data/res.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) + facet_wrap(~ facet_cols) +
@@ -370,7 +387,7 @@ library("microbenchmark")
 library("readr")
 library("data.table")
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
-voyages_base = read.csv(fname, sep = "\t")
+voyages_base = read.delim(fname)
 voyages_readr = read_tsv(fname)
 voyages_dt = fread(fname)
 df = print(res_v)
@@ -382,11 +399,12 @@ df[2:ncol(df)] = df[2:ncol(df)] / df$mean[3]
 knitr::kable(df, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset relative to the mean execution time of `fread`, around 0.02 seconds on a modern computer.", digits = 1)
 ```
 
-The benchmark above produces warning messages (not shown) for the `read_tsv` and `fread` functions but not the slowest base function `read.csv`. An exploration of these can shed light on the speed/robustness trade-off.
+The benchmark above produces warning messages (not shown) for the `read_tsv` and `fread` functions but not the slowest base function `read.delim`. An exploration of these functions can shed light on the speed/robustness trade-off.
 
-- The **readr** function generates a warning for row 2841 in the `built` variable.
-This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows as base `read.*` functions do.
-As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is probably more sensible than the `read.csv` output: the latter coerced the date field into a factor based on a single entry which is a text whereas the latter coerced the variable into a numeric data, as illustrated below. 
+- The **readr** function `read_csv` generates a warning for row 2841 in the `built` variable.
+This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows, as base `read.*` functions do.
+
+As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is more sensible than the `read.delim` output: `read.delim` coerced the date field into a factor based on a single entry which is a text. `read_tsv` coerced the variable into a numeric vector, as illustrated below. 
 
 ```{r}
 class(voyages_base$built) # coerced to a factor
@@ -397,13 +415,7 @@ voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 
 - The **data.table** function `fread` generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread` automatically converts any columns it thought of as numeric into characters.
 
-To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses), which shows 4 main similarities and differences:
-
-- For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
-- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread` and `read_csv` functions return characters.
-- For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread` coerces the result to characters.
-`read_csv` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`.
-- `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
+To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table \@ref(tab:colclasses).
 
 ```{r colclasses, echo=FALSE}
 vcols = as.data.frame(rbind(
@@ -414,6 +426,14 @@ vcols = cbind(df[1], vcols)
 vcols = dplyr::select(vcols, Function, number, boatname, built, departure_date)
 knitr::kable(vcols, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset")
 ```
+
+Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
+
+- For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
+- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread` and `read_csv` functions return characters.
+- For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread` coerces the result to characters.
+`read_csv` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`. This is illustrated in \@ref(tab:colclasses), where `read_tsv` produces a `numeric` class for the 'built' variable, ignoring the non numeric text in row 2841.
+- `read_*` functions generate objects of class `tbl_df`, an extension of the `data.frame`, as discussed in Section  \@ref(dplyr). `fread` generates objects of class `data.table`. These can be used as standard data frames but differ subtly in their behaviour.
 
 The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
@@ -440,34 +460,36 @@ The following command, using the shell command `split`, for example, would break
 split -b100m bigfile.csv
 ```
 
-The result is a series of files, set to 100 MB each with the `-b100m` argument in the above code. By default these will be called `xaa`, `xab` and which could be read in *one chunk at a time* (e.g. using `read.csv`, `fread` or `read_csv`, described in Section \@ref(fast-data-reading)) without crashing most modern computers.
+The result is a series of files, set to 100 MB each with the `-b100m` argument in the above code. By default these will be called `xaa`, `xab` and which could be read in *one chunk at a time* (e.g. using `read.csv`, `fread` or `read_csv`, described in the previous section) without crashing most modern computers.
 
-Splitting a large file into individual chunks may allow it to be read into R .
-But is not an efficient way to import large datasets because you will only ever have access to a non-random sample of the data this way.
+Splitting a large file into individual chunks may allow it to be read into R.
+This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
 A more efficient way to work with very large datasets is via databases.
 
 ### Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
 
-R can connect to databases in a number of ways. The most mature of these is via the RODBC package, which sets up links to external databases using the Open Database Connectivity (ODBC) API, as described in the packages vignette (which can be accessed with `vignette("RODBC")`, once the package has been installed).
-RODBC connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite.
+R can connect to databases in a number of ways. The most mature of these is via the **RODBC** package, which sets up links to external databases using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette, accessed with `vignette("RODBC")`.
+**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite.
 
 The function used to set-up a connection to an external database with RODBC is `odbcConnect`, which takes Data Source Name (`dsn =`), User ID (`uid =`) and password (`pwd`) as required arguments.
+
+```{block, read-url, type='rmdtip'}
 Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in \@ref(renviron).
 Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
+```
 
-Recently there has been a shift 'noSQL' approach to data storage for handling large datasets.
+Recently there has been a shift to the 'noSQL' approach for storing large datasets.
 This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
 
 MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
 (see Section \@ref(dplyr)).
 
-## Tidying with tidyr
+## Tidying data with tidyr
 
-A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. Converting data into a 'tidy' form (described below) is also advantageous from a computational efficiency perspective: it usually faster to run analysis and plotting commands on a few large vectors than many short vectors.
-
+A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. Converting data into a 'tidy' form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on a few large vectors than many short vectors.
 This is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014.
 
 ```{r, echo=FALSE, eval=FALSE}
@@ -479,6 +501,43 @@ downloader::download("http://www.jstatsoft.org/v59/i10/supp/3", destfile = "data
 dir.create("data/reshape")
 unzip("v59i10-data.zip", exdir = "data/reshape/")
 # write.csv(raw, "data/reshape-pew.csv")
+```
+
+These tables may look different, but they contain precisely the same information.
+Column names in the 'flat' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
+According to the concept of 'tidy data', the long form is correct.
+Note that 'correct' here is used in the context of data analysis and graphical visualisation.
+For tabular presentation the 'wide' or 'untidy' form may be better.
+
+Tidy data has the following characteristics [@Wickham_2014]:
+
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.
+
+Because there is only one observational unit in the example (religions), it can be described in a single table.
+Large and complex datasets are usually represented by multiple tables, with unique identifiers or 'keys' to join them together [@Codd1979]. 
+
+Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns.
+
+- Gathering: this means making 'wide' tables 'long' by converting column names to a new variable. This is done is done with the function
+`gather` (the inverse of which is `spread`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below:
+
+
+```{r}
+raw = read_csv("data/pew.csv") # read in the 'wide' dataset
+dim(raw)
+rawt = gather(raw, Income, Count, -religion)
+dim(rawt)
+rawt[1:3,]
+```
+
+```{block, gather-note, type='rmdtip'}
+Note
+that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
+Note that when we print the object `rawt[1:3,]`, the class of each variable is given
+(`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
+This is because `read_csv` uses the `tbl` class from the **dplyr** package (described below).
 ```
 
 ```{r tpew, echo=FALSE}
@@ -508,40 +567,8 @@ rawtp = insertRow(existingDF = rawtp, newrow = rep("...", 3), r = 4)
 knitr::kable(rawtp, caption = "First 3 and last rows of the 'tidied' Pew dataset.")
 ```
 
-These tables may look different, but they contain precisely the same information
-Column names in the 'flat' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
-According to the concept of 'tidy data', the long form is correct.
-Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-For tabular presentation (i.e. tables) the 'wide' or 'untidy' form may be better.
 
-Tidy data has the following characteristics [@Wickham_2014]:
-
-1. Each variable forms a column.
-2. Each observation forms a row.
-3. Each type of observational unit forms a table.
-
-Because there is only one observational unit in the example (religions), it can be described in a single table.
-Large and complex datasets are usually represented by multiple tables, with unique identifiers or 'keys' to join them together [@Codd1979]. 
-
-Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns, as illustrated below.
-
-- 'Wide' tables can become 'long', so that column names become a new variable. This is illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and can be achieved with the function
-`gather`:^[Note
-that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
-Note that when we print the object `rawt[1:3,]`, the class of each variable is given
-(`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
-This is because `read_csv` uses the `tbl` class from the **dplyr** package (described below).
-]
-
-```{r}
-raw = read_csv("data/pew.csv") # read in the 'wide' dataset
-dim(raw)
-rawt = gather(raw, Income, Count, -religion)
-dim(rawt)
-rawt[1:3,]
-```
-
-- Splitting compound variables in two. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with `separate`, as illustrated in the difference between Table \@ref(tab:to-separate) and \@ref(tab:separated):
+- Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with `separate`, as illustrated in Table \@ref(tab:to-separate) and \@ref(tab:separated).
 
 ```{r}
 agesex = c("m0-10", "f0-10") # create compound variable
@@ -560,15 +587,17 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
 ```
 
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
-Data manipulation is a large topic with major potential implications for efficiency [@Spector_2008].
+Data manipulation is a large topic with major potential implications for efficiency, and there is an entire book on the subject [@Spector_2008].
 
-## Data processing {#dplyr}
+## Data processing with dplyr {#dplyr}
 
-Tidy data is easier to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice to decide appropriate packages for the work early on (see Section \@ref(pkgs)) uses **dplyr**, which has a number of advantages compared with base R and **data.table**:
+Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. This package, which rougly means 'data pliers' or 'plyr' (another R package) for large datasets, has a number of advantages compared with base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
+
+We will illustrate the functioning of **dplyr** with reference to a dataset on economic equality provided by the World Bank. This is loaded in the following code block:
 
 ```{r, message=FALSE, results='hide'}
 library("readr")
@@ -589,11 +618,15 @@ we'll start simple, by filtering and aggregating rows, building on the previous 
 
 ### Renaming columns
 
-Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The **dplyr** function `rename()` makes this easy.^[Note
+Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The **dplyr** function `rename()` makes this easy.
+
+```{block, varname-block, style='rmdtip'}
+Note
 in this code block the variable name is surrounded by back-quotes (`).
 This allows R to refer to column names that are non-standard.
 Note also the syntax:
-`rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.]
+`rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.
+```
 
 ```{r}
 library("dplyr")
@@ -686,7 +719,7 @@ aus1 = idata[idata$Country == "Australia",]
 aus2 = filter(idata, Country == "Australia")
 ```
 
-In addition to being more flexible (see the documentation provided by `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
 Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
 the first argument of **dplyr** functions usually a `data.frame`, and
 subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
@@ -721,7 +754,7 @@ glimpse(df)
 # ...
 ```
 
-Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which these variables are.
+Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
 
 ```{r, echo=FALSE}
 # TODO: demonstrate dplyr::select
@@ -756,6 +789,10 @@ file.size(fname) / file.size("data/miniaa.Rds")
 
 Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the 'GHG' dataset stored in the **efficient** package.
 
+```{block, ghg-data, type='rmdnote'}
+The GHG dataset used in the subsequent code reports the amount of greenhouse gas emissions emitted by country and by year for the major economic sectors. It was provided by the World Resources Institute and is available in raw form from their website: [wri.org/resources/data-sets/](http://www.wri.org/resources/data-sets/cait-country-greenhouse-gas-emissions-data).
+```
+
 ```{r, warning=FALSE}
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
 df = read.csv(fname)
@@ -779,7 +816,7 @@ e_ems = aggregate(df$ECO2, list(df$Country), mean, na.rm  = TRUE)
 nrow(e_ems)
 ```
 
-Note that the resulting data frame has the same number of rows as there are countries:
+Note that the resulting data frame now has the same number of rows as there are countries:
 the aggregation has successfully reduced the number of rows we need to deal with.
 Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:
 
@@ -851,7 +888,7 @@ df = rename(df,
              FCO2 = Fugitive.Emissions..CO2...MtCO2.)
 ```
 
-2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering `vignette("introduction")`.
+2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
 3. Test additional **dplyr** 'verbs' on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
 
@@ -913,19 +950,19 @@ top_n(
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
-## data.table
+## Data processing with data.table
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
 tasks^[One
 [question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversey and delves into the philosophy underlying each approach.
 ]
-so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors or that must be 'better' than another. These are both excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
+so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors. Both are excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
 
 ```{r, echo=FALSE}
 # This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 ```
 
-The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df` `data.table` objects will behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
 library("data.table")
@@ -936,7 +973,7 @@ aus3a = idata_dt[Country == "Australia"]
 
 To boost performance, one can set 'keys'. These are
 '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
-which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see `vignette("datatable-keys-fast-subset")`). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
+which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
 
 ```{r}
 setkey(idata_dt, Country)
@@ -980,7 +1017,7 @@ ggplot(res, aes(MB, Time)) +
   theme_bw()
 ```
 
-Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement speed gain on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
+Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
 
 This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing and illustrated the performance gains of using *keys* for subsetting tables. **data.table** is a mature and powerful package which uses clever computational principles implemented in C to provide efficient methods for a number of other operations for data analysis. These include highly efficient data reshaping, dataset merging (also known as joining, as with `left_join` in **dplyr**) and grouping. These are explained in the vignettes [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html). The [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignette explains **data.table**'s unique syntax.
 
@@ -988,21 +1025,21 @@ This section has introduced **data.table** as a complimentary approach to base a
 
 <!-- Thought: this should be more about 'getting your work out there' than packages-->
 
-The final stage in a typical project workflow is publication. This could be a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow. In every case the programming principles of reproducibility, modularity and DRY discussed in \@ref(efficient-programming) will make your publications faster to write, easier to maintain and more useful to others.
+The final stage in a typical project workflow is publication. This could be a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow. In every case the programming principles of reproducibility, modularity and DRY discussed in Chapter \@ref(efficient-programming) will make your publications faster to write, easier to maintain and more useful to others.
 
-Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exits on each of these; to avoid duplication of effort (following the DRY principle) the focus is on documentation from a workflow efficiency perspective.
+Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.
 
-### Dynamic documents
+### Dynamic documents with knitr
 
-When writing a report using R outputs a typical workflow has historically been to a) do the analysis b) save the resulting graphics and record the main results outside the R project and c) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps a to c will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
+When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
 
-To overcome this source of inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically. Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
+To overcome this inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically. Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
 
 ```{r}
 (1:5)^2
 ```
 
-The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated it must by ` ```{r} ` on the line before the R code and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts make it easy to create and modify code chunks. When the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs.
+The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated, it must by preceded by ` ```{r} ` on the line before the R code, and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. When the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs.
 
 Furthermore dynamic documents written in RMarkdown can compile into a range of output formats including html, pdf and Microsoft's docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio's excellent website on RMarkdown hosted at [rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) and, for a more detailed account of dynamic documents with R, [@xie2015dynamic].
 
@@ -1010,7 +1047,7 @@ Furthermore dynamic documents written in RMarkdown can compile into a range of o
 
 A strict approach to project management and workflow is treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN.
 
-The a number of key elements of an R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
+The number of essential elements of R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
 
 - The [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using `Imports:`. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.
 
