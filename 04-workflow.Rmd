@@ -226,7 +226,7 @@ and `unzip` to download and unzip the
 dataset.
 This illustrates how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored neatly in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
 
-```{block, read-url, type='rmdnote'}
+```{block, dutch-data, type='rmdnote'}
 The data downloaded below is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
 ```
 
@@ -475,7 +475,7 @@ R can connect to databases in a number of ways. The most mature of these is via 
 
 The function used to set-up a connection to an external database with RODBC is `odbcConnect`, which takes Data Source Name (`dsn =`), User ID (`uid =`) and password (`pwd`) as required arguments.
 
-```{block, read-url, type='rmdtip'}
+```{block, password-tip, type='rmdtip'}
 Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in \@ref(renviron).
 Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
 ```
@@ -525,6 +525,7 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 
 
 ```{r}
+library("tidyr")
 raw = read_csv("data/pew.csv") # read in the 'wide' dataset
 dim(raw)
 rawt = gather(raw, Income, Count, -religion)
