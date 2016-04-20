@@ -2,6 +2,8 @@
 
 I think it's worth making an effort between distinguishing the bits of book that are how-to tips, and the bits that are explaining underlying concepts.
 
+- Tips have now been extracted and put separate.
+
 You also need to sell some ideas harder.  For example, describe a problem that some your advice then solves.  For example, I'm a lousy typist, and autocomplete means fewer typos.  Or, R has a lots of functions, and remembering their names can be a nightmare.  This is where `apropos` and `??` come in useful.
 
 - `apropos` and `??` are covered in Chapter 6 (yet to be reviewed). There definitely should be something about the importance of touch typing for efficient programming - not sure if this is best placed in Chapter 1, 4 or 9 but we've added an issue to add it.
@@ -14,19 +16,29 @@ It would also be great if you had a summary of tips for lazy people who can't be
 
 The other thing is that it isn't entirely clear who the target audience is.  There are some things targeted at total beginners (like the section on how to install R), and some things that get into technical issues (like how `.Rprofile` files are searched for).  You either need to be consistent about who you target, or mark different bits of content as suitable for beginners/advanced users, so readers can quickly find the content that is appropriate for them.
 
+- We've made the decision that each chapter should go from easy to hard and that is now clarified in the introductory text which reads "Starting with the basics and moving to progressively more advanced topics, we explore how the operating system,
+R version, startup files and IDE can make your R work faster (though IDE could be seen as basic need for efficient programming)."
+
 ## Section 2.1
 
 > p7 "R works on all three major operating systems"
 
 Solaris is also an official platform.  At least packages submitted to CRAN are tested on Solaris.
 
+- Thanks for flagging this. Text now reads: "R works on all three consumer operating systems (OS) (Linux, Mac and Windows)
+as well as the server-orientated Solaris OS." - seem OK?
+
 > p7 "R is predominantly platform-independent"
 
 It's worth a discussion of which bits of code aren't platform independent (anything involving locales, some time zones, some environment variables, character encoding).  This also seems like a good time to mention the *assertive.reflection* package, which has functions for checking which operating system you are running (`assert_is_solaris` or `assert_is_osx_el_capitan`, etc.), as well as which IDE you are using (`assert_is_rstudio`, etc.), the capabilities of R (`assert_r_has_libcurl_capability` etc.), and what OS tools are available (`assert_r_can_compile_code`, etc.).
 
+- A 'pro tip' on this subject has been added - thanks for flagging it.
+
 ### Section 2.1.1 
 
 When would you want to do OS resource monitoring? I can see this being useful for people managing servers, but for general users I think you need to sell some use cases.
+
+- I've added the following explanation: "If you only process small datasets system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM."
 
 ## Section 2.2
 
