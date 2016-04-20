@@ -66,7 +66,7 @@ Sys.info()
 Translated into English, this means that R is running on a 64 bit (`x86_64`) Linux distribution (kernel version `4.2.0-35-generic`) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in `?Sys.info`.
 
 ```{block, assertive.reflection, type='rmdtip'}
-*Pro tip*. The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_solaris` will cause an error. The package can also test for IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code`).
+*Pro tip*. The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_solaris` will cause an error. The package can also test for IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code`). These functions can be useful for running code that designed only to run on one type of set-up.
 ```
 
 
@@ -105,7 +105,8 @@ our advice is usually to stick to whatever OS you are most comfortable with.
 Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using `install.packages`) on Linux systems.
 On Debian-based operating systems such as Ubuntu, these are named with the prefix `r-cran-` (see [Section 2.4](#deps)).
 
-Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming tasks.
+Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming or RAM-intensive tasks.
+If you only process small datasets system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM.
 Alongside R profiling functions such as `profvis` (see Section __XXX__), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.
 
 ```{r, echo=FALSE}
