@@ -1,14 +1,11 @@
 html:
 	Rscript build.R
-	cp style.css _book
-
+	cp -fvr css/style.css _book/
+	cp -fvr images _book/
+	
 pdf:
-	Rscript -e 'bookdown::render_book("index.Rmd", output_format = bookdown::pdf_book())'
+	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")'
 
 clean:
-	rm -fvr *.html *.php
-	rm -fvr _main_files _main_cache
-
-cleaner:
-	make clean
-	rm -fvr _book/
+	Rscript -e "bookdown::clean_book(TRUE)"
+	rm -fvr *.log Rplots.pdf
