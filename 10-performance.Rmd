@@ -1,154 +1,335 @@
 ---
 knit: "bookdown::preview_chapter"
 ---
-  
+
+```{r echo=FALSE}
+source("code/initialise.R")
+```
 # Efficient Performance
 
-Hints and tips for performance
+General Hints and tips for performance. 
 
+In previous chapters we've focused on tools and set-up to increase efficiency. In this
+chapter we are going to consider code optimisation. We will consider a variety of code
+tweaks that can eke out an extra speed boost. 
 
 ## The integer data type
 
-Numbers in R are usually stored in [double-precision floating-point format](https://goo.gl/ZA5R8a) - see @Braun2007 and @Goldberg1991. The term 'double' refers to the fact that on $32$ bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number occupies $8$ bytes and is accurate to around $17$ decimal places (R does not print all of these, as you will see by typing `pi`). 
+Numbers in R are usually stored in [double-precision floating-point
+format](https://goo.gl/ZA5R8a) - see @Braun2007 and @Goldberg1991. The term 'double'
+refers to the fact that on $32$ bit systems (for which the format was developed) two
+memory locations are used to store a single number. Each double-precision number is
+accurate to around $17$ decimal places.
 
 ```{block type="rmdnote"}
-When comparing floating point numbers, we should be particularly careful, since `y = sqrt(2)*sqrt(2)` 
-is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.16f", y)` will
-give you the true value of `y` (to 16 decimal places).
+When comparing floating point numbers we should be particularly careful, since `y = sqrt(2)*sqrt(2)` 
+is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.17f", y)` will
+give you the true value of `y` (to 17 decimal places).
 ```
 
-There is also another data type, called an integer. Integers primarily exist to be passed to C or Fortran code. Typically we don't worry about creating integers. However they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the `head` function
+There is also another data type, called an integer. Integers primarily
+exist to be passed to C or Fortran code. Typically we don't worry about creating
+integers, however they are occasionally used to optimise sub-setting
+operations. When we subset a data frame or matrix, we are interacting with C code.
+For example, if we look at the arguments for the `head` function
 
 ```{r}
 args(head.matrix)
 ```
 
-The default argument is `6L` (the `L`, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first $100$ rows from a data frame (`clock_speed`, from the **efficient** package). The speed increase is illustrated below, using the **microbenchmark** package:
+```{block, type="rmdtip"}
+Using the `:` operator automatically creates a vector of integers.
+```
+
+The default argument is `6L` (the `L`, is short for Literal and is used to create an
+integer). Since this function is being called by almost everyone that uses R, this low
+level optimisation is useful. To illustrate the speed increase, suppose we are
+selecting the first $100$ rows from a data frame (`clock_speed`, from the
+**efficient** package). The speed increase is illustrated below, using the
+**microbenchmark** package:
 
 ```{r, matrix_timing, eval=FALSE}
-s_int = 1:100; s = seq(1, 100, 1.0)
-microbenchmark(clock_speed[s_int, 2L], clock_speed[s, 2.0], times=1000000L)
+s_int = 1:100; s_double = seq(1, 100, 1.0)
+microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000)
 ```
 
 ```
 ## Unit: microseconds
 ## expr   min    lq  mean median    uq   max neval cld
 ## clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
-## clock_speed[s, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
+## clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
 ```
 
-The above result shows that using integers is slightly faster, but probably not worth worrying about.
+The above result shows that using integers is slightly faster, but probably not worth
+worrying about.
 
-A related, unmentioned memory saving idea is to replace `logical` vectors with vectors from the `bit` package which take up just over 16th of the space (but you can't use NAs).
+#### Exercises
 
+1. Another benefit of integers, is that they are slightly more memory efficient. Using
+the `object_size` function from the **pryr** package, compare the size of a vector of
+doubles and a vector of integers.
 
-integer` vectors take up just over half the memory of `numeric` vectors, so if memory is a problem, use those in preference.
+1. Examine the following function definitions to give you an idea of how integers are used.
+  * `tail.matrix`
+  * `lm`. 
+
+1. How does the function `seq.int`, which was used in the `tail.matrix` function,
+differ to the standard `seq` function?
+
+```{block, type="rmdnote"}
+A related memory saving idea is to replace `logical` vectors
+with vectors from the **bit** package which take up just over 16th of the space
+(but you can't use `NA`s).
+```
 
 ## Matrices
 
-A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix columns must have the same type. 
-Matrices tend to be used during statistical calculations. 
-Linear regression using `lm()`, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.
+A matrix is similar to a data frame: it is a two dimensional object and sub-setting
+and other functions work in the expected way. However all matrix elements must have
+the same type. Matrices tend to be used during statistical calculations. Calculating
+the line of best fit using the `lm()` function, internally converts the data to a
+matrix before calculating the results; any characters are thus recoded as numeric
+dummy variables.
 
-Matrices are generally faster than data frames. 
-The datasets `ex_mat` and `ex_df` from the **efficient** package each have $1000$ rows and $100$ columns. 
-They contain the same random numbers. However, selecting rows from a data frame is around $150$ times slower than a matrix. 
+Matrices are generally faster than data frames. The datasets `ex_mat` and
+`ex_df` from the **efficient** package each have $1000$ rows and $100$
+columns. They contain the same random numbers. However selecting rows from
+a data frame is around $150$ times slower than a matrix.
 
-```{r mat_vs_df, echo=2:4, cache=TRUE}
-library("rbenchmark")
+```{r mat_vs_df, cache=TRUE, results="hide"}
 data(ex_mat, ex_df, package="efficient")
-benchmark(replications=10000, 
+rbenchmark::benchmark(replications=10000, 
           ex_mat[1,], ex_df[1,], 
           columns=c("test", "elapsed", "relative"))
 ```
 
-Use `data.matrix` to convert
+```{block, type="rmdtip"}
+Use the `data.matrix` function to efficiently convert a data frame into a matrix.
+```
 
 ### Efficient data structures
 
-Even when our data set is small, the analysis can generate large objects. For example suppose we want to perform standard cluster analysis. Using the built-in data set `USAarrests`, we calculate a distance matrix:
+Even when our data set is small, an analysis can generate large objects. For example
+suppose we want to perform standard cluster analysis. Using the built-in data set
+`USAarrests`, we calculate a distance matrix:
 
 ```{r}
 dist_usa = dist(USArrests)
 ```
 
-The resulting object `dist_usa` measures the similarity between two states with respect to the input data. Since there are $50$ states in the `USAarrests` data set, this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this characteristic for efficiency, allowing storage to be halved. If we examine the object `dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently stored as a vector with some attributes.
+The resulting object `dist_usa` measures the similarity between two states with
+respect to the input data. Since there are $50$ states in the `USAarrests` data set,
+this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the
+matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this
+characteristic for efficiency, allowing storage to be halved. If we examine the object
+`dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently
+stored as a vector with some attributes.
 
-Another efficient data structure is a sparse matrix. This is simply a matrix in where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn't sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the **Matrix** package. For this `dist` object, since the structure is regular.
+Another efficient data structure is a sparse matrix. This is simply a matrix in where
+most of the elements are zero. Conversely, if most elements are non-zero, the matrix
+is considered dense. The proportion of non-zero elements is called the sparsity. Large
+sparse matrices often crop up when performing numerical calculations. Typically, our
+data isn't sparse but the resulting data structures we create may be sparse. There are
+a number of techniques/methods used to store sparse matrices. Methods for creating
+sparse matrices can be found in the **Matrix** package. For this `dist` object, since
+the structure is regular.
 
-## ifelse
+<!-- (Don't like this title) -->
 
+## Efficient base R 
+
+In R, there are often more than one way to solve a problem. In this section we
+highlight standard tricks or alternative methods that will improve performance.
+
+### The `if` vs `ifelse` functions {-}
+
+The `ifelse` function 
+```{r eval=FALSE}
+ifelse(test, yes, no)
 ```
-Further note that if(test) yes else no is much more efficient and often much preferable to ifelse(test, yes, no) whenever test is a simple true/false result, i.e., when length(test) == 1.
+is a vectorised version of the standard control-flow `if` function. The return value
+of `ifelse` is filled with elements from the `yes` and `no` arguments that are
+determined by whether the element of `test` is `TRUE` or `FALSE`.
+
+If `test` has length 1, then the standard `if(test) yes else no` is more efficient.
+
+### Sorting and ordering {-}
+
+Sorting a vector is a relatively expensive computational operation. If you only sort a
+vector once at the top of a script, then don't worry too much about this. However if
+you sorting inside a loop, or in a shiny application, then it can be worthwhile
+thinking about how to optimise this operation.
+
+There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
+be specified in the `sort` function; with `radix` being a new addition to R 3.3.
+Typically the `radix` (the non-default option) is optimal for most situations.
+
+Another useful trick is to partially order the results. For example, if you only want
+to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`
+
+```{r, eval=FALSE, echo=FALSE}
+x = matrix(rnorm(1e7), ncol=100)
+system.time({
+  for(i in 1:100)
+    sort(x[,i], method="radix")
+})
 ```
 
-## Sorting and ordering
+### Reversing elements {-}
 
-### method = c("shell", "quick", "radix")
-### partial
-### Don't use rev  sort(x, decreasing = TRUE). from ?rev
+The `rev` function provides a reversed version of its argument. If you wish to sort in
+increasing order, you should use the more efficient `sort(x, decreasing=TRUE)` instead
+of `rev(sort(x))`.
 
-## which.min and match
+### Which indices are `TRUE` \ {-}
 
-## Converting factors to numerics
+To determine which index of a vector or array are `TRUE`, we would typically use the
+`which` function. If we want to find the index of just the minimum or maximum value,
+i.e. `which(x == min(x))` then use the more efficient `which.min`/`which.max`
+functions.
 
-```
-## what you typically meant and want:
-as.numeric(as.character(f))
-## the same, considerably (for long factors) more efficient:
+###  Converting factors to numerics {-}
+
+A factor is just a vector of integers with associated levels. Occasionally, we want
+to convert a factor into its numerical equivalent. The most efficient way of doing
+this (especially for long factors) is
+
+```{r, echo=2, results="hide"}
+f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
+
+where `f` is the factor.
+
+### String concatenation {-}
+
+To concatenate strings use the `paste` function
+```{r, results="hide"}
+paste("A", "B")
 ```
-?paste
-paste0(..., collapse) is equivalent to paste(..., sep = "", collapse), slightly more efficiently.
+The separation character is specified via the `sep` argument. The function
+`paste0(..., collapse)` is equivalent to `paste(..., sep = "", collapse)`, but is
+slightly more efficient.
+
+### Logical AND and OR {-}
+
+The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
+typically used whenever we perform subsetting operations. For example
+
+```{r, echo=-1}
+x = c(0.2, 0.5, 0.7)
+x < 0.4 | x > 0.6
 ```
 
-## nrow and NRWO
+When R executes the above comparison, it will **always** calculate `x > 0.6`
+regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `&&`,
+only executes the second component if needed. This is efficient and leads to more
+neater code, e.g.
 
-## && and &
+```{r}
+## read.csv is only executed if the file exists
+file.exists("data.csv") && read.csv("data.csv")
+```
 
-## on.exit and invisible
+However care must be taken not to use `&&` or `||` on vectors since it will give the
+incorrect answer
+```{
+x < 0.4 || x > 0.6
+```
 
+### Exit functions with care {-}
+
+Occasionally in a function we make changes outside of the function that should be
+reset after the function exits (either naturally or as the result of an error). The
+`on.exit` function does this job with the minimum of fuss. For example, we could
+rewrite the S3 image function as
+
+```{r}
+image.dist = function(x, ...) {
+  op = par(mar=c(1, 1, 2, 1), mgp=c(0, 0, 0))
+  on.exit(op)
+  x_mat = as.matrix(x)
+  image(x_mat, main=attr(x, "method"), ...)  
+}
+```
+
+The `par` function changes graphical parameters, with `on.exit` ensuring these
+parameters are reset to their previous value when the function ends. Using `on.exit`
+with the **parallel** function `stopCluster` is also recommended.
+
+### Invisible returns {-}
+
+The `invisible` function allows you to return a temporarily invisible copy of an
+object. This is particularly useful for functions that return values which can be
+assigned, but are not printed when they are not assigned. For example, suppose we have
+a function that plots the data and fits a straight line
+```{r}
+regression_plot = function(x, y, ...) {
+  plot(x, y, ...)
+  model = lm(y ~ x)
+  abline(model)
+  invisible(model)
+}
+```
+When call the function, we plot a scatter graph with line of best fit; the output is
+invisible. When we assign the function to an object, i.e. `out = regression_plot(x, y)`
+the variable out contains the output of the `lm` call.
+
+Another example is `hist`. Typically we don't want anything displayed in the console
+when we call the function
+```{r fig.keep="none"}
+x = rnorm(x)
+hist(x)
+```
+However if we assign the output to an object, `out = hist(x)`, the object `out` is
+actually a list containing, _inter alia_ information on the mid-points, breaks and
+counts.
 
 ## The byte compiler
 
-<!-- What's "pre-compilation" and what's "byte-code"?  Your explanation comes a couple of paragraphs after you use the terminology, so this section needs reordering a little. -->
+The ** compiler** package, written by R Core member Luke Tierney has been part of R
+since version 2.13.0. The **compiler** package allows R functions to be compiled,
+resulting in a byte code version that may run faster^[The authors have yet to find a
+situation where byte compiled code runs significantly slower.]. The compilation
+process eliminates a number of costly operations the interpreter has to perform, such
+as variable lookup.
 
-## ::
-
-
-
-The ** compiler** package, written by R Core member Luke Tierney has been part of R since version 2.13.0. Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function `mean`:
+Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled
+into byte-code. This is illustrated by the base function `mean`:
 
 ```{r}
 mean
 ```
 
-The third line contains the `bytecode` of the function. This means that the **compiler** package has translated the R function into another language that can be interpreted by a very fast interpreter.  
-
-The **compiler** package allows R functions to be compiled, resulting in a byte code version that may run faster^[The authors have yet to find a situation where byte compiled code runs significantly slower.]. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines. 
+The third line contains the `bytecode` of the function. This means that the
+**compiler** package has translated the R function into another language that can be
+interpreted by a very fast interpreter. Amazingly the **compiler** package is almost
+entirely pure R, with just a few C support routines.
 
 ### Example: the mean function
 
-The **compiler** package comes with R, so we just need to load the package in the usual way
+The **compiler** package comes with R, so we just need to load the package in the
+usual way
 
 ```{r}
 library("compiler")
 ```
 
-Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the `m` variable.
+Next we create an inefficient function for calculating the mean. This function takes
+in a vector, calculates the length and then updates the `m` variable.
 
 ```{r}
 mean_r = function(x) {
   m = 0
   n = length(x)
-  for(i in 1:n)
+  for(i in seq_len(n))
     m = m + x[i]/n
   m
 }
 ```
 
-This is clearly a bad function and we should just `mean` function, but it's a useful comparison. Compiling the function is straightforward
+This is clearly a bad function and we should just `mean` function, but it's a useful
+comparison. Compiling the function is straightforward
 
 ```{r}
 cmp_mean_r = cmpfun(mean_r)
@@ -160,13 +341,15 @@ Then we use the `benchmark` function to compare the three variants
 <!-- Make n bigger and just copy and paster output -->
 ```{r results="hide", cache=TRUE}
 # Generate some data
-x = rnorm(100)
-benchmark(mean_r(x), cmp_mean_r(x), mean(x), 
+x = rnorm(1000)
+rbenchmark::benchmark(mean_r(x), cmp_mean_r(x), mean(x), 
           columns=c("test", "elapsed", "relative"),
           order="relative", replications=5000)
 ```
 
-The compiled function is around seven times faster than the uncompiled function. Of course, the native `mean` function is faster, but the compiling does make a significant difference (figure \@ref(fig:6-4)).
+The compiled function is around seven times faster than the uncompiled function. Of
+course, the native `mean` function is faster, but compiling does make a significant
+difference (figure \@ref(fig:6-4)).
 
 ```{r 6-4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
 load(file="data/mean_comparison.RData")
@@ -186,17 +369,26 @@ g + annotate("text", x=1000, y=90, label="Pure R", col=colours[3], size=3) +
   annotate("text", x=8000, y=10, label="mean", col=colours[2], size=3)
 ```
 
-
 ### Compiling code
 
-There are a number of ways to compile code. The easiest is to compile individual function using `cmpfun`, but this obviously doesn't scale. If you create a package, then you automatically compile the package on installation by adding
+There are a number of ways to compile code. The easiest is to compile individual
+function using `cmpfun`, but this obviously doesn't scale. If you create a package,
+you automatically compile the package on installation by adding
 ```
 ByteCompile: true
 ```
-to the `DESCRIPTION` file. Most R packages installed using `install.packages` are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable `R_COMPILE_PKGS` set to a positive integer value.
+to the `DESCRIPTION` file. Most R packages installed using `install.packages` are not
+compiled. We can enable (or force) packages to be compiled by starting R with the
+environment variable `R_COMPILE_PKGS` set to a positive integer value.
 
-A final option to use just-in-time (JIT) compilation. The `enableJIT` function disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement different levels of optimisation. JIT can also be enabled by setting the environment variable `R_ENABLE_JIT`, to one of these values.
+A final option to use just-in-time (JIT) compilation. The `enableJIT` function
+disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
+different levels of optimisation. JIT can also be enabled by setting the environment
+variable `R_ENABLE_JIT`, to one of these values.
 
+```{block, type="rmdtip"}
+I always set the compile level to the maximum value of 3.
+```
 
 ```{r eval=FALSE, echo=FALSE}
 dd = NULL
@@ -213,28 +405,6 @@ dir.create("data", showWarnings = FALSE)
 mean_comparison = dd
 save(mean_comparison, file="data/mean_comparison.RData")
 ```
-
-## Type consistency
-
-
-That is, when you are programming, it is very helpful if the return value from a function always takes the same form.  For example `sapply` and `[.data.frame` aren't type consistent, which can cause problems.
-
-```{r}
-two_cols <- data.frame(x = 1:5, y = letters[1:5])
-zero_cols <- data.frame()
-sapply(two_cols, class)  # a character vector
-sapply(zero_cols, class) # a list
-two_cols[, 1:2]          # a data.frame
-two_cols[, 1]            # an integer vector
-```
-
-`lapply` and `vapply` are type consistent.  Likewise `dplyr::select` and `dplyr:filter` are type consistent.  `[.data.table` can be type consistent if you are careful about inputs. The *purrr* package has some type consistent alternatives to base R functions.  For example, `map_dbl` etc. to replace `Map` and `flatten_df` etc. to replace `unlist`.
-
-
-
-
-
-
 
 
 
