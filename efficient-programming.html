@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R programming">
-  <meta name="generator" content="bookdown 0.0.65 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.67 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-04-19">
+<meta name="date" content="2016-04-25">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -385,8 +385,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
 <pre><code>##          test elapsed relative
-## 2  ex_df[1, ]  10.293  177.466
-## 1 ex_mat[1, ]   0.058    1.000</code></pre>
+## 2  ex_df[1, ]  11.379  121.053
+## 1 ex_mat[1, ]   0.094    1.000</code></pre>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
@@ -398,7 +398,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
 <pre><code>## function (object, ...) 
 ## UseMethod(&quot;summary&quot;)
-## &lt;bytecode: 0x6f56cf8&gt;
+## &lt;bytecode: 0x660da30&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
@@ -407,7 +407,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;image&quot;)
-## &lt;bytecode: 0x7ca9570&gt;
+## &lt;bytecode: 0x78401b8&gt;
 ## &lt;environment: namespace:graphics&gt;</code></pre>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
@@ -416,7 +416,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 }</code></pre></div>
 <p>The <code>...</code> argument allows us to pass arguments to the main image method, such as <code>axes</code> (see figure <a href="efficient-programming.html#fig:6-1">6.1</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:6-1"></span>
-<img src="_main_files/figure-html/6-1-1.png" alt="S3 image method for data of class `dist`."  />
+<img src="_main_files/figure-html/6-1-1.png" alt="S3 image method for data of class `dist`." width="480" />
 <p class="caption">
 Figure 6.1: S3 image method for data of class <code>dist</code>.
 </p>
@@ -480,9 +480,9 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
 <pre><code>##         test elapsed
-## 1 method1(n)   2.547
-## 2 method2(n)   0.162
-## 3 method3(n)   0.000</code></pre>
+## 1 method1(n)   1.783
+## 2 method2(n)   0.087
+## 3 method3(n)   0.001</code></pre>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
 <caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour while methods 2 takes 2 seconds and method 3 almost instantaneous.</caption>
@@ -551,7 +551,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)</code></pre></div>
-<pre><code>## &lt;environment: 0x85365a0&gt;</code></pre>
+<pre><code>## &lt;environment: 0x8277138&gt;</code></pre>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()</code></pre></div>
@@ -626,7 +626,7 @@ for(i in <span class="dv">1</span>:<span class="kw">length</span>(x)) {
 <p>This of course can be done simply with</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ans =<span class="st"> </span>x[x &lt;<span class="st"> </span><span class="dv">0</span>]</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:6-2"></span>
-<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve."  />
+<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="384" />
 <p class="caption">
 Figure 6.2: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
 </p>
@@ -659,7 +659,7 @@ f =<span class="st"> </span>function(N){
 <p>In R this takes a few seconds:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   3.086   0.000   3.087</code></pre>
+##   3.352   0.000   3.362</code></pre>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
@@ -668,7 +668,7 @@ f =<span class="st"> </span>function(N){
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.042   0.000   0.042</code></pre>
+##   0.043   0.000   0.043</code></pre>
 </div>
 </div>
 </div>
@@ -690,7 +690,7 @@ no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</cod
 <h3><span class="header-section-number">6.3.2</span> Example: parallel bootstraping</h3>
 <p>In 1965, Gordon Moore co-founder of Intel, observed that the number of transistors in a dense integrated circuit doubles approximately every two years. This observation is known as Moore’s law. A scatter plot (figure <a href="efficient-programming.html#fig:6-3">6.3</a>) of processors over the last thirty years shows that that this law seems to hold.</p>
 <div class="figure"><span id="fig:6-3"></span>
-<img src="_main_files/figure-html/6-3-1.png" alt="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count"  />
+<img src="_main_files/figure-html/6-3-1.png" alt="Transistor counts against introduction date. Credit: https://en.wikipedia.org/wiki/Transistor_count" width="384" />
 <p class="caption">
 Figure 6.3: Transistor counts against introduction date. Credit: <a href="https://en.wikipedia.org/wiki/Transistor_count" class="uri">https://en.wikipedia.org/wiki/Transistor_count</a>
 </p>
@@ -726,7 +726,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
 <pre><code>## function (x, ...) 
 ## UseMethod(&quot;mean&quot;)
-## &lt;bytecode: 0x955dc38&gt;
+## &lt;bytecode: 0x9117798&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
 <p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="efficient-learning.html#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
@@ -752,7 +752,7 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</
           <span class="dt">order=</span><span class="st">&quot;relative&quot;</span>, <span class="dt">replications=</span><span class="dv">5000</span>)</code></pre></div>
 <p>The compiled function is around seven times faster than the uncompiled function. Of course, the native <code>mean</code> function is faster, but the compiling does make a significant difference (figure <a href="efficient-programming.html#fig:6-4">6.4</a>).</p>
 <div class="figure"><span id="fig:6-4"></span>
-<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions."  />
+<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="384" />
 <p class="caption">
 Figure 6.4: Comparsion of mean functions.
 </p>

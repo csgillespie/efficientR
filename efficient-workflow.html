@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R programming">
-  <meta name="generator" content="bookdown 0.0.65 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.67 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-04-19">
+<meta name="date" content="2016-04-25">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -264,7 +264,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">4.1.1</span> ‘Chunking’ your work</h3>
 <p>Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up. The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next. Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track. Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">PMBoK (<a href="efficient-learning.html#ref-PMBoK_2000">2000</a>)</span>. ‘Chunking’ the work will also make collaboration easier, as we shall see in Chapter 5.</p>
 <div class="figure"><span id="fig:phases"></span>
-<img src="_main_files/figure-html/phases-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."  />
+<img src="_main_files/figure-html/phases-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000." width="672" />
 <p class="caption">
 Figure 4.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="efficient-learning.html#ref-PMBoK_2000">2000</a>)</span>.
 </p>
@@ -367,7 +367,7 @@ Note that a function ‘derived from’ another in this context means that it ca
 <p>Figure <a href="efficient-workflow.html#fig:readr-vs-base">4.3</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around 1 MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
 <p>For files beyond 100 MB in size <code>fread</code> and <code>read_csv</code> can be expected to be around <em>5 times faster</em> than <code>read.delim</code>. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with <code>read.csv</code>), but could represent an important speed-up if you frequently load large text files.</p>
 <div class="figure"><span id="fig:readr-vs-base"></span>
-<img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns."  />
+<img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns." width="672" />
 <p class="caption">
 Figure 4.3: Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.
 </p>
@@ -942,7 +942,7 @@ aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Austr
 aus3b =<span class="st"> </span>idata_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
 <p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="efficient-workflow.html#fig:dtplot">4.4</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
 <div class="figure"><span id="fig:dtplot"></span>
-<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes."  />
+<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="576" />
 <p class="caption">
 Figure 4.4: Benchmark illustrating the performance gains to be expected for different dataset sizes.
 </p>
