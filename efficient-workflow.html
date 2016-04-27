@@ -414,15 +414,15 @@ res_v =<span class="st"> </span><span class="kw">microbenchmark</span>(<span cla
 <li>The <strong>readr</strong> function <code>read_csv</code> generates a warning for row 2841 in the <code>built</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first 1000 rows, rather than all rows, as base <code>read.*</code> functions do.</li>
 </ul>
 <p>As illustrated by printing the result for the row which generated a warning, the <code>read_tsv</code> output is more sensible than the <code>read.delim</code> output: <code>read.delim</code> coerced the date field into a factor based on a single entry which is a text. <code>read_tsv</code> coerced the variable into a numeric vector, as illustrated below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(voyages_base$built) <span class="co"># coerced to a factor</span></code></pre></div>
-<pre><code>## [1] &quot;factor&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(voyages_readr$built) <span class="co"># numeric based on first 1000 rows</span></code></pre></div>
-<pre><code>## [1] &quot;numeric&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_base$built[<span class="dv">2841</span>] <span class="co"># contains the text responsible for coercion</span></code></pre></div>
-<pre><code>## [1] 1721-01-01
-## 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span></code></pre></div>
-<pre><code>## [1] NA</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(voyages_base$built) <span class="co"># coerced to a factor</span>
+<span class="co">#&gt; [1] &quot;factor&quot;</span>
+<span class="kw">class</span>(voyages_readr$built) <span class="co"># numeric based on first 1000 rows</span>
+<span class="co">#&gt; [1] &quot;numeric&quot;</span>
+voyages_base$built[<span class="dv">2841</span>] <span class="co"># contains the text responsible for coercion</span>
+<span class="co">#&gt; [1] 1721-01-01</span>
+<span class="co">#&gt; 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</span>
+voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span>
+<span class="co">#&gt; [1] NA</span></code></pre></div>
 <ul>
 <li>The <strong>data.table</strong> function <code>fread</code> generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were <code>Bumped to type character on data row ...</code>, with the offending rows printed in place of <code>...</code>. Instead of changing the offending values to <code>NA</code>, as <strong>readr</strong> does for the <code>built</code> column (9), <code>fread</code> automatically converts any columns it thought of as numeric into characters.</li>
 </ul>
@@ -509,19 +509,19 @@ Be sure never to release your password by entering it directly into the command.
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
 raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
-<span class="kw">dim</span>(raw)</code></pre></div>
-<pre><code>## [1] 18 10</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
-<span class="kw">dim</span>(rawt)</code></pre></div>
-<pre><code>## [1] 162   3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rawt[<span class="dv">1</span>:<span class="dv">3</span>,]</code></pre></div>
-<pre><code>## Source: local data frame [3 x 3]
-## 
-##   religion Income Count
-##      (chr)  (chr) (int)
-## 1 Agnostic  &lt;$10k    27
-## 2  Atheist  &lt;$10k    12
-## 3 Buddhist  &lt;$10k    27</code></pre>
+<span class="kw">dim</span>(raw)
+<span class="co">#&gt; [1] 18 10</span>
+rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
+<span class="kw">dim</span>(rawt)
+<span class="co">#&gt; [1] 162   3</span>
+rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
+<span class="co">#&gt; Source: local data frame [3 x 3]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   religion Income Count</span>
+<span class="co">#&gt;      (chr)  (chr) (int)</span>
+<span class="co">#&gt; 1 Agnostic  &lt;$10k    27</span>
+<span class="co">#&gt; 2  Atheist  &lt;$10k    12</span>
+<span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).
@@ -601,10 +601,10 @@ Note that the dimensions of the data change from having 10 observations across 1
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
 n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
 df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span class="co"># create a data frame</span>
-<span class="kw">separate</span>(df, agesex, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)</code></pre></div>
-<pre><code>##   sex  age n
-## 1   m 0-10 3
-## 2   f 0-10 5</code></pre>
+<span class="kw">separate</span>(df, agesex, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)
+<span class="co">#&gt;   sex  age n</span>
+<span class="co">#&gt; 1   m 0-10 3</span>
+<span class="co">#&gt; 2   f 0-10 5</span></code></pre></div>
 <table>
 <caption><span id="tab:to-separate">Table 4.5: </span>Joined age and sex variables in one column</caption>
 <thead>
@@ -667,19 +667,19 @@ idata <span class="co"># print the dataset </span></code></pre></div>
 <h3><span class="header-section-number">4.5.1</span> Renaming columns</h3>
 <p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.</p>
 <p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:data.table&#39;:
-## 
-##     between, last</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span>
+<span class="co">#&gt; The following objects are masked from &#39;package:data.table&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     between, last</span>
+<span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter, lag</span>
+<span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
+idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
 <p>To rename multiple columns the variable names are simply separated by commas. The base R and <strong>dplyr</strong> way of doing this is illustrated for clarity.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The dplyr way (rename two variables)</span>
 idata =<span class="st"> </span><span class="kw">rename</span>(idata,
@@ -696,25 +696,25 @@ idata =<span class="st"> </span><span class="kw">rename</span>(idata,
 <h3><span class="header-section-number">4.5.2</span> Changing column classes</h3>
 <p>The <em>class</em> of R objects is critical to performance. If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a <code>data.frame</code> can be queried using the function <code>sapply()</code>, as illustrated below, with the inequality data loaded previously.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
-<span class="kw">sapply</span>(idata, class)</code></pre></div>
-<pre><code>##      Country Country Code         Year    Year Code        top10 
-##  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;  &quot;character&quot; 
-##        bot10         gini     b40_cons   gdp_percap 
-##  &quot;character&quot;  &quot;character&quot;  &quot;character&quot;  &quot;character&quot;</code></pre>
+<span class="kw">sapply</span>(idata, class)
+<span class="co">#&gt;      Country Country Code         Year    Year Code        top10 </span>
+<span class="co">#&gt;  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;  &quot;character&quot; </span>
+<span class="co">#&gt;        bot10         gini     b40_cons   gdp_percap </span>
+<span class="co">#&gt;  &quot;character&quot;  &quot;character&quot;  &quot;character&quot;  &quot;character&quot;</span></code></pre></div>
 <p>This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: <code>mean(idata$gini)</code> fails.</p>
 <p>Visual inspection of the data (e.g. via <code>View(idata)</code>) clearly shows that all columns except for 1 to 4 (“Country”, “Country Code”, “Year” and “Year Code”) should be numeric. We can re-assign the classes of the numeric variables one-by one:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)</code></pre></div>
-<pre><code>## Warning: NAs introduced by coercion</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span></code></pre></div>
-<pre><code>## [1] 40.50363</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)
+<span class="co">#&gt; Warning: NAs introduced by coercion</span>
+<span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span>
+<span class="co">#&gt; [1] 40.50363</span></code></pre></div>
 <p>However, the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts a <code>data.frame</code> to a numeric <code>matrix</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id =<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
 idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id])
-<span class="kw">sapply</span>(idata, class)</code></pre></div>
-<pre><code>##      Country Country Code         Year    Year Code        top10 
-##  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;    &quot;numeric&quot; 
-##        bot10         gini     b40_cons   gdp_percap 
-##    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;</code></pre>
+<span class="kw">sapply</span>(idata, class)
+<span class="co">#&gt;      Country Country Code         Year    Year Code        top10 </span>
+<span class="co">#&gt;  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;    &quot;numeric&quot; </span>
+<span class="co">#&gt;        bot10         gini     b40_cons   gdp_percap </span>
+<span class="co">#&gt;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;</span></code></pre></div>
 <p>As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using <code>unlist()</code> which converts list objects into vectors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata[id] =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(idata[id]))</code></pre></div>
 <p><em>Another</em> one-liner to acheive the same result uses <strong>dplyr</strong>’s <code>mutate_each</code> function:</p>
@@ -736,8 +736,8 @@ idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id
 <p>Imagine that we have a text file called <code>miniaa</code> which is large enough to consume most of your computer’s RAM. We can load it with the following command:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/miniaa&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 df =<span class="st"> </span><span class="kw">read.csv</span>(fname) <span class="co"># load imaginary large data</span>
-<span class="kw">dim</span>(df)</code></pre></div>
-<pre><code>## [1]   9 329</code></pre>
+<span class="kw">dim</span>(df)
+<span class="co">#&gt; [1]   9 329</span></code></pre></div>
 <p>Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That’s a lot of variables. Do we need them all? It’s worth taking a glimpse at this dataset to find out:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df)</code></pre></div>
 <pre><code># $ NPI                   (int) 1679576722, ...
@@ -747,10 +747,10 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname) <span class
 <p>Looking at the output, it becomes clear that the majority of the variables only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
 all_na =<span class="st"> </span><span class="kw">sapply</span>(df, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)))
-<span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span></code></pre></div>
-<pre><code>##    Mode   FALSE    TRUE    NA&#39;s 
-## logical      96     233       0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1 =<span class="st"> </span>df[!all_na] <span class="co"># subset the dataframe</span></code></pre></div>
+<span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span>
+<span class="co">#&gt;    Mode   FALSE    TRUE    NA&#39;s </span>
+<span class="co">#&gt; logical      96     233       0</span>
+df1 =<span class="st"> </span>df[!all_na] <span class="co"># subset the dataframe</span></code></pre></div>
 <p>The new <code>df</code> object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R’s binary data format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(df1, <span class="st">&quot;data/miniaa.Rds&quot;</span>)</code></pre></div>
 <div id="exercises-9" class="section level4">
@@ -771,69 +771,69 @@ The GHG dataset used in the subsequent code reports the amount of greenhouse gas
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
-<span class="kw">names</span>(df)</code></pre></div>
-<pre><code>## [1] &quot;X&quot;                                       
-## [2] &quot;Country&quot;                                 
-## [3] &quot;Year&quot;                                    
-## [4] &quot;Electricity.Heat..CO2...MtCO2.&quot;          
-## [5] &quot;Manufacturing.Construction..CO2...MtCO2.&quot;
-## [6] &quot;Transportation..CO2...MtCO2.&quot;            
-## [7] &quot;Other.Fuel.Combustion..CO2...MtCO2.&quot;     
-## [8] &quot;Fugitive.Emissions..CO2...MtCO2.&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(df)</code></pre></div>
-<pre><code>## [1] 7896</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(df$Country))</code></pre></div>
-<pre><code>## [1] 188</code></pre>
+<span class="kw">names</span>(df)
+<span class="co">#&gt; [1] &quot;X&quot;                                       </span>
+<span class="co">#&gt; [2] &quot;Country&quot;                                 </span>
+<span class="co">#&gt; [3] &quot;Year&quot;                                    </span>
+<span class="co">#&gt; [4] &quot;Electricity.Heat..CO2...MtCO2.&quot;          </span>
+<span class="co">#&gt; [5] &quot;Manufacturing.Construction..CO2...MtCO2.&quot;</span>
+<span class="co">#&gt; [6] &quot;Transportation..CO2...MtCO2.&quot;            </span>
+<span class="co">#&gt; [7] &quot;Other.Fuel.Combustion..CO2...MtCO2.&quot;     </span>
+<span class="co">#&gt; [8] &quot;Fugitive.Emissions..CO2...MtCO2.&quot;</span>
+<span class="kw">nrow</span>(df)
+<span class="co">#&gt; [1] 7896</span>
+<span class="kw">length</span>(<span class="kw">unique</span>(df$Country))
+<span class="co">#&gt; [1] 188</span></code></pre></div>
 <p>Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section <a href="efficient-workflow.html#renaming-columns">4.5.1</a>, the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can be done in base R using the following command:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(df)[<span class="dv">4</span>:<span class="dv">8</span>] =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ECO2&quot;</span>, <span class="st">&quot;MCO2&quot;</span>, <span class="st">&quot;TCO2&quot;</span>, <span class="st">&quot;OCO2&quot;</span>, <span class="st">&quot;FCO2&quot;</span>)</code></pre></div>
 <p>After the variable names have been updated, we can aggregate.<a href="efficient-learning.html#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(df$ECO2, <span class="kw">list</span>(df$Country), mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
-<span class="kw">nrow</span>(e_ems)</code></pre></div>
-<pre><code>## [1] 188</code></pre>
+<span class="kw">nrow</span>(e_ems)
+<span class="co">#&gt; [1] 188</span></code></pre></div>
 <p>Note that the resulting data frame now has the same number of rows as there are countries: the aggregation has successfully reduced the number of rows we need to deal with. Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)</code></pre></div>
-<pre><code>##     Group.1          x
-## 77  Iceland 0.01785714
-## 121   Nepal 0.02333333
-## 18    Benin 0.04642857</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)
+<span class="co">#&gt;     Group.1          x</span>
+<span class="co">#&gt; 77  Iceland 0.01785714</span>
+<span class="co">#&gt; 121   Nepal 0.02333333</span>
+<span class="co">#&gt; 18    Benin 0.04642857</span></code></pre></div>
 <p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). The following command creates the same object as <code>e_ems</code>, but with less typing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(ECO2 ~<span class="st"> </span>Country, df, mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">group_by</span>(df, Country) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(ECO2, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
-<pre><code>## Source: local data frame [188 x 2]
-## 
-##              Country   mean_eco2
-##               (fctr)       (dbl)
-## 1        Afghanistan         NaN
-## 2            Albania   0.6411905
-## 3            Algeria  23.0147619
-## 4             Angola   0.7914286
-## 5  Antigua &amp; Barbuda         NaN
-## 6          Argentina  39.1054762
-## 7            Armenia   1.8000000
-## 8          Australia 150.5961905
-## 9            Austria  17.3202381
-## 10        Azerbaijan  16.0430435
-## ..               ...         ...</code></pre>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(ECO2, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
+<span class="co">#&gt; Source: local data frame [188 x 2]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;              Country   mean_eco2</span>
+<span class="co">#&gt;               (fctr)       (dbl)</span>
+<span class="co">#&gt; 1        Afghanistan         NaN</span>
+<span class="co">#&gt; 2            Albania   0.6411905</span>
+<span class="co">#&gt; 3            Algeria  23.0147619</span>
+<span class="co">#&gt; 4             Angola   0.7914286</span>
+<span class="co">#&gt; 5  Antigua &amp; Barbuda         NaN</span>
+<span class="co">#&gt; 6          Argentina  39.1054762</span>
+<span class="co">#&gt; 7            Armenia   1.8000000</span>
+<span class="co">#&gt; 8          Australia 150.5961905</span>
+<span class="co">#&gt; 9            Austria  17.3202381</span>
+<span class="co">#&gt; 10        Azerbaijan  16.0430435</span>
+<span class="co">#&gt; ..               ...         ...</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
-<span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</code></pre></div>
-<pre><code>## Source: local data frame [176 x 2]
-## 
-##         Country     gini
-##           (chr)    (dbl)
-## 1   Afghanistan      NaN
-## 2       Albania 30.43167
-## 3       Algeria 37.76000
-## 4        Angola 50.65000
-## 5     Argentina 48.06739
-## 6       Armenia 33.72929
-## 7     Australia 33.14167
-## 8       Austria 29.15167
-## 9    Azerbaijan 24.79000
-## 10 Bahamas, The      NaN
-## ..          ...      ...</code></pre>
+<span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
+<span class="co">#&gt; Source: local data frame [176 x 2]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;         Country     gini</span>
+<span class="co">#&gt;           (chr)    (dbl)</span>
+<span class="co">#&gt; 1   Afghanistan      NaN</span>
+<span class="co">#&gt; 2       Albania 30.43167</span>
+<span class="co">#&gt; 3       Algeria 37.76000</span>
+<span class="co">#&gt; 4        Angola 50.65000</span>
+<span class="co">#&gt; 5     Argentina 48.06739</span>
+<span class="co">#&gt; 6       Armenia 33.72929</span>
+<span class="co">#&gt; 7     Australia 33.14167</span>
+<span class="co">#&gt; 8       Austria 29.15167</span>
+<span class="co">#&gt; 9    Azerbaijan 24.79000</span>
+<span class="co">#&gt; 10 Bahamas, The      NaN</span>
+<span class="co">#&gt; ..          ...      ...</span></code></pre></div>
 <p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
   <span class="co"># number of rows per country</span>
@@ -846,22 +846,22 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
   <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini &gt;<span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
   <span class="co"># range</span>
   <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) -<span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
-  )</code></pre></div>
-<pre><code>## Source: local data frame [176 x 7]
-## 
-##         Country   obs med_t10      sdev   n30      sdn30   dif
-##           (chr) (int)   (dbl)     (dbl) (int)      (dbl) (dbl)
-## 1   Afghanistan    40      NA       NaN     0         NA    NA
-## 2       Albania    40  24.435  1.252524     3  0.3642801  2.78
-## 3       Algeria    40  29.780  3.436539     2  3.4365390  4.86
-## 4        Angola    40  38.555 11.299566     2 11.2995664 15.98
-## 5     Argentina    40  36.320  3.182462    23  3.1824622 11.00
-## 6       Armenia    40  27.835  4.019532    12  3.9567778 14.84
-## 7     Australia    40  24.785  1.075089     6  1.0750891  2.81
-## 8       Austria    40  23.120  3.120849     4  0.6859300  8.48
-## 9    Azerbaijan    40  17.960  9.479029     3  1.7386489 20.27
-## 10 Bahamas, The    40      NA       NaN     0         NA    NA
-## ..          ...   ...     ...       ...   ...        ...   ...</code></pre>
+  )
+<span class="co">#&gt; Source: local data frame [176 x 7]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;         Country   obs med_t10      sdev   n30      sdn30   dif</span>
+<span class="co">#&gt;           (chr) (int)   (dbl)     (dbl) (int)      (dbl) (dbl)</span>
+<span class="co">#&gt; 1   Afghanistan    40      NA       NaN     0         NA    NA</span>
+<span class="co">#&gt; 2       Albania    40  24.435  1.252524     3  0.3642801  2.78</span>
+<span class="co">#&gt; 3       Algeria    40  29.780  3.436539     2  3.4365390  4.86</span>
+<span class="co">#&gt; 4        Angola    40  38.555 11.299566     2 11.2995664 15.98</span>
+<span class="co">#&gt; 5     Argentina    40  36.320  3.182462    23  3.1824622 11.00</span>
+<span class="co">#&gt; 6       Armenia    40  27.835  4.019532    12  3.9567778 14.84</span>
+<span class="co">#&gt; 7     Australia    40  24.785  1.075089     6  1.0750891  2.81</span>
+<span class="co">#&gt; 8       Austria    40  23.120  3.120849     4  0.6859300  8.48</span>
+<span class="co">#&gt; 9    Azerbaijan    40  17.960  9.479029     3  1.7386489 20.27</span>
+<span class="co">#&gt; 10 Bahamas, The    40      NA       NaN     0         NA    NA</span>
+<span class="co">#&gt; ..          ...   ...     ...       ...   ...        ...   ...</span></code></pre></div>
 <p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
 <ul>
 <li>the number of rows in each country group</li>
@@ -892,17 +892,17 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="st">  </span><span class="kw">group_by</span>(Year) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) %&gt;%
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) %&gt;%
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
-<pre><code>## Selecting by gini</code></pre>
-<pre><code>## Source: local data frame [5 x 2]
-## 
-##    Year   gini
-##   (int)  (dbl)
-## 1  1980 46.850
-## 2  1993 45.996
-## 3  2013 44.550
-## 4  1981 43.650
-## 5  2012 43.560</code></pre>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)
+<span class="co">#&gt; Selecting by gini</span>
+<span class="co">#&gt; Source: local data frame [5 x 2]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;    Year   gini</span>
+<span class="co">#&gt;   (int)  (dbl)</span>
+<span class="co">#&gt; 1  1980 46.850</span>
+<span class="co">#&gt; 2  1993 45.996</span>
+<span class="co">#&gt; 3  2013 44.550</span>
+<span class="co">#&gt; 4  1981 43.650</span>
+<span class="co">#&gt; 5  2012 43.560</span></code></pre></div>
 <p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
 <ol style="list-style-type: decimal">
 <li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
@@ -954,8 +954,8 @@ Figure 4.4: Benchmark illustrating the performance gains to be expected for diff
 <h3><span class="header-section-number">4.7.1</span> Dynamic documents with knitr</h3>
 <p>When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.</p>
 <p>To overcome this inefficiency in the documentation of R outputs the <strong>knitr</strong> package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) <strong>knitr</strong> allows for documents to be generated automatically. Results are generated <em>on the fly</em> by including ‘code chunks’ such as that illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dv">1</span>:<span class="dv">5</span>)^<span class="dv">2</span></code></pre></div>
-<pre><code>## [1]  1  4  9 16 25</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dv">1</span>:<span class="dv">5</span>)^<span class="dv">2</span>
+<span class="co">#&gt; [1]  1  4  9 16 25</span></code></pre></div>
 <p>The resulting output is evaluated each time the document is compiled. To tell <strong>knitr</strong> that <code>(1:5)^2</code> is R code that needs to be evaluated, it must by preceded by <code>```{r}</code> on the line before the R code, and <code>```</code> at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. When the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs.</p>
 <p>Furthermore dynamic documents written in RMarkdown can compile into a range of output formats including html, pdf and Microsoft’s docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio’s excellent website on RMarkdown hosted at <a href="http://rmarkdown.rstudio.com/">rmarkdown.rstudio.com/</a> and, for a more detailed account of dynamic documents with R, <span class="citation">(Xie <a href="efficient-learning.html#ref-xie2015dynamic">2015</a>)</span>.</p>
 </div>

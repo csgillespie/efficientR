@@ -256,22 +256,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
 <p>we have created an atomic vector, contain a single double-precision floating point number. When comparing floating point numbers, we should be particularly careful, since</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span>)*<span class="kw">sqrt</span>(<span class="dv">2</span>)
-y ==<span class="st"> </span><span class="dv">2</span></code></pre></div>
-<pre><code>## [1] FALSE</code></pre>
+y ==<span class="st"> </span><span class="dv">2</span>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
 <p>This is because the value of <code>y</code> is not exactly <span class="math inline">\(2\)</span>, instead it’s <strong>almost</strong> <span class="math inline">\(2\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sprintf</span>(<span class="st">&quot;%.16f&quot;</span>, y)</code></pre></div>
-<pre><code>## [1] &quot;2.0000000000000004&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sprintf</span>(<span class="st">&quot;%.16f&quot;</span>, y)
+<span class="co">#&gt; [1] &quot;2.0000000000000004&quot;</span></code></pre></div>
 <p>To compare numbers in R it is advisable to use <code>all.equal</code> and set an appropriate tolerance, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(y, <span class="dv">2</span>, <span class="dt">tolerance =</span> <span class="fl">1e-9</span>)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(y, <span class="dv">2</span>, <span class="dt">tolerance =</span> <span class="fl">1e-9</span>)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>Although using double precision objects is the most common type, R does have other ways of storing numbers:</p>
 <ul>
 <li><p><code>single</code>: R doesn’t have a single precision data type. Instead, all real numbers are stored in double precision format. The functions <code>as.single</code> and <code>single</code> are identical to <code>as.double</code> and <code>double</code> except they set the attribute <code>Csingle</code> that is used in the <code>.C</code> and <code>.Fortran</code> interface.</p></li>
 <li><p><code>integer</code>: Integers primarily exist to be passed to C or Fortran code. Typically we don’t worry about creating integers. However they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p></li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)</code></pre></div>
-<pre><code>## function (x, n = 6L, ...) 
-## NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
+<span class="co">#&gt; function (x, n = 6L, ...) </span>
+<span class="co">#&gt; NULL</span></code></pre></div>
 <p>The default argument is <code>6L</code> (the <code>L</code>, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package). The speed increase is illustrated below, using the <strong>microbenchmark</strong> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s_int =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span>; s =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="fl">1.0</span>)
 <span class="kw">microbenchmark</span>(clock_speed[s_int, 2L], clock_speed[s, <span class="fl">2.0</span>], <span class="dt">times=</span>1000000L)</code></pre></div>
@@ -284,8 +284,8 @@ y ==<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <li><code>numeric</code>: The function <code>numeric()</code> is identical to <code>double()</code>; it creates is a double-precision number. However, <code>is.numeric()</code> isn’t the same as <code>as.double()</code>, instead <code>is.numeric()</code> returns <code>TRUE</code> for both numeric and double types.</li>
 </ul>
 <p>To find out the type of data stored in an R vector use the command <code>typeof()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))</code></pre></div>
-<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">typeof</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))
+<span class="co">#&gt; [1] &quot;character&quot;</span></code></pre></div>
 </div>
 <div id="exercises-11" class="section level4">
 <h4><span class="header-section-number">6.1.1.2</span> Exercises</h4>
@@ -308,25 +308,25 @@ y ==<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <p>If we sort <code>m</code> in the usual way <code>sort(m)</code>, we use standard alpha-numeric ordering, placing December first. While this is completely correct, it is also not that helpful. We can use factors to remedy this problem by specifying the admissible levels</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># month.name contains the 12 months</span>
 fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="dt">levels=</span>month.name)
-<span class="kw">sort</span>(fac_m)</code></pre></div>
-<pre><code>## [1] January  March    December
-## 12 Levels: January February March April May June July August ... December</code></pre>
+<span class="kw">sort</span>(fac_m)
+<span class="co">#&gt; [1] January  March    December</span>
+<span class="co">#&gt; 12 Levels: January February March April May June July August ... December</span></code></pre></div>
 <p>Most users interact with factors via the <code>read.csv</code> function where character columns are automatically converted to factors. It is generally recommended to avoid this feature using the <code>stringsAsFactors=FALSE</code> argument. Although this argument can be also placed in the global <code>options()</code> list, this leads to non-portable code, so should be avoided.</p>
 <p>Although factors look similar to character vectors, they are actually integers. This leads to initially surprising behaviour</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(m)</code></pre></div>
-<pre><code>## [1] &quot;January&quot;  &quot;December&quot; &quot;March&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(fac_m)</code></pre></div>
-<pre><code>## [1]  1 12  3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(m)
+<span class="co">#&gt; [1] &quot;January&quot;  &quot;December&quot; &quot;March&quot;</span>
+<span class="kw">c</span>(fac_m)
+<span class="co">#&gt; [1]  1 12  3</span></code></pre></div>
 <p>In this case the <code>c()</code> function is using the underlying integer representation of the factor. Overall factors are useful, but can lead to unwanted side-effects if we are not careful.</p>
 <p>In early versions of R, storing character data as a factor was more space efficient. However since identical character strings now share storage, the space gain in factors is now space.</p>
 </div>
 <div id="data-frames" class="section level3">
 <h3><span class="header-section-number">6.1.3</span> Data frames</h3>
 <p>A data frame is a tabular (two dimensional or ‘rectangular’) object in which the columns may be composed of differing vector types such as <code>numeric</code>, <code>logical</code>, <code>character</code> and so on. Matrices can only accept a single data type for all cells as explained in the next section. Data frames are the workhorses of R. Many R functions, such as <code>boxplot</code>, <code>lm</code> and <code>ggplot</code>, expect your data set to be in a data frame. As a general rule, columns in your data should be variables and rows should be the thing of interest. This is illustrated in the <code>USAarrests</code> data set:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">2</span>)</code></pre></div>
-<pre><code>##         Murder Assault UrbanPop Rape
-## Alabama   13.2     236       58 21.2
-## Alaska    10.0     263       48 44.5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">2</span>)
+<span class="co">#&gt;         Murder Assault UrbanPop Rape</span>
+<span class="co">#&gt; Alabama   13.2     236       58 21.2</span>
+<span class="co">#&gt; Alaska    10.0     263       48 44.5</span></code></pre></div>
 <p>Note that each row corresponds to a particular state and each column to a variable. One particular trap to be wary of is when using <code>read.csv</code> and <code>read.table</code> characters are automatically converted to factors. One can avoid this pitfall by using the argument <code>stringsAsFactors = FALSE</code>.</p>
 <p>Since working with R frequently involves interacting with data frames, it’s useful to be fluent a few key functions:</p>
 <table>
@@ -378,32 +378,32 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10000</span>, 
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
-          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
-<pre><code>##          test elapsed relative
-## 2  ex_df[1, ]   8.434   88.779
-## 1 ex_mat[1, ]   0.095    1.000</code></pre>
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))
+<span class="co">#&gt;          test elapsed relative</span>
+<span class="co">#&gt; 2  ex_df[1, ]   8.180  151.481</span>
+<span class="co">#&gt; 1 ex_mat[1, ]   0.054    1.000</span></code></pre></div>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
 <p>R has three built-in object oriented systems. These systems differ in how classes and methods are defined. The easiest and oldest system is the S3 system. S3 refers to the third version of S. The syntax of R is largely based on this version of S. In R there has never been S1 and S2 classes.</p>
 <p>The S3 system implements a generic-function object oriented (OO) system. This type of OO is different to the message-passing style of Java and C++. In a message-passing framework, messages/methods are sent to objects and the object determines which function to call, e.g. <code>normal.rand(1)</code>. The S3 class system is different. In S3, the generic function decides which method to call - it would have the form <code>rand(normal, 1)</code>.</p>
 <p>The S3 system is based on the class of an object. In this system, a class is just an attribute. The S3 class(es) of a object can be determined with the <code>class</code> function.</p>
-<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;data.frame&quot;</code></pre>
 <p>The S3 system can be used to great effect. For example, a <code>data.frame</code> is simply a standard R list, with class <code>data.frame</code>. When we pass an object to a <em>generic</em> function, the function first examines the class of the object, and then decides what to do: it dispatches to another method. The generic <code>summary</code> function, for example, contains the following:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary</code></pre></div>
-<pre><code>## function (object, ...) 
-## UseMethod(&quot;summary&quot;)
-## &lt;bytecode: 0x7145468&gt;
-## &lt;environment: namespace:base&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary
+<span class="co">#&gt; function (object, ...) </span>
+<span class="co">#&gt; UseMethod(&quot;summary&quot;)</span>
+<span class="co">#&gt; &lt;bytecode: 0x877a858&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_usa =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
 <p><code>dist_usa</code> has class <code>dist</code>. To visualise the distances, we can create an image method. First we’ll check if the existing <code>image</code> function is generic, via</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image</code></pre></div>
-<pre><code>## function (x, ...) 
-## UseMethod(&quot;image&quot;)
-## &lt;bytecode: 0x577fe18&gt;
-## &lt;environment: namespace:graphics&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image
+<span class="co">#&gt; function (x, ...) </span>
+<span class="co">#&gt; UseMethod(&quot;image&quot;)</span>
+<span class="co">#&gt; &lt;bytecode: 0x6dba7e8&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:graphics&gt;</span></code></pre></div>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
   x_mat =<span class="st"> </span><span class="kw">as.matrix</span>(x)
@@ -473,11 +473,11 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="fl">1e4</span>
 <span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10</span>, 
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
-          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))</code></pre></div>
-<pre><code>##         test elapsed
-## 1 method1(n)   1.788
-## 2 method2(n)   0.092
-## 3 method3(n)   0.000</code></pre>
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
+<span class="co">#&gt;         test elapsed</span>
+<span class="co">#&gt; 1 method1(n)   1.470</span>
+<span class="co">#&gt; 2 method2(n)   0.089</span>
+<span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
 <caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour while methods 2 takes 2 seconds and method 3 almost instantaneous.</caption>
@@ -534,8 +534,8 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <div id="function-closures" class="section level3">
 <h3><span class="header-section-number">6.2.3</span> Function closures</h3>
 <p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not <code>.GlobalEnv</code>. One of the environments associated with function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using the <code>environment</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)</code></pre></div>
-<pre><code>## &lt;environment: R_GlobalEnv&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)
+<span class="co">#&gt; &lt;environment: R_GlobalEnv&gt;</span></code></pre></div>
 <p>The <code>plot_mpg</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f =<span class="st"> </span>function() {
   x =<span class="st"> </span><span class="dv">5</span>
@@ -545,12 +545,12 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 }</code></pre></div>
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
-<span class="kw">environment</span>(g)</code></pre></div>
-<pre><code>## &lt;environment: 0x788d520&gt;</code></pre>
+<span class="kw">environment</span>(g)
+<span class="co">#&gt; &lt;environment: 0x8ec5568&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
-<span class="kw">g</span>()</code></pre></div>
-<pre><code>## [1] 5</code></pre>
+<span class="kw">g</span>()
+<span class="co">#&gt; [1] 5</span></code></pre></div>
 <p>The value returned is obtained from <code>environment(g)</code> is 5, not <code>.GlobalEnv</code>. This environment allows to cache variables between function calls. The <code>counter</code> function is basic example of this feature</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counter =<span class="st"> </span>function() {
   no =<span class="st"> </span><span class="dv">0</span>
@@ -561,16 +561,16 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 }</code></pre></div>
 <p>When we call the function, we retain object values between function calls</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">counter</span>()
-<span class="kw">sc</span>()</code></pre></div>
-<pre><code>## [1] 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sc</span>()</code></pre></div>
-<pre><code>## [1] 2</code></pre>
+<span class="kw">sc</span>()
+<span class="co">#&gt; [1] 1</span>
+<span class="kw">sc</span>()
+<span class="co">#&gt; [1] 2</span></code></pre></div>
 <p>The key points of the <code>counter</code> function are</p>
 <ul>
 <li><p>The counter function returns a function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">counter</span>()
-<span class="kw">sc</span>()</code></pre></div>
-<pre><code>## [1] 1</code></pre></li>
+<span class="kw">sc</span>()
+<span class="co">#&gt; [1] 1</span></code></pre></div></li>
 <li>The enclosing environment of <code>sc</code> is not <code>.GlobalEnv</code> instead, it’s the binding environment of <code>sc</code>.</li>
 <li>The function <code>sc</code> has an environment that can be used to store/cache values</li>
 <li><p>The operator <code>&lt;&lt;-</code> is used to alter the <code>no</code>.</p></li>
@@ -652,18 +652,18 @@ f =<span class="st"> </span>function(N){
   <span class="kw">return</span>(hits/N)
 }</code></pre></div>
 <p>In R this takes a few seconds:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))</code></pre></div>
-<pre><code>##    user  system elapsed 
-##   2.906   0.000   2.906</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   2.801   0.004   2.806</span></code></pre></div>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
   <span class="kw">return</span>(hits/N)
 }</code></pre></div>
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))</code></pre></div>
-<pre><code>##    user  system elapsed 
-##   0.039   0.004   0.043</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   0.043   0.000   0.043</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -718,11 +718,11 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div id="the-byte-compiler" class="section level2">
 <h2><span class="header-section-number">6.4</span> The byte compiler</h2>
 <p>The ** compiler** package, written by R Core member Luke Tierney has been part of R since version 2.13.0. Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean</code></pre></div>
-<pre><code>## function (x, ...) 
-## UseMethod(&quot;mean&quot;)
-## &lt;bytecode: 0x6871880&gt;
-## &lt;environment: namespace:base&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean
+<span class="co">#&gt; function (x, ...) </span>
+<span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
+<span class="co">#&gt; &lt;bytecode: 0x7ea7c60&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
 <p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="efficient-learning.html#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
