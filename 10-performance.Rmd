@@ -63,7 +63,7 @@ microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000
 The above result shows that using integers is slightly faster, but probably not worth
 worrying about.
 
-#### Exercises
+#### Exercises {-}
 
 1. Another benefit of integers, is that they are slightly more memory efficient. Using
 the `object_size` function from the **pryr** package, compare the size of a vector of
@@ -351,22 +351,8 @@ The compiled function is around seven times faster than the uncompiled function.
 course, the native `mean` function is faster, but compiling does make a significant
 difference (figure \@ref(fig:6-4)).
 
-```{r 6-4, echo=FALSE, fig.height=4, fig.width=4, fig.cap="Comparsion of mean functions.", eval=TRUE}
-load(file="data/mean_comparison.RData")
-dd = mean_comparison
-library("ggplot2")
-g = ggplot(dd, aes(p, relative)) + 
-  geom_line(aes(colour=test), lwd=1) + 
-  theme_bw() + 
-  xlab("Sample size") + 
-  ylab("Relative timings") + 
-  scale_x_continuous(trans="log10", breaks=c(100, 1000, 10000), 
-                     labels=c(expression(10^2), expression(10^3), expression(10^4))) + 
-  scale_colour_manual(values=colours, guide=FALSE) +
-  ylim(c(0, 200))
-g + annotate("text", x=1000, y=90, label="Pure R", col=colours[3], size=3) +
-  annotate("text", x=1000, y=20, label="Complied R", col=colours[1], size=3) + 
-  annotate("text", x=8000, y=10, label="mean", col=colours[2], size=3)
+```{r 6-4, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparsion of mean functions.", eval=TRUE}
+local(source("code/10-performance_f1.R", local=TRUE))
 ```
 
 ### Compiling code

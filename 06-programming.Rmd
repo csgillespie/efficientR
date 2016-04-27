@@ -173,24 +173,11 @@ Writing code this way has a number of benefits.
   * It's neater.
   * It doesn't contain a bug when `x` is of length $0$.
 
-#### Exercise {-}
+#### Exercises {-}
 
 Time the two methods for calculating the log sum. Try different values of $n$.
 
-```{r 6-2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=4, fig.height=4, fig.align="center"}
-set.seed(1)
-par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
-    cex.axis=0.9, las=1)
-curve(x^2, 0,1, ylab="f(x)", xlab="x")
-grid()
-N = 40
-px = runif(N); py=runif(N)
-points(px[py < px^2], py[py < px^2], pch=19, col=1)
-points(px[py > px^2], py[py > px^2], pch=19, col=2)
-```
-
-
-#### Example: Monte-Carlo integration
+#### Example: Monte-Carlo integration {-}
 
 It's also important to make full use of R functions that use vectors. For example,
 suppose we wish to estimate
@@ -245,6 +232,9 @@ The `monte_carlo_vec` function contains (at least) four aspects of vectorisation
   * Using `sum` is quicker than an equivalent for loop.
 
 The function `monte_carlo_vec` is around $30$ times faster than `monte_carlo`.
+```{r 6-2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=6, fig.height=4, fig.align="center"}
+local(source("code/10-performance_f1.R", local=TRUE))
+```
 
 ### Exercise {-}
 
@@ -762,7 +752,7 @@ consistent. Likewise `dplyr::select` and `dplyr:filter`. The **purrr** package h
 some type consistent alternatives to base R functions. For example, `map_dbl` etc. to
 replace `Map` and `flatten_df` etc. to replace `unlist`.
 
-#### Exercise {-}
+#### Exercises {-}
 
 1. Rewrite the `sapply` function using `vapply` to ensure type consistency.
 
