@@ -127,7 +127,7 @@ fortunes::fortune(21)
 Considering that a standard smart phone now contains $1$GB of RAM, the fact that R was designed for "basic" computers, but can scale across clusters is impressive.
 R's origins on computers with limited resources helps explain its efficiency at dealing with large datasets.
 
-### Exercises
+#### Exercises {-}
 
 The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.
 
@@ -185,7 +185,7 @@ which will return $8$ if you a running a $64$-bit version of R.
 
 To find precise details consult the R help pages `help("Memory-limits")` and `help("Memory")`.
 
-### Exercises
+#### Exercises {-}
 
 These exercises aim to condense the previous section into the key points.
 
@@ -194,33 +194,26 @@ These exercises aim to condense the previous section into the key points.
 
 ## Central processing unit (CPU)
 
-The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:3-3)).
+The central processing unit (CPU), or the processor, is the brains of a computer. The
+CPU is responsible for performing numerical calculations. The faster the processor,
+the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency
+with which the CPU executes instructions. The faster the clock speed, the more
+instructions a CPU can execute in a section. CPU clock speed for a single CPU has been
+fairly static in the last couple of years, hovering around 3.4GHz (see figure
+\@ref(fig:3-3)).
 
-```{r 3-3, echo=FALSE, fig.width=4, fig.height=4, fig.cap="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed."} 
-library("ggplot2")
-#data("clock_speed", package="efficient")
-load("data/clock_speed.RData")
-ggplot(clock_speed, aes(Year, MIPS)) + 
-  geom_hline(yintercept=3400, lwd=0.5, alpha=0.8) + 
-  geom_text(x=1980, y=3600, label="3.4 Ghz")+
-  geom_point(alpha=0.5, size=1) +
-  scale_y_continuous(limits=c(0.1, 10000), trans="log10") + 
-  theme_bw() + ylab("CPU clock speed (GHz)")
+```{r 3-3, echo=FALSE, fig.width=6, fig.height=4, fig.cap="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed."} 
+local(source("code/03-hardware_cpu_speed.R", local = TRUE))
 ```
 
-Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package **benchmarkme** provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref(fig:3-4) shows the relative performance for over $150$ CPUs.  
+Unfortunately we can't simply use clock speeds to compare CPUs, since the internal
+architecture of a CPU plays a crucial role in determining the CPU performance. The R
+package **benchmarkme** provides functions for benchmarking your system and contains
+data from previous benchmarks. Figure \@ref(fig:3-4) shows the relative performance
+for over $150$ CPUs.
 
-```{r 3-4, echo=FALSE, fig.width=4, fig.height=4,  fig.cap="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result.", fig.keep="last"}
-library("benchmarkme")
-results = plot_past()
-times = sort(tapply(results$time, results$id, mean))
-times = times/min(times)
-dd_tmp = data.frame(times, rank=1:length(times))
-ggplot(dd_tmp, aes(rank, times)) + 
-  geom_point(alpha=0.5, size=1.5) + 
-  scale_y_log10(limit=c(1, 100)) + 
-  theme_bw() + 
-  xlab("Rank") + ylab("Relative time")
+```{r 3-4, echo=FALSE, fig.width=6, fig.height=4,  fig.cap="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result.", fig.keep="last"}
+local(source("code/03-hardware_benchmarks.R", local = TRUE))
 ```
 
 Running the benchmarks and comparing your CPU to others is straightforward. First load the package
@@ -246,6 +239,9 @@ Amazon Elastic Compute Cloud (EC2) is one of a number of providers of this servi
 
 If you want to run a server in the Amazon EC2 cloud, you have to select the system you are going to boot up. There are a vast array of pre-packaged system images. Some of these images are just basic operating systems, such as Debian or Ubuntu, which require further configuration. There is also an [Amazon machine image](http://www.louisaslett.com/RStudio_AMI/) that specifically targets R and RStudio.
 
-### Exercise
+<!-- TODO: Add worked example using cloudyr -->
+
+
+#### Exercise {-}
 
 To assess whether you should consider cloud computing, how much does it cost to rent a machine comparable to your laptop in the cloud?
