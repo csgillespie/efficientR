@@ -11,7 +11,7 @@ General Hints and tips for performance.
 
 In previous chapters we've focused on tools and set-up to increase efficiency. In this
 chapter we are going to consider code optimisation. We will consider a variety of code
-tweaks that can eke out an extra speed boost. 
+tweaks that can eke out an extra speed boost.
 
 ## The integer data type
 
@@ -236,6 +236,8 @@ incorrect answer
 ```{
 x < 0.4 || x > 0.6
 ```
+### Row and column operations
+
 
 ### Exit functions with care {-}
 
@@ -284,6 +286,172 @@ hist(x)
 However if we assign the output to an object, `out = hist(x)`, the object `out` is
 actually a list containing, _inter alia_ information on the mid-points, breaks and
 counts.
+
+## Code profiling
+
+A circumstance that happens all too often, is that we simple want our code to run
+faster. In some cases it's obvious where the bottle neck lies. Other times, we have to
+rely on our intuition. One major drawback of relying on our intuition is that we could
+be wrong and we end up pointlessly optimising the wrong piece of code. To make slow
+code run faster, we first need to determine where the slow code lives.
+
+The `Rprof` function is built-in tool for profiling the execution of R expressions. At
+regular time intervals, the profiler stops the R interpreter, records the current
+function call stack, and saves the information to a file. The results from `Rprof` are
+stochastic. Each time we run a function R, the conditions have changed. Hence, each
+time you profile your code, the result will be slightly different.
+
+Unfortunately, `Rprof` is not user friendly. The **profvis** package provides an
+interactive graphical interface for visualising data data from `Rprof`.
+
+
+### Getting started with **profvis**
+
+Currently the **profvis** package isn't on CRAN and so we need to install the
+developmental version
+```{r eval=FALSE}
+devtools::install_github("rstudio/profvis")
+```
+As a simple example, we will use the `movies` data set, which contain information on
+around 60,000 movies from the IMDB. First, we'll select movies that are classed as
+comedies, then plot year vs movies rating, and draw a local polynomial regression line
+to pick out the trend. The main function from the **profvis** package, is `profvis`
+which profiles the code and creates an interactive HTML page. The first argument of
+`profvis` is the R expression of interest.
+
+```{r, eval=FALSE}
+library("profvis")
+profvis({
+  data(movies, package="ggplot2movies")
+  movies = movies[movies$Comedy==1, ]
+  plot(movies$year, movies$rating)
+  model = loess(rating ~ year, data=movies)
+  j = order(movies$year)
+  lines(movies$year[j], model$fitted[j])
+})
+```
+
+The above code provides an interactive HTML page (figure XXX). On the left side is the
+code and on the right is a flame graph (horizontal direction is time in milliseconds
+and the vertical direction is the call stack).
+
+```{r echo=FALSE, fig.cap="Output from profvis"}
+knitr::include_graphics("images/profvis1.png")
+```
+
+The left hand panel tells the amount of time spent on each line of code. We see that
+majority of time is spent calculating the `loess` smoothing line. The bottom line of
+the right panel also highlights that most of the execution time is spent on the
+`loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
+which in turn calls `.C` function.
+
+The conclusion from this graph, is that if optimisation were required, it would make
+sense to focus on the `loess` and possibly the `order` functions calls.
+ 
+<!-- http://rpubs.com/wch/123888 -->
+
+```{r, eval=FALSE, echo=FALSE}
+## Code for screen shot
+library("profvis")
+x = 
+  profvis({
+    data(movies, package="ggplot2movies")
+    movies = movies[movies$Comedy==1, ]
+    plot(movies$year, movies$rating)
+    model = loess(rating ~ year, data=movies)
+    j = order(movies$year)
+    lines(movies$year[j], model$fitted[j])
+})
+print(x, viewer=TRUE, width="1300px", height="300px")
+```
+
+### Example: Monopoly Simulation
+
+Monopoly is a board games that originated in the United States over 100 years ago. The
+object of the game is to go round the board and purchase squares (properties). If
+other players land on your properties they have to pay a tax. The player with the most
+money at the end of the game, wins. To make things more interesting, there are Chance
+and Community Chest squares. If you land on one of these squares, you draw card, which
+may send to you to other parts of the board. The other special square, is Jail. One
+way of entering Jail is to roll three successive doubles.
+
+The **efficient** package contains a simulate monopoly function that attempts to find
+the probability of landing on a certain square using a Monte-Carlo algorithm. The
+entire code is around 100 lines long. In order for `profvis` to fully profile the
+code, the **efficient** package needs to be installed from source
+
+```{r eval=FALSE}
+## args is also a valid argument for install.packages
+devtools::install_github("csgillespie/efficient_pkg", args="--with-keep.source")
+```
+
+The function can then be profiled via
+```{r eval=FALSE}
+library("efficient")
+profvis(SimulateMonopoly(10000))
+```
+
+to get
+
+```{r echo=FALSE}
+knitr::include_graphics("images/profvis_monopoly.png")
+```
+
+The output from `profvis` shows that the vast majority of time is spent in the
+`move` function. In Monopoly rolling a double (a pair of 1's, 2's,
+..., 6's) is special:
+
+ * Roll two dice (`total1`): `total_score = total1`;
+ * If you get a double, roll again (`total2`) and `total_score = total1 + total2`;
+ * If you get a double, roll again (`total3`) and `total_score = total1 + total2 + total3`;
+ * If roll three is a double, Go To Jail, otherwise move `total_score`.
+
+The `move` function spends around 50% of the time is spent creating a data frame, 25%
+time calculating row sums, and the remainder on a comparison operations. This piece of
+code can be optimised fairly easily (will still retaining the same overall structure)
+by incorporating the following improvements[^Solutions are available in the
+**efficient** package vignette.]:
+
+  * Use a matrix instead of a data frame;
+  * Sample $6$ numbers at once, instead of two groups of three;
+  * Switch from `apply` to `rowSums`;
+  * Use `&&` in the `if` condition.
+
+Implementing this features, results in the following code.
+
+```{r}
+move = function(current) {
+  ## data.frame -> matrix
+  rolls = matrix(sample(1:6, 6, replace=TRUE), ncol=2)
+  Total = rowSums(rolls)	# apply -> rowSums	
+  IsDouble = rolls[,1] == rolls[,2]
+  ## & -> &&
+  if(IsDouble[1] && IsDouble[2] && IsDouble[3]) {
+    current = 11#Go To Jail
+  } else if(IsDouble[1] && IsDouble[2]) {
+    current = current + sum(Total[1:3])
+  } else if(IsDouble[1]) {
+    current = current + Total[1:2]
+  } else {
+    current = Total[1]
+  }
+  current
+}
+```
+
+which gives a 25-fold speed improvement.
+
+#### Exercise {-}
+
+The `move` function uses a vectorised solution. Whenever we move, we always roll six
+dice, then examine the outcome and determine the number of doubles. However, this is
+potentially wasteful, since the probability of getting one double is $1/6$ and two
+doubles is $1/36$. Another method is too only roll additional dice if and when they
+are needed. Implement and time this solution.
+
+
+
+
 
 ## The byte compiler
 
