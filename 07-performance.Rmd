@@ -4,134 +4,23 @@ knit: "bookdown::preview_chapter"
 
 # Efficient performance
 
-General Hints and tips for performance. 
+[Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a famous American computer
+scientist is developed a number of key alogorithms that we used today. On the subject of optimisation, 
+he said
 
-In previous chapters we've focused on tools and set-up to increase efficiency. In this
-chapter we are going to consider code optimisation. We will consider a variety of code
-tweaks that can eke out an extra speed boost.
+> The real problem is that programmers have spent far too much time worrying about
+efficiency in the wrong places and at the wrong times; premature optimization is the
+root of all evil (or at least most of it) in programming.
 
-## The integer data type
+That's why in the previous chapters we've focused on tools and your working
+environment to increase efficiency. These are (relatively) easy ways of saving time
+that once implemented work for future projects. In this chapter we are going to
+consider code optimisation. Simply stated, making your program run faster.
 
-Numbers in R are usually stored in [double-precision floating-point
-format](https://goo.gl/ZA5R8a) - see @Braun2007 and @Goldberg1991. The term 'double'
-refers to the fact that on $32$ bit systems (for which the format was developed) two
-memory locations are used to store a single number. Each double-precision number is
-accurate to around $17$ decimal places.
+In this chapter, we will consider a variety of code tweaks that can eke out an extra
+speed boost. Some of the topics can provide increase the performance by orders of
+magnitude, **but** require learning a new computer language (C++).
 
-```{block type="rmdnote"}
-When comparing floating point numbers we should be particularly careful, since `y = sqrt(2)*sqrt(2)` 
-is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.17f", y)` will
-give you the true value of `y` (to 17 decimal places).
-```
-
-There is also another data type, called an integer. Integers primarily
-exist to be passed to C or Fortran code. Typically we don't worry about creating
-integers, however they are occasionally used to optimise sub-setting
-operations. When we subset a data frame or matrix, we are interacting with C code.
-For example, if we look at the arguments for the `head` function
-
-```{r}
-args(head.matrix)
-```
-
-```{block, type="rmdtip"}
-Using the `:` operator automatically creates a vector of integers.
-```
-
-The default argument is `6L` (the `L`, is short for Literal and is used to create an
-integer). Since this function is being called by almost everyone that uses R, this low
-level optimisation is useful. To illustrate the speed increase, suppose we are
-selecting the first $100$ rows from a data frame (`clock_speed`, from the
-**efficient** package). The speed increase is illustrated below, using the
-**microbenchmark** package:
-
-```{r, matrix_timing, eval=FALSE}
-s_int = 1:100; s_double = seq(1, 100, 1.0)
-microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000)
-```
-
-```
-## Unit: microseconds
-## expr   min    lq  mean median    uq   max neval cld
-## clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
-## clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
-```
-
-The above result shows that using integers is slightly faster, but probably not worth
-worrying about.
-
-#### Exercises {-}
-
-1. Another benefit of integers, is that they are slightly more memory efficient. Using
-the `object_size` function from the **pryr** package, compare the size of a vector of
-doubles and a vector of integers.
-
-1. Examine the following function definitions to give you an idea of how integers are used.
-  * `tail.matrix`
-  * `lm`. 
-
-1. How does the function `seq.int`, which was used in the `tail.matrix` function,
-differ to the standard `seq` function?
-
-```{block, type="rmdnote"}
-A related memory saving idea is to replace `logical` vectors
-with vectors from the **bit** package which take up just over 16th of the space
-(but you can't use `NA`s).
-```
-
-## Matrices
-
-A matrix is similar to a data frame: it is a two dimensional object and sub-setting
-and other functions work in the expected way. However all matrix elements must have
-the same type. Matrices tend to be used during statistical calculations. Calculating
-the line of best fit using the `lm()` function, internally converts the data to a
-matrix before calculating the results; any characters are thus recoded as numeric
-dummy variables.
-
-Matrices are generally faster than data frames. The datasets `ex_mat` and
-`ex_df` from the **efficient** package each have $1000$ rows and $100$
-columns. They contain the same random numbers. However selecting rows from
-a data frame is around $150$ times slower than a matrix.
-
-```{r mat_vs_df, cache=TRUE, results="hide"}
-data(ex_mat, ex_df, package="efficient")
-rbenchmark::benchmark(replications=10000, 
-          ex_mat[1,], ex_df[1,], 
-          columns=c("test", "elapsed", "relative"))
-```
-
-```{block, type="rmdtip"}
-Use the `data.matrix` function to efficiently convert a data frame into a matrix.
-```
-
-### Efficient data structures
-
-Even when our data set is small, an analysis can generate large objects. For example
-suppose we want to perform standard cluster analysis. Using the built-in data set
-`USAarrests`, we calculate a distance matrix:
-
-```{r}
-dist_usa = dist(USArrests)
-```
-
-The resulting object `dist_usa` measures the similarity between two states with
-respect to the input data. Since there are $50$ states in the `USAarrests` data set,
-this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the
-matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this
-characteristic for efficiency, allowing storage to be halved. If we examine the object
-`dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently
-stored as a vector with some attributes.
-
-Another efficient data structure is a sparse matrix. This is simply a matrix in where
-most of the elements are zero. Conversely, if most elements are non-zero, the matrix
-is considered dense. The proportion of non-zero elements is called the sparsity. Large
-sparse matrices often crop up when performing numerical calculations. Typically, our
-data isn't sparse but the resulting data structures we create may be sparse. There are
-a number of techniques/methods used to store sparse matrices. Methods for creating
-sparse matrices can be found in the **Matrix** package. For this `dist` object, since
-the structure is regular.
-
-<!-- (Don't like this title) -->
 
 ## Efficient base R 
 
@@ -294,9 +183,61 @@ However if we assign the output to an object, `out = hist(x)`, the object `out` 
 actually a list containing, _inter alia_ information on the mid-points, breaks and
 counts.
 
+### Matrices {-}
+
+A matrix is similar to a data frame: it is a two dimensional object and sub-setting
+and other functions work in the expected way. However all matrix elements must have
+the same type. Matrices tend to be used during statistical calculations. Calculating
+the line of best fit using the `lm()` function, internally converts the data to a
+matrix before calculating the results; any characters are thus recoded as numeric
+dummy variables.
+
+Matrices are generally faster than data frames. The datasets `ex_mat` and
+`ex_df` from the **efficient** package each have $1000$ rows and $100$
+columns. They contain the same random numbers. However selecting rows from
+a data frame is around $150$ times slower than a matrix.
+
+```{r mat_vs_df, cache=TRUE, results="hide"}
+data(ex_mat, ex_df, package="efficient")
+rbenchmark::benchmark(replications=10000, 
+          ex_mat[1,], ex_df[1,], 
+          columns=c("test", "elapsed", "relative"))
+```
+
+```{block, type="rmdtip"}
+Use the `data.matrix` function to efficiently convert a data frame into a matrix.
+```
+
+### Efficient data structures {-}
+
+Even when our data set is small, an analysis can generate large objects. For example
+suppose we want to perform standard cluster analysis. Using the built-in data set
+`USAarrests`, we calculate a distance matrix:
+
+```{r}
+dist_usa = dist(USArrests)
+```
+
+The resulting object `dist_usa` measures the similarity between two states with
+respect to the input data. Since there are $50$ states in the `USAarrests` data set,
+this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the
+matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this
+characteristic for efficiency, allowing storage to be halved. If we examine the object
+`dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently
+stored as a vector with some attributes.
+
+Another efficient data structure is a sparse matrix. This is simply a matrix in where
+most of the elements are zero. Conversely, if most elements are non-zero, the matrix
+is considered dense. The proportion of non-zero elements is called the sparsity. Large
+sparse matrices often crop up when performing numerical calculations. Typically, our
+data isn't sparse but the resulting data structures we create may be sparse. There are
+a number of techniques/methods used to store sparse matrices. Methods for creating
+sparse matrices can be found in the **Matrix** package. For this `dist` object, since
+the structure is regular.
+
 ## Code profiling
 
-A circumstance that happens all too often, is that we simple want our code to run
+A circumstance that happens all too often, is that we simply want our code to run
 faster. In some cases it's obvious where the bottle neck lies. Other times, we have to
 rely on our intuition. One major drawback of relying on our intuition is that we could
 be wrong and we end up pointlessly optimising the wrong piece of code. To make slow
@@ -455,10 +396,6 @@ dice, then examine the outcome and determine the number of doubles. However, thi
 potentially wasteful, since the probability of getting one double is $1/6$ and two
 doubles is $1/36$. Another method is too only roll additional dice if and when they
 are needed. Implement and time this solution.
-
-
-
-
 
 ## The byte compiler
 
@@ -970,4 +907,72 @@ features of `Rcpp` is that there is a great deal of documentation available.
  * The `Rcpp` section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
  Questions are often answered by the `Rcpp` authors.
  
+## The integer data type
+
+Numbers in R are usually stored in [double-precision floating-point
+format](https://goo.gl/ZA5R8a) - see @Braun2007 and @Goldberg1991. The term 'double'
+refers to the fact that on $32$ bit systems (for which the format was developed) two
+memory locations are used to store a single number. Each double-precision number is
+accurate to around $17$ decimal places.
+
+```{block type="rmdnote"}
+When comparing floating point numbers we should be particularly careful, since `y = sqrt(2)*sqrt(2)` 
+is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.17f", y)` will
+give you the true value of `y` (to 17 decimal places).
+```
+
+There is also another data type, called an integer. Integers primarily
+exist to be passed to C or Fortran code. Typically we don't worry about creating
+integers, however they are occasionally used to optimise sub-setting
+operations. When we subset a data frame or matrix, we are interacting with C code.
+For example, if we look at the arguments for the `head` function
+
+```{r}
+args(head.matrix)
+```
+
+```{block, type="rmdtip"}
+Using the `:` operator automatically creates a vector of integers.
+```
+
+The default argument is `6L` (the `L`, is short for Literal and is used to create an
+integer). Since this function is being called by almost everyone that uses R, this low
+level optimisation is useful. To illustrate the speed increase, suppose we are
+selecting the first $100$ rows from a data frame (`clock_speed`, from the
+**efficient** package). The speed increase is illustrated below, using the
+**microbenchmark** package:
+
+```{r, matrix_timing, eval=FALSE}
+s_int = 1:100; s_double = seq(1, 100, 1.0)
+microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000)
+```
+
+```
+## Unit: microseconds
+## expr   min    lq  mean median    uq   max neval cld
+## clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
+## clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
+```
+
+The above result shows that using integers is slightly faster, but probably not worth
+worrying about.
+
+#### Exercises {-}
+
+1. Another benefit of integers, is that they are slightly more memory efficient. Using
+the `object_size` function from the **pryr** package, compare the size of a vector of
+doubles and a vector of integers.
+
+1. Examine the following function definitions to give you an idea of how integers are used.
+  * `tail.matrix`
+  * `lm`. 
+
+1. How does the function `seq.int`, which was used in the `tail.matrix` function,
+differ to the standard `seq` function?
+
+```{block, type="rmdnote"}
+A related memory saving idea is to replace `logical` vectors
+with vectors from the **bit** package which take up just over 16th of the space
+(but you can't use `NA`s).
+```
 
