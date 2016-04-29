@@ -14,14 +14,16 @@ chapter comes from this point of view; someone who has uses standard R data
 structures, such as vectors and data frames, but lacks formal training. In this
 chapter we will discuss "big picture" programming techniques. General R programming
 techniques about optimising your code, before describing idiomatic programming
-structures.
+structures. We conclude the chapter by examining relatively easy ways of speeding up
+code using the **compiler** package and multiple CPUs.
 
 <!-- Weak title -->
 ## General advice
 
-In C and Fortran the programmer must declare the type of every variable used and is 
-responsible for managing memory. This increases coding time. **But**, the compiler
-can now perform clever optimisations to make the program run faster.
+C and Fortran demand more from the programmer. The coder must declare the type of
+every variable they use and has the burdensome responsible of memory management. The
+payback is that it allows the compiler to better predict how the program behaves and
+so make clever optimisations.
 
 ```{block, type="rmdnote"}
 The wikipedia page on compiler opimisations gives a nice overview of standard
@@ -30,26 +32,27 @@ optimisation techniques (https://en.wikipedia.org/wiki/Optimizing_compiler).
 
 In R we don't (tend to) worry about data types. However this means that it's possible
 to write R programs that are incredibly slow. While optimisations such as going
-parallel can double speed, poor code can easily run 100's of times slower. If you spend
-any time programming in R, then [@Burns2011] should be considered essential reading. 
+parallel can double speed, poor code can easily run 100's of times slower. If you
+spend any time programming in R, then [@Burns2011] should be considered essential
+reading.
 
 Ultimately calling an R function always ends up calling some underlying C/Fortran
-code. For example, the function definition of `runif` only contains a single line that
+code. For example the base R function `runif` only contains a single line that
 consists of a call to `C_runif`.
 ```{r eval=TRUE, results="hide"}
 function (n, min = 0, max = 1) 
   .Call(C_runif, n, min, max)
 ```
 
-The **golden rule** is to access the underlying C/Fortran routines as quickly as
-possible; the fewer functions calls required to achieve this, the better. For example
-suppose `x` is a standard R vector of length `n`. Then 
+The **golden rule** in R programming is to access the underlying C/Fortran routines as
+quickly as possible; the fewer functions calls required to achieve this, the better.
+For example suppose `x` is a standard R vector of length `n`. Then
 ```{r echo=3}
-n = 10
+n = 2
 x = runif(n)
 x = x + 1
 ```
-involves a single function call to the `+` function. Whereas,
+involves a single function call to the `+` function. Whereas the `for` loop
 ```{r bad_loop}
 for(i in 1:n) 
   x[i] = x[i] + 1 
@@ -59,13 +62,14 @@ has
   * `n` function calls to `+`;
   * `n` function calls to the `[` function;
   * `n` function calls to the `[<-` function (used in the assignment operation);
-  *  A function call to `for` and the `:` operator. 
+  *  A function call to `for` and to the `:` operator. 
 
-It isn't that the `for` loop is slow, rather it is because we have many more function calls.
-Each individual function call is quick, but the total combination is slow.
+It isn't that the `for` loop is slow, rather it is because we have many more function
+calls. Each individual function call is quick, but the total combination is slow.
 
 ```{block, type="rmdnote"}
-Everything in R is a function call. When calculate `1+1`, we are actually exercuting `+(1, 1)`.
+Everything in R is a function call. When calculate `1 + 1`, we are actually exercuting
+`+(1, 1)`.
 ```
 
 #### Exercise {-}
@@ -73,31 +77,32 @@ Everything in R is a function call. When calculate `1+1`, we are actually exercu
 Use the `rbenchmark` package to compare the vectorised construct `x = x + 1`,
 to the `for` loop version. 
 
-## Memory allocation
+### Memory allocation
 
-Another general technique is to be careful with memory allocation. 
-If possible always pre-allocate your vector then fill in the values. 
+Another general technique is to be careful with memory allocation. If possible
+pre-allocate your vector then fill in the values.
 
 ```{block, type="rmdtip"}
-You should also consider pre-allocate memory for data frames and lists. Never grow an
-object. A good rule of thumb is to compare you objects before and after a for loop;
-have they increased in length? 
+You should also consider pre-allocating memory for data frames and lists. Never grow
+an object. A good rule of thumb is to compare your objects before and after a `for`
+loop; have they increased in length?
 ```
 
 Let's consider three methods of creating a sequence of numbers. 
 
-__Method 1__ creates an empty vector, and grows the object
+__Method 1__ creates an empty vector and grows the object
 
 ```{r echo=TRUE, tidy=FALSE}
 method1 = function(n) {
-  vec = NULL # Or myvec = c()
+  vec = NULL # Or vec = c()
   for(i in 1:n)
     vec = c(vec, i)
   vec
 }
 ```
 
-__Method 2__ creates an object of the final length and then changes the values in the object by subscripting:
+__Method 2__ creates an object of the final length and then changes the values in the
+object by subscripting:
 
 ```{r echo=TRUE, tidy=FALSE}
 method2 = function(n) {
@@ -125,7 +130,7 @@ rbenchmark::benchmark(replications=10,
 The table below shows the timing in seconds on my machine for these three methods for
 a selection of values of `n`. The relationships for varying `n` are all roughly linear
 on a log-log scale, but the timings between methods are drastically different. Notice
-that the timings are no longer trivial.When $n=10^7$, method $1$ takes around an hour
+that the timings are no longer trivial. When $n=10^7$, method $1$ takes around an hour
 whilst method $2$ takes $2$ seconds and method $3$ is almost instantaneous. Remember
 the golden rule; access the underlying C/Fortran code as quickly as possible.
 
@@ -138,7 +143,7 @@ $10^7$ | $3827.00$              | $2.21$ | $0.00$
 Table: Time in seconds to create sequences. When $n=10^7$, method $1$ takes around an
 hour while the other methods take less than 3 seconds.
 
-## Vectorised code
+### Vectorised code
 
 The vector is one of the key data types in R, with many key functions offering a
 vectorised version. For example, the code
@@ -147,8 +152,9 @@ n = 10
 x = runif(n) + 1
 ```
 performs two vectorised operations. First `runif` returns `n` random numbers. Second
-we add `1` to each element of the vector. In general it is a good idea to exploit 
-vectorised functions. Consider this piece of R code that calculates the sum of $\log(x)$
+we add `1` to each element of the vector. In general it is a good idea to exploit
+vectorised functions. Consider this piece of R code that calculates the sum of
+$\log(x)$
 
 ```{r eval=FALSE, echo=TRUE, tidy=FALSE}
 log_sum = 0
@@ -180,11 +186,11 @@ Time the two methods for calculating the log sum. Try different values of $n$.
 #### Example: Monte-Carlo integration {-}
 
 It's also important to make full use of R functions that use vectors. For example,
-suppose we wish to estimate
+suppose we wish to estimate the integral
 \[
 \int_0^1 x^2 dx
 \]
-using a basic Monte-Carlo method. Essentially, we throw darts at the curve and count
+using a Monte-Carlo method. Essentially, we throw darts at the curve and count
 the number of darts that fall below the curve (as in \@ref(fig:6-2)).
 
 _Monte Carlo Integration_
@@ -226,14 +232,14 @@ monte_carlo_vec = function(N)
 
 The `monte_carlo_vec` function contains (at least) four aspects of vectorisation
 
-  * That `runif` function call is now fully vectorised;
-  * We can raise entire vectors to a power via `^`;
+  * The `runif` function call is now fully vectorised;
+  * We raise entire vectors to a power via `^`;
   * Comparisons using `>` are vectorised;
   * Using `sum` is quicker than an equivalent for loop.
 
 The function `monte_carlo_vec` is around $30$ times faster than `monte_carlo`.
 ```{r 6-2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=6, fig.height=4, fig.align="center"}
-local(source("code/10-performance_f1.R", local=TRUE))
+local(source("code/06-programming_f1.R", local=TRUE))
 ```
 
 ### Exercise {-}
@@ -241,30 +247,83 @@ local(source("code/10-performance_f1.R", local=TRUE))
 Verify that `monte_carlo_vec` is faster than `monte_carlo`. How does this relate to 
 the number of darts, i.e. the size of `N`, that is used
 
+### Type consistency
+
+When programming it is helpful if the return value from a function always takes the
+same form. Unfortunately, not all of base R functions follow this idiom. For example
+the functions `sapply` and `[.data.frame` aren't type consistent
+```{r, results="hide"}
+two_cols = data.frame(x = 1:5, y = letters[1:5])
+zero_cols = data.frame()
+sapply(two_cols, class)  # a character vector
+sapply(zero_cols, class) # a list
+two_cols[, 1:2]          # a data.frame
+two_cols[, 1]            # an integer vector
+```
+This can cause unexpected problems. The functions `lapply` and `vapply` are type
+consistent. Likewise `dplyr::select` and `dplyr:filter`. The **purrr** package has
+some type consistent alternatives to base R functions. For example, `map_dbl` etc. to
+replace `Map` and `flatten_df` to replace `unlist`.
+
+#### Exercises {-}
+
+1. Rewrite the `sapply` function calls above using `vapply` to ensure type consistency.
+
+1. How would you make subsetting data frames with `[` type consistent? Hint: look at
+the `drop` argument.
+
+### Invisible returns 
+
+The `invisible` function allows you to return a temporarily invisible copy of an
+object. This is particularly useful for functions that return values which can be
+assigned, but are not printed when they are not assigned. For example, suppose we have
+a function that plots the data and fits a straight line
+```{r}
+regression_plot = function(x, y, ...) {
+  plot(x, y, ...)
+  model = lm(y ~ x)
+  abline(model)
+  invisible(model)
+}
+```
+When call the function, we plot a scatter graph with line of best fit; the output is
+invisible. However, when we assign the function to an object, i.e. `out = regression_plot(x, y)`
+the variable `out` contains the output of the `lm` call.
+
+Another example is `hist`. Typically we don't want anything displayed in the console
+when we call the function
+```{r fig.keep="none"}
+x = rnorm(x)
+hist(x)
+```
+However if we assign the output to an object, `out = hist(x)`, the object `out` is
+actually a list containing, _inter alia_, information on the mid-points, breaks and
+counts. 
+
 ## Factors
 
-A factor is used to store categorical variables. This data type is unique to R (or at
-least not common among programming languages). Often categorical variables get stored
-as 1, 2, 3, 4, and 5, with associated documentation elsewhere that explains what each
-number means. This is clearly a pain. Alternatively we store the data as a character
-vector. While this is fine, the semantics are wrong because it doesn't convey that
-this is a categorical variable. It's not sensible to say that you should **always** or
-**never** use factors, since factors have both positive and negative features.
-Instead, we need to  examine each case individually. As a guide of when it's
-appropriate to use factors, consider these examples.
+Factors are much maligned objects. While at times they are awkward, they do have their
+uses. A factor is used to store categorical variables. This data type is unique to R
+(or at least not common among programming languages). Often categorical variables get
+stored as $1$, $2$, $3$, $4$, and $5$, with associated documentation elsewhere that
+explains what each number means. This is clearly a pain. Alternatively we store the
+data as a character vector. While this is fine, the semantics are wrong because it
+doesn't convey that this is a categorical variable. It's not sensible to say that you
+should **always** or **never** use factors, since factors have both positive and
+negative features. Instead we need to examine each case individually. As a guide of
+when it's appropriate to use factors, consider the following examples.
 
 ### Example: Months of the year
 
-Suppose our data set related to months of the year
+Suppose our data set relates to months of the year
 
 ```{r}
 m = c("January", "December", "March")
 ```
 
-If we sort `m` in the usual way `sort(m)`, we use standard alpha-numeric ordering
-placing `December` first. While this is technically correct, it is also not that
-helpful. We can use factors to remedy this problem by specifying the admissible
-levels
+If we sort `m` in the usual way `sort(m)`, we perform standard alpha-numeric ordering;
+placing `December` first. This is technically correct, but not that helpful. We can
+use factors to remedy this problem by specifying the admissible levels
 
 ```{r}
 # month.name contains the 12 months
@@ -274,11 +333,11 @@ sort(fac_m)
 
 ### Example: Graphics
 
-Factors are also used for ordering in graphics. For instance, suppose we have a data
-set where the variable `type`, takes one of three values, `small`, `medium` and
-`large`. Clearly there is an ordering. Using a standard `boxplot` call, `boxplot(y ~
-type)`, would create a boxplot where the x-axis was alphabetically ordered. By
-converting `type` into factor, we can easily specify the correct ordering.
+Factors are used for ordering in graphics. For instance, suppose we have a data set
+where the variable `type`, takes one of three values, `small`, `medium` and `large`.
+Clearly there is an ordering. Using a standard `boxplot` call, `boxplot(y ~ type)`,
+would create a boxplot where the x-axis was alphabetically ordered. By converting
+`type` into factor, we can easily specify the correct ordering.
 ```{r, boxplot_factor, eval=TRUE, echo=6:7, fig.keep="none"}
 set.seed(1)
 level = c("Small", "Medium", "Large")
@@ -293,12 +352,12 @@ boxplot(y ~ factor(type, levels=c("Small", "Medium", "Large")))
 
 Analysis of variance (ANOVA) is a type of statistical model that is used to determine
 differences among group means, while taken into account other factors. The function
-`aov` is used to fit standard analysis of variance models. Potential bugs arise when
-a variable is numeric, but in reality is a categorical variable.
+`aov` is used to fit standard analysis of variance models. Potential bugs arise when a
+variable is numeric, but in reality is a categorical variable.
 
 Consider the `npk` dataset on the growth of peas that comes with R. The column
 `block`, indicates the block (typically a nuisance parameter) effect. This column
-takes values 1 to 5, but has been carefully coded as a factor. Using the `aov`
+takes values $1$ to $5$, but has been carefully coded as a factor. Using the `aov`
 function to estimate the `block` effect, we get
 ```{r, echo=2}
 data(npk, package="datasets")
@@ -328,15 +387,16 @@ to non-portable code, so should be avoided.
 Although factors look similar to character vectors, they are actually integers.
 This leads to initially surprising behaviour
 ```{r}
-c(m)
-c(fac_m)
+x = 4:6
+c(x)
+c(factor(x))
 ```
 
-In this case the `c()` function is using the underlying integer representation of the
+In this case the `c` function is using the underlying integer representation of the
 factor. Overall factors are useful, but can lead to unwanted side-effects if we are
 not careful.
 
-### Exercise
+#### Exercise {-}
 
 Factors are slightly more space efficient than characters. Create a character vector
 and corresponding factor and use `pryr::object_size` to calculate the space needed for
@@ -363,34 +423,37 @@ There are also packages that also provide additional OO frameworks, such as **pr
 **R6** and **R.oo**. If you are knew to OO in R, then S3 is the place to start.
 ```
 
-In this section we will discuss S3 since that is the most popular. The S3 system
+In this section we will just discuss S3 since that is the most popular. The S3 system
 implements a generic-function object oriented (OO) system. This type of OO is
 different to the message-passing style of Java and C++. In a message-passing
 framework, messages/methods are sent to objects and the object determines which
 function to call, e.g. `normal.rand(1)`. The S3 class system is different. In S3, the
-_generic_ function decides which method to call - it would have the form
-`rand(normal, 1)`. By using an OO framework, we avoid an explosion of exposed
-functions, such as, `rand_normal`, `rand_uniform`, `rand_poisson` and instead have a
-single function call `rand` that passes the object to the correct function.
+_generic_ function decides which method to call - it would have the form `rand(normal,
+1)`. By using an OO framework, we avoid an explosion of exposed functions, such as,
+`rand_normal`, `rand_uniform`, `rand_poisson` and instead have a single function call
+`rand` that passes the object to the correct function.
 
 The S3 system is based on the class of an object. In S3 a class is just an attribute
 which can be determined with the `class` function.
 
 ```{r echo=2}
+data("USArrests", package="datasets")
 class(USArrests)
 ```
 
 The S3 system can be used to great effect. When we pass an object to a _generic_
 function, the function first examines the class of the object, and then dispatches the
-object to another method. For example, the function `summary` is a S3 generic function
+object to another method. For example, the `summary` function is a S3 generic function
 
 ```{r}
-summary
+functionBody("summary")
 ```
 
 Note that the only operational line is `UseMethod("summary")`. This handles the method
 dispatch based on the object's class. So when `summary(USArrests)` is executed, the
-generic `summary` function passes `USArrests` to the function `summary.data.frame`.
+generic `summary` function passes `USArrests` to the function `summary.data.frame`. If
+the function `summary.data.frame` does not exist, then it `summary.default` is called
+(if it exists).
 
 This simple mechanism enables us to quickly create our own functions. Consider the
 distance object:
@@ -403,7 +466,8 @@ The `dist_usa` object has class `dist`. To visualise the distances, we can creat
 image method. First we'll check if the existing `image` function is generic, via
 
 ```{r}
-image
+## XXX: isS3stdGeneric in R 3.3
+functionBody("image")
 ```
 
 Since `image` is already a generic method, we just have to create a specific `dist`
@@ -453,11 +517,6 @@ function is called again with the same arguments. This package trades off memory
 versus speed, since the memoised function stores all previous inputs and outputs. To
 cache a function, we simply pass the function to the **memoise** function.
 
-```{r ch6-load_memoise, echo=FALSE, message=FALSE}
-library("memoise")
-library("rbenchmark")
-```
-
 The classic memoise example is the factorial function. Another example is to limit use
 to a web resource. For example, suppose we are developing a shiny (an interactive
 graphic) application where the user can fit regression line to data. The user can
@@ -476,8 +535,9 @@ plot_mpg = function(row_to_remove) {
 We can use **memoise** speed up by caching results. A quick benchmark
 
 ```{r benchmark_memoise, fig.keep="none", cache=TRUE, results="hide"}
+library("memoise")
 m_plot_mpg = memoise(plot_mpg)
-res = benchmark(m_plot_mpg(10), plot_mpg(10), columns = c("test", "relative", "elapsed"))
+res = rbenchmark::benchmark(m_plot_mpg(10), plot_mpg(10), columns = c("test", "relative", "elapsed"))
 #         test relative elapsed
 #1   m_plot(10)    1.000   0.007
 #2 plot_mpg(10)  481.857   3.373
@@ -490,7 +550,6 @@ suggests that we can obtain a 500-fold speed-up.
 Construct a box plot of timings for the standard plotting function and the memoised
 version. 
 
-
 ### Function closures
 
 ```{block, type="rmdwarning"}
@@ -502,9 +561,9 @@ More advanced caching is available using _function closures_. A closure in R is 
 object that contains functions bound to the environment the closure was created in.
 Technically all functions in R have this property, but we use the term function
 closure to denote functions where the environment is not in `.GlobalEnv`. One of the
-environments associated with function is known as the enclosing environment, that is,
-where was the function created. We can determine the enclosing environment using the
-`environment` function
+environments associated with a function is known as the enclosing environment, that
+is, where was the function created. We can determine the enclosing environment using
+`environment`:
 
 ```{r}
 environment(plot_mpg)
@@ -540,13 +599,12 @@ g()
 ```
 
 The value returned is obtained from `environment(g)` not from the `.GlobalEnv`. This
-persistent environment allows to cache variables between function calls.
+persistent environment allows us to cache variables between function calls.
 
 ```{block type="rmdnote"}
-The operator `<<-` makes R search through the parent environments for an 
-existing defintion. If such a variable is found 
-(and its binding is not locked) then its value is redefined, 
-otherwise assignment takes place in the global environment.
+The operator `<<-` makes R search through the parent environments for an existing
+defintion. If such a variable is found (and its binding is not locked) then its value
+is redefined, otherwise assignment takes place in the global environment.
 ```
 
 The `simple_counter` function exploits this feature to enable variable caching
@@ -573,20 +631,17 @@ sc()
 
 The key points of the `simple_counter` function are 
 
- * The counter function returns a function
-    ```{r}
-    sc = simple_counter()
-    sc()
-    ```
-  * The enclosing environment of `sc` is not `.GlobalEnv` instead, it's the binding 
-  environment of `sc`.
-  * The function `sc` has an environment that can be used to store/cache values
+  * The counter function returns a function;
+  * The enclosing environment of `sc` is not `.GlobalEnv`, instead it's the binding 
+    environment of `sc`;
+  * The function `sc` has an environment that can be used to store/cache values;
   * The operator `<<-` is used to alter the object `no` in the `sc` environment.
 
 #### Example {-}
 
 We can exploit function closures to simplify our code. Suppose we wished to simulate a
-games of Snakes and Ladders. We have function handles the logic of landing on a snake
+games of Snakes and Ladders. We have function that handles the logic of landing on a
+snake
 
 ```{r}
 check_snake = function(square) {
@@ -607,7 +662,7 @@ check_snake = function() {
        '16'=6,  '49'=12, '47'=26, '56'=48, '62'=19, 
        '64'=60, '87'=24, '93'=73, '96'=76, '98'=78, 
        square)
-    no_of_snakes = no_of_snakes + (new_square != square)
+    no_of_snakes <<- no_of_snakes + (new_square != square)
     new_square
   }
 }
@@ -649,14 +704,110 @@ Many stop-watches have the ability to measure not only your overall time but als
 individual laps. Add a `lap` function to the `stop_watch` function that will record
 individual times, while still keeping track of the overall time.
 
+## The byte compiler
+
+The **compiler** package, written by R Core member Luke Tierney has been part of R
+since version 2.13.0. The **compiler** package allows R functions to be compiled,
+resulting in a byte code version that may run faster^[The authors have yet to find a
+situation where byte compiled code runs significantly slower.]. The compilation
+process eliminates a number of costly operations the interpreter has to perform, such
+as variable lookup.
+
+Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled
+into byte-code. This is illustrated by the base function `mean`:
+
+```{r}
+getFunction("mean")
+```
+
+The third line contains the `bytecode` of the function. This means that the
+**compiler** package has translated the R function into another language that can be
+interpreted by a very fast interpreter. Amazingly the **compiler** package is almost
+entirely pure R, with just a few C support routines.
+
+### Example: the mean function
+
+The **compiler** package comes with R, so we just need to load the package in the
+usual way
+
+```{r}
+library("compiler")
+```
+
+Next we create an inefficient function for calculating the mean. This function takes
+in a vector, calculates the length and then updates the `m` variable.
+
+```{r}
+mean_r = function(x) {
+  m = 0
+  n = length(x)
+  for(i in seq_len(n))
+    m = m + x[i]/n
+  m
+}
+```
+
+This is clearly a bad function and we should just `mean` function, but it's a useful
+comparison. Compiling the function is straightforward
+
+```{r}
+cmp_mean_r = cmpfun(mean_r)
+```
+
+Then we use the `benchmark` function to compare the three variants
+
+
+<!-- Make n bigger and just copy and paster output -->
+```{r results="hide", cache=TRUE}
+# Generate some data
+x = rnorm(1000)
+rbenchmark::benchmark(mean_r(x), cmp_mean_r(x), mean(x), 
+          columns=c("test", "elapsed", "relative"),
+          order="relative", replications=5000)
+```
+
+The compiled function is around seven times faster than the uncompiled function. Of
+course, the native `mean` function is faster, but compiling does make a significant
+difference (figure \@ref(fig:6-4)).
+
+```{r 6-4, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparsion of mean functions.", eval=TRUE}
+local(source("code/06-programming_f2.R", local=TRUE))
+```
+
+### Compiling code
+
+There are a number of ways to compile code. The easiest is to compile individual
+function using `cmpfun`, but this obviously doesn't scale. If you create a package,
+you can automatically compile the package on installation by adding
+```
+ByteCompile: true
+```
+to the `DESCRIPTION` file. Most R packages installed using `install.packages` are not
+compiled. We can enable (or force) packages to be compiled by starting R with the
+environment variable `R_COMPILE_PKGS` set to a positive integer value.
+
+A final option to use just-in-time (JIT) compilation. The `enableJIT` function
+disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
+different levels of optimisation. JIT can also be enabled by setting the environment
+variable `R_ENABLE_JIT`, to one of these values.
+
+```{block, type="rmdtip"}
+I always set the compile level to the maximum value of 3.
+```
+
+
 ## Parallel computing
 
 <!-- Missing from this section: what sorts of problems benefit from parallelization?  What sorts don't? -->
 
 <!-- Also worth referencing Q Ethan McCallum's "Parallel R" for further reading. -->
 
+This chapter provides a brief foray into the word of parallel computing. The idea is
+to give a flavour of what is possible, instead of covering all possible varities. For
+a fuller account, see \@mccallum2011.
+
 In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
-with base R. The ** parallel** package must still be loaded before use however, and
+with base R. The **parallel** package must still be loaded before use however, and
 you must determine the number of available cores manually, as illustrated below.
 
 ```{r echo=1:2}
@@ -664,7 +815,8 @@ library("parallel")
 no_of_cores = detectCores()
 ```
 
-The computer used to compile the published version of this book chapter has `r no_of_cores` CPUs/Cores. 
+The computer used to compile the published version of this book chapter has `r no_of_cores` 
+CPUs/Cores. 
 
 ```{block, type="rmdnote"}
 This section provides an intial foray into parallel computing and only looks at shared memory
@@ -673,7 +825,7 @@ systems. For a complete guide see \@{mccallum2011}
 
 ### Parallel versions of apply functions
 
-The most commonly used parallel applications are parallelized replacements of
+The most commonly used parallel applications are parallelised replacements of
 `lapply`, `sapply` and `apply`. The parallel implementations and their arguments are
 shown below.
 
@@ -683,18 +835,20 @@ parApply(cl = NULL, X, MARGIN, FUN, ...)
 parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) 
 ```
 
-Note that each function has an argument `cl` which must be created by `makeCluster`.
-This function, amongst other things, specifies the number of processors to use.
+The key point is that there is very little difference in arguments between `parLapply`
+and `apply`, so the barrier to using (this form) of parallel computing is low. Each
+function above has an argument `cl`, which is created by a `makeCluster` call. This
+function, amongst other things, specifies the number of processors to use.
 
 ### Example: Snakes and Ladders
 
-Parallel computing is idea for Monte-Carlo simulations. Each core can simulate the
-model, and we can gather up the results. In the **efficient** package, there is a
-function that simulates a single game - `snakes_ladders()`[^The idea for this example
-came to one of the authors after a particularly long and dull game of Snakes and
-Ladders with his son.] 
+Parallel computing is ideal for Monte-Carlo simulations. Each core independently
+simulates a realisation from model. At the end, we gather up the results. In the
+**efficient** package, there is a function that simulates a single game of Snakes and
+Ladders - `snakes_ladders()`[^The idea for this example came to one of the authors
+after a particularly long and dull game of Snakes and Ladders with his son.]
 
-If we wanted to simulate `N` games, then we could use `sapply`
+If we wanted to simulate `N` games we could use `sapply`
 ```{r eval=FALSE, echo=c(1, 3)}
 N = 10^4
 N = 2
@@ -723,6 +877,30 @@ stopCluster(cl)
 
 On my computer I get a four-fold speed-up.
 
+### Exit functions with care
+
+We should always call `stopCluster` to free resources when we are finished with the
+`cl` object. However, if the parallel code is within function, it's possible that
+function ends as the results of an error and so `stopCluster` is ommitted.
+
+The `on.exit` function handles this problem with the minimum of fuss; regardless how
+the function ends, `on.exit` is always called. In the context of parallel programming
+we will have something similar to
+
+```{r}
+simulate = function(cores) {
+  cl = makeCluster(cores)
+  on.exit(stopCluster(cl))
+  ## Do something  
+}
+```
+
+```{block, type="rmdtip"}
+Another common use of `on.exit` is in conjunction with the `par` function. If you use
+`par` to change graphical parameters within a function, `on.exit` ensures these
+parameters are reset to their previous value when the function ends.
+```
+
 ### Process forking
 
 Another way of running code in parallel is to use the `mclapply` and `mcmapply`
@@ -733,43 +911,3 @@ mclapply(1:2, snakes_ladders)
 These functions use forking, that is creating a new copy of a process running on the
 CPU. However Windows does not support this low-level functionality in the way that
 Linux does.
-
-## Type consistency
-
-When programming it is helpful if the return value from a function always takes the
-same form. Unfortunately, not all of base R functions follow this idiom. For example
-the functions `sapply` and `[.data.frame` aren't type consistent
-```{r, results="hide"}
-two_cols = data.frame(x = 1:5, y = letters[1:5])
-zero_cols = data.frame()
-sapply(two_cols, class)  # a character vector
-sapply(zero_cols, class) # a list
-two_cols[, 1:2]          # a data.frame
-two_cols[, 1]            # an integer vector
-```
-This can cause unexpected problems. The functions `lapply` and `vapply` are type
-consistent. Likewise `dplyr::select` and `dplyr:filter`. The **purrr** package has
-some type consistent alternatives to base R functions. For example, `map_dbl` etc. to
-replace `Map` and `flatten_df` etc. to replace `unlist`.
-
-#### Exercises {-}
-
-1. Rewrite the `sapply` function using `vapply` to ensure type consistency.
-
-1. How would you make subsetting data frames with `[` type consistent? Hint: look at
-the `drop` argument.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
