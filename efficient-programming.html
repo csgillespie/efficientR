@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R programming">
-  <meta name="generator" content="bookdown 0.0.67 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.69 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-04-27">
+<meta name="date" content="2016-04-29">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -236,7 +236,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>We begin this chapter by discussing key data types, how they are used and potential computational gains available. Once we understand these objects, we will look at key R programming idioms, before covering techniques for speeding up code.</p>
 <div id="data-types" class="section level2">
 <h2><span class="header-section-number">6.1</span> Data types</h2>
-<p>A data type is an object that has a set of predefined characteristics, such as a number or a character. When programming in C or FORTRAN, the data type of every object must be specified by the user. he advantage is that it allows the compiler to perform type-specific optimisation. The downside is verbose and fragile code, which is inefficient to type. In R data types are less critical, but understanding them will help you debug and optimize for computational efficiency. Essentially, we have a trade-off between CPU run time and developer thinking time. However an understanding of data types can help when debugging and optimizing for computational efficiency. In this chapter, we will pick out the key point data types from an efficiency perspective. Chapter 2 of Advanced R Programming <span class="citation">(Wickham <a href="efficient-learning.html#ref-Wickham2014">2014</a><a href="efficient-learning.html#ref-Wickham2014">a</a>)</span> provides a more comprehensive treatment.</p>
+<p>A data type is an object that has a set of predefined characteristics, such as a number or a character. When programming in C or FORTRAN, the data type of every object must be specified by the user. he advantage is that it allows the compiler to perform type-specific optimisation. The downside is verbose and fragile code, which is inefficient to type. In R data types are less critical, but understanding them will help you debug and optimize for computational efficiency. Essentially, we have a trade-off between CPU run time and developer thinking time. However an understanding of data types can help when debugging and optimizing for computational efficiency. In this chapter, we will pick out the key point data types from an efficiency perspective. Chapter 2 of Advanced R Programming <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a more comprehensive treatment.</p>
 <div id="vectors" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> Vectors</h3>
 <p>The vector is a fundamental data structure in R. Confusingly there are two varieties:</p>
@@ -252,7 +252,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>This means that any vector containing a character string will be coerced to class, as illustrated below.</p>
 <div id="numerics-doubles-and-integers" class="section level4">
 <h4><span class="header-section-number">6.1.1.1</span> Numerics: doubles and integers</h4>
-<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a> - see <span class="citation">Braun and Murdoch (<a href="efficient-learning.html#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="efficient-learning.html#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number occupies <span class="math inline">\(8\)</span> bytes and is accurate to around <span class="math inline">\(17\)</span> decimal places (R does not print all of these, as you will see by typing <code>pi</code>). Somewhat surprisingly, when we run the command</p>
+<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a> - see <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number occupies <span class="math inline">\(8\)</span> bytes and is accurate to around <span class="math inline">\(17\)</span> decimal places (R does not print all of these, as you will see by typing <code>pi</code>). Somewhat surprisingly, when we run the command</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
 <p>we have created an atomic vector, contain a single double-precision floating point number. When comparing floating point numbers, we should be particularly careful, since</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span>)*<span class="kw">sqrt</span>(<span class="dv">2</span>)
@@ -380,8 +380,8 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
           ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))
 <span class="co">#&gt;          test elapsed relative</span>
-<span class="co">#&gt; 2  ex_df[1, ]   7.993  145.327</span>
-<span class="co">#&gt; 1 ex_mat[1, ]   0.055    1.000</span></code></pre></div>
+<span class="co">#&gt; 2  ex_df[1, ]  10.304  166.194</span>
+<span class="co">#&gt; 1 ex_mat[1, ]   0.062    1.000</span></code></pre></div>
 </div>
 <div id="S3" class="section level3">
 <h3><span class="header-section-number">6.1.5</span> S3 objects</h3>
@@ -393,7 +393,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary
 <span class="co">#&gt; function (object, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;summary&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x84191a8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x84117b8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>.</p>
 <p>This simple mechanism enables us to quickly create our own functions. Consider the distance object:</p>
@@ -402,7 +402,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;image&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x6506968&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x64e9330&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:graphics&gt;</span></code></pre></div>
 <p>Since <code>image</code> is already a generic method, we just have to create a specific <code>dist</code> method</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">image.dist =<span class="st"> </span>function(x, ...) {
@@ -435,7 +435,7 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
 </div>
 <div id="good-programming-techniques" class="section level2">
 <h2><span class="header-section-number">6.2</span> Good programming techniques</h2>
-<p>A major benefit of using R (as opposed to C or Fortran, say), is that coding time is greatly reduced. However if we are not careful, it’s very easy to write programs that are incredibly slow. While optimisations such as going parallel can easily double speed, poor code can easily run 100s of times slower. For this reason a priority of an efficient programmer should be to avoid the following common mistakes. If you spend any time programming in R, then reading <span class="citation">(Burns <a href="efficient-learning.html#ref-Burns2011">2011</a>)</span> should be considered essential reading.</p>
+<p>A major benefit of using R (as opposed to C or Fortran, say), is that coding time is greatly reduced. However if we are not careful, it’s very easy to write programs that are incredibly slow. While optimisations such as going parallel can easily double speed, poor code can easily run 100s of times slower. For this reason a priority of an efficient programmer should be to avoid the following common mistakes. If you spend any time programming in R, then reading <span class="citation">(Burns <a href="#ref-Burns2011">2011</a>)</span> should be considered essential reading.</p>
 <div id="general-tips" class="section level3">
 <h3><span class="header-section-number">6.2.1</span> General tips</h3>
 <p>The key to making R code run fast is to access the underlying C/Fortran routines as quickly as possible. For example, suppose that <code>x</code> is a standard R vector of length <code>n</code>. Then</p>
@@ -475,9 +475,9 @@ Figure 6.1: S3 image method for data of class <code>dist</code>.
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
 <span class="co">#&gt;         test elapsed</span>
-<span class="co">#&gt; 1 method1(n)   1.863</span>
-<span class="co">#&gt; 2 method2(n)   0.086</span>
-<span class="co">#&gt; 3 method3(n)   0.001</span></code></pre></div>
+<span class="co">#&gt; 1 method1(n)   2.200</span>
+<span class="co">#&gt; 2 method2(n)   0.087</span>
+<span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <span class="math inline">\(n\)</span>. The relationships for varying <span class="math inline">\(n\)</span> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour whilst method 2 takes <span class="math inline">\(2\)</span> seconds and method 3 is almost instantaneous.</p>
 <table>
 <caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method 1 takes around an hour while methods 2 takes 2 seconds and method 3 almost instantaneous.</caption>
@@ -546,7 +546,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <strong>returned</strong> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x9085660&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x907f660&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -654,7 +654,7 @@ f =<span class="st"> </span>function(N){
 <p>In R this takes a few seconds:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.864   0.000   2.864</span></code></pre></div>
+<span class="co">#&gt;   3.633   0.024   3.658</span></code></pre></div>
 <p>In contrast, a more R-centric approach would be the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))
@@ -663,7 +663,7 @@ f =<span class="st"> </span>function(N){
 <p><code>f1</code> is around <span class="math inline">\(30\)</span> times faster than <code>f</code>, illustrating the efficiency gains that can be made by vectorising your code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>(<span class="kw">f1</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.043   0.000   0.043</span></code></pre></div>
+<span class="co">#&gt;   0.069   0.000   0.069</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -721,10 +721,10 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x6f36528&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x6f18f90&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter.</p>
-<p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="efficient-learning.html#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
+<p>The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup. Amazingly the compiler package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Example: the mean function</h3>
 <p>The <strong>compiler</strong> package comes with R, so we just need to load the package in the usual way</p>
@@ -762,6 +762,27 @@ Figure 6.4: Comparsion of mean functions.
 
 </div>
 </div>
+</div>
+<h3><span class="header-section-number">9</span> Efficient Learning</h3>
+<div id="refs" class="references">
+<div id="ref-Wickham2014">
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
+</div>
+<div id="ref-Braun2007">
+<p>Braun, John, and Duncan J Murdoch. 2007. <em>A First Course in Statistical Programming with R</em>. Vol. 25. Cambridge University Press Cambridge.</p>
+</div>
+<div id="ref-Goldberg1991">
+<p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1). ACM: 5–48.</p>
+</div>
+<div id="ref-Burns2011">
+<p>Burns, Patrick. 2011. <em>The R Inferno</em>. Lulu.com.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="19">
+<li id="fn19"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="efficient-programming.html#fnref19">↩</a></p></li>
+</ol>
 </div>
             </section>
 
