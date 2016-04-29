@@ -35,11 +35,11 @@ abline(v=as.Date("2013-04-03"), col="grey90", lty=2)
 abline(v=as.Date("2014-04-03"), col="grey90", lty=2)
 abline(v=as.Date("2015-04-03"), col="grey90", lty=2)
 
-text(as.Date("2013-04-03"), 7000, "R 3.0", pos=4, col="grey50")
-text(as.Date("2014-04-03"), 7000, "R 3.1", pos=4, col="grey50")
-text(as.Date("2015-04-03"), 7000, "R 3.2", pos=4, col="grey50")
+text(as.Date("2013-04-03"), 7800, "R 3.0", pos=4, col="grey50")
+text(as.Date("2014-04-03"), 7800, "R 3.1", pos=4, col="grey50")
+text(as.Date("2015-04-03"), 7800, "R 3.2", pos=4, col="grey50")
 
-lines(rcpp$date, rcpp$Downloads,  lwd=2,col=3)
+lines(rcpp$date, rcpp$Downloads,  lwd=3,col=3)
 lines(v8$date, v8$Downloads, lwd=2, col=4)
 lines(rjava$date, rjava$Downloads, lwd=2, col=2)
 lines(rpython$date, rpython$Downloads, lwd=2, col=1)
@@ -49,9 +49,9 @@ axis(1, at = c(start, end), labels=c(2013, 2016), tick=F)
 
 
 title("The rise of Rcpp", adj=1, 
-      cex.main=0.9, font.main=2, col.main="black")
+      cex.main=1, font.main=2, col.main="black")
 
-text(as.Date("2013-06-01"), 6, "rPython", col=1)
-text(as.Date("2014-02-01"), 3000, "Rcpp", col=3)
-text(as.Date("2015-02-01"), 80, "V8", col=4)
-text(as.Date("2015-03-01"), 1000, "rJava", col=2)
+text(as.Date("2013-06-01"), 6, "rPython", col=1, font = 2)
+text(as.Date("2014-02-01"), 3000, "Rcpp", col=3, font = 2)
+text(as.Date("2015-02-01"), 80, "V8", col=4, font = 2)
+text(as.Date("2015-03-01"), 1000, "rJava", col=2, font = 2)
