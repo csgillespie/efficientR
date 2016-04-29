@@ -1,3 +1,20 @@
+# dd = NULL
+# for(i in seq(2, 4, length.out=12)) {
+#   x = rnorm(10^i)
+#   dd_tmp = rbenchmark::benchmark(my_mean(x), cmp_mean(x), mean(x), 
+#                                  columns=c("test", "elapsed", "relative"),
+#                                  order="relative", replications=5000)
+#   dd_tmp$i = i
+#   dd = rbind(dd, dd_tmp)
+# }
+# dd$p = 10^dd$i
+# dir.create("data", showWarnings = FALSE)
+# mean_comparison = dd
+# save(mean_comparison, file="data/mean_comparison.RData")
+
+
+
+
 source("code/initialise.R")
 load(file="data/mean_comparison.RData")
 
