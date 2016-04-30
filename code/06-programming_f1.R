@@ -25,7 +25,7 @@ text(1, 0.03, "Hit", pos=2, font=1, cex=1.1)
 
 
 title("Monte-Carlo Integration", adj=1, 
-      cex.main=0.9, font.main=2, col.main="black")
+      cex.main=1, font.main=2, col.main="black")
 
 set.seed(5)
 N = 40
