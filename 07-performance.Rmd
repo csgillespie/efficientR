@@ -28,7 +28,7 @@ at `Rcpp`, an efficient way of incorparting C++ code into an R analysis.
 
 ## Efficient base R 
 
-In R, there are often more than one way to solve a problem. In this section we
+In R, there is often more than one way to solve a problem. In this section we
 highlight standard tricks or alternative methods that will improve performance.
 
 ### The `if` vs `ifelse` functions {-}
@@ -58,6 +58,7 @@ Another useful trick is to partially order the results. For example, if you only
 to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`
 
 ```{r, eval=FALSE, echo=FALSE}
+## Run when R is updated.
 x = matrix(rnorm(1e7), ncol=100)
 system.time({
   for(i in 1:100)
@@ -76,13 +77,13 @@ of `rev(sort(x))`.
 To determine which index of a vector or array are `TRUE`, we would typically use the
 `which` function. If we want to find the index of just the minimum or maximum value,
 i.e. `which(x == min(x))` then use the more efficient `which.min`/`which.max`
-functions.
+variants.
 
 ###  Converting factors to numerics {-}
 
-A factor is just a vector of integers with associated levels. Occasionally, we want
-to convert a factor into its numerical equivalent. The most efficient way of doing
-this (especially for long factors) is
+A factor is just a vector of integers with associated levels. Occasionally we want to
+convert a factor into its numerical equivalent. The most efficient way of doing this
+(especially for long factors) is
 
 ```{r, echo=2, results="hide"}
 f = factor(10:100)
@@ -123,7 +124,7 @@ file.exists("data.csv") && read.csv("data.csv")
 
 However care must be taken not to use `&&` or `||` on vectors since it will give the
 incorrect answer
-```{
+```{r}
 x < 0.4 || x > 0.6
 ```
 
@@ -133,13 +134,15 @@ In data analysis we often want to apply a function to each column or row of a da
 set. For example, we might want to calculation the column or row sums. The `apply`
 function makes this type of operation straightforward.
 ```{r eval=FALSE}
-## 1 -> rows. 2 -> columns
+## Second argument: 1 -> rows. 2 -> columns
 apply(data_set, 1, function_name)
 ```
 There are optimised functions for calculating row and columns sums/means, `rowSums`,
 `colSums`, `rowMeans` and `colMeans` that should be used whenever possible.
 
+## `is.na` and `anyNA`
 
+TODO
 
 ### Matrices {-}
 
@@ -150,11 +153,10 @@ the line of best fit using the `lm()` function, internally converts the data to 
 matrix before calculating the results; any characters are thus recoded as numeric
 dummy variables.
 
-Matrices are generally faster than data frames. The datasets `ex_mat` and
-`ex_df` from the **efficient** package each have $1000$ rows and $100$
-columns. They contain the same random numbers. However selecting rows from
-a data frame is around $150$ times slower than a matrix.
-
+Matrices are generally faster than data frames. The datasets `ex_mat` and `ex_df` from
+the **efficient** package each have $1000$ rows and $100$ columns. They contain the
+same random numbers. However selecting rows from a data frame is around $150$ times
+slower than a matrix.
 ```{r mat_vs_df, cache=TRUE, results="hide"}
 data(ex_mat, ex_df, package="efficient")
 rbenchmark::benchmark(replications=10000, 
@@ -173,7 +175,6 @@ suppose we want to perform standard cluster analysis. Using the built-in data se
 `USAarrests`, we calculate a distance matrix:
 
 ```{r echo=2}
-data("USArrests", package="datasets")
 dist_usa = dist(USArrests)
 ```
 
@@ -262,14 +263,10 @@ with vectors from the **bit** package which take up just over 16th of the space
 (but you can't use `NA`s).
 ```
 
-
-
-
-
 ## Code profiling
 
 A circumstance that happens all too often, is that we simply want our code to run
-faster. In some cases it's obvious where the bottle neck lies. Other times, we have to
+faster. In some cases it's obvious where the bottle neck lies. Other times we have to
 rely on our intuition. One major drawback of relying on our intuition is that we could
 be wrong and we end up pointlessly optimising the wrong piece of code. To make slow
 code run faster, we first need to determine where the slow code lives.
@@ -280,7 +277,7 @@ function call stack, and saves the information to a file. The results from `Rpro
 stochastic. Each time we run a function R, the conditions have changed. Hence, each
 time you profile your code, the result will be slightly different.
 
-Unfortunately, `Rprof` is not user friendly. The **profvis** package provides an
+Unfortunately `Rprof` is not user friendly. The **profvis** package provides an
 interactive graphical interface for visualising data data from `Rprof`.
 
 
@@ -313,11 +310,9 @@ profvis({
 The above code provides an interactive HTML page (figure XXX). On the left side is the
 code and on the right is a flame graph (horizontal direction is time in milliseconds
 and the vertical direction is the call stack).
-
 ```{r echo=FALSE, fig.cap="Output from profvis"}
 knitr::include_graphics("images/profvis1.png")
 ```
-
 The left hand panel tells the amount of time spent on each line of code. We see that
 majority of time is spent calculating the `loess` smoothing line. The bottom line of
 the right panel also highlights that most of the execution time is spent on the
@@ -438,7 +433,7 @@ C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of t
 (Figure \@ref(fig:cranlog)).
 
 ```{r cranlog, echo=FALSE, fig.cap="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.", warning=FALSE}
-local(source("code/10-performance_f2.R", local=TRUE))
+local(source("code/07-performance_f2.R", local=TRUE))
 ```
 
 C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. **Rcpp** makes incorporating C++ code into your R workflow easily.
@@ -728,7 +723,7 @@ z = microbenchmark(
 
 The results are easily compared using the `boxplot` method
 
-```{r fig.width=5, fig.height=3, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t'}
+```{r fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t'}
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01, cex.axis=0.9, las=1)
 boxplot(z, ylab="Log (time)")
 grid()
