@@ -80,6 +80,8 @@ The introduction to this section quickly gets bogged down in technical details. 
 
 You can more easily find the location of all these files using the *pathological* package and `example(startup)`.
 
+- Reference to this useful package has been made as a tip.
+
 ### Section 2.3.2
 
 Just suggesting to read a help file isn't that useful.  And the help page is called "Startup".
@@ -87,6 +89,8 @@ Just suggesting to read a help file isn't that useful.  And the help page is cal
 #### Section 2.3.2.1
 
 I also like `options(continue = "  ")` to make it easier to copy from the command line and paste to the editor.
+
+- This is indeed a good tip and an option I didn't know about. Added!
 
 #### Section 2.3.2.4 
 

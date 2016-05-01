@@ -317,6 +317,11 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 ## R startup
 
 Every time R starts a number of things happen.
+It can be useful to understand this startup process, so you can make R work the way you want it, fast.
+This section explains how.
+
+### R startup arguments
+
 The arguments passed to the R startup command (typically simply `R` from a shell environment)
 determine what happens.
 The following arguments are particularly important from an efficiency perspective:
@@ -327,9 +332,24 @@ The following arguments are particularly important from an efficiency perspectiv
 
 - `--no-save` tells R not to ask the user if they want to save objects saved in RAM when the session is ended with `q()`.
 
-Adding each of these will make R load slightly faster, and mean that slightly less user input is needed.
+Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit.
+See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
+
+```{block, rstudio-tip, type='rmdtip'}
+Some of R's startup arguments can be controlled interactively in RStudio. See the online help file [Customizing RStudio](https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio) for more on this.
+```
+
+### An overview of R's startup files
 
 There are two special files, `.Rprofile` and `.Renviron`, which determine how R performs for the duration of the session.
+These are summarised in the bullet points below we go into more detail on each in the subsequent sections.
+
+- `.Rprofile` is a plain text file (which is always called `.Rprofile`, hence its name) that simply runs lines of R code every time R starts. If you want R to check for package updates each time it starts (as explained in the previous section), you simply add the relevant line somewhere in this file.
+
+- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
+
+### The location of startup files
+
 Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session.
 Note also that these files should only be changed with caution and if you know what you are doing.
 This is because they can make your R version behave differently to other R installations,
@@ -367,6 +387,10 @@ if(!file.exists(user_renviron)) # check to see if the file already exists
 file.edit(user_renviron) # open with another text editor if this fails
 ```
 
+```{block, pathological, type='rmdtip'}
+The **pathological** package can help find where `.Rprofile` and `.Renviron` files are located on your system, thanks to the `os_path()` function. The output of `example(startup)` is also instructive.
+```
+
 The location, contents and uses of each is outlined in more detail below.
 
 ### The `.Rprofile` file {#rprofile}
@@ -402,13 +426,29 @@ file.edit("~/.Rprofile")
 
 ### Example `.Rprofile` settings
 
-An `.Rprofile` file is just an R script that is run at start-up. The examples at the bottom of the `.Rprofile` help file
+An illustrative example of a useful `.Rprofile` is shown in the example below, with comments explaining what each line does.
 
 ```{r, eval=FALSE}
-help("Rprofile")
+# A fun welcome message
+message("Hi Robin, welcome to R")
+
+# Customise the R prompt that prefixes every command
+# (use " " for a blank prompt)
+options(prompt = "R4geo> ")
+
+# Don't convert text strings to factors with base read functions
+options(stringsAsFactors = FALSE)
 ```
 
-give clues as to the types of things we could place in our profile.
+For more suggestions of useful startup settings, see Examples in `help("Startup")`
+and online. The suggested `.Rprofile` settings at [statmethods.net](http://www.statmethods.net/interface/customizing.html)
+are particularly recommended.
+
+```{block, continuetip, style='rmdtip'}
+Ever been frustrated by unwanted `+` symbols that prevent copyied and pasted multi-line functions from working?
+These potentially annoying `+`s can be erradicated from you session by adding `options(continue = "  ")` to your `.Rprofile`.
+```
+
 
 #### Setting options
 
