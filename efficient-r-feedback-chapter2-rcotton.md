@@ -38,7 +38,7 @@ It's worth a discussion of which bits of code aren't platform independent (anyth
 
 When would you want to do OS resource monitoring? I can see this being useful for people managing servers, but for general users I think you need to sell some use cases.
 
-- I've added the following explanation: "If you only process small datasets system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM."
+- I've added the following explanation: "If you only process small datasets, system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM."
 
 ## Section 2.2
 
@@ -46,21 +46,37 @@ When would you want to do OS resource monitoring? I can see this being useful fo
 
 It depends upon context.  For most analysis work, this is true.  There are quite a few R packages on Bioconductor that contain copies of omics databases, and different versions of R packages contain slightly different datasets, and you usually want to keep these fixed for the duration of a project, so your results dont change half way through.  When R is embedded in some other application (for example providing server-side data analysis for a web app), you probably want to be more convsersative about updating.
 
+- Agreed, I've updated the text accordingly, e.g.: "For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code.
+In some circumstances (e.g. on a production server) you may alternatively want to use specific versions"
+
 Maybe worth mentioning *packrat*, *miniCRAN* and other package version management tools.
+
+- A tip on R versions has been added. Not added anything on **miniCRAN** as yet.
 
 ### Section 2.2.1 
 
 It seems quite late in the book to only just be talking about installing R.
 
+- Fair point but I think it's the right place. We now refer to it in Chapter 1 (not yet published) and the intro of C2 (`(skip to section \@ref(r-version)`).
+
 ### Section 2.2.3 and Section 2.2.5
 
 `update.packages` is mentioned in both sections, which seems redundant.  Also worth mentioning putting `update.packages(ask = FALSE)` in your .RProfile to keep everything up to date.
+
+- The first (redundant) mention of `update.packages` has been removed
+
+- `update.packages(ask = FALSE)` is now mentioned in relation to `.Rprofile` (providing a taster of what is to come), in a tip that references you!: To update packages automatically, you can add the line `update.packages(ask = FALSE)` to your
+`.Rprofile` startup file (see the next section for more on `.Rprofile`). Thanks to Richard Cotton for this tip.
 
 ## Section 2.3
 
 Command args don't seem to be mentioned.  I speed up startup using `"--quiet --no-save --no-restore"` options.  Full documentation is in Appendix B of R-intro.
 
+- This has been added. I wondered how to set these in RStudio but could find little online documentation so just described these arguments in general terms. Any further feedback in this area gratefully received.
+
 The introduction to this section quickly gets bogged down in technical details.  I think it is more important to describe what the purpose of each file is, and the sorts of things that you might want to put inside them.
+
+- This is a good point - the introduction now provides a brief overview of each file before getting bogged down in technicalities.
 
 You can more easily find the location of all these files using the *pathological* package and `example(startup)`.
 

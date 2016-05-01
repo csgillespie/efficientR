@@ -22,7 +22,7 @@ for optimal computational and programmer efficiency.
 It covers the following topics:
 
 - R and the operating systems: system monitoring on Linux, Mac and Windows
-- R version: how to keep your base R installation and packages up to date
+- R version: how to keep your base R installation and packages up-to-date
 - R start-up: how and why to adjust your `.Rprofile` and `.Renviron` files
 - RStudio: an integrated development environment (IDE) to boost your programming productivity
 - BLAS and alternative R interpreters: looks at ways to make R faster
@@ -107,7 +107,7 @@ Some packages (e.g. those that must be compiled and that depend on external libr
 On Debian-based operating systems such as Ubuntu, these are named with the prefix `r-cran-` (see [Section 2.4](#deps)).
 
 Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming or RAM-intensive tasks.
-If you only process small datasets system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM.
+If you only process small datasets, system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM.
 Alongside R profiling functions such as **profvis** (see Section __XXX__), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.
 
 ```{r, echo=FALSE}
@@ -179,9 +179,12 @@ identical(r1, r2)
 ## R version
 
 It is important to be aware that R is an evolving software project, whose behaviour changes over time.
-This applies to an even greater extent to packages, the behaviour of which can change substantially from one release to the next.
-Depending on context, you may want to your R installation and packages up-to-date, or 'pin' the version of R and packages to specific versions, to ensure stability.
-For most desktop users, keeping packages up-to-date is desirable: new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
+This applies to an even greater extent to packages, which occassionally change substantially from one release to the next.
+For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code.
+In some circumstances (e.g. on a production server) you may alternatively want to use specific versions which have been tested,
+to ensure stability.
+Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich.
+This section explains how.
 
 ```{block, packrat, style='rmdtip'}
 Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at [cran.r-project.org/bin/](https://cran.r-project.org/bin/). To download binary versions for Ubuntu 'Wily', for example, see [cran.r-project.org/bin/linux/ubuntu/wily/](https://cran.r-project.org/bin/linux/ubuntu/wily/). To 'pin' specific versions of R packages you can use the **packrat** package. For more on pinning R versions and R packages see articles on RStudio's website [Using-Different-Versions-of-R](https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R) and [rstudio.github.io/packrat/](https://rstudio.github.io/packrat/).
@@ -234,7 +237,7 @@ R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
     installr::updateR() 
     ```
     
-For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up to date.
+For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up-to-date.
 
 ### Installing R packages
 
@@ -259,11 +262,11 @@ We use `library` here instead of `require` because the former produces an error 
 
 Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
 Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
-To provide another example, we can update only the packages named in `pkgs` with the following command:
+<!-- To provide another example, we can update only the packages named in `pkgs` with the following command: -->
 
-```{r, eval=FALSE}
-update.packages(oldPkgs = pkgs)
-```
+<!-- ```{r, eval=FALSE} -->
+<!-- update.packages(oldPkgs = pkgs) -->
+<!-- ``` -->
 
 ### Installing R packages with dependencies {#deps}
 
@@ -293,10 +296,14 @@ This can be done *for all packages* with:
 update.packages() # update installed CRAN packages
 ```
 
-The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system.^[In
-the previous section we specified only a few packages to update.]
-This is a good thing:
-updating dozens of large packages can consume a large proportion of available system resources and much time!
+The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system.
+This is generally desirable as
+updating dozens of large packages can consume a large proportion of available system resources.
+
+```{block, update-rprofile, type='rmdtip'}
+To update packages automatically, you can add the line `update.packages(ask = FALSE)` to your
+`.Rprofile` startup file (see the next section for more on `.Rprofile`). Thanks to Richard Cotton for this tip.
+```
 
 An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates.
 Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
@@ -309,10 +316,24 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts, a number of files are read, in a particular order.
-The contents of these files determine how R performs for the duration of the session.
-Note that these files should only be changed with caution, as they may make your R version behave differently to other R installations.
-This could reduce the reproducibility of your code.
+Every time R starts a number of things happen.
+The arguments passed to the R startup command (typically simply `R` from a shell environment)
+determine what happens.
+The following arguments are particularly important from an efficiency perspective:
+
+- `--no-environ` tells R to only look for startup files in the current working directory. (Do not worry if you don't understand what this means at present: it will become clear as the later in the section.)
+
+- `--no-restore` tells R not to load any `.RData` files knocking around in the current working directory.
+
+- `--no-save` tells R not to ask the user if they want to save objects saved in RAM when the session is ended with `q()`.
+
+Adding each of these will make R load slightly faster, and mean that slightly less user input is needed.
+
+There are two special files, `.Rprofile` and `.Renviron`, which determine how R performs for the duration of the session.
+Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session.
+Note also that these files should only be changed with caution and if you know what you are doing.
+This is because they can make your R version behave differently to other R installations,
+potentially reducing the reproducibility of your code.
 
 Files in three folders are important in this process:
 
