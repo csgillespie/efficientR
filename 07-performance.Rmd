@@ -432,7 +432,7 @@ another, faster language. R has interfaces to other languages via packages, such
 C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of these
 (Figure \@ref(fig:cranlog)).
 
-```{r cranlog, echo=FALSE, fig.cap="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.", warning=FALSE}
+```{r cranlog, echo=FALSE, fig.cap="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.", warning=FALSE, fig.width=6, fig.height=4}
 local(source("code/07-performance_f2.R", local=TRUE))
 ```
 
@@ -710,23 +710,20 @@ x = rnorm(1e4)
 
 Then call the `microbenchmark` function.
 
-```{r cache=TRUE, echo=-1}
+```{r cache=TRUE, echo=-1, eval=FALSE}
 com_mean_r = compiler::cmpfun(mean_r)
 ## com_mean_r is the compiled version of mean_r
 z = microbenchmark(
-  mean(x),
-  mean_r(x),
-  com_mean_r(x),
-  mean_c(x)
+  mean(x), mean_r(x),
+  com_mean_r(x), mean_c(x),
+  times=1000
 )
 ```
 
 The results are easily compared using the `boxplot` method
 
 ```{r fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t'}
-par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01, cex.axis=0.9, las=1)
-boxplot(z, ylab="Log (time)")
-grid()
+local(source("code/07-performance_f3.R", local=TRUE))
 ```
 
 In this simple example, the C++ variant is around $100$ times faster than the
