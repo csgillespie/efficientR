@@ -960,10 +960,14 @@ It was found that the installation of OpenBLAS led to a 2-fold speed-up (from ar
 library("ggplot2")
 res_blas = readRDS("data/res_rl_blas.Rds")
 res_noblas = readRDS("data/res_rl_noblas.Rds")
-res_blas$blas = "BLAS"
-res_noblas$blas = "No BLAS"
+res_blas$BLAS = "OpenBLAS"
+res_noblas$BLAS = "No BLAS"
 res_all = rbind(res_blas, res_noblas)
-ggplot(res_all) + geom_violin(aes(test_group, elapsed, fill = blas)) 
+res_all$`Test group` = factor(res_all$test_group)
+levels(res_all$`Test group`) = c("Programming", "Matrix calculation", "Matrix function")
+                              
+ggplot(res_all) + geom_violin(aes(`Test group`, elapsed, fill = BLAS)) +
+  ylab("Time elapsed (seconds)")
 ```
 
 ### Revolution R
