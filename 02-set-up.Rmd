@@ -51,9 +51,6 @@ Basic system information can be queried from within R using `Sys.info()`, as ill
 
 ```{r, eval=FALSE}
 Sys.info()
-```
-
-```
 ##                   sysname 
 ##                   "Linux" 
 ##                   release 
@@ -145,7 +142,7 @@ process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del`
 - On Mac the **Activity Monitor** provides similar functionality. This can be initiated
 form the Utilities folder in Launchpad.
 
-### Exercises
+#### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
 2. Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure 2-1?
@@ -153,10 +150,8 @@ form the Utilities folder in Launchpad.
     ```{r, eval=FALSE}
     # 1: Create large dataset
     X = data.frame(matrix(rnorm(1e8), nrow = 1e7))
-
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
-
     # 3: Find the median of each column using many cores
     r2 = parallel::mclapply(X, median) # runs in serial on Windows
     ```
@@ -309,7 +304,7 @@ An even more interactive method for updating packages in R is provided by RStudi
 Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
 Next (after the exercises) we take a look at how to configure R using start-up files. 
 
-### Exercises
+#### Exercises {-}
 
 1. What version of R are you using? Is it the most up-to-date?
 2. Do any of your packages need updating?
@@ -511,9 +506,15 @@ if(interactive())
   try(fortunes::fortune(), silent=TRUE)
 ```
 
-The `interactive` function tests whether R is being used
-interactively in a terminal. The `fortune` function is called within `try`. If the **fortunes** package is not available, we avoid raising an error and move on. By using `::` we avoid adding the **fortunes** package to our list of
-attached packages..
+The `interactive` function tests whether R is being used interactively in a terminal.
+The `fortune` function is called within `try`. If the **fortunes** package is not
+available, we avoid raising an error and move on. By using `::` we avoid adding the
+**fortunes** package to our list of attached packages.
+
+```{block, type="rmdtip"}
+Typing `search()`, gives the list of attached packages. By using `fortunes::fortune()`
+we avoid adding the **fortunes** package to that list.
+```
 
 The function `.Last`, if it exists in the `.Rprofile`, is always run 
 at the end of the session.
@@ -538,7 +539,6 @@ For example, we could load the following two functions for examining data frames
 ```{r}  
 # ht == headtail
 ht = function(d, n=6) rbind(head(d, n), tail(d, n))
-  
 # Show the first 5 rows & first 5 columns of a data frame
 hh = function(d) d[1:5, 1:5]
 ```
@@ -547,7 +547,7 @@ and a function for setting a nice plotting window:
 
 ```{r, eval=FALSE}  
 setnicepar = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), 
-                      tck = -.01, cex.axis = 0.9, 
+                      tck = -0.01, cex.axis = 0.9, 
                       las = 1, mfrow = c(1, 1), ...) {
     par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, 
         las = las, mfrow = mfrow, ...)
@@ -632,9 +632,7 @@ To set or unset environment variable for the duration of a session, use the foll
 
 ```{r}
 Sys.setenv(TEST = "test-string") # set an environment variable for the session
-Sys.getenv("TEST") # call it
 Sys.unsetenv("TEST") # unset it
-Sys.getenv("TEST") # test it no longer exists
 ```
 
 Another common use of `.Renviron` is to store API keys and authentication tokens that will be available
