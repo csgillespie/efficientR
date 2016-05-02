@@ -136,13 +136,21 @@ Are there any tips on how to configure the IDE to make it more efficient?
 
 ### Section 2.4.6
 
+
+
 > p20 "Ctl+Z/Shift+Z: Undo/Redo"
 
 Redo is Ctrl +Y.  Also, calling the Ctrl key Ctl weirds me out a bit.
 
+- `Ctrl +Y` fails on my computer. 
+
+- `Ctl` changed to `Ctrl`
+
 > p20 "‘Slots’ are sub-elements of an object"
 
 Worth clarifying that they are elements of an S4 object.
+
+- Clarified in the footnote
 
 ### Section 2.4.8
 
