@@ -447,11 +447,9 @@ fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <sp
 <p>Example contents of short and simple <code>.Rprofile</code> are illustrated below, with comments explaining what each line does. More details on these, and other potentially useful <code>.Rprofile</code> options are described subsequently.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># A fun welcome message</span>
 <span class="kw">message</span>(<span class="st">&quot;Hi Robin, welcome to R&quot;</span>)
-
 <span class="co"># Customise the R prompt that prefixes every command</span>
 <span class="co"># (use &quot; &quot; for a blank prompt)</span>
 <span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4geo&gt; &quot;</span>)
-
 <span class="co"># Don&#39;t convert text strings to factors with base read functions</span>
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>For more suggestions of useful startup settings, see Examples in <code>help(&quot;Startup&quot;)</code> and online resources such as those at <a href="http://www.statmethods.net/interface/customizing.html">statmethods.net</a>.</p>
@@ -471,9 +469,8 @@ fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <sp
 <div id="setting-the-cran-mirror" class="section level4">
 <h4><span class="header-section-number">2.4.5.2</span> Setting the CRAN mirror</h4>
 <p>To avoid setting the CRAN mirror each time you run <code>install.packages</code> you can permanently set the mirror in your <code>.Rprofile</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># local creates a new, empty environment</span>
-<span class="co"># This avoids polluting the global environment with</span>
-<span class="co"># the object r</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># `local` creates a new, empty environment</span>
+<span class="co"># This avoids polluting .GlobalEnv with the object r</span>
 <span class="kw">local</span>({
   r =<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)             
   r[<span class="st">&quot;CRAN&quot;</span>] =<span class="st"> &quot;https://cran.rstudio.com/&quot;</span>
@@ -518,7 +515,7 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
         <span class="dt">las =</span> las, <span class="dt">mfrow =</span> mfrow, ...)
 }</code></pre></div>
 <p>Note that these functions are for personal use and are unlikely to interfere with code from other people. For this reason even if you use a certain package every day, we don’t recommend loading it in your <code>.Rprofile</code>. Shortening long function names for interactive (but not reproducible code writing). If you frequently use <code>View()</code>, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span>utils::View<span class="st">`</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v =<span class="st"> </span>utils::View</code></pre></div>
 <p>Also beware the dangers of loading many functions by default: it may make your code less portable. Another downside of putting functions in your <code>.Rprofile</code> is that it can clutter-up your work space: when you run the <code>ls()</code> command, your <code>.Rprofile</code> functions will appear. Also if you run <code>rm(list=ls())</code>, your functions will be deleted.</p>
 <p>One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with <code>.</code>, by default it doesn’t appear in the output of the <code>ls()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.obj =<span class="st"> </span><span class="dv">1</span>
@@ -546,7 +543,7 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.getenv</span>(<span class="st">&quot;R_LIBS_USER&quot;</span>)</code></pre></div>
 <p>All currently stored environment variables can be seen by calling <code>Sys.getenv()</code> with no arguments. Note that many environment variables are already pre-set and do not need to be specified in <code>.Renviron</code>. <code>HOME</code>, for example, which can be seen with <code>Sys.getenv('HOME')</code>, is taken from the operating system’s list of environment variables. A list of the most important environment variables that can affect R’s behaviour is documented in the little known help page <code>help(&quot;environment variables&quot;)</code>.</p>
 <p>To set or unset environment variable for the duration of a session, use the following commands:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="dt">TEST =</span> <span class="st">&quot;test-string&quot;</span>) <span class="co"># set an environment variable for the session</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">&quot;TEST&quot;</span> =<span class="st"> &quot;test-string&quot;</span>) <span class="co"># set an environment variable for the session</span>
 <span class="kw">Sys.unsetenv</span>(<span class="st">&quot;TEST&quot;</span>) <span class="co"># unset it</span></code></pre></div>
 <p>Another common use of <code>.Renviron</code> is to store API keys and authentication tokens that will be available from one session to another.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> A common use case is setting the ‘envvar’ <code>GITHUB_PAT</code>, which will be detected by the <strong>devtools</strong> package via the fuction <code>github_pat()</code>. To take another example, the following line in <code>.Renviron</code> sets the <code>ZEIT_KEY</code> environment variable which is used in the <strong><a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a></strong> package:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">ZEIT_KEY=</span>PUT_YOUR_KEY_HERE</code></pre></div>
@@ -560,7 +557,7 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
 <li><p><code>TMPDIR=/data/R_tmp/</code>. When R is running, it creates temporary copies. On my work machine, the default directory is a network drive.</p></li>
 <li><p><code>R_COMPILE_PKGS=3</code>. Byte compile all packages (covered in Chapter <a href="#programming"><strong>??</strong></a>).</p></li>
 <li><p><code>R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library</code> I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoiding using this directory.</p></li>
-<li><p><code>R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods</code>. Explicitly state the packages to load. Note I don’t load the <code>datasets</code> package, but I ensure that <code>methods</code> is always loaded. Due to historical reasons, under some circumstances the <code>methods</code> package isn’t loaded by default.</p></li>
+<li><p><code>R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods</code>. Explicitly state the packages to load. Note I don’t load the <code>datasets</code> package, but I ensure that <code>methods</code> is always loaded. Due to historical reasons, the <code>methods</code> package isn’t loaded by default in certain applications, e.g. <code>Rscript</code>.</p></li>
 </ul>
 </div>
 <div id="exercises-2" class="section level4 unnumbered">
@@ -688,7 +685,7 @@ Figure 2.3: The data viewing tab in RStudio.
 </ul>
 <p>Each project is different but most contain input data, R code and outputs. To keep things tidy, we recommend a sub-directory structure resembling the following:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">project/</span>
-  <span class="kw">-</span> README.rmd <span class="co"># Project description</span>
+  <span class="kw">-</span> README.Rmd <span class="co"># Project description</span>
   <span class="kw">-</span> set-up.R  <span class="co"># Required packages</span>
   <span class="kw">-</span> R/ <span class="co"># For R code</span>
   <span class="kw">-</span> input <span class="co"># Data files</span>
