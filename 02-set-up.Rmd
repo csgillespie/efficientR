@@ -427,11 +427,9 @@ More details on these, and other potentially useful `.Rprofile` options are desc
 ```{r, eval=FALSE}
 # A fun welcome message
 message("Hi Robin, welcome to R")
-
 # Customise the R prompt that prefixes every command
 # (use " " for a blank prompt)
 options(prompt = "R4geo> ")
-
 # Don't convert text strings to factors with base read functions
 options(stringsAsFactors = FALSE)
 ```
@@ -474,9 +472,8 @@ To avoid setting the CRAN mirror each time you run
 `install.packages` you can permanently set the mirror in your `.Rprofile`.
 
 ```{r, eval=FALSE}
-# local creates a new, empty environment
-# This avoids polluting the global environment with
-# the object r
+# `local` creates a new, empty environment
+# This avoids polluting .GlobalEnv with the object r
 local({
   r = getOption("repos")             
   r["CRAN"] = "https://cran.rstudio.com/"
@@ -561,7 +558,7 @@ If you frequently use `View()`, for example, you may be able to save time by ref
 in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
 ```{r, eval=FALSE}
-v <- utils::View`
+v = utils::View
 ```
 
 Also beware the dangers of loading many functions by default: it may make your code less portable.
@@ -631,7 +628,7 @@ little known help page `help("environment variables")`.
 To set or unset environment variable for the duration of a session, use the following commands:
 
 ```{r}
-Sys.setenv(TEST = "test-string") # set an environment variable for the session
+Sys.setenv("TEST" = "test-string") # set an environment variable for the session
 Sys.unsetenv("TEST") # unset it
 ```
 
@@ -681,8 +678,8 @@ some API keys, my `.Renviron` has a few other lines:
 
   * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the 
     packages to load. Note I don't load the `datasets` package, but I ensure that 
-    `methods` is always loaded. Due to historical reasons, under some circumstances
-    the `methods` package isn't loaded by default.
+    `methods` is always loaded. Due to historical reasons, 
+    the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
 
 #### Exercises {-}
 
@@ -912,7 +909,7 @@ To keep things tidy, we recommend a sub-directory structure resembling the follo
 
 ```{r, engine='bash', eval = FALSE}
 project/
-  - README.rmd # Project description
+  - README.Rmd # Project description
   - set-up.R  # Required packages
   - R/ # For R code
   - input # Data files
