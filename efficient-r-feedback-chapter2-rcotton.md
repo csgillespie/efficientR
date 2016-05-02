@@ -160,9 +160,13 @@ I've tried doing data analysis inside R packages, and it's awful.  When you are 
 
 Packages are for more permanent code.  So creating a package of your final analysis is a great idea, and creating packages for utility stuff to reuse between projects is great, but they aren't suitable for everything.
 
+- I've added this caveat: "This is not recommended for most use cases, as it places restrictions on where you can put files."
+
 > p22 " Creating R packages is easier than ever before" 
 
 Maybe recommend Chapter 17 of "Learning R" (by me) and Hadley W.'s "R Packages". A step by step example of how to create a package programmatically would also be useful.
+
+- Done
 
 ## Section 2.5
 
