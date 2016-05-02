@@ -5,6 +5,8 @@ res_noblas = readRDS("data/res_rl_noblas.Rds")
 res_blas$blas = "Optimised"
 res_noblas$blas = "Standard"
 res_all = rbind(res_blas, res_noblas)
+res_all$test_group = factor(res_all$test_group)
+levels(res_all$test_group) = c("Programming", "Matrix calculation", "Matrix function")
 
 g = ggplot(res_all) + geom_violin(aes(test_group, elapsed, fill = blas),position=position_dodge(0.9))
 
