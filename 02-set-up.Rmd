@@ -2,6 +2,10 @@
 knit: "bookdown::preview_chapter"
 ---
 
+```{r echo=FALSE}
+data("USArrests", package="datasets")
+```
+
 # Efficient set-up
 
 An efficient computer set-up is analogous to a well-tuned vehicle:
@@ -47,9 +51,6 @@ Basic system information can be queried from within R using `Sys.info()`, as ill
 
 ```{r, eval=FALSE}
 Sys.info()
-```
-
-```
 ##                   sysname 
 ##                   "Linux" 
 ##                   release 
@@ -141,7 +142,7 @@ process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del`
 - On Mac the **Activity Monitor** provides similar functionality. This can be initiated
 form the Utilities folder in Launchpad.
 
-### Exercises
+#### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
 2. Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure 2-1?
@@ -149,10 +150,8 @@ form the Utilities folder in Launchpad.
     ```{r, eval=FALSE}
     # 1: Create large dataset
     X = data.frame(matrix(rnorm(1e8), nrow = 1e7))
-
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
-
     # 3: Find the median of each column using many cores
     r2 = parallel::mclapply(X, median) # runs in serial on Windows
     ```
@@ -305,7 +304,7 @@ An even more interactive method for updating packages in R is provided by RStudi
 Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
 Next (after the exercises) we take a look at how to configure R using start-up files. 
 
-### Exercises
+#### Exercises {-}
 
 1. What version of R are you using? Is it the most up-to-date?
 2. Do any of your packages need updating?
@@ -507,9 +506,15 @@ if(interactive())
   try(fortunes::fortune(), silent=TRUE)
 ```
 
-The `interactive` function tests whether R is being used
-interactively in a terminal. The `fortune` function is called within `try`. If the **fortunes** package is not available, we avoid raising an error and move on. By using `::` we avoid adding the **fortunes** package to our list of
-attached packages..
+The `interactive` function tests whether R is being used interactively in a terminal.
+The `fortune` function is called within `try`. If the **fortunes** package is not
+available, we avoid raising an error and move on. By using `::` we avoid adding the
+**fortunes** package to our list of attached packages.
+
+```{block, type="rmdtip"}
+Typing `search()`, gives the list of attached packages. By using `fortunes::fortune()`
+we avoid adding the **fortunes** package to that list.
+```
 
 The function `.Last`, if it exists in the `.Rprofile`, is always run 
 at the end of the session.
@@ -534,7 +539,6 @@ For example, we could load the following two functions for examining data frames
 ```{r}  
 # ht == headtail
 ht = function(d, n=6) rbind(head(d, n), tail(d, n))
-  
 # Show the first 5 rows & first 5 columns of a data frame
 hh = function(d) d[1:5, 1:5]
 ```
@@ -543,7 +547,7 @@ and a function for setting a nice plotting window:
 
 ```{r, eval=FALSE}  
 setnicepar = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), 
-                      tck = -.01, cex.axis = 0.9, 
+                      tck = -0.01, cex.axis = 0.9, 
                       las = 1, mfrow = c(1, 1), ...) {
     par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, 
         las = las, mfrow = mfrow, ...)
@@ -604,15 +608,12 @@ The `.Renviron` file is used to store system variables. It follows a similar
 start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
 local versions. A typical use of the `.Renviron` file is to
 specify the `R_LIBS` path, which determines where new packages are installed:
-
 ```{r, engine='bash', eval=FALSE}
-## Linux
+# Linux
 R_LIBS=~/R/library
-
 # Windows
 R_LIBS=C:/R/library
 ```
-
 After setting this, `install.packages` saves packages in the directory specified by `R_LIBS`.
 The location of this directory can be referred back to subsequently as follows:
 
@@ -631,9 +632,7 @@ To set or unset environment variable for the duration of a session, use the foll
 
 ```{r}
 Sys.setenv(TEST = "test-string") # set an environment variable for the session
-Sys.getenv("TEST") # call it
 Sys.unsetenv("TEST") # unset it
-Sys.getenv("TEST") # test it no longer exists
 ```
 
 Another common use of `.Renviron` is to store API keys and authentication tokens that will be available
@@ -651,19 +650,45 @@ sets the `ZEIT_KEY` environment variable which is used in the
 ZEIT_KEY=PUT_YOUR_KEY_HERE
 ```
 
-You will need to sign-in and start a new R session for the environment variable (accessed by `Sys.getenv`) to be visible.
-To test if the example API key has been successfully added as an environment variable, run the following:
+You will need to sign-in and start a new R session for the environment variable
+(accessed by `Sys.getenv`) to be visible. To test if the example API key has been
+successfully added as an environment variable, run the following:
 
 ```{r, eval=FALSE}
 Sys.getenv("ZEIT_KEY")
 ```
 
-Use of the `.Renviron` file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session.
-Furthermore, the same `.Renviron` file will work across different platforms so keep it stored safely.
+Use of the `.Renviron` file for storing settings such as library paths and API keys is
+efficient because it reduces the need to update your settings for every R session.
+Furthermore, the same `.Renviron` file will work across different platforms so keep it
+stored safely.
 
-### Exercises
+#### Example `.Renviron` file
 
-1. What are the three locations where the startup files are stored? Where are these locations on your computer?
+My `.Renviron` file has grown over the years. I often switch between my desktop and
+laptop computers, so to maintain a consistent working environment, I have the same
+`.Renviron` file on all of my machines. As well as containing an `R_LIBS` entry and
+some API keys, my `.Renviron` has a few other lines:
+
+  * `TMPDIR=/data/R_tmp/`. When R is running, it creates temporary copies. On my work
+    machine, the default directory is a network drive. 
+  
+  * `R_COMPILE_PKGS=3`. Byte compile all packages (covered in Chapter \@ref(programming)).
+  
+  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to 
+    look for packages. My University has a site-wide directory that contains out of date 
+    packages. I want to avoiding using this directory.
+
+  * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the 
+    packages to load. Note I don't load the `datasets` package, but I ensure that 
+    `methods` is always loaded. Due to historical reasons, under some circumstances
+    the `methods` package isn't loaded by default.
+
+#### Exercises {-}
+
+1. What are the three locations where the startup files are stored? Where are these
+locations on your computer?
+
 2. For each location, does a `.Rprofile` or `.Renviron` file exist?
 3. Create a `.Rprofile` file in your current working directory that prints the message `Happy efficient R programming` each time you start R at this location.
 4. What happens to the startup files in `R_HOME` if you create them in `HOME` or local project directories? 
