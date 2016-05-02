@@ -96,13 +96,35 @@ I also like `options(continue = "  ")` to make it easier to copy from the comman
 
 I define a few shortcuts for utility functions that are a commonly used but a pain to type. (`tr <- traceback`, `br <- browser`, `v <- utils::View`). 
 
+- There is now a description of this kind of function redefinition, with an example from `View()`.
+
 ### Section 2.3.3
 
 You need to discuss when you would use an `.Renviron` file over setting the environment variable permanently in the OS, and using `Sys.setenv`.
 
+- Thanks. I've now tackled this in the following way:
+
+All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments.
+Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`.
+`HOME`, for example, which can be seen with `Sys.getenv('HOME')`, is
+taken from the operating system's list of environment variables.
+A list of the most important environment variables that can affect R's behaviour is documented in the
+little known help page `help("environment variables")`.
+
+To set or unset environment variable for the duration of a session, use the following commands:
+
+```{r}
+Sys.setenv(TEST = "test-string") # set an environment variable for the session
+Sys.getenv("TEST") # call it
+Sys.unsetenv("TEST") # unset it
+Sys.getenv("TEST") # test it no longer exists
+```
+
 > p15 "Another common use of .Renviron is to store API keys"
 
 I suppose a more mainstream example is to store github authentication tokens to use with `devtools::install_github`.  Or does this come in the Efficient Collaboration chapter?
+
+- I've added reference to the common use case mentioned
 
 ## Section 2.4
 

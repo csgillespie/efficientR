@@ -558,7 +558,7 @@ Note that these functions are for personal use and are unlikely to interfere wit
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
 Shortening long function names for interactive (but not reproducible code writing).
 If you frequently use `View()`, for example, you may be able to save time by referring to it
-in abbreviated form. This is illustrated below (although with IDE-driven autocompletion, outlined in the next section, shorter functions are not always faster to enter.)
+in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
 ```{r, eval=FALSE}
 v <- utils::View`
@@ -605,9 +605,9 @@ attach(.env)
 ### The `.Renviron` file {#renviron}
 
 The `.Renviron` file is used to store system variables. It follows a similar
-start up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
+start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
 local versions. A typical use of the `.Renviron` file is to
-specify the `R_LIBS` path
+specify the `R_LIBS` path, which determines where new packages are installed:
 
 ```{r, engine='bash', eval=FALSE}
 ## Linux
@@ -617,15 +617,39 @@ R_LIBS=~/R/library
 R_LIBS=C:/R/library
 ```
 
-This variable points to a directory where R packages will be installed. When `install.packages` is called, new packages will be stored in `R_LIBS`.
+After setting this, `install.packages` saves packages in the directory specified by `R_LIBS`.
+The location of this directory can be referred back to subsequently as follows:
 
-Another common use of `.Renviron` is to store API keys that will be available
+```{r, eval=FALSE}
+Sys.getenv("R_LIBS_USER")
+```
+
+All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments.
+Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`.
+`HOME`, for example, which can be seen with `Sys.getenv('HOME')`, is
+taken from the operating system's list of environment variables.
+A list of the most important environment variables that can affect R's behaviour is documented in the
+little known help page `help("environment variables")`.
+
+To set or unset environment variable for the duration of a session, use the following commands:
+
+```{r}
+Sys.setenv(TEST = "test-string") # set an environment variable for the session
+Sys.getenv("TEST") # call it
+Sys.unsetenv("TEST") # unset it
+Sys.getenv("TEST") # test it no longer exists
+```
+
+Another common use of `.Renviron` is to store API keys and authentication tokens that will be available
 from one session to another.^[See
 [`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)
 from the `httr` package for more on
-this.] The following line in `.Renviron`, for example,
-sets the `ZEIT_KEY` environment variable which is used in the package
-[diezeit](https://cran.r-project.org/web/packages/diezeit/) package:
+this.]
+A common use case is setting the 'envvar' `GITHUB_PAT`, which will be detected by the **devtools** package
+via the fuction `github_pat()`.
+To take another example, the following line in `.Renviron`
+sets the `ZEIT_KEY` environment variable which is used in the
+**[diezeit](https://cran.r-project.org/web/packages/diezeit/)** package:
 
 ```{r, engine='bash', eval=FALSE}
 ZEIT_KEY=PUT_YOUR_KEY_HERE
