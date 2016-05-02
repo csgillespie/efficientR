@@ -134,6 +134,8 @@ I'm not sure that a quick how to guide for RStudio is much use.  I'd prefer a di
 
 Are there any tips on how to configure the IDE to make it more efficient?
 
+- I think we've done a good job of that in terms of user efficiency. Not sure how RStudio tweaks can improve *computational* efficiency though...
+
 ### Section 2.4.6
 
 
@@ -174,19 +176,27 @@ Maybe recommend Chapter 17 of "Learning R" (by me) and Hadley W.'s "R Packages".
 
 Show don't tell.  It would be nice to see an example or two of how much speed up you can get.  I don't have a feel for whether this will give a 10% speed boost or a 10-fold speed boost.  Which kinds of problems will changing this most affect?
 
+- There is now a graphic illustrating this and the basic explanation that matrix algebra is the area that recieves most speed-up.
+
 Also, getting set up to use this seems to be the main obstacle, so giving an outline of where to start would be helpful.
 
+- There is now a brief explanation of how to install OpenBLAS on Ubuntu.
 
 ### Section 2.5.2
 
 Google have taken over development of CXXR, another interpreter based on C++.
 
+- This is now described as the #1 alternative interpreter. It's now called Rho.
+
 > p23 "mentioning Julia"
 
 You are welcome to quote me as describing Julia as *MATLAB for hipsters*.
+
+- Thanks - I won't go there!
 
 
 ### Section 2.5.4
 
 Ex1. How do you find this out?
 
+- I've added the answer earlier in the section (sorry it got removed) and provided this hint: (Hint: you will need the **benchmarkme** package installed.)
