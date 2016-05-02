@@ -969,10 +969,10 @@ get_linear_algebra()
 
 ### Testing performance gains from BLAS
 
-As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6^th^ generation Core i7 processor, before and after OpenBLAS was installed (via `sudo apt-get install libopenblas-base`, automatically detected by R):
+As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6^th^ generation Core i7 processor, before and after OpenBLAS was installedv^[OpenBLAS was installed on the computer via `sudo apt-get install libopenblas-base`, which automatically detected and used by R.]
 
 ```{r, eval=FALSE}
-benchmark_std() # run a suit of tests to test R's performance
+res = benchmark_std() # run a suit of tests to test R's performance
 ```
 
 It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are now much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
@@ -981,10 +981,14 @@ It was found that the installation of OpenBLAS led to a 2-fold speed-up (from ar
 library("ggplot2")
 res_blas = readRDS("data/res_rl_blas.Rds")
 res_noblas = readRDS("data/res_rl_noblas.Rds")
-res_blas$blas = "BLAS"
-res_noblas$blas = "No BLAS"
+res_blas$BLAS = "OpenBLAS"
+res_noblas$BLAS = "No BLAS"
 res_all = rbind(res_blas, res_noblas)
-ggplot(res_all) + geom_violin(aes(test_group, elapsed, fill = blas)) 
+res_all$`Test group` = factor(res_all$test_group)
+levels(res_all$`Test group`) = c("Programming", "Matrix calculations", "Matrix functions")
+                              
+ggplot(res_all) + geom_violin(aes(`Test group`, elapsed, fill = BLAS)) +
+  ylab("Time elapsed (seconds)")
 ```
 
 ### Revolution R
