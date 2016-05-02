@@ -108,6 +108,8 @@ I suppose a more mainstream example is to store github authentication tokens to 
 
 I'm not sure that a quick how to guide for RStudio is much use.  I'd prefer a discussion of the choices of IDE (pretty much RStudio vs. Architect vs. Revolution R Enterprise vs. emacs+ESS).  For example, if you develop in multiple languages, then Architect or emacs is a better choice because they aren't tied to the R language.  Where you mention RStudio, you could reference John Verzani's "Getting Started with RStudio" which has more detail on this sort of step-by-step how to stuff.
 
+- I disagree. Based on my teaching experience, not knowing how to use the IDE effectively is one of the major bottlenecks preventing productive programming. I think the focus on RStudio is entirely justified. It can be used to develop in many languages also and is by far and away the most user friendly IDE for R. Rather than muddy the water with alternatives I think a pithy description of RStudio is entirely warranted here. However, we agree that Architect deserves more mention, perhaps alongside VisualStudio now it supports R also. And what about Vim?
+
 Are there any tips on how to configure the IDE to make it more efficient?
 
 ### Section 2.4.6
