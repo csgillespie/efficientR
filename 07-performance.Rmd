@@ -307,10 +307,10 @@ profvis({
 })
 ```
 
-The above code provides an interactive HTML page (figure XXX). On the left side is the
-code and on the right is a flame graph (horizontal direction is time in milliseconds
-and the vertical direction is the call stack).
-```{r echo=FALSE, fig.cap="Output from profvis"}
+The above code provides an interactive HTML page (figure \@ref(fig:profvis1)). On the
+left side is the code and on the right is a flame graph (horizontal direction is time
+in milliseconds and the vertical direction is the call stack).
+```{r profvis1, echo=FALSE, fig.cap="Output from profvis"}
 knitr::include_graphics("images/profvis1.png")
 ```
 The left hand panel tells the amount of time spent on each line of code. We see that
@@ -708,7 +708,8 @@ comparison
 x = rnorm(1e4)
 ```
 
-Then call the `microbenchmark` function.
+Then call the `microbenchmark` function (results plotted in figure
+\@ref(fig:rcppcomp)).
 
 ```{r cache=TRUE, echo=-1, eval=FALSE}
 com_mean_r = compiler::cmpfun(mean_r)
@@ -720,14 +721,13 @@ z = microbenchmark(
 )
 ```
 
-The results are easily compared using the `boxplot` method
+In this simple example, the Rcpp variant is around $100$ times faster than the
+corresponding R version. This sort of speed-up is not uncommon when switching to an
+Rcpp solution.
 
-```{r fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t'}
+```{r rcppcomp, fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t'}
 local(source("code/07-performance_f3.R", local=TRUE))
 ```
-
-In this simple example, the C++ variant is around $100$ times faster than the
-corresponding R version.
 
 #### Exercises {-}
 
