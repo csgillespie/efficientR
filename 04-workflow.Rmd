@@ -312,6 +312,7 @@ saveRDS(res, "data/res.Rds")
 ```
 
 ```{r readr-vs-base, fig.cap="Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
+library(ggplot2)
 res = readRDS("data/res.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) + facet_wrap(~ facet_cols) +
@@ -991,11 +992,7 @@ saveRDS(res, "data/res-datatable.Rds")
 ```
 
 ```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4}
-res = readRDS("data/res-datatable.Rds")
-ggplot(res, aes(MB, Time)) + 
-  geom_line(aes(colour = exp)) +
-  xlab("Size (MB)") + ylab("Time (relative to fastest)") + 
-  theme_bw()
+local(source("code/04-project-planning_f4.R", local=TRUE))
 ```
 
 Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
