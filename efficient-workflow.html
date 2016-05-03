@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-05-02">
+<meta name="date" content="2016-05-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -261,7 +261,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">4.1.1</span> ‘Chunking’ your work</h3>
 <p>Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up. The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next. Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track. Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">PMBoK (<a href="#ref-PMBoK_2000">2000</a>)</span>. ‘Chunking’ the work will also make collaboration easier, as we shall see in Chapter 5.</p>
 <div class="figure"><span id="fig:phases"></span>
-<img src="_main_files/figure-html/phases-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000." width="672" />
+<img src="_main_files/figure-html/phases-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000." width="576" />
 <p class="caption">
 Figure 4.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="#ref-PMBoK_2000">2000</a>)</span>.
 </p>
@@ -295,9 +295,8 @@ Figure 4.2: A Gantt chart created using <strong>DiagrammeR</strong> illustrating
 <li><p><a href="http://rich-iannone.github.io/DiagrammeR/"><strong>DiagrammeR</strong></a>, a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as <a href="https://github.com/knsv/mermaid">mermaid</a> and <a href="https://github.com/ellson/graphviz">GraphViz</a>.</p></li>
 </ul>
 <p>The small example below (which provides the basis for creating charts like Figure <a href="efficient-workflow.html#fig:timeline">4.2</a> illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts. Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. {#DiagrammeR}</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>) <span class="co"># load the necessary package</span>
-
-<span class="co"># define the Gantt chart and plot the result (not shown)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)
+<span class="co"># Define the Gantt chart and plot the result (not shown)</span>
 <span class="kw">mermaid</span>(<span class="st">&quot;gantt</span>
 <span class="st">        Section Initiation</span>
 <span class="st">        Planning           :a1, 2016-01-01, 10d</span>
@@ -670,27 +669,14 @@ idata <span class="co"># print the dataset </span></code></pre></div>
 <p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.</p>
 <p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the</code>data.frame<code>as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span>
-<span class="co">#&gt; The following objects are masked from &#39;package:data.table&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     between, last</span>
-<span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
 <p>To rename multiple columns the variable names are simply separated by commas. The base R and <strong>dplyr</strong> way of doing this is illustrated for clarity.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The dplyr way (rename two variables)</span>
 idata =<span class="st"> </span><span class="kw">rename</span>(idata,
  <span class="dt">top10 =</span> <span class="st">`</span><span class="dt">Income share held by highest 10% [SI.DST.10TH.10]</span><span class="st">`</span>,
  <span class="dt">bot10 =</span> <span class="st">`</span><span class="dt">Income share held by lowest 10% [SI.DST.FRST.10]</span><span class="st">`</span>)
-
 <span class="co"># The base R way (rename five variables)</span>
-<span class="kw">names</span>(idata)[<span class="dv">5</span>:<span class="dv">9</span>] =
-<span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;top10&quot;</span>, <span class="st">&quot;bot10&quot;</span>, <span class="st">&quot;gini&quot;</span>, <span class="st">&quot;b40_cons&quot;</span>, <span class="st">&quot;gdp_percap&quot;</span>)</code></pre></div>
+<span class="kw">names</span>(idata)[<span class="dv">5</span>:<span class="dv">9</span>] =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;top10&quot;</span>, <span class="st">&quot;bot10&quot;</span>, <span class="st">&quot;gini&quot;</span>, <span class="st">&quot;b40_cons&quot;</span>, <span class="st">&quot;gdp_percap&quot;</span>)</code></pre></div>
 <p>Now we have usefully renamed the object we save the result for future reference:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(idata, <span class="st">&quot;data/idata-renamed.Rds&quot;</span>)</code></pre></div>
 </div>
@@ -741,11 +727,11 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname) <span class
 <span class="kw">dim</span>(df)
 <span class="co">#&gt; [1]   9 329</span></code></pre></div>
 <p>Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That’s a lot of variables. Do we need them all? It’s worth taking a glimpse at this dataset to find out:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df)</code></pre></div>
-<pre><code># $ NPI                   (int) 1679576722, ...
-# $ Entity Type Code      (int) 1, 1, 2,    ...
-# $ Replacement NPI       (lgl) NA, NA, NA, ...
-# ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df)
+<span class="co">#&gt; $ NPI                   (int) 1679576722, ...</span>
+<span class="co">#&gt; $ Entity Type Code      (int) 1, 1, 2,    ...</span>
+<span class="co">#&gt; $ Replacement NPI       (lgl) NA, NA, NA, ...</span>
+<span class="co">#&gt; ...</span></code></pre></div>
 <p>Looking at the output, it becomes clear that the majority of the variables only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
 all_na =<span class="st"> </span><span class="kw">sapply</span>(df, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)))
