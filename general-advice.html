@@ -210,7 +210,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.7.2" data-path="publication.html"><a href="publication.html#r-packages"><i class="fa fa-check"></i><b>4.7.2</b> R packages</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="efficient-data-capentry.html"><a href="efficient-data-capentry.html"><i class="fa fa-check"></i><b>5</b> Efficient data capentry</a></li>
+<li class="chapter" data-level="5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html"><i class="fa fa-check"></i><b>5</b> Efficient data carpentry</a></li>
 <li class="chapter" data-level="6" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html"><i class="fa fa-check"></i><b>6</b> Efficient visualisation</a><ul>
 <li class="chapter" data-level="6.1" data-path="rough-outline.html"><a href="rough-outline.html"><i class="fa fa-check"></i><b>6.1</b> Rough outline</a></li>
 <li class="chapter" data-level="6.2" data-path="cairo-type.html"><a href="cairo-type.html"><i class="fa fa-check"></i><b>6.2</b> Cairo type</a></li>
@@ -377,8 +377,8 @@ rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</sp
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
 <span class="co">#&gt;         test elapsed</span>
-<span class="co">#&gt; 1 method1(n)   1.351</span>
-<span class="co">#&gt; 2 method2(n)   0.086</span>
+<span class="co">#&gt; 1 method1(n)   1.419</span>
+<span class="co">#&gt; 2 method2(n)   0.087</span>
 <span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
@@ -466,7 +466,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.012   0.004   4.016</span></code></pre></div>
+<span class="co">#&gt;   3.270   0.008   3.280</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
