@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="operating-system.html">
+<link rel="next" href="r-startup.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,40 +274,83 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="r-version" class="section level2">
+<h2><span class="header-section-number">2.3</span> R version</h2>
+<p>It is important to be aware that R is an evolving software project, whose behaviour changes over time. This applies to an even greater extent to packages, which occassionally change substantially from one release to the next. For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.</p>
+<p>Previous R versions can be installed from CRAN’s archive or previous R releases. The binary versions for all OSs can be found at <a href="https://cran.r-project.org/bin/">cran.r-project.org/bin/</a>. To download binary versions for Ubuntu ‘Wily’, for example, see <a href="https://cran.r-project.org/bin/linux/ubuntu/wily/">cran.r-project.org/bin/linux/ubuntu/wily/</a>. To ‘pin’ specific versions of R packages you can use the <strong>packrat</strong> package. For more on pinning R versions and R packages see articles on RStudio’s website <a href="https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R">Using-Different-Versions-of-R</a> and <a href="https://rstudio.github.io/packrat/">rstudio.github.io/packrat/</a>.</p>
+<div id="installing-r" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Installing R</h3>
+<p>The method of installing R varies for Windows, Linux and Mac.</p>
+<p>On Windows, a single <code>.exe</code> file (hosted at <a href="https://cran.r-project.org/bin/windows/base/">cran.r-project.org/bin/windows/base/</a>) will install the base R package.</p>
+<p>On a Mac, the latest version should be installed by downloading the <code>.pkg</code> files hosted at <a href="https://cran.r-project.org/bin/macosx/">cran.r-project.org/bin/macosx/</a>.</p>
+<p>On Debian-based systems adding the CRAN repository in the format. The following bash command will add the repository to <code>/etc/apt/sources.list</code> and keep your operating system updated with the latest version of R:</p>
+<pre><code>apt-add-repository https://cran.rstudio.com/bin/linux/ubuntu</code></pre>
+<p>In the above code <code>cran.rstudio.com</code> is the ‘mirror’ from which <code>r-base</code> and other <code>r-</code> packages can be installed using the <code>apt</code> system. R also works on FreeBSD and other Unix-based systems.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>Once R is installed it should be kept up-to-date.</p>
 </div>
-<h3><span class="header-section-number">9</span> Efficient data capentry</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="updating-r" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Updating R</h3>
+<p>R is a mature and stable language so well-written code in base R should work on most versions. However, it is important to keep your R version relatively up-to-date, because:</p>
+<ul>
+<li>Bug fixes are introduced in each version, making errors less likely;</li>
+<li>Performance enhancements are made from one version to the next, meaning your code may run faster in later versions;</li>
+<li>Many R packages only work on recent versions on R.</li>
+</ul>
+<p>Release notes with details on each of these issues are hosted at <a href="https://cran.r-project.org/src/base/NEWS">cran.r-project.org/src/base/NEWS</a>. R release versions have 3 components corresponding to major.minor.patch changes. Generally 2 or 3 patches are released before the next minor increment. R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.</p>
+<ul>
+<li>On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with <code>apt-get upgrade</code>.</li>
+<li>On Mac, the latest version should be installed by the user from the <code>.pkg</code> files mentioned above.</li>
+<li><p>On Windows <strong>installr</strong> package makes updating easy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check and install the latest R version</span>
+installr::<span class="kw">updateR</span>() </code></pre></div></li>
+</ul>
+<p>For information about changes to expect in the next version, you can subscribe to the R’s NEWS RSS feed: <a href="http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss">developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss</a>. It’s a good way of keeping up-to-date.</p>
+</div>
+<div id="installing-r-packages" class="section level3">
+<h3><span class="header-section-number">2.3.3</span> Installing R packages</h3>
+<p>Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span>
+<span class="kw">install.packages</span>(pkgs)</code></pre></div>
+<p>In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the <code>pkgs</code> object to load them all:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></code></pre></div>
+<p>In the above code <code>library(pkg[i])</code> is executed for every package stored in the text string vector. We use <code>library</code> here instead of <code>require</code> because the former produces an error if the package is not available.</p>
+<p>Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed <em>before</em> time is spent executing code. Storing package names in a character vector object such as <code>pkgs</code> is also useful because it allows us to refer back to them again and again. <!-- To provide another example, we can update only the packages named in `pkgs` with the following command: --></p>
+<!-- ```{r, eval=FALSE} -->
+<!-- update.packages(oldPkgs = pkgs) -->
+<!-- ``` -->
+</div>
+<div id="deps" class="section level3">
+<h3><span class="header-section-number">2.3.4</span> Installing R packages with dependencies</h3>
+<p>Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing <code>install.packages</code>. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with <code>r-cran-</code> can be search for and installed as follows (see <a href="https://cran.r-project.org/bin/linux/ubuntu/">cran.r-project.org/bin/linux/ubuntu/</a> for a list of these):</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span>
+<span class="kw">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></code></pre></div>
+<p>On Windows the <strong>installr</strong> package helps manage and update R packages with system-level dependencies. For example the <strong>Rtools</strong> package for compiling C/C++ code on Window can be installed with the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">installr::<span class="kw">install.rtools</span>() </code></pre></div>
+</div>
+<div id="updating-r-packages" class="section level3">
+<h3><span class="header-section-number">2.3.5</span> Updating R packages</h3>
+<p>An efficient R set-up will contain up-to-date packages. This can be done <em>for all packages</em> with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></code></pre></div>
+<p>The default for this function is for the <code>ask</code> argument to be set to <code>TRUE</code>, giving control over what is downloaded onto your system. This is generally desirable as updating dozens of large packages can consume a large proportion of available system resources.</p>
+<div class="rmdtip">
+<p>
+To update packages automatically, you can add the line <code>update.packages(ask = FALSE)</code> to your <code>.Rprofile</code> startup file (see the next section for more on <code>.Rprofile</code>). Thanks to Richard Cotton for this tip.
+</p>
+</div>
+<p>An even more interactive method for updating packages in R is provided by RStudio via Tools &gt; Check for Package Updates. Many such time saving tricks are enabled by RStudio, as described in <a href="rstudio.html#install-rstudio">a subsequent section</a>. Next (after the exercises) we take a look at how to configure R using start-up files.</p>
+<div id="exercises-1" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li>What version of R are you using? Is it the most up-to-date?</li>
+<li>Do any of your packages need updating?</li>
+</ol>
+</div>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<ol start="2">
+<li id="fn2"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="r-version.html#fnref2">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -315,8 +358,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="operating-system.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="r-startup.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +386,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/02-set-up.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="rstudio.html">
+<link rel="next" href="efficient-hardware.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,40 +274,72 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="blas-and-alternative-r-interpreters" class="section level2">
+<h2><span class="header-section-number">2.6</span> BLAS and alternative R interpreters</h2>
+<p>In this section we cover a few system-level options available to speed-up R’s performance. Note that for many applications stability rather than speed is a priority, so these should only be considered if a) you have exhausted options for writing your R code more efficiently and b) you are confident tweaking system-level settings. This should therefore be seen as an advanced section: if you are not interested in speeding-up base R, feel free to skip to the next section of hardware.</p>
+<p>Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.</p>
+<p>The two open source alternative BLAS libraries are <a href="http://math-atlas.sourceforge.net/">ATLAS</a> and <a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a>. The <a href="https://software.intel.com/en-us/intel-mkl">Intel MKL</a> is another implementation, designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching you BLAS library, linear algebra operations can run several times faster than with the base BLAS routines.</p>
+<p>If you use Linux, you can find whether you have a BLAS library setting with the following function, from <strong>benchmarkme</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)
+<span class="kw">get_linear_algebra</span>()</code></pre></div>
+<div id="testing-performance-gains-from-blas" class="section level3">
+<h3><span class="header-section-number">2.6.1</span> Testing performance gains from BLAS</h3>
+<p>As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6<sup>th</sup> generation Core i7 processor, before and after OpenBLAS was installedv<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">benchmark_std</span>() <span class="co"># run a suit of tests to test R&#39;s performance</span></code></pre></div>
+<p>It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure <a href="blas-and-alternative-r-interpreters.html#fig:blas-bench">2.4</a>. Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that ‘programming’ benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are now much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.</p>
+<div class="figure"><span id="fig:blas-bench"></span>
+<img src="_main_files/figure-html/blas-bench-1.png" alt="Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`)." width="576" />
+<p class="caption">
+Figure 2.4: Performance gains obtained changing the underlying BLAS library (tests from <code>benchmark_std()</code>).
+</p>
 </div>
+</div>
+<div id="revolution-r" class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Revolution R</h3>
+<p>Revolution R is the main software product offered by Revolution Analytics. It is “100%” compatible with R“, supporting all available packages through the MRAN package repository. Revolution R provides faster performance on for certain functions than base R, through its use of MKL, an implementation of BLAS (as described above). Revolution R is available as a free and open source product, ‘Revolution R Open’ (RRO), and is reported to be faster than base R installations.<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<p>Additional benchmarks reported by <span class="citation">Eddelbuettel (<a href="#ref-eddelbuettel2010benchmarking">2010</a>)</span> show the MKL implementations of R used in RRO and the commercial edition to be substantially faster than the reference case.</p>
+</div>
+<div id="other-interpreters" class="section level3">
+<h3><span class="header-section-number">2.6.3</span> Other interpreters</h3>
+<p>The R <em>language</em> can be separated from the R <em>interpreter</em>. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.</p>
+<ul>
+<li><p><a href="https://github.com/rho-devel/rho">Rho</a> (previously called CXXR, short for C++), a re-implementation of the R interpretter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).</p></li>
+<li><p><a href="http://www.pqr-project.org/">pqrR</a> (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. <strong>pqR</strong> is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.</p></li>
+<li><p><a href="http://www.renjin.org/">Renjin</a> reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.</p></li>
+<li><p><a href="http://spotfire.tibco.com/">Tibco</a> created a C++ based interpreter called TERR.</p></li>
+<li><p>Oracle also offer an R-interpreter that uses Intel’s mathematics library and therefore achieves a higher performance without changing R’s core.</p></li>
+</ul>
+<p>At the time of writing, switching interpreters is something to consider carefully. But in the future, it may become more routine.</p>
+<p>In this context it is also worth mentioning <a href="http://julialang.org/">Julia</a>. This is a fast language and interpreter which aims to provide “a high-level, high-performance dynamic programming language for technical computing” that will be familiar to R and Python users.</p>
+</div>
+<div id="useful-blasbenchmarking-resources" class="section level3">
+<h3><span class="header-section-number">2.6.4</span> Useful BLAS/benchmarking resources</h3>
+<ul>
+<li>The <a href="https://cran.r-project.org/web/packages/gcbd/">gcbd</a> package benchmarks performance of a few standard linear algebra operations across a number of different BLAS libraries as well as a GPU implementation. It has an excellent vignette summarising the results.</li>
+<li><a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Brett Klamer</a> provides a nice comparison of ATLAS, OpenBLAS and Intel MKL BLAS libraries. He also gives a description of how to install the different libraries.</li>
+<li>The official R manual <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#BLAS">section</a> on BLAS.</li>
+</ul>
+</div>
+<div id="exercises-5" class="section level3">
+<h3><span class="header-section-number">2.6.5</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>What BLAS system is your version of R using? (Hint: you will need the <strong>benchmarkme</strong> package installed.)</li>
+</ol>
+
+</div>
+</div>
+<!-- </div> -->
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-eddelbuettel2010benchmarking">
+<p>Eddelbuettel, Dirk. 2010. “Benchmarking Single-and Multi-Core BLAS Implementations and GPUs for Use with R.” Mathematica.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<ol start="6">
+<li id="fn6"><p>OpenBLAS was installed on the computer via <code>sudo apt-get install libopenblas-base</code>, which automatically detected and used by R.<a href="blas-and-alternative-r-interpreters.html#fnref6">↩</a></p></li>
+<li id="fn7"><p>See <a href="http://www.brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/">brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/</a>, which finds Revolution R to be marginally faster than R using OpenBLAS and ATLAS BLAS implementations and <a href="http://brettklamer.com/diversions/statistical/faster-blas-in-r/">Faster BLAS in R</a>, which does not.<a href="blas-and-alternative-r-interpreters.html#fnref7">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -315,8 +347,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="rstudio.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-hardware.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +375,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/02-set-up.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

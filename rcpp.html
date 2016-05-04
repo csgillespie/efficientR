@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="code-profiling.html">
+<link rel="next" href="efficient-learning.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,276 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="rcpp" class="section level2">
+<h2><span class="header-section-number">7.4</span> Rcpp</h2>
+<p>Sometimes R is just slow. You’ve tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as <strong>Rcpp</strong>, <strong>rJava</strong>, <strong>rPython</strong> and recently <strong>V8</strong>. These provide R interfaces to C++, Java, Python and JavaScript respectively. <strong>Rcpp</strong> is the most popular of these (Figure <a href="rcpp.html#fig:cranlog">7.2</a>).</p>
+<div class="figure"><span id="fig:cranlog"></span>
+<img src="_main_files/figure-html/cranlog-1.png" alt="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages." width="576" />
+<p class="caption">
+Figure 7.2: Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.
+</p>
 </div>
+<p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easily.</p>
+<p>Although C/Fortran routines can be used using the <code>.Call</code> function this is not recommended: using <code>.Call</code> can be a painful experience. <strong>Rcpp</strong> provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R’s tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.</p>
+<p>C++ is a powerful programming language about which entire books have been written. This chapter therefore is focussed on getting started and provide a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong> in Section <a href="rcpp.html#pre-requisites">7.4.1</a>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="rcpp.html#simple-c">7.4.2</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="rcpp.html#cppfunction">7.4.3</a>. The remainder of the chapter explains C++ data types (Section <a href="rcpp.html#c-types">7.4.4</a>), illustrates how to source C++ code directly (Section <a href="rcpp.html#sourcecpp">7.4.5</a>) and explains vectors (Section <a href="rcpp.html#vectors-and-loops">7.4.6</a>) <strong>Rcpp</strong> sugar (Section <a href="rcpp.html#sugar">7.4.7</a>) and finally provides guidance on further resources on the subject (Section <a href="rcpp.html#rcpp-resources">7.4.8</a>).</p>
+<div id="pre-requisites" class="section level3">
+<h3><span class="header-section-number">7.4.1</span> Pre-requisites</h3>
+<p>To write and compile C++ functions, you need a working C++ compiler. The installation method depends on your operating system:</p>
+<ul>
+<li>Linux: A compiler should already be installed. Otherwise, install <code>r-base</code> and a compiler will be installed as a dependency.</li>
+<li>Macs: Install <code>Xcode</code>.</li>
+<li>Windows: Install <a href="http://cran.r-project.org/bin/windows/">Rtools</a>. Make sure you select the version that corresponds to your version of R.</li>
+</ul>
+<p>The code in this chapter was generated using version 0.12.4 of <strong>Rcpp</strong>. The latest version can be installed from CRAN:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;Rcpp&quot;</span>)</code></pre></div>
+<p><strong>Rcpp</strong> is well documented, as illustrated by package’s <a href="https://cran.r-project.org/web/packages/Rcpp/">CRAN</a> page. In addition to its popularity, many other packages depend on <strong>Rcpp</strong>, which can be seen by looking at the <code>Reverse Imports</code> section.</p>
+<p>To check that you have everything needed for this chapter, run the following piece of code from the course R package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">efficient::<span class="kw">test_rcpp</span>()
+<span class="co">#&gt; Everything seems fine</span></code></pre></div>
+</div>
+<div id="simple-c" class="section level3">
+<h3><span class="header-section-number">7.4.2</span> A simple C++ function</h3>
+<p>A C++ function is similar to an R function: you pass a set of inputs to function, some code is run, a single object is returned. However there are some key differences.</p>
+<ol style="list-style-type: decimal">
+<li>In the C++ function each line must be terminated with <code>;</code> In R, we use <code>;</code> only when we have multiple statements on the same line.</li>
+<li>We must declare object types in the C++ version. In particular we need to declare the types of the function arguments, return value and any intermediate objects we create.</li>
+<li>The function must have an explicit <code>return</code> statement. Similar to R, there can be multiple returns, but the function will terminate when it hits it’s first <code>return</code> statement.</li>
+<li>You do not use assignment when creating a function.</li>
+<li>Object assignment must use <code>=</code> sign. The <code>&lt;-</code> operator isn’t valid.</li>
+<li>One line comments can be created using <code>//</code>. Multi-line comments are created using <code>/*...*/</code></li>
+</ol>
+<p>Suppose we want to create a function that adds two numbers together. In R this would be a simple one line affair:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_r =<span class="st"> </span>function(x, y) x +<span class="st"> </span>y</code></pre></div>
+<p>In C++ it is a bit more long winded</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">/* Return type double</span>
+<span class="co"> * Two arguments, also doubles</span>
+<span class="co"> */</span>
+  <span class="dt">double</span> add_c(<span class="dt">double</span> x, <span class="dt">double</span> y) { 
+    <span class="dt">double</span> value = x + y;
+    <span class="kw">return</span> value;
+  }</code></pre></div>
+<p>If we were writing a C++ programme we would also need another function called <code>main</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
+</div>
+<div id="cppfunction" class="section level3">
+<h3><span class="header-section-number">7.4.3</span> The cppFunction command</h3>
+<p>Load the <strong>Rcpp</strong> package using the usual <code>library</code> function call:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>) </code></pre></div>
+<p>Pass the C++ function created in the previous section as a text string argument to <code>cppFunction</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cppFunction</span>(<span class="st">&#39;</span>
+<span class="st">  double add_c(double x, double y) {</span>
+<span class="st">    double value = x + y;</span>
+<span class="st">    return value;</span>
+<span class="st">  }</span>
+<span class="st">&#39;</span>)</code></pre></div>
+<p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
+<span class="co">#&gt; function (x, y) </span>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ae9165b48a0&gt;, x, y)</span></code></pre></div>
+<p>We can call the <code>add_c</code> function in the usual way</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
+<span class="co">#&gt; [1] 3</span></code></pre></div>
+<p>and we don’t have to worry about compilers. Also, if you include this function in a package, users don’t have to worry about any of the <strong>Rcpp</strong> magic. It just works.</p>
+</div>
+<div id="c-types" class="section level3">
+<h3><span class="header-section-number">7.4.4</span> C++ data types</h3>
+<p>The most basic type of variable is an integer, <code>int</code>. An <code>int</code> variable can store a value in the range <span class="math inline">\(-32768\)</span> to <span class="math inline">\(+32767\)</span>. (There is also something called an unsigned int, which goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(65,535\)</span>). There are also <code>long int</code> data types, which range from <span class="math inline">\(0\)</span> to <span class="math inline">\(2^{31}-1\)</span>.}. To store floating point numbers, there are single precision numbers, <code>float</code> and double precision numbers, <code>double</code>. A <code>double</code> takes twice as much memory as a <code>float</code>. For <strong>single</strong> characters, we use the <code>char</code> data type.</p>
+<table>
+<caption><span id="tab:cpptypes">Table 7.1: </span>Overview of key C++ object types.</caption>
+<thead>
+<tr class="header">
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">char</td>
+<td align="left">A single character.</td>
+</tr>
+<tr class="even">
+<td align="left">int</td>
+<td align="left">An integer.</td>
+</tr>
+<tr class="odd">
+<td align="left">float</td>
+<td align="left">A single precision floating point number.</td>
+</tr>
+<tr class="even">
+<td align="left">double</td>
+<td align="left">A double-precision floating point number.</td>
+</tr>
+<tr class="odd">
+<td align="left">void</td>
+<td align="left">A valueless quantity.</td>
+</tr>
+</tbody>
+</table>
+<p>A pointer object is a variable that points to an area of memory that has been given a name. Pointers are a very powerful, but primitive facility contained in the C++ language. They are very useful since rather than passing large objects around, we pass a pointer to the memory location; rather than pass the house, we just give the address. We won’t use pointers in this chapter, but mention them for completeness. Table @ref{tab:cpptypes} gives an overview.</p>
+</div>
+<div id="sourcecpp" class="section level3">
+<h3><span class="header-section-number">7.4.5</span> The <code>sourceCpp</code> function</h3>
+<p>The <code>cppFunction</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp(&quot;path/to/file.cpp&quot;)</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. Alternatively you can view it <a href="https://github.com/RcppCore/Rcpp">online</a>. The <code>include</code> line</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;Rcpp.h&gt;</span></code></pre></div>
+<p>causes the compiler to replace that lines with the contents of the named source file. This means that we can access the functions defined by <strong>Rcpp</strong>. To access the <strong>Rcpp</strong> functions we would have to type <code>Rcpp::function_1</code>. To avoid typing <code>Rcpp::</code>, we use the namespace facility</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</code></pre></div>
+<p>Now we can just type <code>function_1</code>; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// [[Rcpp::export]]</span></code></pre></div>
+<p>This would give the complete file</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;Rcpp.h&gt;</span>
+<span class="kw">using</span> <span class="kw">namespace</span> Rcpp;
+
+<span class="co">// [[Rcpp::export]]</span>
+<span class="dt">double</span> add_c(<span class="dt">double</span> x, <span class="dt">double</span> y) {
+  <span class="dt">double</span> value = x + y;
+  <span class="kw">return</span> value;
+}</code></pre></div>
+<p>There are two main benefits with putting your C++ functions in separate files. First, we have the benefit of syntax highlighting (RStudio has great support for C++ editing). Second, it’s easier to make syntax errors when the switching between R and C++ in the same file. To save space, we we’ll omit the headers for the remainder of the chapter.</p>
+</div>
+<div id="vectors-and-loops" class="section level3">
+<h3><span class="header-section-number">7.4.6</span> Vectors and loops</h3>
+<p>Let’s now consider a slightly more complicated example. Here we want to write our own function that calculates the mean. This is just an illustrative example: R’s version is much better and more robust to scale differences in our data. For comparison, let’s create a corresponding R function - this is the same function we used in chapter @ref{programming}. The function takes a single vector <code>x</code> as input, and returns the mean value, <code>m</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean_r =<span class="st"> </span>function(x) {
+  m =<span class="st"> </span><span class="dv">0</span>
+  n =<span class="st"> </span><span class="kw">length</span>(x)
+  for(i in <span class="dv">1</span>:n)
+    m =<span class="st"> </span>m +<span class="st"> </span>x[i]/n
+  m
+}</code></pre></div>
+<p>This is a very bad R function. We should just use the base function <code>mean</code> for real world applications. However the purpose of <code>mean_r</code> is to provide a comparison for the C++ version, which we will write in a similar way.</p>
+<p>In this example, we will let <strong>Rcpp</strong> smooth the interface between C++ and R by using the <code>NumericVector</code> data type. This <strong>Rcpp</strong> data type mirrors the R vector object type. Other common classes are: <code>IntegerVector</code>, <code>CharacterVector</code>, and <code>LogicalVector</code>.</p>
+<p>In the C++ version of the mean function, we specify the arguments types: <code>x</code> (<code>NumericVector</code>) and the return value (<code>double</code>). The C++ version of the <code>mean</code> function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer.</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> mean_c(NumericVector x) {
+  <span class="dt">int</span> i;
+  <span class="dt">int</span> n = x.size();
+  <span class="dt">double</span> mean = <span class="dv">0</span>;
+
+  <span class="kw">for</span>(i=<span class="dv">0</span>; i&lt;n; i++) {
+    mean = mean + x[i]/n;
+  }
+  <span class="kw">return</span> mean;
+}</code></pre></div>
+<p>To use the C++ function we need to source the file (remember to put the necessary headers in).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sourceCpp</span>(<span class="st">&quot;src/mean_c.cpp&quot;</span>)</code></pre></div>
+<p>Although the C++ version is similar, there are a few crucial differences.</p>
+<ol style="list-style-type: decimal">
+<li>We use the <code>.size()</code> method to find the length of <code>x</code></li>
+<li><p>The <code>for</code> loop has a more complicated syntax.</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">for</span> (variable initialization; condition; variable update ) {
+  <span class="co">// Code to execute</span>
+}</code></pre></div></li>
+<li><p>C++ provides operators to modify variables in place. So <code>i++</code> increases the value of <code>i</code> by <code>1</code>. Similarly, we could rewrite part of the loop as</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">mean += x[i]/n;</code></pre></div>
+The above code adds <code>x[i]/n</code> to the value of <code>mean</code>. Other similar operators are <code>-=</code>, <code>*=</code>, <code>/=</code> and <code>i--</code>.</li>
+<li><p>A C++ vector starts at <code>0</code> <strong>not</strong> <code>1</code></p></li>
+</ol>
+<p>To compare the C++ and R functions, we’ll generate some normal random numbers for the comparison</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</code></pre></div>
+<p>Then call the <code>microbenchmark</code> function (results plotted in figure <a href="rcpp.html#fig:rcppcomp">7.3</a>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## com_mean_r is the compiled version of mean_r
+z =<span class="st"> </span><span class="kw">microbenchmark</span>(
+  <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x),
+  <span class="kw">com_mean_r</span>(x), <span class="kw">mean_c</span>(x),
+  <span class="dt">times=</span><span class="dv">1000</span>
+)</code></pre></div>
+<p>In this simple example, the Rcpp variant is around <span class="math inline">\(100\)</span> times faster than the corresponding R version. This sort of speed-up is not uncommon when switching to an Rcpp solution.</p>
+<div class="figure"><span id="fig:rcppcomp"></span>
+<img src="_main_files/figure-html/rcppcomp-1.png" alt="Comparison of mean functions." width="576" />
+<p class="caption">
+Figure 7.3: Comparison of mean functions.
+</p>
+</div>
+<div id="exercises-15" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<p>Consider the following piece of code</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> test1() {
+  <span class="dt">double</span> a = <span class="fl">1.</span><span class="dv">0</span> / <span class="dv">81</span>;
+  <span class="dt">double</span> b = <span class="dv">0</span>;
+  <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">729</span>; ++ i)
+    b = b + a;
+  <span class="kw">return</span> b;
+}</code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Save the function <code>test1</code> in a separate file. Make sure it works.</li>
+<li>Write a similar function in R and compare the speed of the C++ and R versions.</li>
+<li>Create a function called <code>test2</code> where the <code>double</code> variables have been replaced by <code>float</code>. Do you still get the correct answer?</li>
+<li>Change <code>b = b + a</code> to <code>b += a</code> to make you code more <code>C</code> like.</li>
+<li>(Hard) What’s the difference between <code>i++</code> and <code>++i</code>?</li>
+</ol>
+</div>
+<div id="matrices-1" class="section level4">
+<h4><span class="header-section-number">7.4.6.1</span> Matrices</h4>
+<p>Each vector type has a corresponding matrix equivalent: <code>NumericMatrix</code>, <code>IntegerMatrix</code>, <code>CharacterMatrix</code> and <code>LogicalMatrix</code>. We use these types in a similar way to how we used <code>NumericVector</code>’s. The main differences are:</p>
+<ul>
+<li><p>When we initialise, we need specify the number of rows and columns</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// 10 rows, 5 columns</span>
+NumericMatrix mat(<span class="dv">10</span>, <span class="dv">5</span>);
+<span class="co">// Length 10</span>
+NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
+<li>We subset using <code>()</code>, i.e. <code>mat(5, 4)</code>.</li>
+<li>The first view in a matrix is <code>mat(0, 0)</code> - remember indexes start with <code>0</code>.</li>
+<li><p>To determine the number of rows and columns, we use the <code>.nrow()</code> and <code>.ncol()</code> methods.</p></li>
+</ul>
+</div>
+</div>
+<div id="sugar" class="section level3">
+<h3><span class="header-section-number">7.4.7</span> C++ with sugar on top</h3>
+<p><strong>Rcpp</strong> sugar brings a higher-level of abstraction to C++ code written using the <strong>Rcpp</strong> API. What this means in practice is that we can write C++ code in the style of R. For example, suppose we wanted to find the squared difference of two vectors; a residual in regression. In R, we would we would use</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sq_diff_r =<span class="st"> </span>function(x, y) (x -<span class="st"> </span>y)^<span class="dv">2</span></code></pre></div>
+<p>Rewriting the function in standard C++, we would more effort. Assuming we have the correct headers, we would try something like</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">NumericVector res_c(NumericVector x, NumericVector y) {
+  <span class="dt">int</span> i;
+  <span class="dt">int</span> n = x.size();
+  NumericVector residuals(n);
+  <span class="kw">for</span>(i=<span class="dv">0</span>; i&lt;n; i++) {
+    residuals[i] = pow(x[i] - y[i], <span class="dv">2</span>);
+  }
+  <span class="kw">return</span> residuals;
+}</code></pre></div>
+<p>With <strong>Rcpp</strong> sugar we can rewrite this code to be more succinct and have more of an R feel:</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">NumericVector res_sugar(NumericVector x, NumericVector y) {
+  <span class="kw">return</span> pow(x-y, <span class="dv">2</span>);
+}</code></pre></div>
+<p>In the above C++ code, the <code>pow</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm</code> and <code>pnorm</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
+<div id="exercises-16" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li>Construct an R version, <code>res_r</code> and compare the three function variants.</li>
+<li>In the above example, <code>res_sugar</code> is faster than <code>res_c</code>. Do you know why?</li>
+</ol>
+</div>
+</div>
+<div id="rcpp-resources" class="section level3">
+<h3><span class="header-section-number">7.4.8</span> Rcpp resources</h3>
+<p>The aim of this section was to provide an introduction to <code>Rcpp</code>. One of the selling features of <code>Rcpp</code> is that there is a great deal of documentation available.</p>
+<ul>
+<li>The Rcpp <a href="http://www.rcpp.org/">website</a>;</li>
+<li>The original Journal of Statistical Software paper describing <code>Rcpp</code> (<span class="citation">Eddelbuettel and François (<a href="#ref-Eddelbuettel2011">2011</a>)</span>) and the follow-up book (<span class="citation">Eddelbuettel (<a href="#ref-Eddelbuettel2013">2013</a>)</span>);</li>
+<li>A very readable chapter on <code>Rcpp</code> that goes into a bit more detail than this section (<span class="citation">Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>);</li>
+<li>The <code>Rcpp</code> section on the <a href="https://stackoverflow.com/questions/tagged/rcpp">stackoverflow</a> website. Questions are often answered by the <code>Rcpp</code> authors.</li>
+</ul>
+
+</div>
+</div>
+<!-- </div> -->
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-Eddelbuettel2011">
+<p>Eddelbuettel, Dirk, and Romain François. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
 </div>
+<div id="ref-Eddelbuettel2013">
+<p>Eddelbuettel, Dirk. 2013. <em>Seamless R and C++ Integration with Rcpp</em>. Springer.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
+<div id="ref-Wickham2014">
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="code-profiling.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-learning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +570,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/07-performance.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

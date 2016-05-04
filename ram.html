@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="background-what-is-a-byte.html">
+<link rel="next" href="hard-drives-hdd-vs-ssd.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,82 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="ram" class="section level2">
+<h2><span class="header-section-number">3.2</span> Random access memory: RAM</h2>
+Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analysis. <!-- https://commons.wikimedia.org/wiki/File:Two\_8\_GB\_DDR4-2133_ECC_1.2\_V\_RDIMMs.jpg"  -->
+<div class="figure"><span id="fig:3-1"></span>
+<img src="figures/ram.jpg" alt="Two 8GB RAM cards. Credit: Wikimedia.org"  />
+<p class="caption">
+Figure 3.1: Two 8GB RAM cards. Credit: Wikimedia.org
+</p>
 </div>
-<h3><span class="header-section-number">9</span> Efficient data capentry</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<p>Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)
+<span class="co">#&gt;         Murder Assault UrbanPop Rape</span>
+<span class="co">#&gt; Alabama   13.2     236       58 21.2</span>
+<span class="co">#&gt; Alaska    10.0     263       48 44.5</span>
+<span class="co">#&gt; Arizona    8.1     294       80 31.0</span></code></pre></div>
+<p>If we want to group states that have similar crime statistics, a standard first step is to calculate the distance or similarity matrix</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
+<p>When we inspect the object size of the original data set and the distance object using the <strong>pryr</strong> package</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(USArrests)
+<span class="co">#&gt; 5.23 kB</span>
+pryr::<span class="kw">object_size</span>(d)
+<span class="co">#&gt; 14.3 kB</span></code></pre></div>
+<div class="rmdnote">
+<p>
+The distance object <code>d</code> is actually a vector that contains the distances in the upper triangular region.
+</p>
 </div>
+<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math inline">\(n \times n\)</span> matrix, where <span class="math inline">\(n\)</span> is the number of rows in <code>USAarrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math inline">\(O(n^2)\)</span>. So if our original data set contained <span class="math inline">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math inline">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math inline">\(50\)</span> million unique values.</p>
+<div class="rmdtip">
+<p>
+A rough rule of thumb is that your RAM should be three times the size of your data set.
+</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<p>Another benefit of having increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often (we will cover this in more detail in chapter XXX).</p>
+<p>It is straightforward to determine how much RAM you have. Under Windows,</p>
+<ol style="list-style-type: decimal">
+<li>Clicking the <code>Start</code> button picture of the Start button, then right-clicking Computer. Next click on <code>Properties</code>.</li>
+<li>In the <code>System</code> section, you can see the amount of RAM your computer has next to the <code>Installed memory (RAM)</code> section. Windows reports how much RAM it can use, not the amount installed. This is only an issue if you are using a 32-bit version of Windows.</li>
 </ol>
+<p>In Mac, click the Apple menu. Select <code>About This Mac</code> and a window appears with the relevant information.</p>
+<p>On almost all Unix-based OSs, you can find out how much RAM you have using the code <code>vmstat</code>, whilst on all Linux distributions, you can use the command <code>free</code>. Using this in conjunction with the <code>-h</code> tag will provide the answer in human readable format, as illustrated below for a 16 GB machine:</p>
+<pre><code>$ free -h
+             total       used       free     
+Mem:           15G       4.0G        11G </code></pre>
+<p>It is sometimes possible to increase your computer’s RAM. On the computer motherboard, there are typically <span class="math inline">\(2\)</span> or <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more RAM. However, it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the RAM will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from 4GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; RAM is cheap and thinking hurts.</span>
+<span class="co">#&gt;    -- Uwe Ligges (about memory requirements in R)</span>
+<span class="co">#&gt;       R-help (June 2007)</span></code></pre></div>
+<p>It is a testament to the design of R that it is still relevant and its popularity is growing. Ross Ihaka, one of the originators of the R programming language, made a throw-away comment in 2003:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">21</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; I seem to recall that we were targetting 512k Macintoshes. In our dreams</span>
+<span class="co">#&gt; we might have seen 16Mb Sun.</span>
+<span class="co">#&gt;    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they</span>
+<span class="co">#&gt;       started out that they would see R using 16G memory on a dual Opteron</span>
+<span class="co">#&gt;       computer)</span>
+<span class="co">#&gt;       R-help (November 2003)</span></code></pre></div>
+<p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive. R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
+<div id="exercises-6" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<p>The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.</p>
+<ol style="list-style-type: decimal">
+<li>R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?</li>
+<li>Using your preferred search engine, how much does it cost (in pounds) to double the amount of available RAM on your system?</li>
+</ol>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="background-what-is-a-byte.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hard-drives-hdd-vs-ssd.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +376,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/03-hardware.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

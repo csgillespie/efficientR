@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="the-byte-compiler.html">
+<link rel="next" href="efficient-performance.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,73 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="parallel-computing" class="section level2">
+<h2><span class="header-section-number">6.6</span> Parallel computing</h2>
+<p>This chapter provides a brief foray into the word of parallel computing and only looks at shared memory systems. The idea is to give a flavour of what is possible, instead of covering all possible varities. For a fuller account, see <span class="citation">(McCallum and Weston <a href="#ref-mccallum2011">2011</a>)</span>.</p>
+<p>In recent R versions (since R 2.14.0) the <strong>parallel</strong> package comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
+no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
+<p>The computer used to compile the published version of this book chapter has <code>r no_of_cores</code> CPUs/Cores.</p>
+<div id="parallel-versions-of-apply-functions" class="section level3">
+<h3><span class="header-section-number">6.6.1</span> Parallel versions of apply functions</h3>
+<p>The most commonly used parallel applications are parallelised replacements of <code>lapply</code>, <code>sapply</code> and <code>apply</code>. The parallel implementations and their arguments are shown below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
+<span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
+<span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
+<p>The key point is that there is very little difference in arguments between <code>parLapply</code> and <code>apply</code>, so the barrier to using (this form) of parallel computing is low. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster</code> call. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
+<div id="example-snakes-and-ladders" class="section level3">
+<h3><span class="header-section-number">6.6.2</span> Example: Snakes and Ladders</h3>
+<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code>[^The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.]</p>
+<p>If we wanted to simulate <code>N</code> games we could use <code>sapply</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10</span>^<span class="dv">4</span>
+<span class="kw">sapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
+<p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward. We begin by making a cluster object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</code></pre></div>
+<p>Then swap <code>sapply</code> for <code>parSapply</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
+<p>before stopping the cluster</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
+<p>On my computer I get a four-fold speed-up.</p>
+</div>
+<div id="exit-functions-with-care" class="section level3">
+<h3><span class="header-section-number">6.6.3</span> Exit functions with care</h3>
+<p>We should always call <code>stopCluster</code> to free resources when we are finished with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster</code> is ommitted.</p>
+<p>The <code>on.exit</code> function handles this problem with the minimum of fuss; regardless how the function ends, <code>on.exit</code> is always called. In the context of parallel programming we will have something similar to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simulate =<span class="st"> </span>function(cores) {
+  cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)
+  <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))
+  ## Do something  
+}</code></pre></div>
+<div class="rmdtip">
+<p>
+Another common use of <code>on.exit</code> is in conjunction with the <code>par</code> function. If you use <code>par</code> to change graphical parameters within a function, <code>on.exit</code> ensures these parameters are reset to their previous value when the function ends.
+</p>
+</div>
+</div>
+<div id="process-forking" class="section level3">
+<h3><span class="header-section-number">6.6.4</span> Process forking</h3>
+<p>Another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions, i.e.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## This will run on Windows, but will only use 1 core
+<span class="kw">mclapply</span>(<span class="dv">1</span>:<span class="dv">2</span>, snakes_ladders)</code></pre></div>
+<p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. If I’m writing code that is only for me, then I use <code>mclapply</code> since I avoid starting and stopping clusters. However if the code is to be shared with a windows user, I use <code>makeCluster</code> since it is cross-platform.</p>
+
+</div>
+</div>
+<!-- </div> -->
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-mccallum2011">
+<p>McCallum, Ethan, and Stephen Weston. 2011. <em>Parallel R</em>. “ O’Reilly Media, Inc.”</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="the-byte-compiler.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-performance.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +367,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

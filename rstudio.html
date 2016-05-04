@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="r-startup.html">
+<link rel="next" href="blas-and-alternative-r-interpreters.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,40 +274,153 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="rstudio" class="section level2">
+<h2><span class="header-section-number">2.5</span> RStudio</h2>
+<p>RStudio is an Integrated Development Environment (IDE) for R. It makes life easy for R users and developers with its intuitive and flexible interface. RStudio encourages good programming practice. Through its wide range of features RStudio can help make you a more efficient and productive R programmer. RStudio can, for example, greatly reduce the amount of time spent remembering and typing function names thanks to intelligent autocompletion. Some of the most important features of RStudio include:</p>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li>Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.</li>
+<li>Intelligent auto-completion of function names, packages and R objects.</li>
+<li>A wide range of keyboard shortcuts.</li>
+<li>Visual display of objects, including a searchable data display table.</li>
+<li>Real-time code checking and error detection.</li>
+<li>Menus to install and update packages.</li>
+<li>Project management and integration with version control.</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
+<p>The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> As with R itself, the best way to learn about RStudio is by using it. It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.</p>
+<div id="install-rstudio" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Installing and updating RStudio</h3>
+<p>RStudio can be installed from the RStudio website <a href="https://www.rstudio.com/products/rstudio/download/">rstudio.com</a> and is available for all major operating systems. Updating RStudio is simple: click on <code>Help &gt; Check for Updates</code> in the menu. For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse. RStudio has many keyboard shortcuts that will help with this. To get into good habits early, try accessing the RStudio Update interface without touching the mouse. On Linux and Windows dropdown menus are activated with the <code>Alt</code> button, so the menu item can be found with:</p>
+<pre><code>Alt+H U</code></pre>
+<p>On Mac it works differently. <code>Cmd+?</code> should activate a search across menu items, allowing the same operation can be achieved with:</p>
+<pre><code>Cmd+? update</code></pre>
+<p><strong>Note:</strong> in RStudio the keyboard shortcuts differ between Linux and Windows versions on one hand and Mac on the other. In this section we generally only use the Windows/Linux shortcut keys for brevity. The Mac equivalent is usually found by simply replacing <code>Ctrl</code> and <code>Alt</code> with the Mac-specific <code>Cmd</code> button.</p>
+</div>
+<div id="window-pane-layout" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> Window pane layout</h3>
+<p>RStudio has four main window ‘panes’ (see Figure <a href="rstudio.html#fig:rstudio">2.2</a>), each of which serves a range of purposes:</p>
 <ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<li><p>The <strong>Source pane</strong>, for editing, saving, and dispatching R code to the console (top left). Note that this pane does not exist by default when you start RStudio: it appears when you open an R script, e.g. via File -&gt; New File -&gt; R Script. A common task in this pane is to send code on the current line to the console, via <code>Ctrl-Enter</code> (or <code>Cmd-Enter</code> on Mac).</p></li>
+<li><p>The <strong>Console pane</strong>. Any code entered here is processed by R, line by line. This pane is ideal for interactively testing ideas before saving the final results in the Source pane above.</p></li>
+<li><p>The <strong>Environment pane</strong> (top right) contains information about the current objects loaded in the workspace including their class, dimension (if they are a data frame) and name. This pane also contains tabbed sub-panes with a searchable history that was dispatched to the console and (if applicable to the project) Build and Git options.</p></li>
+<li><p>The <strong>Files pane</strong> (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML ‘widgets’.</p></li>
+</ul>
+<div class="figure"><span id="fig:rstudio"></span>
+<img src="figures/rstudio.png" alt="RStudio Panels"  />
+<p class="caption">
+Figure 2.2: RStudio Panels
+</p>
+</div>
+<p>Using each of the panels effectively and navigating between them quickly is a skill that will develop over time, and will only improve with practice.</p>
+</div>
+<div id="exercises-3" class="section level3">
+<h3><span class="header-section-number">2.5.3</span> Exercises</h3>
+<p>You are developing a project to visualise data. Test out the multi-panel RStudio workflow by following the steps below:</p>
+<ol style="list-style-type: decimal">
+<li><p>Create a new folder for the input data using the <strong>Files pane</strong>.</p></li>
+<li>Type in <code>downl</code> in the <strong>Source pane</strong> and hit <code>Enter</code> to make the function <code>download.file()</code> autocomplete. Then type <code>&quot;</code>, which will autocomplete to <code>&quot;&quot;</code>, paste the URL of a file to download (e.g. <code>https://www.census.gov/2010census/csv/pop_change.csv</code>) and a file name (e.g. <code>pop_change.csv</code>).</li>
+<li><p>Execute the full command with <code>Ctrl-Enter</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,
+              <span class="st">&quot;data/pop_change.csv&quot;</span>)</code></pre></div></li>
+<li><p>Write and execute a command to read-in the data, such as</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</code></pre></div></li>
+<li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure 2-3).</p>
+<div class="figure"><span id="fig:2-3"></span>
+<img src="figures/View.png" alt="The data viewing tab in RStudio."  />
+<p class="caption">
+Figure 2.3: The data viewing tab in RStudio.
+</p>
+</div></li>
+<li><p>Use the <strong>Console</strong> to test different plot commands to visualise the data, saving the code you want to keep back into the <strong>Source pane</strong>, as <code>pop_change.R</code>.</p></li>
+<li><p>Use the <strong>Plots tab</strong> in the Files pane to scroll through past plots. Save the best using the Export dropdown button.</p></li>
+</ol>
+<p>The above example shows understanding of these panes and how to use them interactively can help with the speed and productivity of you R programming. Further, there are a number of RStudio settings that can help ensure that it works for your needs.</p>
+</div>
+<div id="rstudio-options" class="section level3">
+<h3><span class="header-section-number">2.5.4</span> RStudio options</h3>
+<p>A range of <code>Project Options</code> and <code>Global Options</code> are available in RStudio from the <code>Tools</code> menu (accessible in Linux and Windows from the keyboard via <code>Alt+T</code>). Most of these are self-explanatory but it is worth mentioning a few that can boost your programming efficiency:</p>
+<ul>
+<li><p>GIT/SVN project settings allow RStudio to provide a graphical interface to your version control system, described in Chapter XX.</p></li>
+<li><p>R version settings allow RStudio to ‘point’ to different R versions/interpreters, which may be faster for some projects.</p></li>
+<li><p><code>Restore .RData</code>: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the change of getting bugs due to previously created objects.</p></li>
+<li><p>Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling <code>Vim mode</code> makes RStudio act as a (partial) Vim emulator.</p></li>
+<li><p>Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work. This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.</p></li>
+<li><p>Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics, which are also important because feeling comfortable in your programming environment can boost productivity.</p></li>
+</ul>
+</div>
+<div id="auto-completion" class="section level3">
+<h3><span class="header-section-number">2.5.5</span> Auto-completion</h3>
+<p>R provides some basic autocompletion functionality. Typing the beginning of a function name, for example <code>rn</code> (short for <code>rnorm()</code>), and hitting <code>Tab</code> will result in the full function names associated with this text string being printed. In this case two options would be displayed: <code>rnbinom</code> and <code>rnorm</code>, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing <code>te</code> in the console in a project which contains a file called <code>test.R</code> should result in the full name <code>&quot;test.R&quot;</code> being auto-completed. RStudio builds on this functionality and takes it to a new level.</p>
+<p>Instead of only auto completing options when <code>Tab</code> is pressed, RStudio auto completes them at any point. Building on the previous example, RStudio’s autocompletion triggers when the first three characters are typed: <code>rno</code>. The same functionality works when only the first characters are typed, followed by <code>Tab</code>: automatic auto-completion does not replace <code>Tab</code> autocompletion but supplements it. Note that in RStudio two more options are provided to the user after entering <code>rn Tab</code> compared with entering the same text into base R’s console described in the previous paragraph: <code>RNGkind</code> and <code>RNGversion</code>. This illustrates that RStudio’s autocompletion functionality is not case sensitive in the same way that R is. This is a good thing because R has no consistent function name style!</p>
+<p>RStudio also has more intelligent auto-completion of objects and file names than R’s built-in command line. To test this functionality, try typing <code>US</code>, followed by the Tab key. After pressing down until <code>USArrests</code> is selected, press Enter so it autocompletes. Finally, typing <code>$</code> should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">USArrests$<span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></code></pre></div>
+<p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form <code>spdf@data$varname</code>.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name. RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>. Another example is RStudio’s ability to find files hidden away in sub-folders. Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>. There are a number of other clever auto-completion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
+</div>
+<div id="keyboard-shortcuts" class="section level3">
+<h3><span class="header-section-number">2.5.6</span> Keyboard shortcuts</h3>
+<p>RStudio has many useful shortcuts that can help make your programming more efficient by reducing the need to reach for the mouse and point and click your way around code and RStudio. These can be viewed by using a little known but extremely useful keyboard shortcut:</p>
+<pre><code>Alt+Shift+K</code></pre>
+<p>This will display the default shortcuts in RStudio. It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse. Some more <a href="http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/">useful</a> shortcuts are listed below. There are many more gems to find that could boost your R writing productivity:</p>
+<ul>
+<li><code>Ctrl+Z/Shift+Z</code>: Undo/Redo.</li>
+<li><code>Ctrl+Enter</code>: Execute the current line or code selection in the Source pane.</li>
+<li><code>Ctrl+Alt+R</code>: Execute all the R code in the currently open file in the Source pane.</li>
+<li><code>Ctrl+Left/Right</code>: Navigate code quickly, word by word.</li>
+<li><code>Home/End</code>: Navigate to the beginning/end of the current line.</li>
+<li><code>Alt+Shift+Up/Down</code>: Duplicate the current line up or down.</li>
+<li><code>Ctrl+D</code>: Delete the current line.</li>
+</ul>
+</div>
+<div id="object-display-and-output-table" class="section level3">
+<h3><span class="header-section-number">2.5.7</span> Object display and output table</h3>
+<p>It is useful to know what is in your current R environment. This information can be revealed with <code>ls()</code>, but this function only provides object names. RStudio provides an efficient mechanism to show currently loaded objects, and their details, in real-time: the Environment tab in the top right corner. It makes sense to keep an eye on which objects are loaded and to delete objects that are no longer useful. Doing so will minimise the probability of confusion in your workflow (e.g. by using the wrong version of an object) and reduce the amount of RAM R needs. The details provided in the Environment tab include the object’s dimension and some additional details depending on the object’s class (e.g. size in MB for large datasets).</p>
+<p>A very useful feature of RStudio is its advanced viewing functionality. This is triggered either by executing <code>View(object)</code> or by double clicking on the object name in the Environment tab. Although you cannot edit data in the Viewer (this should be considered a good thing from a data integrity perspective), recent versions of RStudio provide an efficient search mechanism to rapidly filter and view the records that are of most interest (see Figure 2-3 above).</p>
+</div>
+<div id="project-management" class="section level3">
+<h3><span class="header-section-number">2.5.8</span> Project management</h3>
+<p>In the far top-right of RStudio there is a diminutive drop-down menu illustrated with R inside a transparent box. This menu may be small and simple, but it is hugely efficient in terms of organising large, complex and long-term projects.</p>
+<p>The idea of RStudio projects is that the bulk of R programming work is part of a wider task, which will likely consist of input data, R code, graphical and numerical outputs and documents describing the work. It is possible to scatter each of these elements at random across your hard-discs but this is not recommended. Instead, the concept of projects encourages reproducible working, such that anyone who opens the particular project folder that you are working from should be able to repeat your analyses and replicate your results.</p>
+<p>It is therefore <em>highly recommended</em> that you use projects to organise your work. It could save hours in the long-run. Organizing data, code and outputs also makes sense from a portability perspective: if you copy the folder (e.g. via GitHub) your can work on it from any computer without worrying about having the right files on your current machine. These tasks are implemented using RStudio’s simple project system, in which the following things happen each time you open an existing project:</p>
+<ul>
+<li><p>The working directory automatically switches to the project’s folder. This enables data and script files to be referred to using relative file paths, which are much shorter than absolute file paths. This means that switching directory using <code>setwd()</code>, a common source of error for R users, is rarely if ever needed.</p></li>
+<li><p>The last previously open file is loaded into the Source pane. The history of R commands executed in previous sessions is also loaded into the History tab. This assists with continuity between one session and the next.</p></li>
+<li><p>The <code>File</code> tab displays the associated files and folders in the project, allowing you to quickly find your previous work.</p></li>
+<li><p>Any settings associated with the project, such as Git settings, are loaded. This assists with collaboration and project-specific set-up.</p></li>
+</ul>
+<p>Each project is different but most contain input data, R code and outputs. To keep things tidy, we recommend a sub-directory structure resembling the following:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">project/</span>
+  <span class="kw">-</span> README.Rmd <span class="co"># Project description</span>
+  <span class="kw">-</span> set-up.R  <span class="co"># Required packages</span>
+  <span class="kw">-</span> R/ <span class="co"># For R code</span>
+  <span class="kw">-</span> input <span class="co"># Data files</span>
+  <span class="kw">-</span> graphics/
+  <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre></div>
+<p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
+<p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(Wickham <a href="#ref-Wickham_2015">2015</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
+<p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
+</div>
+<div id="exercises-4" class="section level3">
+<h3><span class="header-section-number">2.5.9</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li><p>Try modifying the look and appearance of your RStudio setup.</p></li>
+<li><p>What is the keyboard shortcut to show the other shortcut? (Hint: it begins with <code>Alt+Shift</code> on Linux and Windows.)</p></li>
+<li><p>Try as many of the shortcuts revealed by the previous step as you like. Write down the ones that you think will save you time, perhaps on a post-it note to go on your computer.</p></li>
+</ol>
+</div>
 </div>
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-cotton_learning_2013">
+<p>Cotton, Richard. 2013. <em>Learning R</em>. “O’Reilly Media, Inc.”</p>
+</div>
+<div id="ref-Wickham_2015">
+<p>Wickham, Hadley. 2015. <em>R Packages</em>. O’Reilly Media, Inc.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<ol start="4">
+<li id="fn4"><p>Other open source R IDEs exist, including <a href="https://rkward.kde.org/">RKWard</a>, <a href="http://sourceforge.net/projects/tinn-r/">Tinn-R</a> and <a href="https://www.rforge.net/JGR/">JGR</a>. <a href="https://www.gnu.org/software/emacs/">emacs</a> is another popular software environment. However, it has a very steep learning curve.<a href="rstudio.html#fnref4">↩</a></p></li>
+<li id="fn5"><p>‘Slots’ are elements of an object (specifically, S4 objects) analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="rstudio.html#fnref5">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -315,8 +428,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="r-startup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="blas-and-alternative-r-interpreters.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +456,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/02-set-up.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

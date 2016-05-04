@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="dplyr.html">
+<link rel="next" href="publication.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,40 +274,31 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="data-processing-with-data.table" class="section level2">
+<h2><span class="header-section-number">4.6</span> Data processing with data.table</h2>
+<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> so it should be stated at the outset that <strong>dplyr</strong> and <strong>data.table</strong> are not mutually exclusive competitors. Both are excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.</p>
+<p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="dplyr.html#filtering-columns">4.5.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
+idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
+idata_dt =<span class="st"> </span><span class="kw">data.table</span>(idata) <span class="co"># convert to data.table class</span>
+aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Australia&quot;</span>]</code></pre></div>
+<p>To boost performance, one can set ‘keys’. These are ‘<a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">supercharged rownames</a>’ which order the table based on one or more variables. This allows a <em>binary search</em> algorithm to subset the rows of interest, which is much, much faster than the <em>vector scan</em> approach used in base R (see <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html"><code>vignette(&quot;datatable-keys-fast-subset&quot;)</code></a>). <strong>data.table</strong> uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise <code>.()</code> syntax below).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setkey</span>(idata_dt, Country)
+aus3b =<span class="st"> </span>idata_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
+<p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="data-processing-with-data-table.html#fig:dtplot">4.4</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
+<div class="figure"><span id="fig:dtplot"></span>
+<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="576" />
+<p class="caption">
+Figure 4.4: Benchmark illustrating the performance gains to be expected for different dataset sizes.
+</p>
 </div>
-<h3><span class="header-section-number">9</span> Efficient data capentry</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
-</div>
+<p>Figure <a href="data-processing-with-data-table.html#fig:dtplot">4.4</a> demonstrates that <strong>data.table</strong> is <em>much faster</em> than base R and <strong>dplyr</strong> at subsetting. As with using external packages to read in data (see Section <a href="importing-data.html#fread">4.3.1</a>), the relative benefits of <strong>data.table</strong> improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on <strong>dplyr</strong> as the dataset size reaches half a Gigabyte. Interestingly, even the ‘non key’ implementation of <strong>data.table</strong> subset method is faster than the alternatives: this is because <strong>data.table</strong> creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.</p>
+<p>This section has introduced <strong>data.table</strong> as a complimentary approach to base and <strong>dplyr</strong> methods for data processing and illustrated the performance gains of using <em>keys</em> for subsetting tables. <strong>data.table</strong> is a mature and powerful package which uses clever computational principles implemented in C to provide efficient methods for a number of other operations for data analysis. These include highly efficient data reshaping, dataset merging (also known as joining, as with <code>left_join</code> in <strong>dplyr</strong>) and grouping. These are explained in the vignettes <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf"><code>datatable-intro</code></a> and <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html"><code>datatable-reshape</code></a>. The <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html"><code>datatable-reference-semantics</code></a> vignette explains <strong>data.table</strong>’s unique syntax.</p>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<ol start="18">
+<li id="fn18"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversey and delves into the philosophy underlying each approach.<a href="data-processing-with-data-table.html#fnref18">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -315,8 +306,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="dplyr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="publication.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

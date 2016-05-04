@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="importing-data.html">
+<link rel="next" href="dplyr.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,181 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="tidying-data-with-tidyr" class="section level2">
+<h2><span class="header-section-number">4.4</span> Tidying data with tidyr</h2>
+<p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on a few large vectors than many short vectors. This is illustrated by Tables <a href="tidying-data-with-tidyr.html#tab:tpew">4.3</a> and <a href="tidying-data-with-tidyr.html#tab:tpewt">4.4</a>, provided by <span class="citation">Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p>
+<p>These tables may look different, but they contain precisely the same information. Column names in the ‘flat’ form in Table <a href="tidying-data-with-tidyr.html#tab:tpew">4.3</a> became a new variable in the ‘long’ form in Table <a href="tidying-data-with-tidyr.html#tab:tpewt">4.4</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. For tabular presentation the ‘wide’ or ‘untidy’ form may be better.</p>
+<p>Tidy data has the following characteristics <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li>Each variable forms a column.</li>
+<li>Each observation forms a row.</li>
+<li>Each type of observational unit forms a table.</li>
+</ol>
+<p>Because there is only one observational unit in the example (religions), it can be described in a single table. Large and complex datasets are usually represented by multiple tables, with unique identifiers or ‘keys’ to join them together <span class="citation">(Codd <a href="#ref-Codd1979">1979</a>)</span>.</p>
+<p>Two common operations facilitated by <strong>tidyr</strong> are <em>gathering</em> and <em>splitting</em> columns.</p>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li>Gathering: this means making ‘wide’ tables ‘long’ by converting column names to a new variable. This is done is done with the function <code>gather</code> (the inverse of which is <code>spread</code>) , as illustrated in Table <a href="tidying-data-with-tidyr.html#tab:tpew">4.3</a> and Table <a href="tidying-data-with-tidyr.html#tab:tpewt">4.4</a> and in the code block below:</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
+raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
+<span class="kw">dim</span>(raw)
+<span class="co">#&gt; [1] 18 10</span>
+rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
+<span class="kw">dim</span>(rawt)
+<span class="co">#&gt; [1] 162   3</span>
+rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
+<span class="co">#&gt; Source: local data frame [3 x 3]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   religion Income Count</span>
+<span class="co">#&gt;      (chr)  (chr) (int)</span>
+<span class="co">#&gt; 1 Agnostic  &lt;$10k    27</span>
+<span class="co">#&gt; 2  Atheist  &lt;$10k    12</span>
+<span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
+<div class="rmdtip">
+<p>
+Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <code>read_csv</code> uses the <code>tbl</code> class from the <strong>dplyr</strong> package (described below).
+</p>
+</div>
+<table>
+<caption><span id="tab:tpew">Table 4.3: </span>First 6 rows of the aggregated ‘pew’ dataset from Wickham (2014a) in an ‘untidy’ form.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="right">&lt;$10k</th>
+<th align="right">$10–20k</th>
+<th align="right">$20–30k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="right">27</td>
+<td align="right">34</td>
+<td align="right">60</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="right">12</td>
+<td align="right">27</td>
+<td align="right">37</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="right">27</td>
+<td align="right">21</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:tpewt">Table 4.4: </span>First 3 and last rows of the ‘tidied’ Pew dataset.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="left">Income</th>
+<th align="left">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="left">&lt;$10k</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="left">&lt;$10k</td>
+<td align="left">12</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="left">&lt;$10k</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr class="odd">
+<td align="left">Unaffiliated</td>
+<td align="left">&gt;150k</td>
+<td align="left">258</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<li>Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-15</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with <code>separate</code>, as illustrated in Table <a href="tidying-data-with-tidyr.html#tab:to-separate">4.5</a> and <a href="tidying-data-with-tidyr.html#tab:separated">4.6</a>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
+n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
+df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span class="co"># create a data frame</span>
+<span class="kw">separate</span>(df, agesex, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)
+<span class="co">#&gt;   sex  age n</span>
+<span class="co">#&gt; 1   m 0-10 3</span>
+<span class="co">#&gt; 2   f 0-10 5</span></code></pre></div>
+<table>
+<caption><span id="tab:to-separate">Table 4.5: </span>Joined age and sex variables in one column</caption>
+<thead>
+<tr class="header">
+<th align="left">agesex</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:separated">Table 4.6: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
+<thead>
+<tr class="header">
+<th align="left">sex</th>
+<th align="left">age</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m</td>
+<td align="left">0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f</td>
+<td align="left">0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). Data manipulation is a large topic with major potential implications for efficiency, and there is an entire book on the subject <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span>.</p>
 </div>
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
 <div id="ref-Wickham_2014">
 <p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
 </div>
+<div id="ref-Codd1979">
+<p>Codd, E. F. 1979. “Extending the database relational model to capture more meaning.” <em>ACM Transactions on Database Systems</em> 4 (4): 397–434. doi:<a href="https://doi.org/10.1145/320107.320109">10.1145/320107.320109</a>.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
+<div id="ref-Spector_2008">
+<p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="importing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="dplyr.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="efficient-base-r.html">
+<link rel="next" href="code-profiling.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,91 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="is.na-and-anyna" class="section level2">
+<h2><span class="header-section-number">7.2</span> <code>is.na</code> and <code>anyNA</code></h2>
+<p>TODO</p>
+<div id="matrices" class="section level3 unnumbered">
+<h3>Matrices</h3>
+<p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the expected way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. Calculating the line of best fit using the <code>lm()</code> function, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
+<p>Matrices are generally faster than data frames. The datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns. They contain the same random numbers. However selecting rows from a data frame is around <span class="math inline">\(150\)</span> times slower than a matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10000</span>, 
+          ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
+<div class="rmdtip">
+<p>
+Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
+</p>
+</div>
+</div>
+<div id="efficient-data-structures" class="section level3 unnumbered">
+<h3>Efficient data structures</h3>
+<p>Even when our data set is small, an analysis can generate large objects. For example suppose we want to perform standard cluster analysis. Using the built-in data set <code>USAarrests</code>, we calculate a distance matrix:</p>
+<p>The resulting object <code>dist_usa</code> measures the similarity between two states with respect to the input data. Since there are <span class="math inline">\(50\)</span> states in the <code>USAarrests</code> data set, this results in a matrix with <span class="math inline">\(50\)</span> columns and <span class="math inline">\(50\)</span> rows. Intuitively, since the matrix <code>dist_usa</code> is symmetric around the diagonal, it makes sense to exploit this characteristic for efficiency, allowing storage to be halved. If we examine the object <code>dist_usa</code>, with <code>str(dist_usa)</code>, it becomes apparent that the data is efficiently stored as a vector with some attributes.</p>
+<p>Another efficient data structure is a sparse matrix. This is simply a matrix in where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package.</p>
+</div>
+<div id="the-integer-data-type" class="section level3 unnumbered">
+<h3>The integer data type</h3>
+<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a> - see <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
+<div class="rmdnote">
+<p>
+When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2)*sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
+</p>
+</div>
+<p>There is also another data type, called an integer. Integers primarily exist to be passed to C or Fortran code. Typically we don’t worry about creating integers, however they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
+<span class="co">#&gt; function (x, n = 6L, ...) </span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+<div class="rmdtip">
+<p>
+Using the <code>:</code> operator automatically creates a vector of integers.
+</p>
+</div>
+<p>The default argument is <code>6L</code> (the <code>L</code>, is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package). The speed increase is illustrated below, using the <strong>microbenchmark</strong> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s_int =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span>; s_double =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="fl">1.0</span>)
+<span class="kw">microbenchmark</span>(clock_speed[s_int, 2L], clock_speed[s_double, <span class="fl">2.0</span>], <span class="dt">times=</span><span class="dv">1000000</span>)</code></pre></div>
+<pre><code>## Unit: microseconds
+## expr   min    lq  mean median    uq   max neval cld
+## clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
+## clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b</code></pre>
+<p>The above result shows that using integers is slightly faster, but probably not worth worrying about.</p>
+<div id="exercises-14" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li><p>Another benefit of integers, is that they are slightly more memory efficient. Using the <code>object_size</code> function from the <strong>pryr</strong> package, compare the size of a vector of doubles and a vector of integers.</p></li>
+<li>Examine the following function definitions to give you an idea of how integers are used.</li>
+</ol>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li><code>tail.matrix</code></li>
+<li><code>lm</code>.</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<ol style="list-style-type: decimal">
+<li>How does the function <code>seq.int</code>, which was used in the <code>tail.matrix</code> function, differ to the standard <code>seq</code> function?</li>
+</ol>
+<div class="rmdnote">
+<p>
+A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over 16th of the space (but you can’t use <code>NA</code>s).
+</p>
+</div>
+</div>
+</div>
 </div>
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-Braun2007">
+<p>Braun, John, and Duncan J Murdoch. 2007. <em>A First Course in Statistical Programming with R</em>. Vol. 25. Cambridge University Press Cambridge.</p>
 </div>
+<div id="ref-Goldberg1991">
+<p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1). ACM: 5–48.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="efficient-base-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="code-profiling.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +385,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/07-performance.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

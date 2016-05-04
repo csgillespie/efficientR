@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="programming.html">
+<link rel="next" href="factors.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,228 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="general-advice" class="section level2">
+<h2><span class="header-section-number">6.1</span> General advice</h2>
+<p>C and Fortran demand more from the programmer. The coder must declare the type of every variable they use and has the burdensome responsible of memory management. The payback is that it allows the compiler to better predict how the program behaves and so make clever optimisations.</p>
+<div class="rmdnote">
+<p>
+The wikipedia page on compiler opimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).
+</p>
+</div>
+<p>In R we don’t (tend to) worry about data types. However this means that it’s possible to write R programs that are incredibly slow. While optimisations such as going parallel can double speed, poor code can easily run 100’s of times slower. If you spend any time programming in R, then <span class="citation">(Burns <a href="#ref-Burns2011">2011</a>)</span> should be considered essential reading.</p>
+<p>Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function <code>runif</code> only contains a single line that consists of a call to <code>C_runif</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function (n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) 
+  <span class="kw">.Call</span>(C_runif, n, min, max)</code></pre></div>
+<p>The <strong>golden rule</strong> in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose <code>x</code> is a standard vector of length <code>n</code>. Then</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span>x +<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<p>involves a single function call to the <code>+</code> function. Whereas the <code>for</code> loop</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(i in <span class="dv">1</span>:n) 
+  x[i] =<span class="st"> </span>x[i] +<span class="st"> </span><span class="dv">1</span> </code></pre></div>
+<p>has</p>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li><code>n</code> function calls to <code>+</code>;</li>
+<li><code>n</code> function calls to the <code>[</code> function;</li>
+<li><code>n</code> function calls to the <code>[&lt;-</code> function (used in the assignment operation);</li>
+<li>A function call to <code>for</code> and to the <code>:</code> operator.</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
+<p>It isn’t that the <code>for</code> loop is slow, rather it is because we have many more function calls. Each individual function call is quick, but the total combination is slow.</p>
+<div class="rmdnote">
+<p>
+Everything in R is a function call. When we execute <code>1 + 1</code>, we are actually exercuting <code>+(1, 1)</code>.
+</p>
+</div>
+<div id="exercise-1" class="section level4 unnumbered">
+<h4>Exercise</h4>
+<p>Use the <code>rbenchmark</code> package to compare the vectorised construct <code>x = x + 1</code>, to the <code>for</code> loop version. Try varying the size of the input vector.</p>
+</div>
+<div id="memory-allocation" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Memory allocation</h3>
+<p>Another general technique is to be careful with memory allocation. If possible pre-allocate your vector then fill in the values.</p>
+<div class="rmdtip">
+<p>
+You should also consider pre-allocating memory for data frames and lists. Never grow an object. A good rule of thumb is to compare your objects before and after a <code>for</code> loop; have they increased in length?
+</p>
+</div>
+<p>Let’s consider three methods of creating a sequence of numbers. <strong>Method 1</strong> creates an empty vector and grows the object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method1 =<span class="st"> </span>function(n) {
+  vec =<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Or vec = c()</span>
+  for(i in <span class="dv">1</span>:n)
+    vec =<span class="st"> </span><span class="kw">c</span>(vec, i)
+  vec
+}</code></pre></div>
+<p><strong>Method 2</strong> creates an object of the final length and then changes the values in the object by subscripting:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method2 =<span class="st"> </span>function(n) {
+  vec =<span class="st"> </span><span class="kw">numeric</span>(n)
+  for(i in <span class="dv">1</span>:n)
+    vec[i] =<span class="st"> </span>i
+  vec
+}</code></pre></div>
+<p><strong>Method 3</strong> directly creates the final object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="dv">1</span>:n</code></pre></div>
+<p>To compare the three methods we use the <code>benchmark</code> function from the previous chapter</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="fl">1e4</span>
+rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10</span>, 
+          <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
+          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
+<span class="co">#&gt;         test elapsed</span>
+<span class="co">#&gt; 1 method1(n)   1.803</span>
+<span class="co">#&gt; 2 method2(n)   0.098</span>
+<span class="co">#&gt; 3 method3(n)   0.001</span></code></pre></div>
+<p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
+<table>
+<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour while the other methods take less than 3 seconds.</caption>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(n\)</span></th>
+<th align="left">Method 1</th>
+<th align="left">Method 2</th>
+<th align="left">Method 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(10^5\)</span></td>
+<td align="left"><span class="math inline">\(\phantom{000}0.21\)</span></td>
+<td align="left"><span class="math inline">\(0.02\)</span></td>
+<td align="left"><span class="math inline">\(0.00\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(10^6\)</span></td>
+<td align="left"><span class="math inline">\(\phantom{00}25.50\)</span></td>
+<td align="left"><span class="math inline">\(0.22\)</span></td>
+<td align="left"><span class="math inline">\(0.00\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(10^7\)</span></td>
+<td align="left"><span class="math inline">\(3827.00\)</span></td>
+<td align="left"><span class="math inline">\(2.21\)</span></td>
+<td align="left"><span class="math inline">\(0.00\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="vectorised-code" class="section level3">
+<h3><span class="header-section-number">6.1.2</span> Vectorised code</h3>
+<p>The vector is one of the key data types in R, with many functions offering a vectorised version. For example, the code</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">runif</span>(n) +<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<p>performs two vectorised operations. First <code>runif</code> returns <code>n</code> random numbers. Second we add <code>1</code> to each element of the vector. In general it is a good idea to exploit vectorised functions. Consider this piece of R code that calculates the sum of <span class="math inline">\(\log(x)\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log_sum =<span class="st"> </span><span class="dv">0</span>
+for(i in <span class="dv">1</span>:<span class="kw">length</span>(x))
+  log_sum =<span class="st"> </span>logsum +<span class="st"> </span><span class="kw">log</span>(x[i])</code></pre></div>
+<div class="rmdwarning">
+<p>
+Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code> has length zero. Instead use <code>seq_along(x)</code> or <code>seq_leng(length(x))</code>.
+</p>
+</div>
+<p>This code could easily be vectorised via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log_sum =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">log</span>(x))</code></pre></div>
+<p>Writing code this way has a number of benefits.</p>
 <ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<li>It’s faster. When <span class="math inline">\(n = 10^7\)</span> the ``R way’’ is about forty times faster.</li>
+<li>It’s neater.</li>
+<li>It doesn’t contain a bug when <code>x</code> is of length <span class="math inline">\(0\)</span>.</li>
+</ul>
+<div id="exercises-11" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<p>Time the two methods for calculating the log sum. Try different values of <span class="math inline">\(n\)</span>.</p>
+</div>
+<div id="example-monte-carlo-integration" class="section level4 unnumbered">
+<h4>Example: Monte-Carlo integration</h4>
+<p>It’s also important to make full use of R functions that use vectors. For example, suppose we wish to estimate the integral <span class="math display">\[
+\int_0^1 x^2 dx
+\]</span> using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in <a href="general-advice.html#fig:6-2">6.1</a>).</p>
+<p><em>Monte Carlo Integration</em></p>
+<ol style="list-style-type: decimal">
+<li>Initialise: <code>hits = 0</code></li>
+<li><strong>for i in 1:N</strong></li>
+<li><span class="math inline">\(~~~\)</span> Generate two random numbers, <span class="math inline">\(U_1, U_2\)</span>, between 0 and 1</li>
+<li><span class="math inline">\(~~~\)</span> If <span class="math inline">\(U_2 &lt; U_1^2\)</span>, then <code>hits = hits + 1</code></li>
+<li><strong>end for</strong></li>
+<li>Area estimate = <code>hits/N</code></li>
+</ol>
+<p>Implementing this Monte-Carlo algorithm in R would typically lead to something like:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo =<span class="st"> </span>function(N){
+  hits =<span class="st"> </span><span class="dv">0</span>
+  for(i in <span class="dv">1</span>:N)  {
+    u1 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>); u2 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)
+    if(u1^<span class="dv">2</span> &gt;<span class="st"> </span>u2)
+      hits =<span class="st"> </span>hits +<span class="st"> </span><span class="dv">1</span>
+  }
+  <span class="kw">return</span>(hits/N)
+}</code></pre></div>
+<p>In R this takes a few seconds</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
+<span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   3.078   0.021   3.098</span></code></pre></div>
+<p>In contrast a more R-centric approach would be</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
+<p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
+<ul>
+<li>The <code>runif</code> function call is now fully vectorised;</li>
+<li>We raise entire vectors to a power via <code>^</code>;</li>
+<li>Comparisons using <code>&gt;</code> are vectorised;</li>
+<li>Using <code>sum</code> is quicker than an equivalent for loop.</li>
+</ul>
+The function <code>monte_carlo_vec</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo</code>.
+<div class="figure" style="text-align: center"><span id="fig:6-2"></span>
+<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="576" />
+<p class="caption">
+Figure 6.1: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
+</p>
+</div>
+</div>
+</div>
+<div id="exercise-2" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p>Verify that <code>monte_carlo_vec</code> is faster than <code>monte_carlo</code>. How does this relate to the number of darts, i.e. the size of <code>N</code>, that is used</p>
+</div>
+<div id="type-consistency" class="section level3">
+<h3><span class="header-section-number">6.1.3</span> Type consistency</h3>
+<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all of base R functions follow this idiom. For example the functions <code>sapply</code> and <code>[.data.frame</code> aren’t type consistent</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span>:<span class="dv">5</span>])
+zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()
+<span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span>
+<span class="kw">sapply</span>(zero_cols, class) <span class="co"># a list</span>
+two_cols[, <span class="dv">1</span>:<span class="dv">2</span>]          <span class="co"># a data.frame</span>
+two_cols[, <span class="dv">1</span>]            <span class="co"># an integer vector</span></code></pre></div>
+<p>This can cause unexpected problems. The functions <code>lapply</code> and <code>vapply</code> are type consistent. Likewise <code>dplyr::select</code> and <code>dplyr:filter</code>. The <strong>purrr</strong> package has some type consistent alternatives to base R functions. For example, <code>map_dbl</code> etc. to replace <code>Map</code> and <code>flatten_df</code> to replace <code>unlist</code>.</p>
+<div id="exercises-12" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li><p>Rewrite the <code>sapply</code> function calls above using <code>vapply</code> to ensure type consistency.</p></li>
+<li><p>How would you make subsetting data frames with <code>[</code> type consistent? Hint: look at the <code>drop</code> argument.</p></li>
+</ol>
+</div>
+</div>
+<div id="invisible-returns" class="section level3">
+<h3><span class="header-section-number">6.1.4</span> Invisible returns</h3>
+<p>The <code>invisible</code> function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regression_plot =<span class="st"> </span>function(x, y, ...) {
+  <span class="kw">plot</span>(x, y, ...)
+  model =<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x)
+  <span class="kw">abline</span>(model)
+  <span class="kw">invisible</span>(model)
+}</code></pre></div>
+<p>When the function is called, a scatter graph is ploted with the line of best fit, but the output is invisible. However when we assign the function to an object, i.e. <code>out = regression_plot(x, y)</code> the variable <code>out</code> contains the output of the <code>lm</code> call.</p>
+<p>Another example is <code>hist</code>. Typically we don’t want anything displayed in the console when we call the function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(x)</code></pre></div>
+<p>However if we assign the output to an object, <code>out = hist(x)</code>, the object <code>out</code> is actually a list containing, <em>inter alia</em>, information on the mid-points, breaks and counts.</p>
+</div>
 </div>
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-Burns2011">
+<p>Burns, Patrick. 2011. <em>The R Inferno</em>. Lulu.com.</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="programming.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="factors.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +522,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

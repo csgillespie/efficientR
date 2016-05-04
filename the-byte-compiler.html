@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="caching-variables.html">
+<link rel="next" href="parallel-computing.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,40 +274,67 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
-<ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
-</ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="the-byte-compiler" class="section level2">
+<h2><span class="header-section-number">6.5</span> The byte compiler</h2>
+<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
+<p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
+<span class="co">#&gt; function (x, ...) </span>
+<span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
+<span class="co">#&gt; &lt;bytecode: 0x2b85920&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
+<p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
+<div id="example-the-mean-function" class="section level3">
+<h3><span class="header-section-number">6.5.1</span> Example: the mean function</h3>
+<p>The <strong>compiler</strong> package comes with R, so we just need to load the package in the usual way</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)</code></pre></div>
+<p>Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the <code>m</code> variable.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean_r =<span class="st"> </span>function(x) {
+  m =<span class="st"> </span><span class="dv">0</span>
+  n =<span class="st"> </span><span class="kw">length</span>(x)
+  for(i in <span class="kw">seq_len</span>(n))
+    m =<span class="st"> </span>m +<span class="st"> </span>x[i]/n
+  m
+}</code></pre></div>
+<p>This is clearly a bad function and we should just <code>mean</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</code></pre></div>
+<p>Then we use the <code>benchmark</code> function to compare the three variants</p>
+<!-- Make n bigger and just copy and paster output -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
+x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
+rbenchmark::<span class="kw">benchmark</span>(<span class="kw">mean_r</span>(x), <span class="kw">cmp_mean_r</span>(x), <span class="kw">mean</span>(x), 
+          <span class="dt">columns=</span> <span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>),
+          <span class="dt">order=</span><span class="st">&quot;relative&quot;</span>, <span class="dt">replications=</span><span class="dv">5000</span>)
+<span class="co"># 3       mean(x)   0.032    1.000</span>
+<span class="co"># 2 cmp_mean_r(x)   0.260    8.125</span>
+<span class="co"># 1     mean_r(x)   1.848   57.750</span></code></pre></div>
+<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="the-byte-compiler.html#fig:6-4">6.3</a>).</p>
+<div class="figure"><span id="fig:6-4"></span>
+<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="576" />
+<p class="caption">
+Figure 6.3: Comparsion of mean functions.
+</p>
 </div>
-<h3><span class="header-section-number">9</span> Efficient data capentry</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+</div>
+<div id="compiling-code" class="section level3">
+<h3><span class="header-section-number">6.5.2</span> Compiling code</h3>
+<p>There are a number of ways to compile code. The easiest is to compile individual functions using <code>cmpfun</code>, but this obviously doesn’t scale. If you create a package, you can automatically compile the package on installation by adding</p>
+<pre><code>ByteCompile: true</code></pre>
+<p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Windows users will need Rtools
+<span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type=</span><span class="st">&quot;source&quot;</span>)</code></pre></div>
+A final option to use just-in-time (JIT) compilation. The <code>enableJIT</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.
+<div class="rmdtip">
+<p>
+I always set the compile level to the maximum value of 3.
+</p>
+</div>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
+<ol start="19">
+<li id="fn19"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="the-byte-compiler.html#fnref19">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -315,8 +342,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="caching-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="parallel-computing.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +370,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

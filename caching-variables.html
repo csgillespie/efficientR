@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="S3.html">
+<link rel="next" href="the-byte-compiler.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,138 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="caching-variables" class="section level2">
+<h2><span class="header-section-number">6.4</span> Caching variables</h2>
+<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>log(x)</code> in multiple function calls with the object <code>log_x</code> that is defined once and reused. This small saving in time quickly multiplies when the cached variable is used inside a <code>for</code> loop.</p>
+<p>A more advanced form of caching is to use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
+<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit regression line to data. The user can remove points and refit the line. An example function would be</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Argument indicates row to remove</span>
+plot_mpg =<span class="st"> </span>function(row_to_remove) {
+  <span class="kw">data</span>(mpg, <span class="dt">package=</span><span class="st">&quot;ggplot2&quot;</span>)
+  mpg =<span class="st"> </span>mpg[-row_to_remove,]
+  <span class="kw">plot</span>(mpg$cty, mpg$hwy)
+  <span class="kw">lines</span>(<span class="kw">lowess</span>(mpg$cty, mpg$hwy), <span class="dt">col=</span><span class="dv">2</span>)
+}</code></pre></div>
+<p>We can use <strong>memoise</strong> speed up by caching results. A quick benchmark</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;memoise&quot;</span>)
+m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)
+res =<span class="st"> </span>rbenchmark::<span class="kw">benchmark</span>(<span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>), 
+                            <span class="dt">columns =</span> <span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;relative&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
+<span class="co">#         test relative elapsed</span>
+<span class="co">#1   m_plot(10)    1.000   0.007</span>
+<span class="co">#2 plot_mpg(10)  481.857   3.373</span></code></pre></div>
+<p>suggests that we can obtain a <span class="math inline">\(500\)</span>-fold speed-up.</p>
+<div id="exercise-4" class="section level4 unnumbered">
+<h4>Exercise</h4>
+<p>Construct a box plot of timings for the standard plotting function and the memoised version.</p>
+</div>
+<div id="function-closures" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Function closures</h3>
+<div class="rmdwarning">
+<p>
+The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation"><span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span> for a detailed introduction.
+</p>
+</div>
+<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in <code>.GlobalEnv</code>. One of the environments associated with a function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using <code>environment</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)
+<span class="co">#&gt; &lt;environment: R_GlobalEnv&gt;</span></code></pre></div>
+<p>The <code>plot_mpg</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f =<span class="st"> </span>function() {
+  x =<span class="st"> </span><span class="dv">5</span>
+  function() x
+}</code></pre></div>
+<p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
+<span class="kw">environment</span>(g)
+<span class="co">#&gt; &lt;environment: 0x4f60538&gt;</span></code></pre></div>
+<p>When we call this new function <code>g</code>,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
+<span class="kw">g</span>()
+<span class="co">#&gt; [1] 5</span></code></pre></div>
+The value returned is obtained from <code>environment(g)</code> not from the <code>.GlobalEnv</code>. This persistent environment allows us to cache variables between function calls.
+<div class="rmdnote">
+<p>
+The operator <code>&lt;&lt;-</code> makes R search through the parent environments for an existing defintion. If such a variable is found (and its binding is not locked) then its value is redefined, otherwise assignment takes place in the global environment.
+</p>
+</div>
+<p>The <code>simple_counter</code> function exploits this feature to enable variable caching</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simple_counter =<span class="st"> </span>function() {
+  no =<span class="st"> </span><span class="dv">0</span>
+  function() {
+    no &lt;&lt;-<span class="st"> </span>no +<span class="st"> </span><span class="dv">1</span>
+    no
+  }
+}</code></pre></div>
+<p>When we call the <code>simple_counter</code> function, we retain object values between function calls</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">simple_counter</span>()
+<span class="kw">sc</span>()
+<span class="co">#&gt; [1] 1</span>
+<span class="kw">sc</span>()
+<span class="co">#&gt; [1] 2</span></code></pre></div>
+<p>The key points of the <code>simple_counter</code> function are</p>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li>The <code>simple_counter</code> function returns a function;</li>
+<li>The enclosing environment of <code>sc</code> is not <code>.GlobalEnv</code>, instead it’s the binding environment of <code>sc</code>;</li>
+<li>The function <code>sc</code> has an environment that can be used to store/cache values;</li>
+<li>The operator <code>&lt;&lt;-</code> is used to alter the object <code>no</code> in the <code>sc</code> environment.</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
-<ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<div id="example" class="section level4 unnumbered">
+<h4>Example</h4>
+<p>We can exploit function closures to simplify our code. Suppose we wished to simulate a games of Snakes and Ladders. We have function that handles the logic of landing on a snake</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">check_snake =<span class="st"> </span>function(square) {
+   switch(<span class="kw">as.character</span>(square), 
+       <span class="st">&#39;16&#39;</span>=<span class="dv">6</span>,  <span class="st">&#39;49&#39;</span>=<span class="dv">12</span>, <span class="st">&#39;47&#39;</span>=<span class="dv">26</span>, <span class="st">&#39;56&#39;</span>=<span class="dv">48</span>, <span class="st">&#39;62&#39;</span>=<span class="dv">19</span>, 
+       <span class="st">&#39;64&#39;</span>=<span class="dv">60</span>, <span class="st">&#39;87&#39;</span>=<span class="dv">24</span>, <span class="st">&#39;93&#39;</span>=<span class="dv">73</span>, <span class="st">&#39;96&#39;</span>=<span class="dv">76</span>, <span class="st">&#39;98&#39;</span>=<span class="dv">78</span>, 
+       square)
+}</code></pre></div>
+<p>If we then wanted to determine how often we landed on a Snake, we could use a function closure to easily keep track of the counter.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">check_snake =<span class="st"> </span>function() {
+  no_of_snakes =<span class="st"> </span><span class="dv">0</span>
+  function(square) {
+    new_square =<span class="st"> </span>switch(<span class="kw">as.character</span>(square), 
+       <span class="st">&#39;16&#39;</span>=<span class="dv">6</span>,  <span class="st">&#39;49&#39;</span>=<span class="dv">12</span>, <span class="st">&#39;47&#39;</span>=<span class="dv">26</span>, <span class="st">&#39;56&#39;</span>=<span class="dv">48</span>, <span class="st">&#39;62&#39;</span>=<span class="dv">19</span>, 
+       <span class="st">&#39;64&#39;</span>=<span class="dv">60</span>, <span class="st">&#39;87&#39;</span>=<span class="dv">24</span>, <span class="st">&#39;93&#39;</span>=<span class="dv">73</span>, <span class="st">&#39;96&#39;</span>=<span class="dv">76</span>, <span class="st">&#39;98&#39;</span>=<span class="dv">78</span>, 
+       square)
+    no_of_snakes &lt;&lt;-<span class="st"> </span>no_of_snakes +<span class="st"> </span>(new_square !=<span class="st"> </span>square)
+    new_square
+  }
+}</code></pre></div>
+<p>Keeping the variable <code>no_of_snakes</code> attached to the <code>check_snake</code> function, enables us to have cleaner code.</p>
+</div>
+<div id="exercise-5" class="section level4 unnumbered">
+<h4>Exercise</h4>
+<p>The following function implements a stop-watch function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stop_watch =<span class="st"> </span>function() {
+  start_time =<span class="st"> </span>stop_time =<span class="st"> </span><span class="ot">NULL</span>
+  start =<span class="st"> </span>function() start_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
+  stop =<span class="st"> </span>function() {
+    stop_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
+    <span class="kw">difftime</span>(stop_time, start_time)
+  }
+  <span class="kw">list</span>(<span class="dt">start=</span>start, <span class="dt">stop=</span>stop)
+}
+watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre></div>
+<p>It contains two functions. One function for starting the timer</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">watch$<span class="kw">start</span>()</code></pre></div>
+<p>the other for stopping the timer</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">watch$<span class="kw">stop</span>()</code></pre></div>
+<p>Many stop-watches have the ability to measure not only your overall time but also you individual laps. Add a <code>lap</code> function to the <code>stop_watch</code> function that will record individual times, while still keeping track of the overall time.</p>
+</div>
+</div>
 </div>
 <h3><span class="header-section-number">9</span> Efficient data capentry</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+<div id="ref-Wickham2014">
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="S3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-byte-compiler.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +432,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-programming.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

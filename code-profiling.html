@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cloud-computing.html">
-<link rel="next" href="project-planning.html">
+<link rel="prev" href="is-na-and-anyna.html">
+<link rel="next" href="rcpp.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -274,49 +274,93 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-workflow" class="section level1">
-<h1><span class="header-section-number">4</span> Efficient workflow</h1>
-<p>Efficient programming is an important and sometimes vital skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful project outcomes which involve R. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.</p>
-<p>Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved. Writing a ‘one-off’ R script requires no project management. Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and priorities.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
-<p>Project management structures also depend on the <em>type</em> of project. The typology below (thanks to Richard Cotton) demonstrate the links between project type and project management requirements.</p>
+<div id="code-profiling" class="section level2">
+<h2><span class="header-section-number">7.3</span> Code profiling</h2>
+<p>A circumstance that happens all too often, is that we simply want our code to run faster. In some cases it’s obvious where the bottle neck lies. Other times we have to rely on our intuition. One major drawback of relying on our intuition is that we could be wrong and we end up pointlessly optimising the wrong piece of code. To make slow code run faster, we first need to determine where the slow code lives.</p>
+<p>The <code>Rprof</code> function is built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
+<p>Unfortunately <code>Rprof</code> is not user friendly. The <strong>profvis</strong> package provides an interactive graphical interface for visualising data data from <code>Rprof</code>.</p>
+<div id="getting-started-with-profvis" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Getting started with <strong>profvis</strong></h3>
+<p>Currently the <strong>profvis</strong> package isn’t on CRAN and so we need to install the developmental version</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/profvis&quot;</span>)</code></pre></div>
+<p>As a simple example, we will use the <code>movies</code> data set, which contain information on around 60,000 movies from the IMDB. First, we’ll select movies that are classed as comedies, then plot year vs movies rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package, is <code>profvis</code> which profiles the code and creates an interactive HTML page. The first argument of <code>profvis</code> is the R expression of interest.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
+<span class="kw">profvis</span>({
+  <span class="kw">data</span>(movies, <span class="dt">package=</span><span class="st">&quot;ggplot2movies&quot;</span>)
+  movies =<span class="st"> </span>movies[movies$Comedy==<span class="dv">1</span>, ]
+  <span class="kw">plot</span>(movies$year, movies$rating)
+  model =<span class="st"> </span><span class="kw">loess</span>(rating ~<span class="st"> </span>year, <span class="dt">data=</span>movies)
+  j =<span class="st"> </span><span class="kw">order</span>(movies$year)
+  <span class="kw">lines</span>(movies$year[j], model$fitted[j])
+})</code></pre></div>
+The above code provides an interactive HTML page (figure <a href="code-profiling.html#fig:profvis1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).
+<div class="figure"><span id="fig:profvis1"></span>
+<img src="images/profvis1.png" alt="Output from profvis"  />
+<p class="caption">
+Figure 7.1: Output from profvis
+</p>
+</div>
+<p>The left hand panel tells the amount of time spent on each line of code. We see that majority of time is spent calculating the <code>loess</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess</code> function. Travelling up the function, we see that <code>loess</code> calls <code>simpleLoess</code> which in turn calls <code>.C</code> function.</p>
+<p>The conclusion from this graph, is that if optimisation were required, it would make sense to focus on the <code>loess</code> and possibly the <code>order</code> functions calls.</p>
+<!-- http://rpubs.com/wch/123888 -->
+</div>
+<div id="example-monopoly-simulation" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Example: Monopoly Simulation</h3>
+<p>Monopoly is a board games that originated in the United States over 100 years ago. The object of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
+<p>The <strong>efficient</strong> package contains a simulate monopoly function that attempts to find the probability of landing on a certain square using a Monte-Carlo algorithm. The entire code is around 100 lines long. In order for <code>profvis</code> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## args is also a valid argument for install.packages
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient_pkg&quot;</span>, <span class="dt">args=</span><span class="st">&quot;--with-keep.source&quot;</span>)</code></pre></div>
+<p>The function can then be profiled via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
+<span class="kw">profvis</span>(<span class="kw">SimulateMonopoly</span>(<span class="dv">10000</span>))</code></pre></div>
+<p>to get</p>
+<p><img src="images/profvis_monopoly.png" alt="" /><!-- --></p>
+<p>The output from <code>profvis</code> shows that the vast majority of time is spent in the <code>move</code> function. In Monopoly rolling a double (a pair of 1’s, 2’s, …, 6’s) is special:</p>
 <ul>
-<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
-<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
-<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
-<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+<li>Roll two dice (<code>total1</code>): <code>total_score = total1</code>;</li>
+<li>If you get a double, roll again (<code>total2</code>) and <code>total_score = total1 + total2</code>;</li>
+<li>If you get a double, roll again (<code>total3</code>) and <code>total_score = total1 + total2 + total3</code>;</li>
+<li>If roll three is a double, Go To Jail, otherwise move <code>total_score</code>.</li>
 </ul>
-<p>Based on these observations we recommend trying different working practices to discover which works best for you and the teams you work with.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
-<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
+<p>The <code>move</code> function spends around 50% of the time is spent creating a data frame, 25% time calculating row sums, and the remainder on a comparison operations. This piece of code can be optimised fairly easily (will still retaining the same overall structure) by incorporating the following improvements[^Solutions are available in the <strong>efficient</strong> package vignette.]:</p>
 <ul>
-<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (<code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>), it is more important than ever to consider the range of options at the outset.</p></li>
-<li><p>Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.</p></li>
-<li><p>Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p></li>
-<li><p>Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on <strong>dplyr</strong> and <strong>data.table</strong>, which make data analysis code fast to type and fast to run.</p></li>
-<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="publication.html#publication">4.7</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
-</ul> 
+<li>Use a matrix instead of a data frame;</li>
+<li>Sample <span class="math inline">\(6\)</span> numbers at once, instead of two groups of three;</li>
+<li>Switch from <code>apply</code> to <code>rowSums</code>;</li>
+<li>Use <code>&amp;&amp;</code> in the <code>if</code> condition.</li>
+</ul>
+<p>Implementing this features, results in the following code.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">move =<span class="st"> </span>function(current) {
+  ## data.frame -&gt; matrix
+  rolls =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>), <span class="dt">ncol=</span><span class="dv">2</span>)
+  Total =<span class="st"> </span><span class="kw">rowSums</span>(rolls)    <span class="co"># apply -&gt; rowSums  </span>
+  IsDouble =<span class="st"> </span>rolls[,<span class="dv">1</span>] ==<span class="st"> </span>rolls[,<span class="dv">2</span>]
+  ## &amp; -&gt; &amp;&amp;
+  if(IsDouble[<span class="dv">1</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">2</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">3</span>]) {
+    current =<span class="st"> </span><span class="dv">11</span><span class="co">#Go To Jail</span>
+  } else if(IsDouble[<span class="dv">1</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">2</span>]) {
+    current =<span class="st"> </span>current +<span class="st"> </span><span class="kw">sum</span>(Total[<span class="dv">1</span>:<span class="dv">3</span>])
+  } else if(IsDouble[<span class="dv">1</span>]) {
+    current =<span class="st"> </span>current +<span class="st"> </span>Total[<span class="dv">1</span>:<span class="dv">2</span>]
+  } else {
+    current =<span class="st"> </span>Total[<span class="dv">1</span>]
+  }
+  current
+}</code></pre></div>
+<p>which gives a 25-fold speed improvement.</p>
+<div id="exercise-6" class="section level4 unnumbered">
+<h4>Exercise</h4>
+<p>The <code>move</code> function uses a vectorised solution. Whenever we move, we always roll six dice, then examine the outcome and determine the number of doubles. However, this is potentially wasteful, since the probability of getting one double is <span class="math inline">\(1/6\)</span> and two doubles is <span class="math inline">\(1/36\)</span>. Another method is too only roll additional dice if and when they are needed. Implement and time this solution.</p>
 </div>
-<h3><span class="header-section-number">9</span> Efficient data capentry</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="8">
-<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="efficient-workflow.html#fnref8">↩</a></p></li>
-<li id="fn9"><p>A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity): the web browser add-on <a href="https://www.zenhub.io/">ZenHub</a>, “the first and only project management suite that works natively within GitHub”; the web-based and easy-to-use <a href="https://trello.com/">Trello</a>; and the fully featured enterprise scale open source project management system <a href="https://www.openproject.org/">OpenProject</a>.<a href="efficient-workflow.html#fnref9">↩</a></p></li>
-<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="efficient-workflow.html#fnref10">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="cloud-computing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="project-planning.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="is-na-and-anyna.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rcpp.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -343,7 +387,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/07-performance.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],
