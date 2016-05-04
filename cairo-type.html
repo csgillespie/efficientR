@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="cairo-type.html">
-<link rel="next" href="efficient-base-r.html">
+<link rel="prev" href="rough-outline.html">
+<link rel="next" href="efficient-performance.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -313,23 +313,39 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-performance" class="section level1">
-<h1><span class="header-section-number">7</span> Efficient performance</h1>
-<p><a href="https://en.wikiquote.org/wiki/Donald_Knuth">Donald Knuth</a> is a famous American computer scientist who developed a number of the key alogorithms that we used today. On the subject of optimisation he give this advice.</p>
-<blockquote>
-<p>The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.</p>
-</blockquote>
-<p>That’s why in the previous chapters we’ve focused on tools and your working environment to increase efficiency. These are (relatively) easy ways of saving time, that once implemented, work for future projects. In this chapter we are going to consider code optimisation. Simply stated, making your program run faster.</p>
-<p>In many scernios, a code is running slowly due to a couple of key bottlenecks. By specifically targetting these key areas, we may be able to speed up the entire program.</p>
-<p>In this chapter we will consider a variety of code tweaks that can eke out an extra speed boost. We’ll begin with general hints and tips about using base R. Then look at code profiling to determine where our efforts should be focused. We conclude by looking at <code>Rcpp</code>, an efficient way of incorparting C++ code into an R analysis.</p> 
+<div id="cairo-type" class="section level2">
+<h2><span class="header-section-number">6.2</span> Cairo type</h2>
+<p>These are just some thoughts/observations</p>
+<p>When you use <code>cairo</code> to save plots, we get anti-aliasing. The standard graphic devices, <code>png</code>,and <code>jpeg</code> save graphics as either <code>c(&quot;cairo&quot;, &quot;Xlib&quot;, &quot;quartz&quot;)</code>. By default, it goes for <code>getOption(&quot;bitmapType&quot;)</code>. Under a proper OS, such as Linux, this will default to <code>cairo</code>. Under windows, it seems to go for <code>NULL</code>, which results in using <code>X11</code></p>
+<p>For example, compare</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
+<span class="kw">png</span>(<span class="st">&quot;fig1.png&quot;</span>, <span class="dt">type=</span><span class="st">&quot;cairo&quot;</span>)
+<span class="kw">plot</span>(x)
+<span class="kw">dev.off</span>()
+
+<span class="kw">png</span>(<span class="st">&quot;fig2.png&quot;</span>, <span class="dt">type=</span><span class="st">&quot;Xlib&quot;</span>)
+<span class="kw">plot</span>(x)
+<span class="kw">dev.off</span>()</code></pre></div>
+<ul>
+<li>Can you just force <code>type=&quot;cairo&quot;</code> in Windows - probably not.</li>
+<li>If you use the <code>cairo</code> package under Windows, can you then access <code>type=&quot;cairo&quot;</code>. Or do you need to use the <code>cairo::</code> functions.</li>
+<li>No idea about Macs.</li>
+</ul>
+<p>Search the web brings up a few out of date pages:</p>
+<ul>
+<li><a href="http://gforge.se/2013/02/exporting-nice-plots-in-r/" class="uri">http://gforge.se/2013/02/exporting-nice-plots-in-r/</a></li>
+</ul>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="cairo-type.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="efficient-base-r.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="rough-outline.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-performance.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -356,7 +372,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/07-performance.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-visualisation.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],
