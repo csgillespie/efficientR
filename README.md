@@ -33,13 +33,3 @@ To build the book, run
 ```
 bookdown::render_book("index.Rmd",  bookdown::html_chapters())
 ```
-
-
-
-
-
-
- 
-
-
-
