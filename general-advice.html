@@ -340,7 +340,7 @@ The wikipedia page on compiler opimisations gives a nice overview of standard op
 <p>It isn’t that the <code>for</code> loop is slow, rather it is because we have many more function calls. Each individual function call is quick, but the total combination is slow.</p>
 <div class="rmdnote">
 <p>
-Everything in R is a function call. When we execute <code>1 + 1</code>, we are actually exercuting <code>+(1, 1)</code>.
+Everything in R is a function call. When we execute <code>1 + 1</code>, we are actually executing <code>+(1, 1)</code>.
 </p>
 </div>
 <div id="exercise" class="section level4 unnumbered">
@@ -377,8 +377,8 @@ rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</sp
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
 <span class="co">#&gt;         test elapsed</span>
-<span class="co">#&gt; 1 method1(n)   1.702</span>
-<span class="co">#&gt; 2 method2(n)   0.101</span>
+<span class="co">#&gt; 1 method1(n)   1.351</span>
+<span class="co">#&gt; 2 method2(n)   0.086</span>
 <span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
@@ -466,7 +466,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.822   0.000   3.822</span></code></pre></div>
+<span class="co">#&gt;   4.012   0.004   4.016</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
