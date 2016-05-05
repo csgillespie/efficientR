@@ -246,13 +246,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="efficient-hardware.html"><a href="efficient-hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
-<li class="chapter" data-level="8.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.1</b> Background: what is a byte?</a></li>
-<li class="chapter" data-level="8.2" data-path="efficient-hardware.html"><a href="efficient-hardware.html#ram"><i class="fa fa-check"></i><b>8.2</b> Random access memory: RAM</a></li>
-<li class="chapter" data-level="8.3" data-path="efficient-hardware.html"><a href="efficient-hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>8.3</b> Hard drives: HDD vs SSD</a></li>
-<li class="chapter" data-level="8.4" data-path="efficient-hardware.html"><a href="efficient-hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>8.4</b> Operating systems: 32-bit or 64-bit</a></li>
-<li class="chapter" data-level="8.5" data-path="efficient-hardware.html"><a href="efficient-hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>8.5</b> Central processing unit (CPU)</a></li>
-<li class="chapter" data-level="8.6" data-path="efficient-hardware.html"><a href="efficient-hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.6</b> Cloud computing</a><ul>
-<li class="chapter" data-level="8.6.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>8.6.1</b> Amazon EC2</a></li>
+<li class="chapter" data-level="8.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
+<li class="chapter" data-level="8.2" data-path="efficient-hardware.html"><a href="efficient-hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
+<li class="chapter" data-level="8.3" data-path="efficient-hardware.html"><a href="efficient-hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
+<li class="chapter" data-level="8.4" data-path="efficient-hardware.html"><a href="efficient-hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>8.4</b> Hard drives: HDD vs SSD</a></li>
+<li class="chapter" data-level="8.5" data-path="efficient-hardware.html"><a href="efficient-hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>8.5</b> Operating systems: 32-bit or 64-bit</a></li>
+<li class="chapter" data-level="8.6" data-path="efficient-hardware.html"><a href="efficient-hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>8.6</b> Central processing unit (CPU)</a></li>
+<li class="chapter" data-level="8.7" data-path="efficient-hardware.html"><a href="efficient-hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.7</b> Cloud computing</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="efficient-hardware.html"><a href="efficient-hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>8.7.1</b> Amazon EC2</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient Collaboration</a><ul>
@@ -382,8 +383,8 @@ rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</sp
           <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
           <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
 <span class="co">#&gt;         test elapsed</span>
-<span class="co">#&gt; 1 method1(n)   1.604</span>
-<span class="co">#&gt; 2 method2(n)   0.089</span>
+<span class="co">#&gt; 1 method1(n)   1.698</span>
+<span class="co">#&gt; 2 method2(n)   0.088</span>
 <span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
@@ -471,7 +472,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.130   0.004   3.134</span></code></pre></div>
+<span class="co">#&gt;   3.575   0.008   3.584</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -688,7 +689,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x550e5e0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x55de980&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -771,7 +772,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x30f2560&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3530ba0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
