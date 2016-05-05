@@ -778,7 +778,7 @@ idata =<span class="st"> </span><span class="kw">rename</span>(idata,
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)
 <span class="co">#&gt; Warning: NAs introduced by coercion</span>
 <span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span>
-<span class="co">#&gt; [1] 40.50363</span></code></pre></div>
+<span class="co">#&gt; [1] 40.5</span></code></pre></div>
 <p>However, the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts a <code>data.frame</code> to a numeric <code>matrix</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id =<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
 idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id])
@@ -864,10 +864,10 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="co">#&gt; [1] 188</span></code></pre></div>
 <p>Note that the resulting data frame now has the same number of rows as there are countries: the aggregation has successfully reduced the number of rows we need to deal with. Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)
-<span class="co">#&gt;     Group.1          x</span>
-<span class="co">#&gt; 77  Iceland 0.01785714</span>
-<span class="co">#&gt; 121   Nepal 0.02333333</span>
-<span class="co">#&gt; 18    Benin 0.04642857</span></code></pre></div>
+<span class="co">#&gt;     Group.1      x</span>
+<span class="co">#&gt; 77  Iceland 0.0179</span>
+<span class="co">#&gt; 121   Nepal 0.0233</span>
+<span class="co">#&gt; 18    Benin 0.0464</span></code></pre></div>
 <p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). The following command creates the same object as <code>e_ems</code>, but with less typing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(ECO2 ~<span class="st"> </span>Country, df, mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below:</p>
@@ -876,36 +876,26 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(ECO2, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; Source: local data frame [188 x 2]</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;              Country   mean_eco2</span>
-<span class="co">#&gt;               (fctr)       (dbl)</span>
-<span class="co">#&gt; 1        Afghanistan         NaN</span>
-<span class="co">#&gt; 2            Albania   0.6411905</span>
-<span class="co">#&gt; 3            Algeria  23.0147619</span>
-<span class="co">#&gt; 4             Angola   0.7914286</span>
-<span class="co">#&gt; 5  Antigua &amp; Barbuda         NaN</span>
-<span class="co">#&gt; 6          Argentina  39.1054762</span>
-<span class="co">#&gt; 7            Armenia   1.8000000</span>
-<span class="co">#&gt; 8          Australia 150.5961905</span>
-<span class="co">#&gt; 9            Austria  17.3202381</span>
-<span class="co">#&gt; 10        Azerbaijan  16.0430435</span>
-<span class="co">#&gt; ..               ...         ...</span></code></pre></div>
+<span class="co">#&gt;              Country mean_eco2</span>
+<span class="co">#&gt;               (fctr)     (dbl)</span>
+<span class="co">#&gt; 1        Afghanistan       NaN</span>
+<span class="co">#&gt; 2            Albania     0.641</span>
+<span class="co">#&gt; 3            Algeria    23.015</span>
+<span class="co">#&gt; 4             Angola     0.791</span>
+<span class="co">#&gt; 5  Antigua &amp; Barbuda       NaN</span>
+<span class="co">#&gt; ..               ...       ...</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
 <span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; Source: local data frame [176 x 2]</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;         Country     gini</span>
-<span class="co">#&gt;           (chr)    (dbl)</span>
-<span class="co">#&gt; 1   Afghanistan      NaN</span>
-<span class="co">#&gt; 2       Albania 30.43167</span>
-<span class="co">#&gt; 3       Algeria 37.76000</span>
-<span class="co">#&gt; 4        Angola 50.65000</span>
-<span class="co">#&gt; 5     Argentina 48.06739</span>
-<span class="co">#&gt; 6       Armenia 33.72929</span>
-<span class="co">#&gt; 7     Australia 33.14167</span>
-<span class="co">#&gt; 8       Austria 29.15167</span>
-<span class="co">#&gt; 9    Azerbaijan 24.79000</span>
-<span class="co">#&gt; 10 Bahamas, The      NaN</span>
-<span class="co">#&gt; ..          ...      ...</span></code></pre></div>
+<span class="co">#&gt;        Country  gini</span>
+<span class="co">#&gt;          (chr) (dbl)</span>
+<span class="co">#&gt; 1  Afghanistan   NaN</span>
+<span class="co">#&gt; 2      Albania  30.4</span>
+<span class="co">#&gt; 3      Algeria  37.8</span>
+<span class="co">#&gt; 4       Angola  50.6</span>
+<span class="co">#&gt; 5    Argentina  48.1</span>
+<span class="co">#&gt; ..         ...   ...</span></code></pre></div>
 <p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
   <span class="co"># number of rows per country</span>
@@ -921,19 +911,14 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
   )
 <span class="co">#&gt; Source: local data frame [176 x 7]</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;         Country   obs med_t10      sdev   n30      sdn30   dif</span>
-<span class="co">#&gt;           (chr) (int)   (dbl)     (dbl) (int)      (dbl) (dbl)</span>
-<span class="co">#&gt; 1   Afghanistan    40      NA       NaN     0         NA    NA</span>
-<span class="co">#&gt; 2       Albania    40  24.435  1.252524     3  0.3642801  2.78</span>
-<span class="co">#&gt; 3       Algeria    40  29.780  3.436539     2  3.4365390  4.86</span>
-<span class="co">#&gt; 4        Angola    40  38.555 11.299566     2 11.2995664 15.98</span>
-<span class="co">#&gt; 5     Argentina    40  36.320  3.182462    23  3.1824622 11.00</span>
-<span class="co">#&gt; 6       Armenia    40  27.835  4.019532    12  3.9567778 14.84</span>
-<span class="co">#&gt; 7     Australia    40  24.785  1.075089     6  1.0750891  2.81</span>
-<span class="co">#&gt; 8       Austria    40  23.120  3.120849     4  0.6859300  8.48</span>
-<span class="co">#&gt; 9    Azerbaijan    40  17.960  9.479029     3  1.7386489 20.27</span>
-<span class="co">#&gt; 10 Bahamas, The    40      NA       NaN     0         NA    NA</span>
-<span class="co">#&gt; ..          ...   ...     ...       ...   ...        ...   ...</span></code></pre></div>
+<span class="co">#&gt;        Country   obs med_t10  sdev   n30  sdn30   dif</span>
+<span class="co">#&gt;          (chr) (int)   (dbl) (dbl) (int)  (dbl) (dbl)</span>
+<span class="co">#&gt; 1  Afghanistan    40      NA   NaN     0     NA    NA</span>
+<span class="co">#&gt; 2      Albania    40    24.4  1.25     3  0.364  2.78</span>
+<span class="co">#&gt; 3      Algeria    40    29.8  3.44     2  3.437  4.86</span>
+<span class="co">#&gt; 4       Angola    40    38.6 11.30     2 11.300 15.98</span>
+<span class="co">#&gt; 5    Argentina    40    36.3  3.18    23  3.182 11.00</span>
+<span class="co">#&gt; ..         ...   ...     ...   ...   ...    ...   ...</span></code></pre></div>
 <p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
 <ul>
 <li>the number of rows in each country group</li>
@@ -968,13 +953,13 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="co">#&gt; Selecting by gini</span>
 <span class="co">#&gt; Source: local data frame [5 x 2]</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;    Year   gini</span>
-<span class="co">#&gt;   (int)  (dbl)</span>
-<span class="co">#&gt; 1  1980 46.850</span>
-<span class="co">#&gt; 2  1993 45.996</span>
-<span class="co">#&gt; 3  2013 44.550</span>
-<span class="co">#&gt; 4  1981 43.650</span>
-<span class="co">#&gt; 5  2012 43.560</span></code></pre></div>
+<span class="co">#&gt;    Year  gini</span>
+<span class="co">#&gt;   (int) (dbl)</span>
+<span class="co">#&gt; 1  1980  46.9</span>
+<span class="co">#&gt; 2  1993  46.0</span>
+<span class="co">#&gt; 3  2013  44.5</span>
+<span class="co">#&gt; 4  1981  43.6</span>
+<span class="co">#&gt; 5  2012  43.6</span></code></pre></div>
 <p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
 <ol style="list-style-type: decimal">
 <li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>

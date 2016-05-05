@@ -466,7 +466,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.968   0.004   2.973</span></code></pre></div>
+<span class="co">#&gt;   4.827   0.015   4.844</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -551,11 +551,11 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <span class="co">#&gt;    aov(formula = yield ~ block, data = npk)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Terms:</span>
-<span class="co">#&gt;                   block Residuals</span>
-<span class="co">#&gt; Sum of Squares  343.295   533.070</span>
-<span class="co">#&gt; Deg. of Freedom       5        18</span>
+<span class="co">#&gt;                 block Residuals</span>
+<span class="co">#&gt; Sum of Squares    343       533</span>
+<span class="co">#&gt; Deg. of Freedom     5        18</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Residual standard error: 5.441967</span>
+<span class="co">#&gt; Residual standard error: 5.44</span>
 <span class="co">#&gt; Estimated effects may be unbalanced</span></code></pre></div>
 <p>If we repeat the analysis, but change <code>block</code> to a numeric data type we get different (and incorrect) results</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">aov</span>(yield ~<span class="st"> </span><span class="kw">as.numeric</span>(block), npk)
@@ -564,10 +564,10 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Terms:</span>
 <span class="co">#&gt;                 as.numeric(block) Residuals</span>
-<span class="co">#&gt; Sum of Squares            22.4023  853.9627</span>
+<span class="co">#&gt; Sum of Squares                 22       854</span>
 <span class="co">#&gt; Deg. of Freedom                 1        22</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Residual standard error: 6.230288</span>
+<span class="co">#&gt; Residual standard error: 6.23</span>
 <span class="co">#&gt; Estimated effects may be unbalanced</span></code></pre></div>
 <p>When we pass a numeric variable, the <code>aov</code> function is interpreting this variable as continuous, and fits a regression line.</p>
 </div>
@@ -683,7 +683,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x345da10&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x34375e8&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -766,7 +766,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3b8c3e0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x4671f98&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
