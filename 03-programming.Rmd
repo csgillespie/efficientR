@@ -70,7 +70,7 @@ executing `+(1, 1)`.
 
 #### Exercise {-}
 
-Use the `rbenchmark` package to compare the vectorised construct `x = x + 1`, to the
+Use the **microbenchmark** package to compare the vectorised construct `x = x + 1`, to the
 `for` loop version. Try varying the size of the input vector.
 
 ### Memory allocation
@@ -109,12 +109,10 @@ __Method 3__ directly creates the final object
 ```{r eval=TRUE, echo=TRUE}
 method3 = function(n) 1:n
 ```
-To compare the three methods we use the `benchmark` function from the previous chapter
-```{r tidy=FALSE,cache=TRUE}
-n = 1e4
-rbenchmark::benchmark(replications=10, 
-          method1(n), method2(n), method3(n),
-          columns=c("test", "elapsed"))
+To compare the three methods we use the `microbenchmark` function from the previous chapter
+```{r tidy=FALSE,eval=FALSE}
+microbenchmark(times = 100, unit="s",
+                               method1(n), method2(n), method3(n))
 ```
 
 The table below shows the timing in seconds on my machine for these three methods for
@@ -509,13 +507,13 @@ We can use **memoise** speed up by caching results. A quick benchmark
 ```{r benchmark_memoise, fig.keep="none", cache=TRUE, results="hide"}
 library("memoise")
 m_plot_mpg = memoise(plot_mpg)
-res = rbenchmark::benchmark(m_plot_mpg(10), plot_mpg(10), 
-                            columns = c("test", "relative", "elapsed"))
-#         test relative elapsed
-#1   m_plot(10)    1.000   0.007
-#2 plot_mpg(10)  481.857   3.373
+microbenchmark(times=10, unit="ms", m_plot_mpg(10), plot_mpg(10))
+#> Unit: milliseconds
+#>            expr   min    lq  mean median    uq   max neval cld
+#>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a 
+#>    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b
 ```
-suggests that we can obtain a $500$-fold speed-up.
+suggests that we can obtain a $100$-fold speed-up.
 
 #### Exercise {-}
 
@@ -704,19 +702,20 @@ comparison. Compiling the function is straightforward
 ```{r}
 cmp_mean_r = cmpfun(mean_r)
 ```
-Then we use the `benchmark` function to compare the three variants
+Then we use the `microbenchmark` function to compare the three variants
 
 
 <!-- Make n bigger and just copy and paster output -->
 ```{r results="hide", eval=FALSE}
 # Generate some data
 x = rnorm(1000)
-rbenchmark::benchmark(mean_r(x), cmp_mean_r(x), mean(x), 
-          columns= c("test", "elapsed", "relative"),
-          order="relative", replications=5000)
-# 3       mean(x)   0.032    1.000
-# 2 cmp_mean_r(x)   0.260    8.125
-# 1     mean_r(x)   1.848   57.750
+microbenchmark(times=10, unit="ms", # milliseconds
+          mean_r(x), cmp_mean_r(x), mean(x))
+#> Unit: milliseconds
+#>           expr   min    lq  mean median    uq  max neval cld
+#>      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c
+#>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b 
+#>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  
 ```
 The compiled function is around seven times faster than the uncompiled function. Of
 course the native `mean` function is faster, but compiling does make a significant

@@ -159,9 +159,8 @@ same random numbers. However selecting rows from a data frame is around $150$ ti
 slower than a matrix.
 ```{r mat_vs_df, cache=TRUE, results="hide"}
 data(ex_mat, ex_df, package="efficient")
-rbenchmark::benchmark(replications=10000, 
-          ex_mat[1,], ex_df[1,], 
-          columns=c("test", "elapsed", "relative"))
+microbenchmark(times=100, unit="ms",
+          ex_mat[1,], ex_df[1,])
 ```
 
 ```{block, type="rmdtip"}
