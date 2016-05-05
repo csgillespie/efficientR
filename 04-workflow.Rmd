@@ -70,22 +70,8 @@ Setting start dates and deadlines for each task will help prioritise the work an
 Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular @PMBoK_2000.
 'Chunking' the work will also make collaboration easier, as we shall see in Chapter 5.
 
-```{r phases, echo=FALSE, fig.height=3, fig.cap="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."}
-x = seq(0, 1, length.out=100)
-df = data.frame(Phase = rep(c("Planning", "Programming", "Write-up"), each=length(x)), 
-                Time = c(dbeta(x, 2, 6), dbeta(x, 2, 2) + 0.2, dbeta(x, 6, 2)), 
-                x = c(x, x, x))
-df$x = df$x * 4
-library("ggplot2")
-m = ggplot(df, aes(x, Time)) + 
-  geom_line(aes(color=Phase)) + xlab("Time (days)")
-m + 
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        legend.position = "top") +
-  ylab("Level of Activity")  +
-  scale_color_discrete(name = "Phase: ") + 
-  theme_bw()
+```{r phases, echo=FALSE, fig.width=6, fig.height=4,fig.cap="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK_2000."}
+local(source("code/04-project-planning_f1.R", local=TRUE))
 ```
 
 The tasks that a project should be split into will depend the nature of the work and the phases illustrated in Figure \@ref(fig:phases) represent a rough starting point, not a template and the 'programming' phase will usually need to be split into at least 'data tidying', 'processing', and 'visualisation'.
@@ -107,35 +93,8 @@ A project plan can take many forms, including a short document, a Gantt chart
 (see Figure \@ref(fig:timeline) or simply a clear vision of the project's steps in mind.
 
 ```{r timeline, echo=FALSE, fig.cap="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development."}
+## Code in "code/04-project-planning_f2.R"
 knitr::include_graphics("figures/DiagrammeR-gantt-book.png")
-```
-
-```{r, echo=FALSE, eval=FALSE}
-# Code to create DiagrammeR Gantt chart for the book
-# install.packages("DiagrammeR")
-mermaid("gantt
-        dateFormat  YYYY-MM-DD
-
-        section 2 chapters
-        Write Chapter 2           :done,    des1, 2015-10-15,2015-11-24
-        Write Chapter 3           :done,    des2, 2015-10-15,2015-11-24
-        Review Chapter 2          :done,  des3, 2015-12-03,2016-01-10
-        Review Chapter 3          :active,  des4, 2015-12-03,2016-01-10
-
-        section 1st half
-        Write Chapter 4          :crit, active, 2015-12-19,2016-01-19
-        Write Chapter 6          :crit, active, 2015-12-19,2016-01-19
-        Review Chapter 4          :active, 2016-01-30,2016-03-01
-        Review Chapter 6          :active, 2016-01-30,2016-03-01
-
-        section 2nd half
-        Write Chapter 5               :active, a1, 2016-03-01,2016-04-15
-        Write Chapter 7               :active, a1, 2016-03-01,2016-04-15
-        Write Chapter 1               :active, a1, 2016-03-08,2016-05-03
-        Write Chapter 8               :active, c8, 2016-03-20,2016-05-03
-        Technical review              :crit, active, a1, 2016-05-03,2016-05-30
-        Complete final draft          :active, c8, 2016-05-30,2016-06-28
-")
 ```
 
 ### R packages for planning
@@ -154,9 +113,8 @@ The small example below (which provides the basis for creating charts like Figur
 Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. {#DiagrammeR}
 
 ```{r, eval=FALSE}
-library("DiagrammeR") # load the necessary package
-
-# define the Gantt chart and plot the result (not shown)
+library("DiagrammeR")
+# Define the Gantt chart and plot the result (not shown)
 mermaid("gantt
         Section Initiation
         Planning           :a1, 2016-01-01, 10d
@@ -326,7 +284,8 @@ res$facet_cols = paste("No of columns:", res$cols)
 saveRDS(res, "data/res.Rds")
 ```
 
-```{r readr-vs-base, fig.cap="Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
+```{r readr-vs-base, fig.cap="TODO: Rerun. Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
+library(ggplot2)
 res = readRDS("data/res.Rds")
 ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = exp)) + facet_wrap(~ facet_cols) +
@@ -629,7 +588,7 @@ Note also the syntax:
 `rename` takes the `data.frame` as the first object and then creates new variables by specifying `new_variable_name = original_name`.
 ```
 
-```{r}
+```{r, message=FALSE}
 library("dplyr")
 idata = rename(idata, Country = `Country Name`)
 ```
@@ -641,10 +600,8 @@ To rename multiple columns the variable names are simply separated by commas. Th
 idata = rename(idata,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
-
 # The base R way (rename five variables)
-names(idata)[5:9] =
-  c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
+names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ```
 
 Now we have usefully renamed the object we save the result for future reference:
@@ -746,13 +703,10 @@ Note that the data frame has 329 columns, and imagine it has millions of rows, i
 
 ```{r, eval=FALSE}
 glimpse(df)
-```
-
-```
-# $ NPI                   (int) 1679576722, ...
-# $ Entity Type Code      (int) 1, 1, 2,    ...
-# $ Replacement NPI       (lgl) NA, NA, NA, ...
-# ...
+#> $ NPI                   (int) 1679576722, ...
+#> $ Entity Type Code      (int) 1, 1, 2,    ...
+#> $ Replacement NPI       (lgl) NA, NA, NA, ...
+#> ...
 ```
 
 Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
@@ -1011,11 +965,7 @@ saveRDS(res, "data/res-datatable.Rds")
 ```
 
 ```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4}
-res = readRDS("data/res-datatable.Rds")
-ggplot(res, aes(MB, Time)) + 
-  geom_line(aes(colour = exp)) +
-  xlab("Size (MB)") + ylab("Time (relative to fastest)") + 
-  theme_bw()
+local(source("code/04-project-planning_f4.R", local=TRUE))
 ```
 
 Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.

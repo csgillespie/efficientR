@@ -427,11 +427,9 @@ More details on these, and other potentially useful `.Rprofile` options are desc
 ```{r, eval=FALSE}
 # A fun welcome message
 message("Hi Robin, welcome to R")
-
 # Customise the R prompt that prefixes every command
 # (use " " for a blank prompt)
 options(prompt = "R4geo> ")
-
 # Don't convert text strings to factors with base read functions
 options(stringsAsFactors = FALSE)
 ```
@@ -474,9 +472,8 @@ To avoid setting the CRAN mirror each time you run
 `install.packages` you can permanently set the mirror in your `.Rprofile`.
 
 ```{r, eval=FALSE}
-# local creates a new, empty environment
-# This avoids polluting the global environment with
-# the object r
+# `local` creates a new, empty environment
+# This avoids polluting .GlobalEnv with the object r
 local({
   r = getOption("repos")             
   r["CRAN"] = "https://cran.rstudio.com/"
@@ -561,7 +558,7 @@ If you frequently use `View()`, for example, you may be able to save time by ref
 in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
 ```{r, eval=FALSE}
-v <- utils::View`
+v = utils::View
 ```
 
 Also beware the dangers of loading many functions by default: it may make your code less portable.
@@ -631,7 +628,7 @@ little known help page `help("environment variables")`.
 To set or unset environment variable for the duration of a session, use the following commands:
 
 ```{r}
-Sys.setenv(TEST = "test-string") # set an environment variable for the session
+Sys.setenv("TEST" = "test-string") # set an environment variable for the session
 Sys.unsetenv("TEST") # unset it
 ```
 
@@ -681,8 +678,8 @@ some API keys, my `.Renviron` has a few other lines:
 
   * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the 
     packages to load. Note I don't load the `datasets` package, but I ensure that 
-    `methods` is always loaded. Due to historical reasons, under some circumstances
-    the `methods` package isn't loaded by default.
+    `methods` is always loaded. Due to historical reasons, 
+    the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
 
 #### Exercises {-}
 
@@ -839,7 +836,8 @@ To test this functionality, try typing `US`, followed by the Tab key.
 After pressing down until `USArrests` is selected, press Enter so it autocompletes.
 Finally, typing `$` should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=2}
+data("USArrests", package="datasets")
 USArrests$ # a dropdown menu of columns should appear in RStudio
 ```
 
@@ -912,7 +910,7 @@ To keep things tidy, we recommend a sub-directory structure resembling the follo
 
 ```{r, engine='bash', eval = FALSE}
 project/
-  - README.rmd # Project description
+  - README.Rmd # Project description
   - set-up.R  # Required packages
   - R/ # For R code
   - input # Data files
@@ -962,7 +960,6 @@ designed for Intel processors by Intel and used in Revolution R
 If you use Linux, you can find whether you have a BLAS library setting with the following function, from **benchmarkme**:
 
 ```{r, eval=FALSE}
-# devtools::install_github("csgillespie/benchmarkme")
 library("benchmarkme")
 get_linear_algebra()
 ```
@@ -970,25 +967,22 @@ get_linear_algebra()
 ### Testing performance gains from BLAS
 
 As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6^th^ generation Core i7 processor, before and after OpenBLAS was installedv^[OpenBLAS was installed on the computer via `sudo apt-get install libopenblas-base`, which automatically detected and used by R.]
-
+  		  
 ```{r, eval=FALSE}
 res = benchmark_std() # run a suit of tests to test R's performance
 ```
 
-It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are now much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
+It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around
+150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests,
+as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests
+are highly dependent on the particularities of each computer. However, it clearly
+shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci
+numbers) are now much faster, whereas matrix calculations and functions receive a
+substantial speed boost. This demonstrates that the speed-up you can expect from BLAS
+depends heavily on the type of computations you are undertaking.
 
-```{r blas-bench, echo=FALSE, fig.cap="Example performance gains of installing OpenBLAS using tests from `benchmark_std()`."}
-library("ggplot2")
-res_blas = readRDS("data/res_rl_blas.Rds")
-res_noblas = readRDS("data/res_rl_noblas.Rds")
-res_blas$BLAS = "OpenBLAS"
-res_noblas$BLAS = "No BLAS"
-res_all = rbind(res_blas, res_noblas)
-res_all$`Test group` = factor(res_all$test_group)
-levels(res_all$`Test group`) = c("Programming", "Matrix calculations", "Matrix functions")
-                              
-ggplot(res_all) + geom_violin(aes(`Test group`, elapsed, fill = BLAS)) +
-  ylab("Time elapsed (seconds)")
+```{r blas-bench, fig.width=6, fig.height=4,echo=FALSE, fig.cap="Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`)."}
+local(source("code/02-blas.R", local=TRUE))
 ```
 
 ### Revolution R

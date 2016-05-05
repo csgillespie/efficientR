@@ -8,4 +8,4 @@ pdf:
 
 clean:
 	Rscript -e "bookdown::clean_book(TRUE)"
-	rm -fvr *.log Rplots.pdf
+#	rm -fvr *.log Rplots.pdf _output.yml

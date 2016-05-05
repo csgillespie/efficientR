@@ -1,0 +1,233 @@
+---
+knit: "bookdown::preview_chapter"
+---
+
+# Efficient Collaboration
+
+<!-- Comment on speech marks-->
+
+Large projects inevitably involve many people. This poses risks but also opportunities for improving computational efficiency and productivity, especially if project collaborators are reading and committing code. This chapter provides guidance on how to minimise the risks and maximise the benefits of collaborative R programming. 
+
+Collaborative working has a number of benefits. A team with a diverse skill set is usually stronger than a team with a very narrow focus. It makes sense to specialize: clearly defining roles such as statistician, front-end developer, system administrator and project manager will make your team stronger. Even if you are working alone, dividing the work into discrete branches in this way can be useful, as discussed in Chapter \@ref(workflow).
+
+Collaborative programming provides an opportunity for people to review each other's code. This can be encouraged by using a uniform style with many comments as described in Section \@ref(coding-style). Like using a clear style in human language, following a style guide has the additional advantage of making your code more understandable to others.
+
+When working on complex programming projects with multiple inter-dependencies version control is essential. Even on small projects tracking the progress of your project's code-base has many advantages and makes collaboration much easier. Fortunately it is now easier than ever before to integrate version control into your project, using RStudio's interface to the version control software `git` and online code sharing websites such as GitHub. This is the subject of Section \@ref(version-control).
+
+The final section, \@ref(refactoring), addresses the question of how to respond when you find inefficient code. Refactoring is the process of re-writing poorly written or scripts so they are faster, more comprehensible, more portable and easier to maintain.
+
+## Coding style
+
+To be a successful programmer you need to use a consistent programming style.
+There is no single 'correct' style. To some extent good style is subjective and down to personal taste. There are, however, general principles that
+most programmers agree on, such as:
+
+- Use modular code
+- Comment your code
+- Don't Repeat Yourself (DRY)
+- Be concise, clear and consistent
+
+Good coding style will make you more efficient even if you are the only person who reads it.
+When your code is read by multiple readers or you are developing code with
+co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by
+[Google](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml)
+and one by [Hadley Whickham](http://adv-r.had.co.nz/Style.html).
+The style followed in this book is based on a combination of Hadley Wickham's guide and our own preferences (we follow Yihui Xie in preferring `=` to `<-` for assignment, for example).
+
+In-line with the principle of automation (automate any task that can save time by automating), the easiest way to improve your code is to ask your computer to do it, using RStudio.
+
+### Reformatting code with RStudio
+
+RStudio can automatically clean up poorly indented and formatted code. To do this, select the lines that need to be formatted (e.g. via `Ctrl+A` to select the entire script) then automatically indent it with `Ctrl+I`. The shortcut `Ctrl+Shift+A` will reformat the code, adding spaces for maximum readability. An example is provided below.
+
+```{r, eval=FALSE}
+# Poorly indented/formatted code
+if(!exists("x")){
+x=c(3,5)
+y=x[2]}
+```
+
+This code chunk works but is not pleasant to read. RStudio automatically indents the code after the `if` statement as follows.
+
+```{r}
+# Automatically indented code (Ctrl+I in RStudio)
+if(!exists("x")){
+  x=c(3,5)
+  y=x[2]}
+```
+
+This is a start, but it's still not easy to read. This can be fixed in RStudio as illustrated below (these options can be seen in the Code menu, accessed with `Alt+C` on Windows/Linux computers).
+
+```{r}
+# Automatically reformat the code (Ctrl+Shift+A in RStudio)
+if(!exists("x")) {
+  x = c(3, 5)
+  y = x[2]
+  }
+```
+
+Note that some aspects of style are subjective: we would not leave a space after the `if` and `)`. 
+
+<!-- Another way to automate R code formatting is with the **formatR** package. The example below shows the above steps of indenting and formatting undertaken with a single function call. -->
+
+<!-- ```{r} -->
+<!-- formatR::tidy_source(text = 'if(!exists("x")){ -->
+<!-- x=c(3,5) -->
+<!-- y=x[2]}') -->
+<!-- ``` -->
+
+### File names
+
+File names should use the `.R` extension and should be lower case (e.g. `load.R`). Avoid spaces. Use a dash or underscore to separate words.
+
+```{r, engine='bash', eval=FALSE}
+# Good names
+normalise.R
+load.R
+# Bad names
+Normalise.r
+load data.R
+```
+
+### Loading packages
+
+Library function calls should be at the top of your script. When loading an essential package, 
+use `library` instead of `require` since a missing package will then raise an error. If a package isn't essential, 
+use `require` and appropriately capture the warning raised. 
+Package names should be surrounded with speech marks. 
+
+```{r messages=FALSE}
+# Good
+library("ggplot2")
+# Bad
+library(ggplot2)
+```
+
+Avoid listing every package you may need, instead just include the packages you actually use. If you find
+that you are loading a large number of packages, consider putting all packages in a file called `packages.R` and using
+`source` appropriately. 
+
+### Commenting
+
+Avoid using plain English to explain standard R code
+
+```{r}
+# Setting x equal to 1
+x = 1
+```
+
+Instead comments should explain at a higher level of abstraction the programmer's intention [@Mcconnell2004]. Each comment line should begin with a single hash (`#`), followed by a space. Comments can be toggled (turned on and off) in this way with `Ctl+Shift+C` in RStudio. The double hash (`##`) can be reserved for R output. If you follow your comment with four dashes (`# ----`) RStudio will enable code folding until the next instance of this.
+
+### Object names
+
+Function and variable names should be lower case, with an underscore `(_)` separating words. Unless you are creating an S3 object, avoid using a `.` in the name. Create names that are concise, but still have meaning. 
+
+In functions the required arguments should always be first, followed by optional arguments, with
+the special `...` argument coming last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
+
+```{block type="rmdwarning"}
+It's tempting to use `T`/`F` as shortcuts. But it is easy to accidently redefine these variables, e.g. `F = 10`.
+R raises an error if you try to redefine `TRUE`/`FALSE`
+```
+While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
+as it makes understanding the default behaviour harder to understand. Typically it's easier to set an argument to have a default value of `NULL` and check its value using `is.null` than by using `missing`. 
+Avoid using names of existing functions. Do not, for example, use `data` as a variable name.
+
+### Example package
+
+The `lubridate` package is a good example of a package that has a consistent naming system, 
+to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
+
+```{r results="hide"}
+library("lubridate")
+ymd("2012-01-02")
+dmy("02-01-2012")
+mdy("01-02-2012")
+```
+
+### Assignment
+
+The two most common ways of assigning objects to values in R is with `<-` and `=`. 
+In most (but not all) contexts, they can be used interchangeably. Regardless of which operator
+you prefer, consistency is key, particularly when working in a 
+group. In this book we use the `=` operator for assignment, as it's faster to type and more consistent with other languages.
+
+The one place where a difference occurs is during function calls. Consider the following 
+piece of code used for timing random number generation
+
+```{r eval=FALSE, results="hide"}
+system.time(expr1 <- rnorm(10e5))
+system.time(expr2 = rnorm(10e5)) # error
+```
+
+The first lines will run correctly __and__ create a variable called `expr1`.
+The second line will raise an error. When we use `=` in a function call, it changes from an 
+_assignment_ operator to an _argument passing_ operator. For further information about
+assignment, see `?assignOps`.
+
+To prevent `=` being interpreted as an argument passing operator, you can enclose the function call in curly braces:
+
+```{r}
+system.time({expr3 = rnorm(10e5)}) 
+```
+
+### Spacing
+
+Consistent spacing is an easy way of making your code more readable. Even a simple command such as `x = x + 1` takes a bit more time to understand when the spacing is removed, i.e. `x=x+1`. You should add a space around the operators `+`, `-`, `\` and `*`. Include a space around the assignment operators, `<-` and `=`. Additionally, add a space around any comparison operators such as `==` and `<`. The latter rule helps avoid bugs 
+
+```{r echo=2:5, results="hide"}
+x = 10
+# Bug. x now equals 1
+x[x<-1]
+# Correct. Selecting values less than -1
+x[x < -1]
+```
+
+The exceptions to the space rule are `:`, `::` and `:::`, as well as `$` and `@` symbols for selecting sub-parts of objects. As with English, add a space after a comma, e.g.
+
+```{r eval=FALSE}
+cpu_speed[year > 1990, ]
+```
+
+### Indentation
+
+Use two spaces to indent code. Never mix tabs and spaces. RStudio can automatically convert the tab character to spaces (see `Tools -> Global options -> Code`).
+
+### Curly braces
+
+Consider the following code:
+
+```{r eval=FALSE}
+# Bad style, fails
+if(x < 5)
+{ 
+y} 
+else {
+  x}
+```
+
+Typing this straight into R will result in an error. 
+An opening curly brace, `{` should not go on its own line and 
+should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside a curly braces should be indented (and RStudio will enforce this rule), as shown below.
+
+```{r}
+# Good style
+if(x < 5){
+  x
+} else {
+  y
+}
+```
+
+Be consistent with one line control statements. Some people prefer to avoid using braces:
+
+```{r}
+# No braces
+if(x < 5)
+  x else
+    y
+```
+
+### Exercises
+
+Look at the difference between your style and RStudio's based on a representative R script that you have written (see Section \@ref(coding-style)). What are the similarities? What are the differences? Are you consistent? Write these down and think about how you can use the results to improve your coding style.

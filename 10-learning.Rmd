@@ -1,0 +1,165 @@
+---
+knit: "bookdown::preview_chapter"
+---
+
+# Efficient Learning
+
+As with any vibrant open source software community, R is fast moving. This can be disorientating because it means
+that you can never 'finish' learning R. On the other hand it can make R a fascinating subject: there is always
+more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more
+elegantly and that can be really satisfying. Therefore *learning how to learn* is one of the most important skills you
+will learn if you want to learn R *in depth* and for the long-term. We emphasise *depth* of learning because it
+is more efficient to learn something properly than to Google it repeatedly every time we forget how it works.
+
+This chapter equips you with concepts and tips that will accelerate the transition from an R *hacker* to an R
+*programmer*. This inevitably involves effective use of R's help, reading R source code and use of online
+material.
+
+## Using R Help
+
+All functions have help files. For example, to see the help file for `plot`, just type:
+
+```{r eval=FALSE}
+?plot
+```
+
+Note: this is the same as `help("plot")`.
+Note that the resulting help page is divided into many sections. The example
+section is very helpful in showing precisely how the function works.
+You can either copy and paste the code, or actually run the example code
+using the `example` command:.
+
+```{r eval=FALSE}
+example(plot)
+```
+
+Another useful section in the help file is `See Also:`. In the `plot` help file, it gives pointers to 3d plotting.
+
+To look for help about a certain *topic* rather than a specific *function* use `??topic`, which is analogous to `?function`. To search for information about regression in all installed packages, for example, use the following command:
+
+```{r, eval=FALSE}
+??regression
+```
+
+Note that this is shorthand `help.search("regression")`. 
+
+To search more specifically for objects the `appropos` function can be useful. To search for all objects and
+functions in the current workspace containing the text string `lm`, for example, one would enter:
+
+```{r, echo=FALSE}
+apropos("lm")
+```
+
+Sometimes a package will contain vignettes. To browse any vignettes associated with a particular package, we can
+use the handy function
+
+```{r eval=FALSE}
+browseVignettes(package = "benchmarkme")
+```
+
+## Reading R source code
+
+## Learning online
+
+### Reproducible example
+
+Asking questions on stackoverflow and R-help is hard. Your question should contain
+just enough information that you problem is clear and can be reproducibed, while
+at the same time avoid unnecessary details. Fortunately, there is a SO question - [How to make a great R reproducible example?](http://stackoverflow.com/q/5963269/203420) - that provides
+excellent guidence!
+
+### Minimal data set
+
+What is the smallest data set you can construct that will reproduce your issue? Your
+actualy data set may contain $10^5$ rows and $10^4$ columns, but to get your idea across,
+you might only need $5$ rows and $3$ columns. Making small example data sets is easy. 
+For example, to create a data frame with two numeric columns and a column of characters
+we use
+
+```{r}
+set.seed(1)
+example_df = data.frame(x=rnorm(5), y=rnorm(5), z=sample(LETTERS, 5))
+```
+
+Note the call to `set.seed` that ensures anyone who runs the code will get the same
+random number stream. Alternatively, you use one of the many data sets that come with R - `library(help="datasets")`. 
+
+If creating an example data set isn't possible, then use `dput` on your actual data set. This
+will create an ASCII text representation of the object that will enable anyone to recreate
+the object
+
+```{r}
+dput(example_df)
+```
+
+### Minimal example
+
+What you should not do, is simply copy and paste your entire function into your question.
+It's unlikely that your entire function doesn't work, so just simplify it the bare minimum. 
+For example, 
+
+
+
+
+<!-- https://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example -->
+<!-- Producing minimal code -->
+<!-- This should be the easy part but often isn't. What you should not do, is: -->
+
+<!-- add all kind of data conversions. Make sure the provided data is already in the correct format (unless that is the problem of course) -->
+<!-- copy-paste a whole function / chunk of code that gives an error. First try to locate which lines exactly result in the error. More often than not you'll find out what the problem is yourself. -->
+<!-- What you should do, is: -->
+
+<!-- add which packages should be used if you use any. -->
+<!-- if you open connections or make files, add some code to close them or delete the files (using unlink()) -->
+<!-- if you change options, make sure the code contains a statement to revert them back to the original ones. (eg op <- par(mfrow=c(1,2)) ...some code... par(op) ) -->
+<!-- test run your code in a new, empty R session to make sure the code is runnable. People should be able to just copy-paste your data and your code in the console and get exactly the same as you have. -->
+<!-- Give extra information -->
+<!-- In most cases, just the R version and the operating system will suffice. When conflicts arise with packages, giving the output of sessionInfo() can really help. When talking about connections to other applications (be it through ODBC or anything else), one should also provide version numbers for those, and if possible also the necessary information on the setup -->
+
+
+
+## Online resources
+
+When asking a question, here are a few pointers:
+
+  * Make your example reproducible.
+  * Clearly state your problem. Don't confuse a statistical problem with an R problem.
+  * Read a few other questions to learn the format of the site.
+  * People aren't under __any__ obligation to answer your question!
+
+### Stackoverflow
+
+The number one place on the internet for getting help on programming is  [Stackoverflow](http://www.stackoverflow.com). This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps answers remain relevant. 
+
+Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). Each tag has a page describing the tag. The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links
+
+Members of the Stackoverflow R community have tagged, using `r-faq`, a few question that often crop up. 
+
+  * [How to search for R materials](http://stackoverflow.com/q/102056/203420).
+
+
+### Mailing lists: help, dev, package
+
+### r-bloggers
+### twitter: `#rstats`
+
+## Conferences
+### useR!
+### Local groups
+
+## Code
+## Look at the source code
+    * e.g. `NCOL`
+    * Learn from well known packages 
+    * git version of R
+    * Monitor changes in the NEWS
+
+### R-journal and Journal of Statistical Software
+
+### The manuals
+
+Those two should be mentioned somewhere as further reading, as those are one of the best reference manuals about the language and its proper use. 
+  
+  * (R-lang)[https://cran.r-project.org/doc/manuals/r-release/R-lang.html]
+  * (R-exts)[https://cran.r-project.org/doc/manuals/r-release/R-exts.html]
+

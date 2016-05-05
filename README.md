@@ -8,38 +8,16 @@ The text and code for the forthcoming O'Reilly book: [Efficient R programming](h
 
 ### Building this book
 
-To build this book on your own system, you will need to install the following packages.
+To build this book on your own system, use 
 
 ```
-pkgs = c("dplyr", "readxl",
-  "readr", "grid", "png",
-  "rbenchmark", "microbenchmark",
-  "fortunes", "pryr", "ggplot2")
-
-to_install = pkgs[!pkgs %in% installed.packages()]
-if(length(to_install))
-  install.packages(to_install)
+devtools::install_github("csgillespie/efficientR")
 ```
 
-GitHub packages to install:
-
-```
-gh_pkgs = c("csgillespie/efficient_pkg", "rstudio/bookdown", "csgillespie/benchmarkme")
-devtools::install_github(gh_pkgs)
-```
+to install the necessary packages.
 
 To build the book, run
 
 ```
 bookdown::render_book("index.Rmd",  bookdown::html_chapters())
 ```
-
-
-
-
-
-
- 
-
-
-
