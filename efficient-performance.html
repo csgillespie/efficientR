@@ -389,9 +389,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the expected way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. Calculating the line of best fit using the <code>lm()</code> function, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
 <p>Matrices are generally faster than data frames. The datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns. They contain the same random numbers. However selecting rows from a data frame is around <span class="math inline">\(150\)</span> times slower than a matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
-rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10000</span>, 
-          ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,], 
-          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>))</code></pre></div>
+<span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>,
+          ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -594,7 +593,7 @@ Figure 7.2: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b87e7ee28a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b2e32f588a0&gt;, x, y)</span></code></pre></div>
 <p>We can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>

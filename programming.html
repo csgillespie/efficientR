@@ -351,7 +351,7 @@ Everything in R is a function call. When we execute <code>1 + 1</code>, we are a
 </div>
 <div id="exercise" class="section level4 unnumbered">
 <h4>Exercise</h4>
-<p>Use the <code>rbenchmark</code> package to compare the vectorised construct <code>x = x + 1</code>, to the <code>for</code> loop version. Try varying the size of the input vector.</p>
+<p>Use the <strong>microbenchmark</strong> package to compare the vectorised construct <code>x = x + 1</code>, to the <code>for</code> loop version. Try varying the size of the input vector.</p>
 </div>
 <div id="memory-allocation" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Memory allocation</h3>
@@ -377,15 +377,9 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 }</code></pre></div>
 <p><strong>Method 3</strong> directly creates the final object</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="dv">1</span>:n</code></pre></div>
-<p>To compare the three methods we use the <code>benchmark</code> function from the previous chapter</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="fl">1e4</span>
-rbenchmark::<span class="kw">benchmark</span>(<span class="dt">replications=</span><span class="dv">10</span>, 
-          <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n),
-          <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
-<span class="co">#&gt;         test elapsed</span>
-<span class="co">#&gt; 1 method1(n)   2.093</span>
-<span class="co">#&gt; 2 method2(n)   0.132</span>
-<span class="co">#&gt; 3 method3(n)   0.000</span></code></pre></div>
+<p>To compare the three methods we use the <code>microbenchmark</code> function from the previous chapter</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;s&quot;</span>,
+                               <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
 <caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour while the other methods take less than 3 seconds.</caption>
@@ -472,7 +466,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.743   0.016   4.759</span></code></pre></div>
+<span class="co">#&gt;   2.968   0.004   2.973</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -661,12 +655,12 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 <p>We can use <strong>memoise</strong> speed up by caching results. A quick benchmark</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;memoise&quot;</span>)
 m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)
-res =<span class="st"> </span>rbenchmark::<span class="kw">benchmark</span>(<span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>), 
-                            <span class="dt">columns =</span> <span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;relative&quot;</span>, <span class="st">&quot;elapsed&quot;</span>))
-<span class="co">#         test relative elapsed</span>
-<span class="co">#1   m_plot(10)    1.000   0.007</span>
-<span class="co">#2 plot_mpg(10)  481.857   3.373</span></code></pre></div>
-<p>suggests that we can obtain a <span class="math inline">\(500\)</span>-fold speed-up.</p>
+<span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">10</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, <span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>))
+<span class="co">#&gt; Unit: milliseconds</span>
+<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval cld</span>
+<span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a </span>
+<span class="co">#&gt;    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b</span></code></pre></div>
+<p>suggests that we can obtain a <span class="math inline">\(100\)</span>-fold speed-up.</p>
 <div id="exercise-3" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>Construct a box plot of timings for the standard plotting function and the memoised version.</p>
@@ -689,7 +683,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x57fa5b0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x345da10&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -772,7 +766,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3733a50&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3b8c3e0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -789,16 +783,17 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 }</code></pre></div>
 <p>This is clearly a bad function and we should just <code>mean</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</code></pre></div>
-<p>Then we use the <code>benchmark</code> function to compare the three variants</p>
+<p>Then we use the <code>microbenchmark</code> function to compare the three variants</p>
 <!-- Make n bigger and just copy and paster output -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
 x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-rbenchmark::<span class="kw">benchmark</span>(<span class="kw">mean_r</span>(x), <span class="kw">cmp_mean_r</span>(x), <span class="kw">mean</span>(x), 
-          <span class="dt">columns=</span> <span class="kw">c</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;elapsed&quot;</span>, <span class="st">&quot;relative&quot;</span>),
-          <span class="dt">order=</span><span class="st">&quot;relative&quot;</span>, <span class="dt">replications=</span><span class="dv">5000</span>)
-<span class="co"># 3       mean(x)   0.032    1.000</span>
-<span class="co"># 2 cmp_mean_r(x)   0.260    8.125</span>
-<span class="co"># 1     mean_r(x)   1.848   57.750</span></code></pre></div>
+<span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">10</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, <span class="co"># milliseconds</span>
+          <span class="kw">mean_r</span>(x), <span class="kw">cmp_mean_r</span>(x), <span class="kw">mean</span>(x))
+<span class="co">#&gt; Unit: milliseconds</span>
+<span class="co">#&gt;           expr   min    lq  mean median    uq  max neval cld</span>
+<span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span>
+<span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span>
+<span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></code></pre></div>
 <p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:6-4">3.3</a>).</p>
 <div class="figure"><span id="fig:6-4"></span>
 <img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="576" />
