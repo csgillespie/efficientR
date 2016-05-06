@@ -225,6 +225,39 @@ local(source("code/03-programming_f1.R", local=TRUE))
 Verify that `monte_carlo_vec` is faster than `monte_carlo`. How does this relate to 
 the number of darts, i.e. the size of `N`, that is used
 
+### Communicating with the user: messages vs warnings vs stop
+
+When we create a function, we often want the function to give feedback on the current state. For example, are missing arguments or has
+a numerical calculation failed. There are three main techniques of communicating with the user.
+
+  * Fatal errors are raised by `stop`, i.e. execution is terminated. When `stop` is called, there is no way for a function to continue. For instance, if one of our arguments was the standard deviation, we could include the check
+  
+  ```{r}
+  if(sd < 0) 
+    stop("sd parameter must be non-negative.")
+  ```
+  
+  Errors can be caught using `try` and `tryCatch` (discussed in more detail in section XXX).
+  
+  * Warnings are generated using `warning`. When a warning is raised, it indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a warning. Warnings can be hidden using `suppressWarnings`:
+    ```{r}
+    suppressWarnings(mean(NULL))
+    ```
+  In general, it is good practice to solve the underlying cause of the warning message, instead of evading the issue via `suppressWarning`
+  
+  * To give informative output, use the `message` function. In my package for fitting power laws, I use messages to give the 
+  user and estimate of expected run time. Similar to warnings, messages can be suppressed with `suppressMessages`.
+  
+  * Another function used for printing messages is `cat`. In general, `cat` should only be used in actual `print`/`show` methods.
+
+### Exercise
+
+1. Create a function with 
+
+1. Use `call.`
+
+
+
 ### Type consistency
 
 When programming it is helpful if the return value from a function always takes the
@@ -472,6 +505,8 @@ A data frame is just an R list, with class `data.frame`.
 indeed a list.
 
 2. Use the function `length` on a data frame. What is return? Why?
+
+
 
 ## Caching variables
 
