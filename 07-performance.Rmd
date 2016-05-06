@@ -243,6 +243,18 @@ microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000
 The above result shows that using integers is slightly faster, but probably not worth
 worrying about.
 
+Integers are more space efficient. If we compare size of a integer vector to a standard numeric vector
+```{r}
+pryr::object_size(1:10000)
+pryr::object_size(y = seq(1, 10000, by=1.0))
+```
+The integer version is (approximately) half the size. However most mathematical operations will convert
+the integer vector into a standard numerical vector, e.g. 
+```{r}
+is.integer(1L + 1)
+```
+
+
 #### Exercises {-}
 
 1. Another benefit of integers, is that they are slightly more memory efficient. Using
@@ -261,6 +273,12 @@ A related memory saving idea is to replace `logical` vectors
 with vectors from the **bit** package which take up just over 16th of the space
 (but you can't use `NA`s).
 ```
+1. Contruct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the
+objects.
+
+
+
+
 
 ## Code profiling
 
