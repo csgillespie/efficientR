@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R programming.">
-  <meta name="generator" content="bookdown 0.0.70 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.71 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-05-05">
+<meta name="date" content="2016-05-06">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -227,8 +227,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="efficient-performance.html"><a href="efficient-performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
 <li class="chapter" data-level="7.1.1" data-path="efficient-performance.html"><a href="efficient-performance.html#is.na-and-anyna"><i class="fa fa-check"></i><b>7.1.1</b> <code>is.na</code> and <code class="unnumbered">anyNA</code></a></li>
 <li class="chapter" data-level="" data-path="efficient-performance.html"><a href="efficient-performance.html#matrices"><i class="fa fa-check"></i>Matrices</a></li>
-<li class="chapter" data-level="" data-path="efficient-performance.html"><a href="efficient-performance.html#efficient-data-structures"><i class="fa fa-check"></i>Efficient data structures</a></li>
 <li class="chapter" data-level="" data-path="efficient-performance.html"><a href="efficient-performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
+<li class="chapter" data-level="" data-path="efficient-performance.html"><a href="efficient-performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="efficient-performance.html"><a href="efficient-performance.html#code-profiling"><i class="fa fa-check"></i><b>7.2</b> Code profiling</a><ul>
 <li class="chapter" data-level="7.2.1" data-path="efficient-performance.html"><a href="efficient-performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.2.1</b> Getting started with <strong>profvis</strong></a></li>
@@ -447,12 +447,14 @@ Note that a function ‘derived from’ another in this context means that it ca
 <p>Figure <a href="efficient-workflow.html#fig:readr-vs-base">4.3</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around 1 MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
 <p>For files beyond 100 MB in size <code>fread</code> and <code>read_csv</code> can be expected to be around <em>5 times faster</em> than <code>read.delim</code>. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with <code>read.csv</code>), but could represent an important speed-up if you frequently load large text files.</p>
 <div class="figure"><span id="fig:readr-vs-base"></span>
-<img src="_main_files/figure-html/readr-vs-base-1.png" alt="TODO: Rerun. Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns." width="672" />
+<img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of `base`, `data.table` and `readr` functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file.." width="576" />
 <p class="caption">
-Figure 4.3: TODO: Rerun. Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.
+Figure 4.3: Benchmarks of <code>base</code>, <code>data.table</code> and <code>readr</code> functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file..
 </p>
 </div>
-<p>When tested on a large (4 GB) .csv file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section <a href="efficient-hardware.html#ram">8.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made faster by pre-specifying the column types at the outset, as illustrated in <a href="efficient-workflow.html#fig:readr-vs-base">4.3</a> and described in the help files.</p>
+<p>When tested on a large (4 GB) .csv file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section <a href="efficient-hardware.html#ram">8.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made significantly faster by pre-specifying the column types at the outset, e.g.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.csv</span>(file_name, <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>))</code></pre></div>
+<p>See the associated help files for further details.</p>
 <!-- Idea: test the functions on text data -->
 <p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="efficient-workflow.html#tab:voyages">4.1</a> shows that <code>read_tsv</code> is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="efficient-workflow.html#fig:readr-vs-base">4.3</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
