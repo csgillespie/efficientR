@@ -1,5 +1,5 @@
 html:
-	Rscript build.R
+	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::gitbook")'
 	cp -fvr css/style.css _book/
 	cp -fvr images _book/
 	
