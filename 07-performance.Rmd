@@ -167,32 +167,6 @@ microbenchmark(times=100, unit="ms",
 Use the `data.matrix` function to efficiently convert a data frame into a matrix.
 ```
 
-### Efficient data structures {-}
-
-Even when our data set is small, an analysis can generate large objects. For example
-suppose we want to perform standard cluster analysis. Using the built-in data set
-`USAarrests`, we calculate a distance matrix:
-
-```{r echo=2}
-dist_usa = dist(USArrests)
-```
-
-The resulting object `dist_usa` measures the similarity between two states with
-respect to the input data. Since there are $50$ states in the `USAarrests` data set,
-this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the
-matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this
-characteristic for efficiency, allowing storage to be halved. If we examine the object
-`dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently
-stored as a vector with some attributes.
-
-Another efficient data structure is a sparse matrix. This is simply a matrix in where
-most of the elements are zero. Conversely, if most elements are non-zero, the matrix
-is considered dense. The proportion of non-zero elements is called the sparsity. Large
-sparse matrices often crop up when performing numerical calculations. Typically, our
-data isn't sparse but the resulting data structures we create may be sparse. There are
-a number of techniques/methods used to store sparse matrices. Methods for creating
-sparse matrices can be found in the **Matrix** package.
-
 ### The integer data type {-}
 
 Numbers in R are usually stored in [double-precision floating-point
@@ -277,8 +251,33 @@ with vectors from the **bit** package which take up just over 16th of the space
 objects.
 
 
+### Sparse matrices {-}
 
+Another efficient data structure is a sparse matrix. This is simply a matrix where most of the elements are
+zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements
+is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our
+data isn't sparse but the resulting data structures we create may be sparse. There are a number of
+techniques/methods used to store sparse matrices. Methods for creating sparse matrices
+can be found in the **Matrix** package[^Technically this isn't in base R, it's a recommend
+package.]. For
+this `dist` object, since the structure is regular.
 
+As an example, suppose we have a large matrix where the diagonial elements are non-zero
+
+```{r}
+library("Matrix")
+N = 10000
+sp = sparseMatrix(1:N, 1:N, x = 1)
+m = diag(1, N, N)
+```
+
+Both objects contain the same information, but the data is stored differently. The matrix object
+stores each individual element, while the sparse matrix object only stores the location of the non-zero
+elements. This is much more memory efficient
+```{r}
+pryr::object_size(sp)
+pryr::object_size(m)
+```
 
 ## Code profiling
 
