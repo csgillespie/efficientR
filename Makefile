@@ -1,5 +1,5 @@
 html:
-	Rscript build.R
+	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::gitbook")'
 	cp -fvr css/style.css _book/
 	cp -fvr images _book/
 	
@@ -8,4 +8,7 @@ pdf:
 
 clean:
 	Rscript -e "bookdown::clean_book(TRUE)"
-#	rm -fvr *.log Rplots.pdf _output.yml
+	rm -fvr *.log Rplots.pdf _bookdown_files
+
+cleaner: 
+	make clean && rm -fvr rsconnect

@@ -142,7 +142,11 @@ There are optimised functions for calculating row and columns sums/means, `rowSu
 
 ### `is.na` and `anyNA` {-}
 
-TODO
+To test for an missing values, whether a vector (or other obeject) contains missing
+values, `NA`'s, we use the `is.na` function. Often we are interested in whether the vector
+contains _any_ missing values. In this case, `anyNA(x)` is usually more efficient than
+`any(is.na(x))`.
+
 
 ### Matrices {-}
 
@@ -166,32 +170,6 @@ microbenchmark(times=100, unit="ms",
 ```{block, type="rmdtip"}
 Use the `data.matrix` function to efficiently convert a data frame into a matrix.
 ```
-
-### Efficient data structures {-}
-
-Even when our data set is small, an analysis can generate large objects. For example
-suppose we want to perform standard cluster analysis. Using the built-in data set
-`USAarrests`, we calculate a distance matrix:
-
-```{r echo=2}
-dist_usa = dist(USArrests)
-```
-
-The resulting object `dist_usa` measures the similarity between two states with
-respect to the input data. Since there are $50$ states in the `USAarrests` data set,
-this results in a matrix with $50$ columns and $50$ rows. Intuitively, since the
-matrix `dist_usa` is symmetric around the diagonal, it makes sense to exploit this
-characteristic for efficiency, allowing storage to be halved. If we examine the object
-`dist_usa`, with `str(dist_usa)`, it becomes apparent that the data is efficiently
-stored as a vector with some attributes.
-
-Another efficient data structure is a sparse matrix. This is simply a matrix in where
-most of the elements are zero. Conversely, if most elements are non-zero, the matrix
-is considered dense. The proportion of non-zero elements is called the sparsity. Large
-sparse matrices often crop up when performing numerical calculations. Typically, our
-data isn't sparse but the resulting data structures we create may be sparse. There are
-a number of techniques/methods used to store sparse matrices. Methods for creating
-sparse matrices can be found in the **Matrix** package.
 
 ### The integer data type {-}
 
@@ -243,11 +221,50 @@ microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000
 The above result shows that using integers is slightly faster, but probably not worth
 worrying about.
 
+Integers are more space efficient. If we compare size of a integer vector to a standard numeric vector
+```{r}
+pryr::object_size(1:10000)
+pryr::object_size(y = seq(1, 10000, by=1.0))
+```
+The integer version is (approximately) half the size. However most mathematical operations will convert
+the integer vector into a standard numerical vector, e.g. 
+```{r}
+is.integer(1L + 1)
+```
+
+### Sparse matrices {-}
+
+Another efficient data structure is a sparse matrix. This is simply a matrix where most of the elements are
+zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements
+is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our
+data isn't sparse but the resulting data structures we create may be sparse. There are a number of
+techniques/methods used to store sparse matrices. Methods for creating sparse matrices
+can be found in the **Matrix** package[^Technically this isn't in base R, it's a recommend
+package.]. For
+this `dist` object, since the structure is regular.
+
+As an example, suppose we have a large matrix where the diagonial elements are non-zero
+
+```{r}
+library("Matrix")
+N = 10000
+sp = sparseMatrix(1:N, 1:N, x = 1)
+m = diag(1, N, N)
+```
+
+Both objects contain the same information, but the data is stored differently. The matrix object
+stores each individual element, while the sparse matrix object only stores the location of the non-zero
+elements. This is much more memory efficient
+```{r}
+pryr::object_size(sp)
+pryr::object_size(m)
+```
+
+
+
 #### Exercises {-}
 
-1. Another benefit of integers, is that they are slightly more memory efficient. Using
-the `object_size` function from the **pryr** package, compare the size of a vector of
-doubles and a vector of integers.
+1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA`. Do the results vary with the size of the vector.
 
 1. Examine the following function definitions to give you an idea of how integers are used.
   * `tail.matrix`
@@ -261,6 +278,11 @@ A related memory saving idea is to replace `logical` vectors
 with vectors from the **bit** package which take up just over 16th of the space
 (but you can't use `NA`s).
 ```
+1. Contruct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the
+objects.
+
+
+
 
 ## Code profiling
 

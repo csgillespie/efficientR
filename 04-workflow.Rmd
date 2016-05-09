@@ -238,63 +238,20 @@ Figure \@ref(fig:readr-vs-base) demonstrates that the relative performance gains
 
 For files beyond 100 MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.delim`. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
-```{r, eval=FALSE, echo=FALSE, warning=FALSE}
-library("microbenchmark")
-rows = 10^(seq(3,7, length.out = 20))
-cols = 2 * 10^(0:2)
-res = NULL
-for(i in seq_along(rows)) {
-  for(j in seq_along(cols)) {
-    no_of_rows = floor(rows[i]/(10^(j-1)))
-    m = matrix(runif(no_of_rows * cols[j]), nrow = no_of_rows, ncol = cols[j])
-    fname = tempfile()
-    write.csv(m, file = fname, row.names = FALSE)
-    mb = microbenchmark(times = 10,
-                        base_default = read.csv(fname),
-                        readr_default = read_csv(fname), 
-                        base_numeric = read.csv(fname, colClasses = rep("numeric", cols[j])), 
-                        readr_double = read_csv(fname, col_types = 
-                                                  paste(replicate(cols[j], "d"), collapse = "")),
-                        fread_default = fread(fname),
-                        fread_numeric = fread(fname, colClasses = rep("numeric", cols[j]))
-    )
-    unlink(fname)
-    
-    tab = tapply(mb$time/1000, mb$expr, mean)
-    res_tmp = data.frame(exp = names(tab),
-                         time = as.vector(tab), rows = no_of_rows,
-                         cols = cols[j], MB = file.size(fname) / 1000000)
-    res = rbind(res, res_tmp)
-  }
-  message(i)
-}
-
-# Plot the result
-res$cells = res$rows * res$cols
-res$Time = NA
-head(res)
-for(i in res$cells){
-  sel = res$cells == i
-  res$Time[sel] = res$time[sel] / min(res$time[sel])
-}
-i
-res$type = c("std", "std", "type", "type", "std", "type")
-library("ggplot2")
-res$facet_cols = paste("No of columns:", res$cols)
-saveRDS(res, "data/res.Rds")
+```{r readr-vs-base, fig.cap="Benchmarks of `base`, `data.table` and `readr` functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file..", echo=FALSE, fig.height=4, fig.width=6,warning=FALSE, message=FALSE}
+local(source("code/04-project-planning_f3.R", local=TRUE))
 ```
 
-```{r readr-vs-base, fig.cap="TODO: Rerun. Benchmarks of base, data.table and readr functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns.", echo=FALSE, fig.height=4, warning=FALSE}
-library(ggplot2)
-res = readRDS("data/res.Rds")
-ggplot(res, aes(MB, Time)) + 
-  geom_line(aes(colour = exp)) + facet_wrap(~ facet_cols) +
-  scale_x_log10() + 
-  xlab("Size (MB)") + 
-  geom_vline(xintercept = 1) + ylim(c(0, 10)) + ylab("Relative time")
+When tested on a large (4 GB) .csv file it was found that `fread` and `read_csv` were almost identical in load
+times and that `read.csv` took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to
+run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be
+made significantly faster by pre-specifying the column types at the outset, e.g.
+
+```{r eval=FALSE}
+read.csv(file_name, colClasses = c("numeric", "numeric"))
 ```
 
-When tested on a large (4 GB) .csv file it was found that `fread` and `read_csv` were almost identical in load times and that `read.csv` took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be made faster by pre-specifying the column types at the outset, as illustrated in \@ref(fig:readr-vs-base) and described in the help files.
+See the associated help files for further details.
 
 ```{r, eval=FALSE, echo=FALSE}
 # This script illustrates the download and processing of a massive (~4 Gb) csv file
