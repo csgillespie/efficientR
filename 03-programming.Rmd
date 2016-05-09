@@ -225,14 +225,6 @@ local(source("code/03-programming_f1.R", local=TRUE))
 Verify that `monte_carlo_vec` is faster than `monte_carlo`. How does this relate to 
 the number of darts, i.e. the size of `N`, that is used
 
-### Exercise
-
-1. Create a function with 
-
-1. Use `call.`
-
-
-
 ### Type consistency
 
 When programming it is helpful if the return value from a function always takes the
@@ -264,7 +256,7 @@ the `drop` argument.
 
 ### `messages`, `warnings`, and `stop`
 
-When we create a function, we often want the function to give feedback on the current
+When we create a function we often want the function to give feedback on the current
 state. For example, are there missing arguments or has a numerical calculation failed.
 There are three main techniques of communicating with the user.
 
@@ -275,8 +267,20 @@ Fatal errors are raised by calling the `stop`, i.e. execution is terminated. Whe
 generate random numbers using `rnorm` the first argument is the `n`, if the number of
 observations to return less than $1$, an error is raised.
 
-Errors can be caught using `try` and `tryCatch` (discussed in more detail in section
-XXX).
+Errors can be caught using `try` and `tryCatch`. For example, 
+```{r}
+## silent suppresses the error message
+good = try(1 + 1, silent=TRUE)
+bad = try(1 + "1", silent=TRUE)
+```
+When we inspect the objects, `good` and `bad`
+```{r}
+good
+bad
+```
+....
+Discussed in more detail in [Hadley](http://adv-r.had.co.nz/Exceptions-Debugging.html)  - don't want to 
+repeat. 
 
 ### Warnings: `warning` {-}
 
@@ -305,7 +309,7 @@ In some cases, it isn't clear what should be returned, a message, a `NA` value o
 error. For example, suppose we wish to download some kind of data from a web site. The
 key idea is what can the user do if the function cannot complete it's purpose. 
 
-The function `GET` from the **httr** package retrieves whaterver information is
+The function `GET` from the **httr** package retrieves whatever information is
 available. If the page exists, the function will return text (with the correct error
 code), e.g.
 ```{r eval=FALSE}
@@ -317,12 +321,14 @@ web-page doesn't exist
 ```{r eval=FALSE}
 GET("http://google1.com/")
 ```
-or if we don't have an internet connection, then `GET` raises an error, via `stop`.
+or if we don't have an internet connection, then `GET` raises an error via `stop`.
+Instead of raising an error we could instead return `NA` (the web-page isn't available).
+However, for the typically use case, it's not clear how returning `NA` would be helpful.
 
-The `install_github` in the **devtools* package either installs the
+The `install_github` function in the **devtools* package either installs the
 package or raises an error. When an error is raised, the function uses a combination
 of `message` and `stop` to indicate the source of an error, e.g.
-```{r}
+```{r, eval=FALSE}
 devtools::install_github("bad/package")
 #> Downloading GitHub repo bad/package@master
 #> from URL https://api.github.com/repos/bad/package/zipball/master
@@ -330,12 +336,17 @@ devtools::install_github("bad/package")
 #>   Couldn't resolve host name 
 ```
 With the key idea being that if a package isn't able to be installed, future
-calculations will break, so it's optimal to raise an error as soon as possible.
+calculations will break; so it's optimal to raise an error as soon as possible.
 
-In contrast, if `download.file` function fails, it raises a warning. The difference
-between `download.file` and `install_github` is the expectation of failure. We don't 
-expect `install_github` to fail, however, `download.file, 
+### Example: Returning a missing value
 
+  * `benchmarkme`: `get_cpu()`, `get_ram` returns `NA`
+  * 
+
+### Exercises {-}
+
+The `stop` function has an argument `call.` that indicates if the function call
+should be part of the error message. Create a function and experiment with this option.
 
 
 
@@ -353,7 +364,7 @@ regression_plot = function(x, y, ...) {
   invisible(model)
 }
 ```
-When the function is called, a scatter graph is ploted with the line of best fit, but
+When the function is called, a scatter graph is plotted with the line of best fit, but
 the output is invisible. However when we assign the function to an object, i.e. 
 `out = regression_plot(x, y)` the variable `out` contains the output of the `lm` call.
 
@@ -463,7 +474,7 @@ factor.
 
 
 Overall factors are useful, but can lead to unwanted side-effects if we are not
-careful. Used at the right time and place, factors can lead to simplier code.
+careful. Used at the right time and place, factors can lead to simpler code.
 
 #### Exercise {-}
 
@@ -844,7 +855,7 @@ I always set the compile level to the maximum value of 3.
 
 This chapter provides a brief foray into the word of parallel computing and only looks
 at shared memory systems. The idea is to give a flavour of what is possible, instead
-of covering all possible varities. For a fuller account, see [@mccallum2011].
+of covering all possible varieties. For a fuller account, see [@mccallum2011].
 
 In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
 with base R. The **parallel** package must still be loaded before use however, and
@@ -915,7 +926,7 @@ On my computer I get a four-fold speed-up.
 
 We should always call `stopCluster` to free resources when we are finished with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is ommitted.
+function ends as the results of an error and so `stopCluster` is omitted.
 
 The `on.exit` function handles this problem with the minimum of fuss; regardless how
 the function ends, `on.exit` is always called. In the context of parallel programming
