@@ -4,14 +4,12 @@ library(data.table)
 library(readr)
 library("microbenchmark")
 
-
-
-## Start corresponds to 0.1 MB
+# # Start corresponds to 0.1 MB
 # rows = 10^(seq(3.445,6, length.out = 50))
 # cols = 2 * 10^(0:2)
 # res = NULL
 # for(i in seq_along(rows)) {
-#   for(k in 1:40) {
+#   for(k in 1:80) {
 #     for(j in seq_along(cols)) {
 #       no_of_rows = floor(rows[i]/(10^(j-1)))
 #       m = matrix(runif(no_of_rows * cols[j]), nrow = no_of_rows, ncol = cols[j])
@@ -19,11 +17,11 @@ library("microbenchmark")
 #       write.csv(m, file = fname, row.names = FALSE)
 #       mb = microbenchmark(times = 10,
 #                           base_default = read.csv(fname),
-#                           readr_default = read_csv(fname), 
+#                           readr_default = read_csv(fname),
 #                           fread_default = fread(fname)
 #       )
-#       
-#       
+# 
+# 
 #       tab = tapply(mb$time/1000, mb$expr, mean)
 #       res_tmp = data.frame(exp = names(tab),
 #                            time = as.vector(tab), rows = no_of_rows,
@@ -35,6 +33,7 @@ library("microbenchmark")
 #   }
 #   message(i)
 # }
+#save(res, file="data/04-f3.RData")
 load("data/04-f3.RData")
 res = aggregate(time ~ cols+rows+ exp, mean, data=res)
 res$MB = res$cols*res$rows*18/1000000 ## Approximate
@@ -48,11 +47,11 @@ res$type = factor(res$exp, labels=c("base", "fread","readr"))
 
 library("ggplot2")
 res$facet_cols = paste("No of columns:", res$cols)
-
+res = res[res$MB >= 0.1,]
 g = ggplot(res, aes(MB, Time)) + 
   geom_line(aes(colour = type), size=1) + 
   facet_grid(~ facet_cols) +
-  scale_x_continuous(limits=c(min(res$MB),30), expand = c(0, 0), trans="log10") + 
+  scale_x_continuous(limits=c(min(res$MB),36), expand = c(0, 0), trans="log10") + 
   theme(panel.grid.major.y = element_line(colour = "gray90"), 
         panel.grid.minor = element_line(colour = NA), 
         panel.grid.major.x = element_line(colour = NA), 
@@ -67,7 +66,7 @@ g = ggplot(res, aes(MB, Time)) +
         legend.key = element_rect(fill = NA)) +
   ylab("Relative time") +  xlab("File size (MB)") + 
   scale_colour_manual(values=c(get_col(2), get_col(3), get_col(4))) + 
-  scale_y_continuous(limits=c(0,12), expand = c(0, 0)) +labs(colour = NULL)
+  scale_y_continuous(limits=c(0,15), expand = c(0, 0)) +labs(colour = NULL)
 g1 = g + theme(strip.background = element_rect(fill = "white"), 
           strip.text = element_text( hjust = 0.95, face="bold")) + 
   guides(colour = guide_legend(override.aes = list(size=1)))
