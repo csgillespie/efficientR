@@ -444,6 +444,124 @@ potentially wasteful, since the probability of getting one double is $1/6$ and t
 doubles is $1/36$. Another method is too only roll additional dice if and when they
 are needed. Implement and time this solution.
 
+
+## Parallel computing
+
+This chapter provides a brief foray into the word of parallel computing and only looks
+at shared memory systems. The idea is to give a flavour of what is possible, instead
+of covering all possible varities. For a fuller account, see [@mccallum2011].
+
+In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
+with base R. The **parallel** package must still be loaded before use however, and
+you must determine the number of available cores manually, as illustrated below.
+
+```{r echo=1:2}
+library("parallel")
+no_of_cores = detectCores()
+```
+The computer used to compile the published version of this book chapter has `r
+no_of_cores` CPUs/Cores.
+
+### Parallel versions of apply functions
+
+The most commonly used parallel applications are parallelised replacements of
+`lapply`, `sapply` and `apply`. The parallel implementations and their arguments are
+shown below.
+
+```{r eval=FALSE, tidy=FALSE}
+parLapply(cl, x, FUN, ...)
+parApply(cl = NULL, X, MARGIN, FUN, ...)
+parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) 
+```
+
+The key point is that there is very little difference in arguments between `parLapply`
+and `apply`, so the barrier to using (this form) of parallel computing is low. Each
+function above has an argument `cl`, which is created by a `makeCluster` call. This
+function, amongst other things, specifies the number of processors to use.
+
+### Example: Snakes and Ladders
+
+Parallel computing is ideal for Monte-Carlo simulations. Each core independently
+simulates a realisation from model. At the end, we gather up the results. In the
+**efficient** package, there is a function that simulates a single game of Snakes and
+Ladders - `snakes_ladders()`[^The idea for this example came to one of the authors
+after a particularly long and dull game of Snakes and Ladders with his son.]
+
+If we wanted to simulate `N` games we could use `sapply`
+```{r eval=FALSE, echo=c(1, 3)}
+N = 10^4
+N = 2
+sapply(1:N, snakes_ladders)
+```
+
+Rewriting this code to make use of the **parallel** package is straightforward. We
+begin by making a cluster object
+
+```{r, eval=FALSE, echo=2}
+library("efficient")
+library("parallel")
+cl = makeCluster(4)
+```
+
+Then swap `sapply` for `parSapply` 
+```{r eval=FALSE}
+parSapply(cl, 1:N, snakes_ladders)
+```
+
+before stopping the cluster
+
+```{r eval=FALSE}
+stopCluster(cl)
+```
+
+On my computer I get a four-fold speed-up.
+
+### Exit functions with care
+
+We should always call `stopCluster` to free resources when we are finished with the
+cluster object. However if the parallel code is within function, it's possible that
+function ends as the results of an error and so `stopCluster` is ommitted.
+
+The `on.exit` function handles this problem with the minimum of fuss; regardless how
+the function ends, `on.exit` is always called. In the context of parallel programming
+we will have something similar to
+```{r}
+simulate = function(cores) {
+  cl = makeCluster(cores)
+  on.exit(stopCluster(cl))
+  ## Do something  
+}
+```
+
+```{block, type="rmdtip"}
+Another common use of `on.exit` is in conjunction with the `par` function. If you use
+`par` to change graphical parameters within a function, `on.exit` ensures these
+parameters are reset to their previous value when the function ends.
+```
+
+### Process forking
+
+```{r echo=FALSE}
+library("efficient")
+```
+
+Another way of running code in parallel is to use the `mclapply` and `mcmapply`
+functions, i.e.
+```{r results="hide"}
+## This will run on Windows, but will only use 1 core
+mclapply(1:2, snakes_ladders)
+```
+These functions use forking, that is creating a new copy of a process running on the
+CPU. However Windows does not support this low-level functionality in the way that
+Linux does. If I'm writing code that is only for me, then I use `mclapply` since I
+avoid starting and stopping clusters. However if the code is to be shared with a
+windows user, I use `makeCluster` since it is cross-platform.
+
+
+
+
+
+
 ## Rcpp
 
 Sometimes R is just slow. You've tried every trick you know, and your code is still
