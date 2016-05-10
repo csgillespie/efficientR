@@ -258,11 +258,7 @@ replace `Map` and `flatten_df` to replace `unlist`.
 1. How would you make subsetting data frames with `[` type consistent? Hint: look at
 the `drop` argument.
 
-
 ## Communicating with the user
-
-
-### `messages`, `warnings`, and `stop`
 
 When we create a function we often want the function to give feedback on the current
 state. For example, are there missing arguments or has a numerical calculation failed.
@@ -275,19 +271,28 @@ Fatal errors are raised by calling the `stop`, i.e. execution is terminated. Whe
 generate random numbers using `rnorm` the first argument is the `n`, if the number of
 observations to return less than $1$, an error is raised.
 
-
 Errors can be caught using `try` and `tryCatch`. For example, 
 ```{r}
 ## silent suppresses the error message
 good = try(1 + 1, silent=TRUE)
 bad = try(1 + "1", silent=TRUE)
 ```
-When we inspect the objects, `good` and `bad`
+When we inspect the objects, `good` just contains the number `2`:
 ```{r}
 good
+```
+However, `bad` is a character string with class `try-error` and an `condition`
+attribute that contains
+```{r}
 bad
 ```
-....
+We can use this information in a standard conditional statement
+```{r}
+if(class(bad) == "try-error")
+  ## Do something sensible
+```
+
+
 Discussed in more detail in [Hadley](http://adv-r.had.co.nz/Exceptions-Debugging.html)  - don't want to 
 repeat. 
 
