@@ -287,20 +287,18 @@ attribute that contains
 bad
 ```
 We can use this information in a standard conditional statement
-```{r}
+```{r eval=FALSE}
 if(class(bad) == "try-error")
-  ## Do something sensible
+  ## Do something 
 ```
-
-
-Discussed in more detail in [Hadley](http://adv-r.had.co.nz/Exceptions-Debugging.html)  - don't want to 
-repeat. 
+Further details on error handling, as well as some excellent advice on general
+debugging techniques, are given in [@Wickham2014].
 
 ### Warnings: `warning` {-}
 
-Warnings are generated using `warning`. When a warning is raised, it indicates
-potential problems. For example, `mean(NULL)` returns `NA` and also raises a warning.
-Warnings can be hidden using `suppressWarnings`:
+Warnings are generated using the `warning` function. When a warning is raised, it
+indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a
+warning. Warnings can be hidden using `suppressWarnings`:
 ```{r}
 suppressWarnings(mean(NULL))
 ```
@@ -319,16 +317,18 @@ S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
 
 ### Example: Retrieving a web resource
 
-In some cases, it isn't clear what should be returned, a message, a `NA` value or an
-error. For example, suppose we wish to download some kind of data from a web site. The
-key idea is what can the user do if the function cannot complete it's purpose. 
+In some cases it isn't clear what should be returned, a message, a `NA` value or an
+error. For example, suppose we wish to download data from a web site. 
 
-
-The function `GET` from the **httr** package retrieves whatever information is
-available. If the page exists, the function will return text (with the correct error
-code), e.g.
+The function `GET` from the **httr** package can be used to download a webpage. When
+the we attempt to download data, the function also obtains an HTML status code. If the
+page exists, the function will return text (with the correct status code), e.g.
 ```{r eval=FALSE}
 GET("http://google.com/") # Status: 200
+```
+If the url is incorrect, e.g. a broken link or is a redirect, then we can interogate the
+output and use the Status to determine what to do next.
+```{r eval=FALSE}
 GET("http://google.com/made_up") # Status: 404
 ```
 By examining the error code, the user has complete flexibility. However if the
@@ -337,8 +337,9 @@ web-page doesn't exist
 GET("http://google1.com/")
 ```
 or if we don't have an internet connection, then `GET` raises an error via `stop`.
-Instead of raising an error we could instead return `NA` (the web-page isn't available).
-However, for the typically use case, it's not clear how returning `NA` would be helpful.
+Instead of raising an error the author could have returned `NA` (the web-page isn't
+available). However for the typically use case, it's not clear how returning `NA`
+would be helpful.
 
 The `install_github` function in the **devtools* package either installs the
 package or raises an error. When an error is raised, the function uses a combination
@@ -353,17 +354,16 @@ devtools::install_github("bad/package")
 With the key idea being that if a package isn't able to be installed, future
 calculations will break; so it's optimal to raise an error as soon as possible.
 
-### Example: Returning a missing value
-
-  * `benchmarkme`: `get_cpu()`, `get_ram` returns `NA`
-  * 
+<!--
+When deciding what to return, consider what the user can 
+The key idea is
+what can the user do if the function cannot complete it's purpose.
+-->
 
 ### Exercises {-}
 
 The `stop` function has an argument `call.` that indicates if the function call
 should be part of the error message. Create a function and experiment with this option.
-
-
 
 ### Invisible returns 
 
