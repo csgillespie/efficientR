@@ -337,12 +337,14 @@ Some of R's startup arguments can be controlled interactively in RStudio. See th
 
 ### An overview of R's startup files
 
-There are two special files, `.Rprofile` and `.Renviron`, which determine how R performs for the duration of the session.
+There are two special files, `.Renviron` and `.Rprofile`, which determine how R performs for the duration of the session.
 These are summarised in the bullet points below we go into more detail on each in the subsequent sections.
+
+- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
 
 - `.Rprofile` is a plain text file (which is always called `.Rprofile`, hence its name) that simply runs lines of R code every time R starts. If you want R to check for package updates each time it starts (as explained in the previous section), you simply add the relevant line somewhere in this file.
 
-- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
+When R starts (unless it was launched with `--no-environ`) it first searches for `.Renviron` and then `.Rprofile`, in that order.
 
 ### The location of startup files
 
