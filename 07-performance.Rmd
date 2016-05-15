@@ -28,7 +28,7 @@ at `Rcpp`, an efficient way of incorparting C++ code into an R analysis.
 
 ## Efficient base R 
 
-In R, there is often more than one way to solve a problem. In this section we
+In R there is often more than one way to solve a problem. In this section we
 highlight standard tricks or alternative methods that will improve performance.
 
 ### The `if` vs `ifelse` functions {-}
@@ -45,10 +45,11 @@ If `test` has length 1, then the standard `if(test) yes else no` is more efficie
 
 ### Sorting and ordering {-}
 
-Sorting a vector is a relatively expensive computational operation. If you only sort a
-vector once at the top of a script, then don't worry too much about this. However if
-you sorting inside a loop, or in a shiny application, then it can be worthwhile
-thinking about how to optimise this operation.
+Sorting a vector a single vector is relatively quick; sorting a vector of length
+$10^7$ takes around $0.01$ seconds. If you only sort a vector once at the top of a
+script, then don't worry too much about this. However if you sorting inside a loop, or
+in a shiny application, then it can be worthwhile thinking about how to optimise this
+operation.
 
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
 be specified in the `sort` function; with `radix` being a new addition to R 3.3.
@@ -64,6 +65,11 @@ system.time({
   for(i in 1:100)
     sort(x[,i], method="radix")
 })
+system.time({
+  for(i in 1:100)
+    sort(x[,i], partial=1:2)
+})
+
 ```
 
 ### Reversing elements {-}

@@ -225,6 +225,14 @@ local(source("code/03-programming_f1.R", local=TRUE))
 Verify that `monte_carlo_vec` is faster than `monte_carlo`. How does this relate to 
 the number of darts, i.e. the size of `N`, that is used
 
+### Exercise
+
+1. Create a function with 
+
+1. Use `call.`
+
+
+
 ### Type consistency
 
 When programming it is helpful if the return value from a function always takes the
@@ -250,6 +258,113 @@ replace `Map` and `flatten_df` to replace `unlist`.
 1. How would you make subsetting data frames with `[` type consistent? Hint: look at
 the `drop` argument.
 
+## Communicating with the user
+
+When we create a function we often want the function to give feedback on the current
+state. For example, are there missing arguments or has a numerical calculation failed.
+There are three main techniques of communicating with the user.
+
+### Fatal errors: `stop` {-}
+
+Fatal errors are raised by calling the `stop`, i.e. execution is terminated. When
+`stop` is called, there is no way for a function to continue. For instance, when we
+generate random numbers using `rnorm` the first argument is the `n`, if the number of
+observations to return less than $1$, an error is raised.
+
+Errors can be caught using `try` and `tryCatch`. For example, 
+```{r}
+## silent suppresses the error message
+good = try(1 + 1, silent=TRUE)
+bad = try(1 + "1", silent=TRUE)
+```
+When we inspect the objects, `good` just contains the number `2`:
+```{r}
+good
+```
+However, `bad` is a character string with class `try-error` and an `condition`
+attribute that contains
+```{r}
+bad
+```
+We can use this information in a standard conditional statement
+```{r eval=FALSE}
+if(class(bad) == "try-error")
+  ## Do something 
+```
+Further details on error handling, as well as some excellent advice on general
+debugging techniques, are given in [@Wickham2014].
+
+### Warnings: `warning` {-}
+
+Warnings are generated using the `warning` function. When a warning is raised, it
+indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a
+warning. Warnings can be hidden using `suppressWarnings`:
+```{r}
+suppressWarnings(mean(NULL))
+```
+In general, it is good practice to solve the underlying cause of the warning message,
+instead of evading the issue via `suppressWarning`.
+  
+### Informative output: `message` and `cat` {-}  
+  
+To give informative output, use the `message` function. In my package for fitting
+power laws, I use messages to give the user and estimate of expected run time. Similar
+to warnings, messages can be suppressed with `suppressMessages`.
+  
+Another function used for printing messages is `cat`. In general `cat` should only be
+used in actual `print`/`show` methods, e.g. look at the function definition of the
+S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
+
+### Example: Retrieving a web resource
+
+In some cases it isn't clear what should be returned, a message, a `NA` value or an
+error. For example, suppose we wish to download data from a web site. 
+
+The function `GET` from the **httr** package can be used to download a webpage. When
+the we attempt to download data, the function also obtains an HTML status code. If the
+page exists, the function will return text (with the correct status code), e.g.
+```{r eval=FALSE}
+GET("http://google.com/") # Status: 200
+```
+If the url is incorrect, e.g. a broken link or is a redirect, then we can interogate the
+output and use the Status to determine what to do next.
+```{r eval=FALSE}
+GET("http://google.com/made_up") # Status: 404
+```
+By examining the error code, the user has complete flexibility. However if the
+web-page doesn't exist
+```{r eval=FALSE}
+GET("http://google1.com/")
+```
+or if we don't have an internet connection, then `GET` raises an error via `stop`.
+Instead of raising an error the author could have returned `NA` (the web-page isn't
+available). However for the typically use case, it's not clear how returning `NA`
+would be helpful.
+
+The `install_github` function in the **devtools* package either installs the
+package or raises an error. When an error is raised, the function uses a combination
+of `message` and `stop` to indicate the source of an error, e.g.
+```{r, eval=FALSE}
+devtools::install_github("bad/package")
+#> Downloading GitHub repo bad/package@master
+#> from URL https://api.github.com/repos/bad/package/zipball/master
+#>  Error in curl::curl_fetch_memory(url, handle = handle) : 
+#>   Couldn't resolve host name 
+```
+With the key idea being that if a package isn't able to be installed, future
+calculations will break; so it's optimal to raise an error as soon as possible.
+
+<!--
+When deciding what to return, consider what the user can 
+The key idea is
+what can the user do if the function cannot complete it's purpose.
+-->
+
+### Exercises {-}
+
+The `stop` function has an argument `call.` that indicates if the function call
+should be part of the error message. Create a function and experiment with this option.
+
 ### Invisible returns 
 
 The `invisible` function allows you to return a temporarily invisible copy of an
@@ -264,7 +379,7 @@ regression_plot = function(x, y, ...) {
   invisible(model)
 }
 ```
-When the function is called, a scatter graph is ploted with the line of best fit, but
+When the function is called, a scatter graph is plotted with the line of best fit, but
 the output is invisible. However when we assign the function to an object, i.e. 
 `out = regression_plot(x, y)` the variable `out` contains the output of the `lm` call.
 
@@ -374,7 +489,7 @@ factor.
 
 
 Overall factors are useful, but can lead to unwanted side-effects if we are not
-careful. Used at the right time and place, factors can lead to simplier code.
+careful. Used at the right time and place, factors can lead to simpler code.
 
 #### Exercise {-}
 
@@ -472,6 +587,8 @@ A data frame is just an R list, with class `data.frame`.
 indeed a list.
 
 2. Use the function `length` on a data frame. What is return? Why?
+
+
 
 ## Caching variables
 
