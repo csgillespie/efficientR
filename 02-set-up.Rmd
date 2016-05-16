@@ -147,7 +147,7 @@ form the Utilities folder in Launchpad.
 1. What is the exact version of your computer's operating system?
 2. Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure 2-1?
 
-    ```{r, eval=FALSE}
+   ```{r, eval=FALSE}
     # 1: Create large dataset
     X = data.frame(matrix(rnorm(1e8), nrow = 1e7))
     # 2: Find the median of each column using a single core
@@ -204,6 +204,14 @@ apt-add-repository https://cran.rstudio.com/bin/linux/ubuntu
 
 In the above code `cran.rstudio.com` is the 'mirror' from which
 `r-base` and other `r-` packages can be installed using the `apt` system.
+The following two commands, for example, would install the base R package (a 'barebones' install)
+and the package **rcurl**, which has an external dependency:
+
+```
+apt-get install r-cran-base # install base R
+apt-get isntall r-cran-rcurl # install the rcurl package
+```
+
 R also works on FreeBSD and other Unix-based systems.^[See
 [jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
 
@@ -220,7 +228,8 @@ However, it is important to keep your R version relatively up-to-date, because:
 
 Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS).
 R release versions have 3 components corresponding to major.minor.patch changes.
-Generally 2 or 3 patches are released before the next minor increment.
+Generally 2 or 3 patches are released before the next minor increment - each 'patch' is
+released roughly every 3 months.
 R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
 
  - On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with `apt-get upgrade`.
@@ -328,6 +337,7 @@ The following arguments are particularly important from an efficiency perspectiv
 - `--no-save` tells R not to ask the user if they want to save objects saved in RAM when the session is ended with `q()`.
 
 Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit.
+R's default setting of loading data from the last session automatically is potentially problematic in this context.
 See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
 
 ```{block, rstudio-tip, type='rmdtip'}
@@ -336,12 +346,15 @@ Some of R's startup arguments can be controlled interactively in RStudio. See th
 
 ### An overview of R's startup files
 
-There are two special files, `.Rprofile` and `.Renviron`, which determine how R performs for the duration of the session.
+There are two special files, `.Renviron` and `.Rprofile`, which determine how R performs for the duration of the session.
 These are summarised in the bullet points below we go into more detail on each in the subsequent sections.
+
+- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
 
 - `.Rprofile` is a plain text file (which is always called `.Rprofile`, hence its name) that simply runs lines of R code every time R starts. If you want R to check for package updates each time it starts (as explained in the previous section), you simply add the relevant line somewhere in this file.
 
-- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
+When R starts (unless it was launched with `--no-environ`) it first searches for `.Renviron` and then `.Rprofile`, in that order.
+Although `.Renviron` is searched for first, we will look at `.Rprofile` first as it is simpler and for many set-up tasks more frequently userful. Both files can exist in three directories on your computer.
 
 ### The location of startup files
 
@@ -419,10 +432,11 @@ if(!file.exists("~/.Rprofile")) # only create if not already there
 file.edit("~/.Rprofile")
 ```
 
-### Example `.Rprofile` settings
+### An example `.Rprofile` file
 
-Example contents of short and simple `.Rprofile` are illustrated below, with comments explaining what each line does.
-More details on these, and other potentially useful `.Rprofile` options are described subsequently.
+The example below provides a taster of what goes into `.Rprofile`.
+Note that this is simply a usual R script, but with an unusual name.
+The best way to understand what is going on is to create this same script, save it as `.Rprofile` in your current working directory and then restart your R session to observer what changes. To restart your R session from within RStudio you can click `Session > Restart R` or use the keyboard shortcut `Ctrl+Shift+F10`.
 
 ```{r, eval=FALSE}
 # A fun welcome message
@@ -434,8 +448,20 @@ options(prompt = "R4geo> ")
 options(stringsAsFactors = FALSE)
 ```
 
+To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started.
+The latter two modify *options* used to change R's behavior, first to change the prompt in the console (set to `R> ` by default) and second to ensure that unwanted `factor` variables are not created when `read.csv` and other functions derived from `read.table` are used to load external data into R. Note that simply adding more lines the `.Rprofile` will set more features.
+An important aspect of `.Rprofile` (and `.Renviron`) is that *each line is run once and only once for each R session*.
+That means that the options set within `.Rprofile` can easily be changed during the session.
+The following command run mid-session, for example, will return the default prompt:
+
+```{r}
+options(prompt = "> ")
+```
+
+More details on these, and other potentially useful `.Rprofile` options are described subsequently.
 For more suggestions of useful startup settings, see Examples in `help("Startup")`
 and online resources such as those at [statmethods.net](http://www.statmethods.net/interface/customizing.html).
+The help pages for R options (accessible with `?options`) are also worth a read before writing you own `.Rprofile`.
 
 ```{block, continuetip, style='rmdtip'}
 Ever been frustrated by unwanted `+` symbols that prevent copyied and pasted multi-line functions from working?
@@ -445,16 +471,15 @@ These potentially annoying `+`s can be erradicated by adding `options(continue =
 #### Setting options
 
 The function `options`, used above, contains a number of default settings.
-See `help("options")` or simply type `options()`
-to get an idea of what we can configure.
-Because `options()` are often related to personal preference (with few implications for reproducibility), that you will want for all your R sessions, `.Rprofile` is a good place to set them.
+Typing `options()` provides a good indication of what be configured.
+Because `options()` are often related to personal preference (with few implications for reproducibility), that you will want for many your R sessions, `.Rprofile` in your home directory or in your project's folder are sensible places to set them.
 Other illustrative options are shown below:
 
 ```{r, eval=FALSE}
 options(prompt="R> ", digits=4, show.signif.stars=FALSE)
 ```  
 
-This changes three features.
+This changes three default options in a single line.
 
   * The R prompt, from the boring `>` to the exciting `R>`.
   * The number of digits displayed.
@@ -492,7 +517,7 @@ downloaded.
 
 The **fortunes** package contains a number of memorable quotes that the community has collected over many years, called R fortunes. Each fortune has a number. To get fortune number $50$, for example, enter
 
-```{r, eval=FALSE}
+```{r }
 fortunes::fortune(50)
 ```
 
@@ -562,10 +587,18 @@ v = utils::View
 ```
 
 Also beware the dangers of loading many functions by default: it may make your code less portable.
-Another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space:
+Another potentially useful setting to change in `.Rprofile` is R's current working directory.
+If you want R to automatically set the working directory to the R folder of your project, for example, one would add the following line of code to the project-specific `.Rprofile`:
+
+```{r, eval=FALSE}
+setwd("R")
+```
+
+#### Creating hidden environments with .Rprofile
+
+Beyond making your code less portable, another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space:
 when you run the `ls()` command, your `.Rprofile` functions will appear.
 Also if you run `rm(list=ls())`, your functions will be deleted. 
-
 One neat trick to overcome this issue is to use hidden objects and environments. When an object
 name starts with `.`, by default it doesn't appear in the output of the
 `ls()` function
@@ -614,7 +647,7 @@ R_LIBS=C:/R/library
 After setting this, `install.packages` saves packages in the directory specified by `R_LIBS`.
 The location of this directory can be referred back to subsequently as follows:
 
-```{r, eval=FALSE}
+```{r}
 Sys.getenv("R_LIBS_USER")
 ```
 
@@ -816,12 +849,17 @@ Other options in this area relate more to aesthetics, which are also important b
 # TODO say which 'subsequent chapter' above
 ```
 
-### Auto-completion 
+### Autocompletion 
 
 R provides some basic autocompletion functionality.
-Typing the beginning of a function name, for example `rn` (short for `rnorm()`), and hitting `Tab` will result in the full function names associated with this text string being printed.
+Typing the beginning of a function name, for example `rn` (short for `rnorm()`), and hitting `Tab` twice will result in the full function names associated with this text string being printed.
 In this case two options would be displayed: `rnbinom` and `rnorm`, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing `te` in the console in a project which contains a file called `test.R` should result in the full name `"test.R"` being auto-completed.
 RStudio builds on this functionality and takes it to a new level.
+
+```{block, autocompletion, type='rmdtip'}
+The default settings for autocompletion in RStudio work well. They are intuitive and are likely to work well for many users, especially beginners. However, RStudio's autocompletion options can be modfified, but navigating to **Tools > Global Options > Code > Completion** in RStudio's top level menu.
+```
+
 
 Instead of only auto completing options when `Tab` is pressed, RStudio auto completes them at any point.
 Building on the previous example, RStudio's autocompletion triggers when the first three characters are typed: `rno`.
@@ -852,7 +890,7 @@ There are a number of other clever auto-completion tricks that can boost R's pro
 ### Keyboard shortcuts
 
 RStudio has many useful shortcuts that can help make your programming more efficient by reducing the need to reach for the mouse and point and click your way around code and RStudio.
-These can be viewed by using a little known but extremely useful keyboard shortcut:
+These can be viewed by using a little known but extremely useful keyboard shortcut (this can also be accessed via the **Tools** menu).
 
 ```
 Alt+Shift+K
@@ -860,6 +898,10 @@ Alt+Shift+K
 
 This will display the default shortcuts in RStudio.
 It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse.
+The power of these autocompletion capabilities can be further enhanced by setting your own keyboard shortcuts.
+However, as with setting `.Rprofile` and `.Renviron` settings, this risks reducing the portability of your workflow.
+To set your own RStudio keyboard shortcuts, navigate to **Tools > Modify Keyboard Shortcuts**.
+
 Some more [useful](http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/) shortcuts are listed below.
 There are many more gems to find that could boost your R writing productivity:
 
@@ -987,7 +1029,8 @@ local(source("code/02-blas.R", local=TRUE))
 
 ### Revolution R
 
-Revolution R is the main software product offered by Revolution Analytics.
+Revolution R is the main software product offered by Revolution Analytics,
+which was recently purchased by Microsoft, implying it has substantial development resources.
 It is "100%" compatible with R",
 supporting all available packages through the MRAN package repository.
 Revolution R provides faster performance on for certain functions
