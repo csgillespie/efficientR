@@ -4,7 +4,7 @@ load("data/clock_speed.RData")
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
     cex.axis=0.9, las=1, xaxs='i',yaxs='i')
 plot(0.1, type="n", ylim=c(0.9, 10000), xlim=c(1980, 2011), axes=FALSE, frame=FALSE, 
-     xlab="", ylab="Clock speed (GHz)", 
+     xlab="", ylab="Clock speed (MHz)", 
      log="y")
 abline(h=10^(-1:4), lty=3, col="grey80")
 abline(h=3600, lty=2, col="grey20")
