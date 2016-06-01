@@ -12,19 +12,6 @@ definition of workflow is similar, with a more industrial feel: "The sequence of
 To some extent workflow is about personal preferences.
 Everyone's mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.
 
-Scale is a vital consideration because the importance of project management increases exponentially with the number of people involved.
-Writing a 'one-off' R script requires no project management.
-Working with dozens of developers to deliver a mission critical application for central government, on the other hand requires much effort dedicated to project management: regular meetings, division of labour and a scalable project management system to track progress, issues and
-priorities will end up an increasing proportion of your time. Fortunately a multitude of dedicated project management systems can help with this task, including (in rough ascending order of scale and complexity):
-
-- the interactive code sharing site [GitHub](https://github.com/) (more on this in Chapter \@ref(efficient-collaboration))
-
-- [ZenHub](https://www.zenhub.io/), a browser plugin that is "the first and only project management suite that works natively within GitHub"
-
-- the web-based and easy-to-use [Trello](https://trello.com/)
-
-- fully featured, enterprise scale open source project management systems such as [OpenProject](https://www.openproject.org/) and [redmine](http://www.redmine.org/).
-
 Appropriate project management structures and workflow also vary depend on the *type* of project you are undertaking. The typology below demonstrate the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
 
 - *Data analysis*.  Here you are trying to explore datasets to discover something interesting/answer some questions.  The emphasis is on speed of manipulating your data to generate interest results.  Formality is less important in this type of project.  Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project's success as how they interact with each other.
@@ -42,28 +29,44 @@ Learning them will, in the long-run, improve productivity and reproducibility.
 With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow.
 It builds on the concept of an R/RStudio *project*, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project's lifespan, from its inception to publication:
 
- - Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.
+ - Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy. Project management is the art of making project plans happen.
  
  - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages. `*_join` from **dplyr**, for example, is often more appropriate than `merge`, as we'll see in \@ref(efficient-data-carpentry). It is therefore more important than ever to consider the range of options at the outset.
 
  - Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section \@ref(publication) touches on documentation using knitr and the much stricter approach to code publication of package development. 
  
-## Project planning
+## Project planning and management
 
 Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: "smart preparation minimizes work" [@berkun2005art].
 Although search engines are useful for identifying the appropriate strategy, trail-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly *inefficient*.
 
-Strategic thinking especially important during a project's inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project's entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: *technical dept*. This has been defined as "not quite  right  code  which  we  postpone making it right" [@kruchten2012technical]. Dozens of academic papers have been written on the subject but, from the perspective of *beginning* a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring (we return to the topic of refactoring in Chapter \@ref(efficient-collaboration)).
+Strategic thinking especially important during a project's inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project's entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: *technical debt*. This has been defined as "not quite  right  code  which  we  postpone making it right" [@kruchten2012technical]. Dozens of academic papers have been written on the subject but, from the perspective of *beginning* a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring (we return to the topic of refactoring in Chapter \@ref(efficient-collaboration)).
 
-The best place to start may be with a pen and paper, allowing you to sketch out your ideas, free from constraints, before you begin.
-Project planning is a creative process not always well-suited to the linear logic of computing.^[A
-number of programs have been developed to assist project management and planning, however. These include [ProjectLibre](http://sourceforge.net/projects/projectlibre/) and [GanttProject](http://sourceforge.net/projects/projectlibre/).
-]
-It involves considering the project's aims in the context of available resources (e.g. computational and programmer resources), project scope, timescales and suitable software. And these things should be considered together. To take one example, is it worth the investment of time needed to learn a particular R package which is not essential to completing the project but which will make the code run faster? Does it make more sense to hire another programmer or invest in more computational resources to complete an urgent deadline?
+To minimise technical debt at the outset, the best place to start may be with a pen and paper and an open mind. Sketching out your ideas and deciding precisely what you want to do, free from the constraints of a particular piece of technology, can be rewarding exercise before you begin.
+Project planning and 'visioning' can be a creative process not always well-suited to the linear logic of computing, despite recent advances in project management software, some of which are outlined in the bullet points below.
+
+Scale can loosely be defined as the number of people working on a project. It should be considered at the outset because the importance of project management increases exponentially with the number of people involved. 
+Project management may be trivial for a small project but if you expect it to grow, implementing a structured workflow early could avoid problems later.
+On small projects consisting of a 'one off' script, project management may be a distracting waste of time.
+Large projects involving dozens of people, on the other hand, require much effort dedicated to project management: regular meetings, division of labour and a scalable project management system to track progress, issues and
+priorities will inevitably consume a large proportion of the project's time. Fortunately a multitude of dedicated project management systems have been developed to cater for projects across a range of scales. These include, in rough ascending order of scale and complexity:
+
+- the interactive code sharing site [GitHub](https://github.com/), which is described in more detail in Chapter \@ref(efficient-collaboration))
+
+- [ZenHub](https://www.zenhub.io/), a browser plugin that is "the first and only project management suite that works natively within GitHub"
+
+- web-based and easy-to-use tools such as [Trello](https://trello.com/)
+
+- Dedicated desktop project management software such as [ProjectLibre](http://sourceforge.net/projects/projectlibre/) and [GanttProject](http://sourceforge.net/projects/projectlibre/)
+
+- fully featured, enterprise scale open source project management systems such as [OpenProject](https://www.openproject.org/) and [redmine](http://www.redmine.org/).
+
+
+Regardless of the software (or lack thereof) used for project management, it involves considering the project's aims in the context of available resources (e.g. computational and programmer resources), project scope, timescales and suitable software. And these things should be considered together. To take one example, is it worth the investment of time needed to learn a particular R package which is not essential to completing the project but which will make the code run faster? Does it make more sense to hire another programmer or invest in more computational resources to complete an urgent deadline?
 
 Minutes spent thinking through such issues before writing a single line can save hours in the future. This is emphasised in books such as @berkun2005art and @PMBoK_2000 and useful online resources such those by [teamgantt.com](http://teamgantt.com/guide-to-project-management/) and
 [lasa.org.uk](http://www.lasa.org.uk/uploads/publications/ictpublications/computanews_guides/lcgpm.pdf),
-which focus exclusively on project planning.  This section is not intended to replace such guides. Instead, the aim here is to condense some of the most important lessons from this literature in the context of typical R projects (i.e. which involve data analysis, modelling and visualisation).
+which focus exclusively on project planning.  This section condenses some of the most important lessons from this literature in the context of typical R projects (i.e. which involve data analysis, modelling and visualisation).
 
 ### 'Chunking' your work
 
