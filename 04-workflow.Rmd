@@ -12,13 +12,20 @@ definition of workflow is similar, with a more industrial feel: "The sequence of
 To some extent workflow is about personal preferences.
 Everyone's mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project.
 
-Scale is a vital consideration because the importance of project management increases in a non linear fashion with the number of people involved.
+Scale is a vital consideration because the importance of project management increases exponentially with the number of people involved.
 Writing a 'one-off' R script requires no project management.
-Working with several developers to deliver a mission critical application for central government requires regular meetings, division of labour and a project management system for tracking progress, issues and
-priorities.^[A number of dedicated project management systems are now available to assist with this task. These include (in rough ascending order of scale and complexity):
-the web browser add-on [ZenHub](https://www.zenhub.io/), "the first and only project management suite that works natively within GitHub"; the web-based and easy-to-use [Trello](https://trello.com/); and the fully featured enterprise scale open source project management system [OpenProject](https://www.openproject.org/).]
+Working with dozens of developers to deliver a mission critical application for central government, on the other hand requires much effort dedicated to project management: regular meetings, division of labour and a scalable project management system to track progress, issues and
+priorities will end up an increasing proportion of your time. Fortunately a multitude of dedicated project management systems can help with this task, including (in rough ascending order of scale and complexity):
 
-Project management structures also depend on the *type* of project. The typology below demonstrate the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
+- the interactive code sharing site [GitHub](https://github.com/) (more on this in Chapter \@ref(efficient-collaboration))
+
+- [ZenHub](https://www.zenhub.io/), a browser plugin that is "the first and only project management suite that works natively within GitHub"
+
+- the web-based and easy-to-use [Trello](https://trello.com/)
+
+- fully featured, enterprise scale open source project management systems such as [OpenProject](https://www.openproject.org/) and [redmine](http://www.redmine.org/).
+
+Appropriate project management structures and workflow also vary depend on the *type* of project you are undertaking. The typology below demonstrate the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
 
 - *Data analysis*.  Here you are trying to explore datasets to discover something interesting/answer some questions.  The emphasis is on speed of manipulating your data to generate interest results.  Formality is less important in this type of project.  Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project's success as how they interact with each other.
 - *Package creation*.  Here you want to create code that can be reused across projects, possibly by people whose use case you don't know (if you make it publicly available).  The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important.  Robustness and testing are important in this type of project too.
@@ -37,22 +44,18 @@ It builds on the concept of an R/RStudio *project*, introduced in Chapter 2, and
 
  - Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy.
  
- - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages (`*_join` from **dplyr**, for example, is often more appropriate than `merge`), it is more important than ever to consider the range of options at the outset.
-
- - Importing data. This can depend on external packages and represent a time-consuming and computational bottle-neck that prevents progress.
- 
- - Tidying data. This critical stage results in datasets that are convenient for analysis and processing, with implications for the efficiency of all subsequent stages [@Wickham_2014].
- 
- - Data processing. This stage involves manipulating data to help answer hypotheses and draw conclusions. The focus of this section is on **dplyr** and **data.table**, which make data analysis code fast to type and fast to run.
+ - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages. `*_join` from **dplyr**, for example, is often more appropriate than `merge`, as we'll see in \@ref(efficient-data-carpentry). It is therefore more important than ever to consider the range of options at the outset.
 
  - Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section \@ref(publication) touches on documentation using knitr and the much stricter approach to code publication of package development. 
  
 ## Project planning
 
-Good programmers embarking on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: "smart preparation minimizes work" [@berkun2005art].
-Although search engines are useful for identifying the appropriate strategy, the trail-and-error approach --- typing code at random and Googling the inevitable error messages --- is usually highly *inefficient*. Strategic thinking is necessary.
+Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: "smart preparation minimizes work" [@berkun2005art].
+Although search engines are useful for identifying the appropriate strategy, trail-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly *inefficient*.
 
-The best place to start may in fact be pen and blank sheet of paper, allowing you to sketch out your ideas before you begin.
+Strategic thinking especially important during a project's inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project's entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: *technical dept*. This has been defined as "not quite  right  code  which  we  postpone making it right" [@kruchten2012technical]. Dozens of academic papers have been written on the subject but, from the perspective of *beginning* a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring (we return to the topic of refactoring in Chapter \@ref(efficient-collaboration)).
+
+The best place to start may be with a pen and paper, allowing you to sketch out your ideas, free from constraints, before you begin.
 Project planning is a creative process not always well-suited to the linear logic of computing.^[A
 number of programs have been developed to assist project management and planning, however. These include [ProjectLibre](http://sourceforge.net/projects/projectlibre/) and [GanttProject](http://sourceforge.net/projects/projectlibre/).
 ]
