@@ -2,7 +2,13 @@
 
 ## Who this book is for
 
-This book is for anyone who who wants to make their R code faster to type, faster to run and more reproducible and scalable. We assume you are either accustomed to R or proficient at programming in other languages. If you already program but want to learn how to use R, this book should be useful: it will help you navigate the quirks of the R language to make it work efficiently (it is easy to write slow R code if you write R code as it it were a general purpose language: it is not). If you write R code but don't consider yourself a programmer, it should make your R work more efficient. If you are an R beginner, you should probably read this book in parallel with other R resources such as the numerous, vignettes, tutorials and online articles that the R community has produced. At a bare minimum you should have R installed on your computer (see section \@ref(r-version) for information on how best to install R on new computers).
+This book is for anyone who wants to make their R code faster to type, faster to run and more scalable. These considerations generally come *after* learning the very basics of R for data analysis: we assume you are either accustomed to R or proficient at programming in other languages, although the book could still be of use for beginners. Thus the book should be of use to three groups, albeit in different ways:
+
+- For **programmers with little R knowledge** this book will help you navigate the quirks of R to make it work efficiently: it is easy to write slow  R code if you treat as if were another language.
+
+- For **R users who have little experience of programming** this book will show you many concepts and 'tricks of the trade', some of which are borrowed from Computer Science, that will make your work more time effective.
+
+- A R beginner, you should probably read this book in parallel with other R resources such as the numerous, vignettes, tutorials and online articles that the R community has produced. At a bare minimum you should have R installed on your computer (see section \@ref(r-version) for information on how best to install R on new computers).
 
 ## What is efficiency?
 
@@ -26,7 +32,7 @@ By the end of this book you should know how to write R code that is efficient fr
 
 Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: in an age of Big Data and stagnating computer clockspeeds (see Chapter \@ref(hardware)), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can "solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research" [@visser_speeding_2015].
 
-A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK's Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. To help his workflow he developed a function, `line2route()` in the **stplanr** to batch process calls to the ([cyclestreets.net](http://www.cyclestreets.net/)) API. But after a few thousand routes the code slowed to a standstill. Yet hundreds of thousands were needed. This endangered the contract. After eliminating internet connection issues, it was found that the slowdown was due to a bug in `line2route()`: it suffered from the 'vector growing problem', discussed in Section XXX.
+A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK's Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. To help his workflow he developed a function, `line2route()` in the **stplanr** to batch process calls to the ([cyclestreets.net](http://www.cyclestreets.net/)) API. But after a few thousand routes the code slowed to a standstill. Yet hundreds of thousands were needed. This endangered the contract. After eliminating internet connection issues, it was found that the slowdown was due to a bug in `line2route()`: it suffered from the 'vector growing problem', discussed in Section \@ref(memory-allocation).
 
 The solution was simple. A [single commit](https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47) made `line2route()` more than *ten times faster* and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be *essential*.
 
