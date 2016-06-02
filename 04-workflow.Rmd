@@ -103,7 +103,7 @@ A project plan can take many forms, including a short document, a Gantt chart
 knitr::include_graphics("figures/DiagrammeR-gantt-book.png")
 ```
 
-### R packages for planning
+### Visualising plans with R
 
 Various R packages can help visualise the project plan. 
 While these are useful, they cannot compete with the dedicated project management software outlined at the outset of this section. However, if you are working on relatively simple project, it is useful to know that R can help represent and keep track of your work. Packages for plotting project progress include:^[For
@@ -145,13 +145,69 @@ for more detailed documentation.
 
 ## Package selection {#pkgs}
 
-A good example of the importance of prior planning to minimise effort is package selection.
+A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection.
 An inefficient, poorly supported or simply outdated package can waste hours.
 When a more appropriate alternative is available this waste can be prevented by prior planning.
 There are many poor packages on CRAN and much duplication so it's easy to go wrong.
 Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
 
-However, used well, packages can greatly improve productivity.
+Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don't have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively that the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is *packaged* in functions behind the scenes.
+
+Let's take an example. Imagine for a project you would like to find the distance between sets of points (origins, `o` and destinations, `d`) on the Earth's surface. Background reading shows that a good approximation of 'great circle' distance, which accounts for the curvature of the Earth, can be made by using the Haversine formula, which you duly implement, involving much trial and error:
+
+```{r, echo=FALSE, eval=FALSE}
+# Generate lat/lon pairs
+o = ggmap::geocode("Leeds")
+d = ggmap::geocode("Newcastle")
+dput(o)
+dput(d)
+```
+
+```{r}
+# Function to convert degrees to radians
+deg2rad = function(deg) return(deg*pi/180)
+
+# Create origins and destinations
+o = c(lon = -1.55, lat = 53.80)
+d = c(lon = -1.61, lat = 54.98)
+
+# Convert to radians
+o_rad = deg2rad(o)
+d_rad = deg2rad(d)
+
+# Find difference in degrees
+delta_lon <- (o_rad[1] - d_rad[1])
+delta_lat <- (o_rad[2] - d_rad[2])
+
+# Calculate distance with Haversine formula
+a = sin(delta_lat / 2)^2 + cos(o_rad[2]) * cos(d_rad[2]) * sin(delta_lon / 2)^2
+c = 2 * asin(min(1, sqrt(a)))
+(d_hav1 = 6371 * c) # multiply by Earth's diameter
+```
+
+This method works but it takes time to write, test and debug. Much better to package it up into a function. Or even better, use a function that someone else has written and put in a package:
+
+```{r}
+# Find great circle distance with geosphere
+(d_hav2 = geosphere::distHaversine(o, d))
+```
+
+The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subetting stages and small, similar functions (e.g. `sin` and `asin`) which are easy to confuse. The other is one line of simple code. The package method using **geosphere** took perhaps 100^th^ of the time *and* gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?
+
+### Searching for R packages
+
+Building on the example above, how can on find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere* package in the second result (a [hardcoded implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
+
+Beyond Google, there are also several sites for searching for packages and functions.
+[rdocumentation.org](http://www.rdocumentation.org/) provides a multi-field search environmnet to pinpoint the function or package you need. Amazingly, the search for `haversine` in the Description field yielded 10 results from 8 packages: R has at least *8* implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:
+
+```{r, eval=FALSE}
+# Search CRAN for mentions of haversine
+RSiteSearch("haversine")
+```
+
+## Deciding which package to use
+
 Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the 'R ecosystem' has occurred in recent years in the packages.
 The increased ease of package development [@Wickham_2015] and interfacing with other languages [e.g. @Eddelbuettel_2011] has accelerated their number, quality and efficiency.
 An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as [ROpenSci](https://ropensci.org/) for peer reviewing code.
@@ -180,6 +236,18 @@ reaching 1 or 2 in the first digit of package versions is usually an indication 
 Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, **ggplot2** scores extremely well in this measure, with over 5000 hits).
 
 An article in [simplystats](http://simplystatistics.org/2015/11/06/how-i-decide-when-to-trust-an-r-package/) discusses this issue with reference to the proliferation of GitHub packages (those that are not available on CRAN). In this context well-regarded and experienced package creators and 'indirect data' such as amount of GitHub activity are also highlighted as reasons to trust a package.
+
+The website [METACRAN](http://www.r-pkg.org), provides metadata about R packages via a simple API and the provision of 'badges' to show how many downloads a particular package has per month. Returning to the Haversine example above, we could find out how many times two packages that implement the formula are downloaded each month with the following urls:
+
+- `http://cranlogs.r-pkg.org/badges/last-month/geosphere`, downloads of **geosphere**:
+
+![](http://cranlogs.r-pkg.org/badges/last-month/geosphere)
+
+- - `http://cranlogs.r-pkg.org/badges/last-month/geoPlot`, downloads of **geoPlot**:
+
+![](http://cranlogs.r-pkg.org/badges/last-month/RcgeoPlotpp)
+
+It is clear from the results reported above that **geosphere** is by far the more popular package, so is a sensible and mature choice for dealing with distances on the Earth's surface.
 
 ## Importing data
 
