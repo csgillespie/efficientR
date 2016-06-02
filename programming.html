@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-06-01">
+<meta name="date" content="2016-06-02">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -169,8 +169,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>5.1.1</b> Memory allocation</a></li>
 <li class="chapter" data-level="5.1.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>5.1.2</b> Vectorised code</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
-<li class="chapter" data-level="5.1.3" data-path="programming.html"><a href="programming.html#exercise-2"><i class="fa fa-check"></i><b>5.1.3</b> Exercise</a></li>
-<li class="chapter" data-level="5.1.4" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>5.1.4</b> Type consistency</a></li>
+<li class="chapter" data-level="5.1.3" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>5.1.3</b> Type consistency</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>5.2</b> Communicating with the user</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>5.2.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
@@ -404,7 +403,7 @@ You should also consider pre-allocating memory for data frames and lists. Never 
                                <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
-<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour while the other methods take less than 3 seconds.</caption>
+<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour while the other methods take less than <span class="math inline">\(3\)</span> seconds.</caption>
 <thead>
 <tr class="header">
 <th align="left"><span class="math inline">\(n\)</span></th>
@@ -488,7 +487,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.997   0.012   3.009</span></code></pre></div>
+<span class="co">#&gt;   3.347   0.008   3.354</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -511,15 +510,8 @@ Figure 5.1: Example of Monte-Carlo integration. To estimate the area under the c
 <h3>Exercise</h3>
 <p>Verify that <code>monte_carlo_vec</code> is faster than <code>monte_carlo</code>. How does this relate to the number of darts, i.e. the size of <code>N</code>, that is used</p>
 </div>
-<div id="exercise-2" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> Exercise</h3>
-<ol style="list-style-type: decimal">
-<li><p>Create a function with</p></li>
-<li><p>Use <code>call.</code></p></li>
-</ol>
-</div>
 <div id="type-consistency" class="section level3">
-<h3><span class="header-section-number">5.1.4</span> Type consistency</h3>
+<h3><span class="header-section-number">5.1.3</span> Type consistency</h3>
 <p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all of base R functions follow this idiom. For example the functions <code>sapply</code> and <code>[.data.frame</code> aren’t type consistent</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span>:<span class="dv">5</span>])
 zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()
@@ -571,7 +563,7 @@ bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</sp
 </div>
 <div id="informative-output-message-and-cat" class="section level3">
 <h3><span class="header-section-number">5.2.3</span> Informative output: <code>message</code> and <code class="unnumbered">cat</code></h3>
-<p>To give informative output, use the <code>message</code> function. In my package for fitting power laws, I use messages to give the user and estimate of expected run time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
+<p>To give informative output, use the <code>message</code> function. In my package for fitting powerlaws, I use messages to give the user an estimate of expected run time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
 <p>Another function used for printing messages is <code>cat</code>. In general <code>cat</code> should only be used in actual <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
 </div>
 <div id="example-retrieving-a-web-resource" class="section level3">
@@ -684,7 +676,7 @@ Although this argument can add in the global <code>options()</code> list and pla
 <span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
 <p>In this case the <code>c</code> function is using the underlying integer representation of the factor.</p>
 <p>Overall factors are useful, but can lead to unwanted side-effects if we are not careful. Used at the right time and place, factors can lead to simpler code.</p>
-<div id="exercise-3" class="section level4 unnumbered">
+<div id="exercise-2" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>Factors are slightly more space efficient than characters. Create a character vector and corresponding factor and use <code>pryr::object_size</code> to calculate the space needed for each object.</p>
 </div>
@@ -755,7 +747,7 @@ m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)
 <span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a </span>
 <span class="co">#&gt;    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b</span></code></pre></div>
 <p>suggests that we can obtain a <span class="math inline">\(100\)</span>-fold speed-up.</p>
-<div id="exercise-4" class="section level4 unnumbered">
+<div id="exercise-3" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>Construct a box plot of timings for the standard plotting function and the memoised version.</p>
 </div>
@@ -777,7 +769,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x2c220d0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x21644c0&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -832,7 +824,7 @@ The operator <code>&lt;&lt;-</code> makes R search through the parent environmen
 }</code></pre></div>
 <p>Keeping the variable <code>no_of_snakes</code> attached to the <code>check_snake</code> function, enables us to have cleaner code.</p>
 </div>
-<div id="exercise-5" class="section level4 unnumbered">
+<div id="exercise-4" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>The following function implements a stop-watch function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stop_watch =<span class="st"> </span>function() {
@@ -860,7 +852,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x384bc98&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x2d93050&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-06-01">
+<meta name="date" content="2016-06-02">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -169,8 +169,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>5.1.1</b> Memory allocation</a></li>
 <li class="chapter" data-level="5.1.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>5.1.2</b> Vectorised code</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
-<li class="chapter" data-level="5.1.3" data-path="programming.html"><a href="programming.html#exercise-2"><i class="fa fa-check"></i><b>5.1.3</b> Exercise</a></li>
-<li class="chapter" data-level="5.1.4" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>5.1.4</b> Type consistency</a></li>
+<li class="chapter" data-level="5.1.3" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>5.1.3</b> Type consistency</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>5.2</b> Communicating with the user</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>5.2.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
@@ -390,22 +389,22 @@ Figure 3.1: The starting position for touch typing, with the fingers over the â€
 <p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying things from one benchmark to the next and recording the results after changing things allows experimentation to see which bits of code are fastest. Benchmarking is important in the efficient programmerâ€™s toolkit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it.</p>
 <pre><code>* `system.time()`
 * `microbenchmark` and `rbenchmark`</code></pre>
-<p>The microbenchmark package runs a test many times (by default 1000), enabling the user to detect microsecond difference in code performance.</p>
+<p>The <strong>microbenchmark</strong> package runs a test many times (by default <span class="math inline">\(1000\)</span>), enabling the user to detect microsecond difference in code performance.</p>
 <div id="benchmarking-example" class="section level3">
 <h3><span class="header-section-number">3.6.1</span> Benchmarking example</h3>
 <p>A good example is testing different methods to look-up an element of a dataframe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
-df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">name =</span> <span class="kw">c</span>(letters[<span class="dv">1</span>:<span class="dv">4</span>]))
+df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">name =</span> <span class="kw">c</span>(letters[<span class="dv">1</span>:<span class="dv">4</span>]))
 <span class="kw">microbenchmark</span>(
   df[<span class="dv">3</span>, <span class="dv">2</span>],
   df$name[<span class="dv">3</span>],
   df[<span class="dv">3</span>, <span class="st">&#39;v&#39;</span>]
 )
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;        expr  min   lq mean median   uq   max neval</span>
-<span class="co">#&gt;    df[3, 2] 23.0 24.2 28.2   24.8 25.8 203.6   100</span>
-<span class="co">#&gt;  df$name[3] 15.8 17.5 19.1   18.6 19.5  32.4   100</span>
-<span class="co">#&gt;  df[3, &quot;v&quot;] 14.7 15.8 17.2   16.6 17.2  30.1   100</span></code></pre></div>
+<span class="co">#&gt;        expr  min   lq mean median uq   max neval</span>
+<span class="co">#&gt;    df[3, 2] 22.5 23.7 27.6   24.3 25 210.3   100</span>
+<span class="co">#&gt;  df$name[3] 16.2 17.6 19.1   18.4 19  31.8   100</span>
+<span class="co">#&gt;  df[3, &quot;v&quot;] 14.2 15.5 17.2   16.3 17  64.2   100</span></code></pre></div>
 <p>The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.</p>
 </div>
 </div>
