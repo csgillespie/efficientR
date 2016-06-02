@@ -20,7 +20,7 @@ dataset.
 This illustrates how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored neatly in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
 
 ```{block, dutch-data, type='rmdnote'}
-The data downloaded below is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
+Using R for basic file management can help create a reproducible workflow, as illustrated below. The data downloaded in the following code chunk is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
 ```
 
 ```{r, eval=FALSE}
@@ -30,14 +30,19 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-```{block, read-url, type='rmdtip'}
-To avoid the file download stage, many functions for reading in data can accept urls and read directly from the internet. This is illustrated below for `read.csv()`:
-```
+This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again.
 
 ```{r, eval=FALSE}
 url = "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
-df = read.csv(url)
+download.file(url, "FatalitiesFY10.csv")
+df = read.csv("FatalitiesFY10.csv")
 ```
+
+```{r, echo=FALSE}
+if(file.exists("FatalitiesFY10.csv"))
+  file.remove("FatalitiesFY10.csv")
+```
+
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
 The example below illustrates this using the WDI package (not supported by ROpenSci) which accesses the World Bank's World Development Indicators:
