@@ -255,9 +255,10 @@ A more efficient way to work with very large datasets is via databases.
 ### Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
 
-R can connect to databases in a number of ways. The most mature of these is via the **RODBC** package, which sets up links to external databases using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette, accessed with `vignette("RODBC")`.
-**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite.
+**RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
+**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
 The function used to set-up a connection to an external database with RODBC is `odbcConnect`, which takes Data Source Name (`dsn =`), User ID (`uid =`) and password (`pwd`) as required arguments.
 
