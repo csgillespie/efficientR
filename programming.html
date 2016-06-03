@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-06-02">
+<meta name="date" content="2016-06-03">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -487,7 +487,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.047   0.004   3.053</span></code></pre></div>
+<span class="co">#&gt;   2.966   0.013   2.980</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -687,7 +687,7 @@ Although this argument can add in the global <code>options()</code> list and pla
 <p>R has three built-in object oriented (OO) systems. These systems differ in how classes and methods are defined. The easiest and oldest system is the S3 system. S3 refers to the third version of S. The syntax of R is largely based on this version of S. In R there has never been S1 and S2 classes. The other two OO frameworks are S4 classes (used mainly in <a href="http://bioconductor.org/">bioconductor</a> packages) and reference classes.</p>
 <div class="rmdnote">
 <p>
-There are also packages that also provide additional OO frameworks, such as <strong>proto</strong>, <strong>R6</strong> and <strong>R.oo</strong>. If you are knew to OO in R, then S3 is the place to start.
+There are also packages that also provide additional OO frameworks, such as <strong>proto</strong>, <strong>R6</strong> and <strong>R.oo</strong>. If you are new to OO in R, then S3 is the place to start.
 </p>
 </div>
 <p>In this section we will just discuss the S3 system since that is the most popular. The S3 system implements a generic-function object oriented (OO) system. This type of OO is different to the message-passing style of Java and C++. In a message-passing framework, messages/methods are sent to objects and the object determines which function to call, e.g. <code>normal.rand(1)</code>. The S3 class system is different. In S3, the <em>generic</em> function decides which method to call - it would have the form <code>rand(normal, 1)</code>. By using an OO framework, we avoid an explosion of exposed functions, such as, <code>rand_normal</code>, <code>rand_uniform</code>, <code>rand_poisson</code> and instead have a single function call <code>rand</code> that passes the object to the correct function.</p>
@@ -769,7 +769,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x335de30&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x3015e30&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -852,7 +852,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x400cfc8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3cc4fa8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
