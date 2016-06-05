@@ -267,7 +267,9 @@ It is clear from the results reported above that **geosphere** is by far the mor
 
 <!-- Thought: this should be more about 'getting your work out there' than packages-->
 
-The final stage in a typical project workflow is publication. This could be a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow. In every case the programming principles of reproducibility, modularity and DRY discussed in Chapter \@ref(programming) will make your publications faster to write, easier to maintain and more useful to others.
+The final stage in a typical project workflow is publication. Although it's the final stage to be worked on, that does not mean you should only document *after* the other stages are complete: making documentation integral to your overall workflow will make this stage much easier and more efficient.
+
+Whether the final output is a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow, starting it early is a good plan. In every case the programming principles of reproducibility, modularity and DRY (don't repeat yourself) discussed in Chapter \@ref(programming) will make your publications faster to write, easier to maintain and more useful to others.
 
 Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.
 
@@ -275,27 +277,51 @@ Instead of attempting a comprehensive treatment of the topic we will touch brief
 
 When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
 
-To overcome this inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically. Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
+To overcome this inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically.
+
+```{block, rmd, type='rmdnote'}
+This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. RMarkdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. RMarkdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in RMarkdown.
+```
+
+Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
+
+    ```{r, sampleCode}
+    (1:5)^2
+    ```
+
+This code, will result in the following output when the RMarkdown document is compiled:
 
 ```{r}
 (1:5)^2
 ```
 
-The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated, it must by preceded by ` ```{r} ` on the line before the R code, and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. When the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs.
+The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated, it must by preceded by ` ```{r} ` on the line before the R code, and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a .Rmd file, for example, simply enter `Ctrl+Alt+I` on Windows or Linux or select the option from the Code dropdown menu.
+
+Once your document has compiled it should appear on your screen into the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
+This is done using the [rpubs](https://rpubs.com) website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).
+Assuming you have an RStudio account, clicking the 'Publish' button at the top of the html output window will instantly publish your work online, with a minimum of effort, enabling fast and efficient communication with many collaborators and the public.
+
+An important advantage of dynamically documenting work this way is that when the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs. Also, if your client wants pages and pages of documented output, **knitr** can provide them with a minimum of typing, e.g. by creating slightly different versions of the same plot over and over again. From a delivery of content perspective, that is certainly an efficiency gain compared with hours of copying and pasting figures!
+
+If your RMarkdown documents include time-consuming processing stages, a speed boost can be attained after the first build by setting `opts_chunk$set(cache = TRUE)` in the first chunk of the document. This setting was used to reduce the build times of this book, as can be seen on [GitHub](https://github.com/csgillespie/efficientR/blob/master/code/before_script.R).
 
 Furthermore dynamic documents written in RMarkdown can compile into a range of output formats including html, pdf and Microsoft's docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio's excellent website on RMarkdown hosted at [rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) and, for a more detailed account of dynamic documents with R, [@xie2015dynamic].
 
 ### R packages
 
-A strict approach to project management and workflow is treating your projects as R packages. This is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN.
+A strict approach to project management and workflow is treating your projects as R packages. This approach has advantages and limitations. The major risk with treating a project as a package is that the package is quite a strict way of organising work. Packages are suited for code intensive projects where code documentation is important. An intermediate approach is to use a 'dummy package' that includes a DESCRIPTION file in the root directory telling users of the project which packages must be installed for the code to work. This book is based on a dummy package so that we can easily keep the dependencies up-to-date (see the book's [DESCRIPTION](https://github.com/csgillespie/efficientR/blob/master/DESCRIPTION) file online for an insight into how this works).
+
+Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the **devools** package, which is highly recommended for anyone attempting to write an R package.
 
 The number of essential elements of R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
 
 - The [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using `Imports:`. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.
 
-- The `R/` folder contains all the R code that defines your package's functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through [Roxygen tags](http://r-pkgs.had.co.nz/man.html#man-workflow) such as `#' This function does this...` makes it easy for others to use your work.
+- The `R/` folder contains all the R code that defines your package's functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through [Roxygen tags](http://r-pkgs.had.co.nz/man.html#man-workflow) such as `#' This function does this...` makes it easy for others to use your work. This form of efficient documentation is facilitated by the **roxygen2** package.
 
 - The `data/` folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the **devtools** package, with `devtools::use_data()`. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function `data('data_set_name')`.
+
+The package **testthat** makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with 'continuous integration' services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in [@cotton_testing_2016].
 
 As with dynamic documents, package development is a large topic. For small 'one-off' projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see [@Wickham_2015].
 
