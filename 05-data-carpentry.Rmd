@@ -85,8 +85,6 @@ The final line in the code chunk above shows a neat feature of **rio** and some 
 file.remove("output.xlsx")
 ```
 
-
-
 ### Fast data reading {#fread}
 
 There is often more than one way to read data into R. A simple `.csv`, for example, file can be imported using a wide range of methods, with implications for computational efficiency. This section investigates methods for getting data into R, with a focus on delimited text formats, as these are ubiquitous, and a focus on three approaches: base R's plain text reading functions such as `read.delim`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
@@ -252,7 +250,7 @@ Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
 A more efficient way to work with very large datasets is via databases.
 
-### Working with databases
+## Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
 R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
@@ -287,7 +285,65 @@ MonetDB is a recent alternative to traditional and noSQL approaches which offers
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
 (see Section \@ref(dplyr)).
 
+To access a database in R via **dplyr**, one must use one of the `src_` functions to create a source. Continuing with the MySQL example above, one would create a `tbl` object, that can be queried by **dplyr** as follows:
 
+```{r, eval=FALSE}
+library("dplyr")
+cafes_db = src_mysql(user = "me", password = pwd, dbname = "cafes")
+cafes_tbl = tbl(cafes_db, sql("SELECT * FROM tblDonnations"))
+```
+
+```{r, echo=FALSE, message=FALSE}
+library("dplyr")
+```
+
+
+Of course, the above example will not work because there is no pre-existing SQL database on your computer. To see the method work on your computer we will create an SQLite database from within R, building on the **dplyr** databases vignette (see `vignette('databases')`).
+
+There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
+
+- [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
+- The `databases` vignette from the **dplyr** package.
+- [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
+
+#### Exercises {-}
+
+Follow the worked example below to create and query a database on land prices in the UK using **dplyr**'s backend to SQLite.
+
+The first stage is to download and read-in the data:
+
+```{r, eval=FALSE}
+url = paste0("http://prod.publicdata.landregistry.gov.uk",
+  ".s3-website-eu-west-1.amazonaws.com/pp-monthly-update.txt")
+download.file(url = url, destfile = "pp-monthly-update.txt")
+land_df = readr::read_csv("pp-monthly-update.txt")
+```
+
+To avoid downloading the file from the internet, you can subset of this data that is provided by the **efficient** package that accompanies this book:
+
+```{r}
+library("efficient")
+data("land_df")
+```
+
+The next stage is to create an SQLite database to hold the data:
+
+```{r}
+# install.packages("RSQLite") # Requires RSQLite package
+my_db = src_sqlite("land.sqlite3", create = TRUE)
+land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
+class(land_sqlite)
+```
+
+From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
+
+```{r}
+# Method 1: using sql
+tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
+
+# Method 2: using dplyr
+select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
+```
 
 ## Tidying data with tidyr
 
