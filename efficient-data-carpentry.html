@@ -466,9 +466,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq mean median    uq  max neval</span>
-<span class="co">#&gt;     with_select  9.36  9.62 10.2   9.71  9.97 12.5     5</span>
-<span class="co">#&gt;  without_select 15.81 16.07 16.2  16.09 16.41 16.5     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median    uq  max neval</span>
+<span class="co">#&gt;     with_select  9.12  9.25  9.71   9.25  9.27 11.7     5</span>
+<span class="co">#&gt;  without_select 14.63 14.66 14.96  14.80 14.92 15.8     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.2</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.2: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -529,7 +529,7 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
 <p>Imagine you have access to a database on food donations from a community support cafe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Connect to a require package</span>
 <span class="kw">library</span>(<span class="st">&quot;RMySQL&quot;</span>) <span class="co"># also loads required package DBI</span>
-con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">MySQL</span>(), <span class="dt">username =</span> <span class="st">&quot;me&quot;</span>, <span class="dt">password =</span> pwd, <span class="dt">dbname =</span> <span class="st">&quot;cafes&quot;</span>)
+con =<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">MySQL</span>(), <span class="dt">username =</span> <span class="st">&quot;me&quot;</span>, <span class="dt">password =</span> pwd, <span class="dt">dbname =</span> <span class="st">&quot;cafes&quot;</span>)
 
 <span class="co"># List available tables</span>
 <span class="kw">dbListTables</span>(con)
