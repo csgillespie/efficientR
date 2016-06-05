@@ -455,7 +455,7 @@ Tidy data is easier and often faster to process than messy data. As with many as
 
 We will illustrate the functioning of **dplyr** with reference to a dataset on economic equality provided by the World Bank. This is loaded in the following code block:
 
-```{r, message=FALSE, results='hide'}
+```{r, message=FALSE}
 library("readr")
 fname = system.file("extdata/world-bank-ineq.csv", package = "efficient")
 idata = read_csv(fname)
@@ -463,9 +463,8 @@ idata # print the dataset
 ```
 
 **dplyr** is much faster than base implementations of various
-operations, but it has the potential to be even faster, as
-*parallelisation* is
-[planned](https://github.com/hadley/dplyr/issues/145) and the [multidplyr](https://github.com/hadley/multidplyr) package, a parallel backend for **dplyr**, is under development.
+operations, but it has the potential to be even faster
+if *parallel* versions are developed.
 
 You should not be expecting to learn the **dplyr** package in one sitting:
 the package is large and can be seen as
@@ -627,7 +626,7 @@ saveRDS(df1, "data/miniaa.Rds")
 
 #### Exercises
 
-1. How much space was saved by reducing the number of columns? (Hint: use `object.size()`.)
+1. How much space does the data take in wide form vs. long form? (Hint: use `object.size()`.)
 
 2. How many times smaller is the .Rds file saved above compared with the .csv file? (Hint: use `file.size()`.)
 
@@ -652,10 +651,14 @@ nrow(df)
 length(unique(df$Country))
 ```
 
-Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can be done in base R using the following command:
+Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can cleaning can be done in base R using the following command:
 
 ```{r}
-names(df)[4:8] = c("ECO2", "MCO2", "TCO2", "OCO2", "FCO2")
+names(df) = gsub("\\..*", "", names(df)) # clean column names
+```
+
+```{block, gsub, type='rmdnote'}
+Note the use of the symbols `\\.` (to escape the special `.` symbol), `.` and `*` in the above cleaning operation. This is part of a regular expression or *regex*, a powerful set of tools for cleaning text strings. See the Pattern matching section in `vignette("stringr")` for more on this.
 ```
 
 After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
@@ -663,11 +666,15 @@ A quirk of R is that the grouping variable must be supplied as a list.
 Next we'll see a way of writing this that is neater.]
 
 ```{r}
-e_ems = aggregate(df$ECO2, list(df$Country), mean, na.rm  = TRUE)
+e_ems = aggregate(df$Electricity, list(df$Country),
+                  mean, na.rm  = TRUE, data = df)
 nrow(e_ems)
 ```
 
-Note that the resulting data frame now has the same number of rows as there are countries:
+Another way to specify the `by` argument is with the tilde (`~`).
+Thus `df$Electricity, list(df$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
+
+The resulting data frame now has the same number of rows as there are countries:
 the aggregation has successfully reduced the number of rows we need to deal with.
 Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:
 
@@ -675,21 +682,17 @@ Now it is easier to find out per-country statistics, such as the three lowest em
 head(e_ems[order(e_ems$x),], 3)
 ```
 
-Another way to specify the `by` argument is with the tilde (`~`).
-The following command creates the same object as `e_ems`, but with less typing.
-
-```{r}
-e_ems = aggregate(ECO2 ~ Country, df, mean, na.rm  = TRUE)
-```
-
 To aggregate the dataset using **dplyr** package one would divide the task in two: to *group* the dataset first and then to summarise, as illustrated below:
 
 ```{r, message=FALSE}
 library("dplyr")
 group_by(df, Country) %>%
-  summarise(mean_eco2 = mean(ECO2, na.rm  = TRUE))
+  summarise(mean_eco2 = mean(Electricity, na.rm  = TRUE))
 ```
 
+```{block, dutch-data, type='rmdnote'}
+The example above relates to a philosophical question in programming: how much work should one function do?  The [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well".  And shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual `group_by` and `summarise` stages.
+```
 
 ```{r}
 countries = group_by(idata, Country)
@@ -807,11 +810,9 @@ This section has provided only a taster of what is possible **dplyr** and why it
 tasks^[One
 [question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversey and delves into the philosophy underlying each approach.
 ]
-so it should be stated at the outset that **dplyr** and **data.table** are not mutually exclusive competitors. Both are excellent packages and the important thing from an efficiency perspective is that they can help speed up data processing tasks.
+so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dply** provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend **dplyr**. However, **data.table** has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.
 
-```{r, echo=FALSE}
-# This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
-```
+This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
 The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
