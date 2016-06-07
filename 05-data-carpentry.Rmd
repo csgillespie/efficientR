@@ -507,11 +507,11 @@ saveRDS(idata, "data/idata-renamed.Rds")
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `sapply()`, as illustrated below, with the inequality data loaded previously.
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`sapply(idata, class)` is an alternative way to query the class of columns in a dataset.]
 
 ```{r}
 idata = readRDS("data/idata-renamed.Rds")
-sapply(idata, class)
+str(idata)
 ```
 
 This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
