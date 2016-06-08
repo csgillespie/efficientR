@@ -47,17 +47,15 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again.
+This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO2. Note that this dataset is also available from the **datasets** package.
 
 ```{r, eval=FALSE}
-url = "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
-download.file(url, "FatalitiesFY10.csv")
-df = read.csv("FatalitiesFY10.csv")
+url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
+download.file(url, "data/co2.csv")
 ```
 
-```{r, echo=FALSE}
-if(file.exists("FatalitiesFY10.csv"))
-  file.remove("FatalitiesFY10.csv")
+```{r}
+df_co2 = read.csv("data/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
@@ -108,7 +106,86 @@ The final line in the code chunk above shows a neat feature of **rio** and some 
 file.remove("output.xlsx")
 ```
 
-### The feather file formate
+### The feather file format
+
+Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
+
+```{r}
+library("feather")
+write_feather(df_co2, "data/co2.feather")
+df_co2_feather = read_feather("data/co2.feather")
+```
+
+```{r, engine='python', eval=FALSE}
+import feather
+import feather
+path = 'data/co2.feather'
+df = feather.read_dataframe(path)
+```
+
+### Efficient data export: .Rdata or .Rds?
+
+Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large `.shp` file, for example, can take more than ten times longer to load than a `.Rds` or `.Rdata` file.
+
+`.Rds` and `.RData` are R's native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats that are central to the history of file import and export in R:
+
+```{r}
+save(df_co2, file = "data/co2.RData")
+saveRDS(df_co2, "data/co2.Rds")
+load("data/co2.RData")
+df_co2_rds = readRDS("data/co2.Rds")
+identical(df_co2, df_co2_rds)
+```
+
+The first method is the most widely used. It uses uses the `save` function which takes any number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
+
+The second method is slightly less used but we recommend it. Apart from being slightly more concise for saving single R objects, the `readRDS` function is more flexible: as shown in the subsequent line, the resulting object can be assigned to any name. In this case we called it `df_co2_rds` (which we show to be identical to `df_co2`, loaded with the `load` command) but we could have called it anything or simply printed it to the console.
+
+Using `saveRDS` is good practice because it forces you to specify object names. If you use `save` without care, you could forget the names of the objects you saved and accidentally overwrite objects that already existed.
+
+How space efficient are these file export methods? We can explore this question using the functions `list.files` and `file.size`, as illustrated below. The results, which also show how the *relative* space saving of native R formats increase with dataset size, are shown in Table \@ref(tab:sizes).
+
+```{r}
+files_co2 = list.files(path = "data", pattern = "co2.", full.names = TRUE)
+filesize_co2 = data.frame(
+  Format = gsub(pattern = "data/", replacement = "", files_co2),
+  Size = file.size(files_co2) / 1000
+  )
+```
+
+```{r spacebench, echo=FALSE, eval=FALSE}
+filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
+filesize_co2$Size_10
+for(i in 10^(1:3)){
+  size_name = paste0("Size (", i, "x)")
+  relsize_name = paste0("Rel (", i, "x)")
+  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
+  write.csv(df, file.path(tempdir(), "co2.csv"))
+  write_feather(df, file.path(tempdir(), "co2.feather"))
+  save(df, file = file.path(tempdir(), "co2.RData"))
+  saveRDS(df, file.path(tempdir(), "co2.Rds"))
+  sizes = c(
+    file.size( file.path(tempdir(), "co2.csv")),
+    file.size( file.path(tempdir(), "co2.feather")),
+    file.size( file.path(tempdir(), "co2.RData")),
+    file.size( file.path(tempdir(), "co2.Rds"))
+  )
+  filesize_co2[[size_name]] = sizes / 1000
+  filesize_co2[[relsize_name]] = sizes / min(sizes)
+}
+saveRDS(filesize_co2, "data/filesizes.Rds")
+```
+
+```{r sizes, echo=FALSE}
+filesize_co2 = readRDS("data/filesizes.Rds")
+knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+The results of this simple disk usage benchmark show that, even though 
+
+### A benchmark of methods for file import and export
+
+Preempting more involved benchmarking exercises in the subsequent sections, and emphasising the importance of benchmarking for efficient R programming overall, this section briefly assesses the file import methods described so far, plus a couple more.
 
 ### Fast data reading {#fread}
 
