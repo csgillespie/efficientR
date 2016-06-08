@@ -156,6 +156,7 @@ filesize_co2 = data.frame(
 ```{r spacebench, echo=FALSE, eval=FALSE}
 filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
 filesize_co2$Size_10
+
 for(i in 10^(1:3)){
   size_name = paste0("Size (", i, "x)")
   relsize_name = paste0("Rel (", i, "x)")
@@ -185,7 +186,63 @@ The results of this simple disk usage benchmark show the advantages of saving da
 
 ### A benchmark of methods for file import and export
 
-Preempting more involved benchmarking exercises in the subsequent sections, and emphasising the importance of benchmarking for efficient R programming overall, this section briefly assesses the file import methods described so far, plus a couple more.
+The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
+
+```{r, echo=FALSE}
+# Create data frame for reporting read/write times
+wtimes = data.frame(
+  Function = c("write.csv", "save_feather", "save", "saveRDS"))
+rtimes = rtimes = data.frame(
+  Function = c("read.csv", "read_feather", "load", "readRDS"))
+
+# Benchmark read/write times
+library("microbenchmark")
+
+for(i in 10^(0:3)){
+  time_name = paste0("Time (", i, "x)")
+  reltime_name = paste0("Rel (", i, "x)")
+  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
+  times_w = c(
+  summary(microbenchmark(write.csv(df, file.path(tempdir(), "co2.csv")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(write_feather(df, file.path(tempdir(), "co2.feather")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(save(df, file = file.path(tempdir(), "co2.RData")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(saveRDS(df, file.path(tempdir(), "co2.Rds")),
+                         unit = "ms", times = 10))$mean
+  )
+  times_r = c(
+  summary(microbenchmark(read.csv(file.path(tempdir(), "co2.csv")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(read_feather(file.path(tempdir(), "co2.feather")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(load(file.path(tempdir(), "co2.RData")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(readRDS(file.path(tempdir(), "co2.Rds")),
+                         unit = "ms", times = 10))$mean
+)
+  wtimes[[time_name]] = times_w 
+  wtimes[[reltime_name]] = times_w / min(times_w)
+  rtimes[[time_name]] = times_r 
+  rtimes[[reltime_name]] = times_r / min(times_r)
+}
+names(rtimes) = names(wtimes) = gsub(" \\(1x\\)", "", names(wtimes))
+saveRDS(rtimes, "data/rtimes.Rds")
+saveRDS(wtimes, "data/wtimes.Rds")
+```
+
+```{r rtimes, echo=FALSE}
+rtimes = readRDS("data/rtimes.Rds")
+knitr::kable(rtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+```{r wtimes, echo=FALSE}
+wtimes = readRDS("data/wtimes.Rds")
+knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) write times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
 ### Fast data reading {#fread}
 
@@ -538,23 +595,23 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
 ```
 
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
-Data manipulation is a large topic with major potential implications for efficiency, and there is an entire book on the subject [@Spector_2008].
+The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
 ```{block, non-standard evaluation, type='rmdnote'}
 Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and auto-completion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(df, agesex, c("sex", "age"), 1)` is `separate_(df, "agesex", c("sex", "age"), 1)`.
 ```
 
-
-
 ## Data processing with dplyr {#dplyr}
 
-Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. This package, which rougly means 'data pliers' or 'plyr' (another R package) for large datasets, has a number of advantages compared with base R and **data.table** approaches to data processing:
+Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. We selected this package, which rougly means 'data pliers' for large datasets, because it has a number of advantages compared with base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-We will illustrate the functioning of **dplyr** with reference to a dataset on economic equality provided by the World Bank. This is loaded in the following code block:
+We demonstrate how **dplyr** works with a number of worked examples. These will show another major advantage of **dplyr**: it reduces the *inefficient* overheads associated with learning new functions, which can be a time consuming and frustrating process. **dplyr** reduces this inefficiency by providing a small number of key functions, which have intuitive names. Despite the apparent simplicity of these functions, they are powerful when used in combination. Using the ` %>%` 'pipe' operator, **dplyr** code can be clear, consistent and easy to read, write and learn.
+
+The starting point is a dataset on economic equality provided by the World Bank, loaded as follows:
 
 ```{r, message=FALSE}
 library("readr")
