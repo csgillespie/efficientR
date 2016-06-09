@@ -110,7 +110,7 @@ file.remove("output.xlsx")
 
 Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
 
-```{r}
+```{r, eval=FALSE}
 library("feather")
 write_feather(df_co2, "data/co2.feather")
 df_co2_feather = read_feather("data/co2.feather")
@@ -182,13 +182,13 @@ filesize_co2 = readRDS("data/filesizes.Rds")
 knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
 ```
 
-The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perpectives. It is striking to note that R's native formats can be **over 100 times** more space efficient than plain text (.csv) and other binary (.feather) formats. But how does each method compare from a computational efficiency perpective?
+The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perpectives. It is striking to note that R's native formats can be **over 100 times** more space efficient than plain text (.csv) and other binary (`.feather`) formats. But how does each method compare from a computational efficiency perpective?
 
 ### A benchmark of methods for file import and export
 
 The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 # Create data frame for reporting read/write times
 wtimes = data.frame(
   Function = c("write.csv", "save_feather", "save", "saveRDS"))
