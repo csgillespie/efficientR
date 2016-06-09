@@ -298,8 +298,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.10" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#curly-braces"><i class="fa fa-check"></i><b>9.1.10</b> Curly braces</a></li>
 <li class="chapter" data-level="9.1.11" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#exercises-20"><i class="fa fa-check"></i><b>9.1.11</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="9.2" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#version-control"><i class="fa fa-check"></i><b>9.2</b> Version control</a></li>
-<li class="chapter" data-level="9.3" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#refactoring"><i class="fa fa-check"></i><b>9.3</b> Refactoring</a></li>
+<li class="chapter" data-level="9.2" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#version-control"><i class="fa fa-check"></i><b>9.2</b> Version control</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#commits"><i class="fa fa-check"></i><b>9.2.1</b> Commits</a></li>
+<li class="chapter" data-level="9.2.2" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#git-integration-in-rstudio"><i class="fa fa-check"></i><b>9.2.2</b> Git integration in RStudio</a></li>
+<li class="chapter" data-level="9.2.3" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#github"><i class="fa fa-check"></i><b>9.2.3</b> GitHub</a></li>
+<li class="chapter" data-level="9.2.4" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#branches-forks-pulls-and-clones"><i class="fa fa-check"></i><b>9.2.4</b> Branches, forks, pulls and clones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="efficient-collaboration.html"><a href="efficient-collaboration.html#refactoring"><i class="fa fa-check"></i><b>9.3</b> Refactoring code</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="efficient-learning.html"><a href="efficient-learning.html"><i class="fa fa-check"></i><b>10</b> Efficient Learning</a><ul>
 <li class="chapter" data-level="10.1" data-path="efficient-learning.html"><a href="efficient-learning.html#using-r-help"><i class="fa fa-check"></i><b>10.1</b> Using R Help</a></li>
@@ -453,7 +458,7 @@ It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is eas
 <p>To prevent <code>=</code> being interpreted as an argument passing operator, you can enclose the function call in curly braces:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({expr3 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">10e5</span>)}) 
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.120   0.000   0.119</span></code></pre></div>
+<span class="co">#&gt;   0.087   0.000   0.087</span></code></pre></div>
 </div>
 <div id="spacing" class="section level3">
 <h3><span class="header-section-number">9.1.8</span> Spacing</h3>
@@ -500,10 +505,62 @@ if(x &lt;<span class="st"> </span><span class="dv">5</span>)
 </div>
 <div id="version-control" class="section level2">
 <h2><span class="header-section-number">9.2</span> Version control</h2>
+<p>When a project gets large, complicated or mission-critical it is important to keep track of how it evolves. In the same way that Dropbox saves a ‘backup’ of your files, version control systems keep a backup of your code. The only difference is that version control systems back-up your code <em>forever</em>.</p>
+<p>The version control system we recommend is Git, a command-line application created by Linus Torvalds, who also invented Linux.<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a> The easiest way to integrate your R projects with Git, if you’re not accustomed to using a shell (e.g. the Unix command line), is with RStudio’s Git tab, in the top right-hand window (see Figure <a href="efficient-collaboration.html#fig:rstudio-git">9.1</a>). This shows a number of files have been modified (as illustrated with the blue M symbol) and that some are new (as illustrated with the yellow ? symbol). Checking the tick-box will enable these files to be <em>committed</em>.</p>
+<div id="commits" class="section level3">
+<h3><span class="header-section-number">9.2.1</span> Commits</h3>
+<p>Commits are the basic units of version control. Keep your commits ‘atomic’: each one should only do one thing. Document your work with clear and concise commit messages, use the present tense, e.g.: ‘Add analysis functions’.</p>
+<p>Committing code only updates the files on your ‘local’ branch. To update the files stored on a remote server (e.g. on GitHub), you mush ‘push’ the commit. This can be done using <code>git push</code> from a shell or using the green up arrow in RStudio, illustrated in Figure <a href="efficient-collaboration.html#fig:rstudio-git">9.1</a>. The blue down arrow will ‘pull’ the latest version of the repository from the remote.<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a></p>
+<div class="figure"><span id="fig:rstudio-git"></span>
+<img src="figures/rstudio-git.png" alt="The Git tab in RStudio"  />
+<p class="caption">
+Figure 9.1: The Git tab in RStudio
+</p>
+</div>
+</div>
+<div id="git-integration-in-rstudio" class="section level3">
+<h3><span class="header-section-number">9.2.2</span> Git integration in RStudio</h3>
+<p>How to enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed <em>and</em> RStudio can find it. You need a working installation of Git (e.g. installed through <code>apt-get install git</code> Ubuntu/Debian or via <a href="https://help.github.com/desktop/guides/getting-started/installing-github-desktop/">GitHub Desktop</a> for Mac and Windows). RStudio can be linked to your Git installation via Tools &gt; Global Options, in the Git/SVN tab. This tab also provides a <a href="https://support.rstudio.com/hc/en-us/articles/200532077">link</a> to a help page on RStudio/Git.</p>
+<p>Once Git has been linked to your RStudio installation, it can be used to track changes in a new project by selecting <code>Create a git repository</code> when creating a new project. The tab illustrated in Figure <a href="efficient-collaboration.html#fig:rstudio-git">9.1</a> will appear, allowing functionality for interacting with Git via RStudio.</p>
+<p>RStudio provides a useful GUI for navigating past commits. This allows you to see the entire history of your project. To navigate and view the details of past commits click on the Diff button in the Git pane, as illustrated in Figure <a href="efficient-collaboration.html#fig:rstudio-githist">9.2</a>.</p>
+<div class="figure"><span id="fig:rstudio-githist"></span>
+<img src="figures/rstudio-githist.png" alt="The Git history navigation interface"  />
+<p class="caption">
+Figure 9.2: The Git history navigation interface
+</p>
+</div>
+</div>
+<div id="github" class="section level3">
+<h3><span class="header-section-number">9.2.3</span> GitHub</h3>
+<p>GitHub is an online platform that makes sharing your work and collaborative code easy. There are alternatives such as <a href="https://about.gitlab.com/">GitLab</a>. The focus here is on GitHub as it’s by far the most popular among R developers. Also, through the command <code>devtools::install_github()</code>, preview versions of a package can be installed and updated in an instant. This makes ‘GitHub packages’ a great way to access the latest functionality. And GitHub makes it easy to get your work ‘out there’ to the world for efficiently collaborating with others, without the restraints placed on CRAN packages.</p>
+<p>To install the GitHub version of the the benchmark package, for example one would enter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgillespie/benchmarkme&quot;</span>)</code></pre></div>
+<p>Note that <code>csgillespie</code> is the GitHub user and <code>benchmarkme</code> is the package name. Replacing <code>csgillespie</code> with <code>robinlovelace</code> in the above code would install Robin’s version of the package. This is useful for fast collaboration with many people, but you must remember that GitHub packages will not update automatically with the command <code>update.packages</code> (see <a href="efficient-set-up.html#updating-r-packages">2.3.5</a>).</p>
+<div class="rmdcaution">
+<p>
+Warning: although GitHub is fantastic for collaboration, it can end up creating more problems than it solves if your collaborators are not git-literate. In one project, Robin eventually abandoned using GitHub to collaborate after his collaborator found it impossible to work with. More time was being spent debugging git/GitHub than actually working. Our advice therefore is to <strong>never impose git</strong> and always ensure that other lines of communication (e.g. phone calls, emails) are open as different people prefer different ways of communicating.
+</p>
+</div>
+</div>
+<div id="branches-forks-pulls-and-clones" class="section level3">
+<h3><span class="header-section-number">9.2.4</span> Branches, forks, pulls and clones</h3>
+<p>Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git’s powerful functionality, we recommend the book Pro Git, which is available online at <a href="https://git-scm.com/book/en/v2">git-scm.com/book/</a>.</p>
+<p>Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> checkout -b test</code></pre></div>
+<p>This is equivalent of entering two commands: <code>git branch test</code> to create the branch and then <code>git checkout test</code> to <em>checkout</em> that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in Figure <a href="efficient-collaboration.html#fig:rstudio-git">9.1</a>: see the <code>master</code> text followed by a down arrow. Clicking on this will allow you to select other branches.</p>
+<p>Forks are like branches but they exist on other people’s computers. You can fork a repository on GitHub easily, as described on the site’s <a href="https://help.github.com/articles/fork-a-repo/">help pages</a>. If you want an exact copy of this repository (including the commit history) you can <em>clone</em> this fork to your computer using the command <code>git clone</code> or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective than cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a <em>pull request</em>. Note: if you don’t need the project’s entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).</p>
+<p>A pull request (PR) is a mechanism on GitHub by which your code can be added to an existing project. One of the most useful features of a PR from a collaboration perspective is that it provides an opportunity for others to comment on your code, line by line, before it gets merged. This is all done online on GitHub, as discussed in <a href="https://help.github.com/articles/merging-a-pull-request/">GitHub’s online help</a>. Following feedback, you may want to refactor code, written by you or others.</p>
+</div>
 </div>
 <div id="refactoring" class="section level2">
-<h2><span class="header-section-number">9.3</span> Refactoring</h2>
+<h2><span class="header-section-number">9.3</span> Refactoring code</h2>
+<p>Nobody is born being able to program. Learning to program involves a great deal of trail and error and it is likely that your code, in terms of programming efficiency and style, will improve over time (e.g. after reading books such as this!). Thus you may discover code you wrote months ago and say ‘did I <em>really</em> write that?’. From a collaboration perspective, you may want to incorporate someone else’s code in your project, but with updated style.</p>
+<p>This process of re-purposing or updating code is called refactoring. An example would be messy code using many objects and packages. The refactored code would be much clearer, efficient and more concise. There is no ‘magic bullet’ formula to refactor code, but a <a href="https://en.wikipedia.org/wiki/Code_refactoring">series of techniques</a> can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a ‘high level’ so you identify quickly its key components and hopefully write it in a better form.</p>
+<div id="exercises-21" class="section level4">
+<h4><span class="header-section-number">9.3.0.1</span> Exercises</h4>
+<p>Refactor the following code to make it more efficient.</p>
 
+</div>
 </div>
 </div>
 <h3>References</h3>
@@ -511,6 +568,13 @@ if(x &lt;<span class="st"> </span><span class="dv">5</span>)
 <div id="ref-Mcconnell2004">
 <p>McConnell, Steve. 2004. <em>Code Complete</em>. Pearson Education.</p>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="20">
+<li id="fn20"><p>We recommend ‘10 Years of Git: An Interview with Git Creator Linus Torvalds’ from <a href="http://www.linux.com/news/featured-blogs/185-jennifer-cloer/821541-10-years-of-git-an-interview-with-git-creator-linus-torvalds">Linux.com</a> for more information on this topic.<a href="efficient-collaboration.html#fnref20">↩</a></p></li>
+<li id="fn21"><p>For a more detailed account of this process, see <a href="https://help.github.com/">GitHub’s help pages</a>.<a href="efficient-collaboration.html#fnref21">↩</a></p></li>
+</ol>
 </div>
             </section>
 
