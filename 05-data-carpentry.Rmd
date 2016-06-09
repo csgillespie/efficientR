@@ -7,17 +7,34 @@ knit: "bookdown::preview_chapter"
   
 # Efficient data carpentry
 
-In this chapter we will cover the following topics:
+There are many words for processing and analysing data. You can clean, hack, manipulate, munge, refine and tidy your datasets, ready for the next stage, typically modelling and visualisation. Each verb says something about perceptions towards the process: it is often seen as *dirty work*. It is often regarded as an unpleasant necesity that must be endured before the *real*, *fun* and *important* work begins. This perception of data handling is dangerous and counter-productive. For this reason we call the process the more respectable job of *data carpentry*.
+
+Getting your data 'ship shape' is a respectable and valuable skill. Carpentry is the process of taking rough pieces of wood and working with care, dilligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
+
+Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in the previous Chapter, can criple your workflow, working with messy data can lead to project management hell. Poorly organised, named and formated data can cause havoc.
+
+Fortunately, done efficiciently, at the outset of your project (rather than half way through, when it may be too late) and using appropriate tools this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of book. In it we cover the following topics:
+
+- Importing data
+- Working with databases
+- Tidying data with **tidyr**
+- Data processing with **dplyr**
+- Data processing with **data.table**
 
 ## Importing data
 
-Before reading in data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and including a comment about its origin are a couple of ways to improve reproducibility, even when the data are not publicly available. This is illustrated below with functions
+With the accelerating digital revolution and increasing download rates worldwide, an increasing proportion of the world's data is available online. Further, and increasing amount of data is *open access*, available to the public to download and use as they please. For these reasons we begin this section by exploring some ways to download and import data from the web. Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
+
+Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
+
+### Getting data from the internet
+
+The code chunk below shows how the functions
 `download.file`^[Since
 R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
 ]
-and `unzip` to download and unzip the
-dataset.
-This illustrates how R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser. The result of the code below is data stored neatly in the `data` directory ready to be read-in (note part of the dataset is also stored in the **efficient** package).
+and `unzip` can be used to download and unzip a dataset from the internet.
+R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data's *provenance*. Note also that part of the dataset is stored in the **efficient** package.
 
 ```{block, dutch-data, type='rmdnote'}
 Using R for basic file management can help create a reproducible workflow, as illustrated below. The data downloaded in the following code chunk is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
@@ -30,17 +47,15 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again.
+This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO2. Note that this dataset is also available from the **datasets** package.
 
 ```{r, eval=FALSE}
-url = "https://www.osha.gov/dep/fatcat/FatalitiesFY10.csv"
-download.file(url, "FatalitiesFY10.csv")
-df = read.csv("FatalitiesFY10.csv")
+url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
+download.file(url, "data/co2.csv")
 ```
 
-```{r, echo=FALSE}
-if(file.exists("FatalitiesFY10.csv"))
-  file.remove("FatalitiesFY10.csv")
+```{r}
+df_co2 = read.csv("data/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
@@ -62,7 +77,9 @@ library("raster") # requires the ncdf4 package to be installed
 r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
 
-A recent development that deserves mention with respect to data import is the recently developed **rio** package. **rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate three of **rio**'s key functions.
+### Versatile data import with rio
+
+**rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate three of **rio**'s key functions.
 
 ```{r, eval=FALSE}
 library(rio)
@@ -77,13 +94,155 @@ df = import(fname)
 export(df, "output.xlsx")
 ```
 
-#### Exercises
+```{block, json, type='rmdtip'}
+The ability to import and use `.json` data is becoming increasingly common as it a standard output format for many APIs and the **jsonlite** and **geojsonio** packages have been developed to make this as easy as possible.
+```
+
+#### Exercises {-}
 
 The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the filename, which make for concise code. Try opening the `output.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient and non-secure file format from your system to preserve precious disk space:
 
 ```{r}
 file.remove("output.xlsx")
 ```
+
+### The feather file format
+
+Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
+
+```{r, eval=FALSE}
+library("feather")
+write_feather(df_co2, "data/co2.feather")
+df_co2_feather = read_feather("data/co2.feather")
+```
+
+```{r, engine='python', eval=FALSE}
+import feather
+import feather
+path = 'data/co2.feather'
+df = feather.read_dataframe(path)
+```
+
+### Efficient data export: .Rdata or .Rds?
+
+Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large `.shp` file, for example, can take more than ten times longer to load than a `.Rds` or `.Rdata` file.
+
+`.Rds` and `.RData` are R's native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats that are central to the history of file import and export in R:
+
+```{r}
+save(df_co2, file = "data/co2.RData")
+saveRDS(df_co2, "data/co2.Rds")
+load("data/co2.RData")
+df_co2_rds = readRDS("data/co2.Rds")
+identical(df_co2, df_co2_rds)
+```
+
+The first method is the most widely used. It uses uses the `save` function which takes any number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
+
+The second method is slightly less used but we recommend it. Apart from being slightly more concise for saving single R objects, the `readRDS` function is more flexible: as shown in the subsequent line, the resulting object can be assigned to any name. In this case we called it `df_co2_rds` (which we show to be identical to `df_co2`, loaded with the `load` command) but we could have called it anything or simply printed it to the console.
+
+Using `saveRDS` is good practice because it forces you to specify object names. If you use `save` without care, you could forget the names of the objects you saved and accidentally overwrite objects that already existed.
+
+How space efficient are these file export methods? We can explore this question using the functions `list.files` and `file.size`, as illustrated below. The results, which also show how the *relative* space saving of native R formats increase with dataset size, are shown in Table \@ref(tab:sizes).
+
+```{r}
+files_co2 = list.files(path = "data", pattern = "co2.", full.names = TRUE)
+filesize_co2 = data.frame(
+  Format = gsub(pattern = "data/", replacement = "", files_co2),
+  Size = file.size(files_co2) / 1000
+  )
+```
+
+```{r spacebench, echo=FALSE, eval=FALSE}
+filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
+filesize_co2$Size_10
+
+for(i in 10^(1:3)){
+  size_name = paste0("Size (", i, "x)")
+  relsize_name = paste0("Rel (", i, "x)")
+  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
+  write.csv(df, file.path(tempdir(), "co2.csv"))
+  write_feather(df, file.path(tempdir(), "co2.feather"))
+  save(df, file = file.path(tempdir(), "co2.RData"))
+  saveRDS(df, file.path(tempdir(), "co2.Rds"))
+  sizes = c(
+    file.size( file.path(tempdir(), "co2.csv")),
+    file.size( file.path(tempdir(), "co2.feather")),
+    file.size( file.path(tempdir(), "co2.RData")),
+    file.size( file.path(tempdir(), "co2.Rds"))
+  )
+  filesize_co2[[size_name]] = sizes / 1000
+  filesize_co2[[relsize_name]] = sizes / min(sizes)
+}
+saveRDS(filesize_co2, "data/filesizes.Rds")
+```
+
+```{r sizes, echo=FALSE}
+filesize_co2 = readRDS("data/filesizes.Rds")
+knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perpectives. It is striking to note that R's native formats can be **over 100 times** more space efficient than plain text (.csv) and other binary (`.feather`) formats. But how does each method compare from a computational efficiency perpective?
+
+### A benchmark of methods for file import and export
+
+The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
+
+```{r, echo=FALSE, eval=FALSE}
+# Create data frame for reporting read/write times
+wtimes = data.frame(
+  Function = c("write.csv", "save_feather", "save", "saveRDS"))
+rtimes = rtimes = data.frame(
+  Function = c("read.csv", "read_feather", "load", "readRDS"))
+
+# Benchmark read/write times
+library("microbenchmark")
+
+for(i in 10^(0:3)){
+  time_name = paste0("Time (", i, "x)")
+  reltime_name = paste0("Rel (", i, "x)")
+  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
+  times_w = c(
+  summary(microbenchmark(write.csv(df, file.path(tempdir(), "co2.csv")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(write_feather(df, file.path(tempdir(), "co2.feather")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(save(df, file = file.path(tempdir(), "co2.RData")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(saveRDS(df, file.path(tempdir(), "co2.Rds")),
+                         unit = "ms", times = 10))$mean
+  )
+  times_r = c(
+  summary(microbenchmark(read.csv(file.path(tempdir(), "co2.csv")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(read_feather(file.path(tempdir(), "co2.feather")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(load(file.path(tempdir(), "co2.RData")),
+                         unit = "ms", times = 10))$mean,
+  summary(microbenchmark(readRDS(file.path(tempdir(), "co2.Rds")),
+                         unit = "ms", times = 10))$mean
+)
+  wtimes[[time_name]] = times_w 
+  wtimes[[reltime_name]] = times_w / min(times_w)
+  rtimes[[time_name]] = times_r 
+  rtimes[[reltime_name]] = times_r / min(times_r)
+}
+names(rtimes) = names(wtimes) = gsub(" \\(1x\\)", "", names(wtimes))
+saveRDS(rtimes, "data/rtimes.Rds")
+saveRDS(wtimes, "data/wtimes.Rds")
+```
+
+```{r rtimes, echo=FALSE}
+rtimes = readRDS("data/rtimes.Rds")
+knitr::kable(rtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+```{r wtimes, echo=FALSE}
+wtimes = readRDS("data/wtimes.Rds")
+knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) write times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+```
+
+The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
 ### Fast data reading {#fread}
 
@@ -258,11 +417,11 @@ R can connect to databases in a number of ways, which are briefly touched on bel
 **RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
 **RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
-Imagine you have access to a database on food donations from a community support cafe.
+Imagine you have access to a database on donations for a community cafe.
 
 ```{r, eval=FALSE}
-# Connect to a require package
-library("RMySQL") # also loads required package DBI
+# Connect to a database driver
+library("RMySQL") # also loads DBI package
 con = dbConnect(MySQL(), username = "me", password = pwd, dbname = "cafes")
 
 # List available tables
@@ -274,8 +433,7 @@ df_head = dbFetch(rs, n = 6) # extract first 6 rows
 The above code chunk shows how the function `dbConnect` connects to an external database, in this case a MySQL database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
 
 ```{block, password-tip, type='rmdtip'}
-Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in \@ref(renviron).
-Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
+Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in Chapter 2. Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
 ```
 
 Recently there has been a shift to the 'noSQL' approach for storing large datasets.
@@ -437,23 +595,23 @@ knitr::kable(separate(df, agesex, c("sex", "age"), 1),
 ```
 
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
-Data manipulation is a large topic with major potential implications for efficiency, and there is an entire book on the subject [@Spector_2008].
+The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
 ```{block, non-standard evaluation, type='rmdnote'}
 Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and auto-completion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(df, agesex, c("sex", "age"), 1)` is `separate_(df, "agesex", c("sex", "age"), 1)`.
 ```
 
-
-
 ## Data processing with dplyr {#dplyr}
 
-Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. This package, which rougly means 'data pliers' or 'plyr' (another R package) for large datasets, has a number of advantages compared with base R and **data.table** approaches to data processing:
+Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. We selected this package, which rougly means 'data pliers' for large datasets, because it has a number of advantages compared with base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-We will illustrate the functioning of **dplyr** with reference to a dataset on economic equality provided by the World Bank. This is loaded in the following code block:
+We demonstrate how **dplyr** works with a number of worked examples. These will show another major advantage of **dplyr**: it reduces the *inefficient* overheads associated with learning new functions, which can be a time consuming and frustrating process. **dplyr** reduces this inefficiency by providing a small number of key functions, which have intuitive names. Despite the apparent simplicity of these functions, they are powerful when used in combination. Using the ` %>%` 'pipe' operator, **dplyr** code can be clear, consistent and easy to read, write and learn.
+
+The starting point is a dataset on economic equality provided by the World Bank, loaded as follows:
 
 ```{r, message=FALSE}
 library("readr")
@@ -508,11 +666,11 @@ saveRDS(idata, "data/idata-renamed.Rds")
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `sapply()`, as illustrated below, with the inequality data loaded previously.
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`sapply(idata, class)` is an alternative way to query the class of columns in a dataset.]
 
 ```{r}
 idata = readRDS("data/idata-renamed.Rds")
-sapply(idata, class)
+str(idata)
 ```
 
 This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
