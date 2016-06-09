@@ -232,6 +232,83 @@ if(x < 5)
 
 Look at the difference between your style and RStudio's based on a representative R script that you have written (see Section \@ref(coding-style)). What are the similarities? What are the differences? Are you consistent? Write these down and think about how you can use the results to improve your coding style.
 
-## Version control {#version-control}
+## Version control
 
-## Refactoring {#refactoring}
+When a project gets large, complicated or mission-critical it is important to keep track of how it evolves. In the same way that Dropbox saves a 'backup' of your files, version control systems keep a backup of your code. The only difference is that version control systems back-up your code *forever*. 
+
+The version control system we recommend is Git, a command-line application created by Linus Torvalds, who also invented Linux.^[We recommend '10 Years of Git: An Interview with Git Creator Linus Torvalds' from
+[Linux.com](http://www.linux.com/news/featured-blogs/185-jennifer-cloer/821541-10-years-of-git-an-interview-with-git-creator-linus-torvalds) for more information on this topic.
+] The easiest way to integrate your R projects with Git, if you're not accustomed to using a shell (e.g. the Unix command line), is with RStudio's Git tab, in the top right-hand window (see Figure \@ref(fig:rstudio-git)). This shows a number of files have been modified (as illustrated with the blue M symbol) and that some are new (as illustrated with the yellow ? symbol). Checking the tick-box will enable these files to be *committed*.
+
+### Commits
+
+Commits are the basic units of version control. Keep your commits 'atomic': each one should only do one thing. Document your work with clear and concise commit messages, use the present tense, e.g.: 'Add analysis functions'.
+
+Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you mush 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in Figure \@ref(fig:rstudio-git). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
+[GitHub's help pages](https://help.github.com/).]
+
+```{r rstudio-git, fig.cap="The Git tab in RStudio", echo=FALSE}
+knitr::include_graphics("figures/rstudio-git.png")
+```
+
+### Git integration in RStudio
+
+How to enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed *and* RStudio can find it. You need a working installation of Git (e.g. installed through `apt-get install git` Ubuntu/Debian or via [GitHub Desktop](https://help.github.com/desktop/guides/getting-started/installing-github-desktop/) for Mac and Windows). RStudio can be linked to your Git installation via Tools > Global Options, in the Git/SVN tab. This tab also provides a [link](https://support.rstudio.com/hc/en-us/articles/200532077) to a help page on RStudio/Git.
+
+Once Git has been linked to your RStudio installation, it can be used to track changes in a new project by selecting `Create a git repository` when creating a new project. The tab illustrated in Figure \@ref(fig:rstudio-git) will appear, allowing functionality for interacting with Git via RStudio.
+
+RStudio provides a useful GUI for navigating past commits. This allows you to see the entire history of your project. To navigate and view the details of past commits click on the Diff button in the Git pane, as illustrated in Figure \@ref(fig:rstudio-githist).
+
+```{r rstudio-githist, fig.cap="The Git history navigation interface", echo=FALSE}
+knitr::include_graphics("figures/rstudio-githist.png")
+```
+
+### GitHub
+
+GitHub is an online platform that makes sharing your work and collaborative code easy. There are alternatives such as [GitLab](https://about.gitlab.com/). The focus here is on GitHub as it's by far the most popular among R developers. Also, through the command `devtools::install_github()`, preview versions of a package can be installed and updated in an instant. This makes 'GitHub packages' a great way to access the latest functionality. And GitHub makes it easy to get your work 'out there' to the world for efficiently collaborating with others, without the restraints placed on CRAN packages.
+
+To install the GitHub version of the the benchmark package, for example one would enter:
+
+```{r, eval=FALSE}
+devtools::install_github("csgillespie/benchmarkme")
+```
+
+Note that `csgillespie` is the GitHub user and `benchmarkme` is the package name. Replacing `csgillespie` with `robinlovelace` in the above code would install Robin's version of the package. This is useful for fast collaboration with many people, but you must remember that GitHub packages will not update automatically with the command `update.packages` (see \@ref(updating-r-packages)).
+
+```{block, note-text, type='rmdcaution'}
+Warning: although GitHub is fantastic for collaboration, it can end up creating more problems than it solves if your collaborators are not git-literate. In one project, Robin eventually abandoned using GitHub to collaborate after his collaborator found it impossible to work with. More time was being spent debugging git/GitHub than actually working. Our advice therefore is to **never impose git** and always ensure that other lines of communication (e.g. phone calls, emails) are open as different people prefer different ways of communicating.
+```
+
+
+### Branches, forks, pulls and clones
+
+Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the book Pro Git, which is available online at [git-scm.com/book/](https://git-scm.com/book/en/v2).
+
+Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
+
+```{r, engine='bash', eval=FALSE}
+git checkout -b test
+```
+
+This is equivalent of entering two commands: `git branch test` to create the branch and then `git checkout test` to *checkout* that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in Figure \@ref(fig:rstudio-git): see the `master` text followed by a down arrow. Clicking on this will allow you to select other branches.
+
+Forks are like branches but they exist on other people's computers. You can fork a repository on GitHub easily, as described on the site's [help pages](https://help.github.com/articles/fork-a-repo/). If you want an exact copy of this repository (including the commit history) you can *clone* this fork to your computer using the command `git clone` or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective than cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a *pull request*. Note: if you don't need the project's entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).
+
+A pull request (PR) is a mechanism on GitHub by which your code can be added to an existing project. One of the most useful features of a PR from a collaboration perspective is that it provides an opportunity for others to comment on your code, line by line, before it gets merged. This is all done online on GitHub, as discussed in [GitHub's online help](https://help.github.com/articles/merging-a-pull-request/). Following feedback, you may want to refactor code, written by you or others.
+
+
+```{r, echo=FALSE}
+# Content to add
+# For this reason GitHub is the subject of the next section.
+### Using GitHub
+```
+
+## Refactoring code {#refactoring}
+
+Nobody is born being able to program. Learning to program involves a great deal of trail and error and it is likely that your code, in terms of programming efficiency and style, will improve over time (e.g. after reading books such as this!). Thus you may discover code you wrote months ago and say 'did I *really* write that?'. From a collaboration perspective, you may want to incorporate someone else's code in your project, but with updated style.
+
+This process of re-purposing or updating code is called refactoring. An example would be messy code using many objects and packages. The refactored code would be much clearer, efficient and more concise. There is no 'magic bullet' formula to refactor code, but a [series of techniques](https://en.wikipedia.org/wiki/Code_refactoring) can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a 'high level' so you identify quickly its key components and hopefully write it in a better form.
+
+#### Exercises
+
+Refactor the following code to make it more efficient.
