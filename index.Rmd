@@ -54,31 +54,6 @@ microsimulation with R (CRC Press, forthcoming). Robin has used R on mission-cri
 contracts, including the creation of a nationally scalable interactive online mapping
 tool for the UK’s Department for Transport (DfT).
 
-## Package Dependencies {-}
-
-The book depends on the following packages:
-
-```{r echo=FALSE}
-desc = read.dcf("DESCRIPTION")
-headings = dimnames(desc)[[2]]
-fields = which(headings %in% c("Depends", "Imports", "Suggests"))
-pkgs = paste(desc[fields], collapse = ", ")
-pkgs = gsub("\n", " ", pkgs)
-pkgs = strsplit(pkgs, ",")[[1]]
-pkgs = gsub(" ", "", pkgs)
-pkgs = c(pkgs, "efficient", "bookdown")
-
-pkgs = pkgs[order(pkgs)]
-pkgs_df = data.frame(Name = pkgs, Title = NA)
-for(i in seq_along(pkgs)){
-  f = system.file(package = pkgs[i], "DESCRIPTION")
-  # Title is always on 3rd line
-  title = readLines(f)
-  title = title[grep("Title: ", title)]
-  pkgs_df$Title[i] = gsub("Title: ", "", title)
-}
-knitr::kable(pkgs_df)
-```
 
 # Preface {-}
 
