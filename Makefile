@@ -11,7 +11,7 @@ md:
 
 ## For Colin, who keeps forgetting how to deploy.
 deploy:
-	Rscript -e 'bookdown::publish_book(render="local")'
+	Rscript -e 'bookdown::publish_book(render="local", account="csgillespie")'
 
 clean:
 	Rscript -e "bookdown::clean_book(TRUE)"
