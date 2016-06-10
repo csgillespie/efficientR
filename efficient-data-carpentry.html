@@ -25,7 +25,7 @@
 
 <meta name="author" content="Colin Gillespie and Robin Lovelace">
 
-<meta name="date" content="2016-06-09">
+<meta name="date" content="2016-06-10">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -724,8 +724,8 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   )
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 16.6 16.7 16.7   16.7 16.8 16.8     5</span>
-<span class="co">#&gt;  without_select 26.5 26.9 28.1   27.5 27.7 31.8     5</span></code></pre></div>
+<span class="co">#&gt;     with_select 10.1 10.2 10.2   10.3 10.3 10.3     5</span>
+<span class="co">#&gt;  without_select 17.2 17.2 17.8   17.2 17.4 19.8     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -860,10 +860,10 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 </div>
 <div id="tidying-data-with-tidyr" class="section level2">
 <h2><span class="header-section-number">5.3</span> Tidying data with tidyr</h2>
-<p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on a few large vectors than many short vectors.</p>
-<p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling. The process of reshaping is illustrated by Tables <a href="efficient-data-carpentry.html#tab:tpew">5.6</a> and <a href="efficient-data-carpentry.html#tab:tpewt">5.7</a>, provided by <span class="citation">Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p>
+<p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on a few large vectors than many short vectors.</p>
+<p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling. The process of reshaping is illustrated by Tables <a href="efficient-data-carpentry.html#tab:tpew">5.6</a> and <a href="efficient-data-carpentry.html#tab:tpewt">5.7</a>, provided by <span class="citation">H. Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p>
 <p>These tables may look different, but they contain precisely the same information. Column names in the ‘wide’ form in Table <a href="efficient-data-carpentry.html#tab:tpew">5.6</a> became a new variable in the ‘long’ form in Table <a href="efficient-data-carpentry.html#tab:tpewt">5.7</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. For tabular presentation the wide form may be better. Wide data can also be less memory consuming because it requires fewer cells.</p>
-<p>Tidy data has the following characteristics <span class="citation">(Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>:</p>
+<p>Tidy data has the following characteristics <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>:</p>
 <ol style="list-style-type: decimal">
 <li>Each variable forms a column.</li>
 <li>Each observation forms a row.</li>
@@ -1318,7 +1318,7 @@ The example above relates to a philosophical question in programming: how much w
       <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)),
     <span class="kw">desc</span>(gini)),
   <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
-<p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span>.</p>
+<p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham, n.d.)</span>.</p>
 </div>
 </div>
 <div id="data-processing-with-data.table" class="section level2">
@@ -1358,9 +1358,6 @@ Figure 5.2: Benchmark illustrating the performance gains to be expected for diff
 </div>
 <div id="ref-Spector_2008">
 <p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
-</div>
-<div id="ref-grolemund_r_2016">
-<p>Grolemund, Garrett, and Hadley Wickham. 2016. <em>R for Data Science</em>. 1 edition. O’Reilly Media.</p>
 </div>
 </div>
 <div class="footnotes">
