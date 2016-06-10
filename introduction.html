@@ -113,7 +113,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to Efficient R Programming</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#authors"><i class="fa fa-check"></i>Authors</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#package-dependencies"><i class="fa fa-check"></i>Package Dependencies</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
@@ -332,6 +331,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.7.2" data-path="efficient-learning.html"><a href="efficient-learning.html#the-manuals"><i class="fa fa-check"></i><b>10.7.2</b> The manuals</a></li>
 </ul></li>
 </ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="divider"></li>
 <li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
 
@@ -402,10 +403,7 @@ Figure 1.1: The starting position for touch typing, with the fingers over the �
 </div>
 <div id="benchmarking" class="section level2">
 <h2><span class="header-section-number">1.6</span> Benchmarking</h2>
-<p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying things from one benchmark to the next and recording the results after changing things allows experimentation to see which bits of code are fastest. Benchmarking is important in the efficient programmer’s toolkit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it.</p>
-<pre><code>* `system.time()`
-* `microbenchmark` and `rbenchmark`</code></pre>
-<p>The <strong>microbenchmark</strong> package runs a test many times (by default <span class="math inline">\(1000\)</span>), enabling the user to detect microsecond difference in code performance.</p>
+<p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying things from one benchmark to the next and recording the results after changing things allows experimentation to see which bits of code are fastest. Benchmarking is important in the efficient programmer’s toolkit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it. The easiest way to benchmark a function is to use <code>system.time()</code>. The <strong>microbenchmark</strong> package is more flexible and runs a test many times (by default <span class="math inline">\(1000\)</span>), enabling the user to detect microsecond difference in code performance.</p>
 <div id="benchmarking-example" class="section level3">
 <h3><span class="header-section-number">1.6.1</span> Benchmarking example</h3>
 <p>A good example is testing different methods to look-up an element of a dataframe.</p>
@@ -418,9 +416,9 @@ df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt"
 )
 <span class="co">#&gt; Unit: microseconds</span>
 <span class="co">#&gt;        expr  min   lq mean median   uq   max neval</span>
-<span class="co">#&gt;    df[3, 2] 22.7 23.6 26.9   24.2 25.1 201.1   100</span>
-<span class="co">#&gt;  df$name[3] 15.8 17.3 19.2   18.2 19.3  35.7   100</span>
-<span class="co">#&gt;  df[3, &quot;v&quot;] 14.3 15.6 17.3   16.1 17.0  56.8   100</span></code></pre></div>
+<span class="co">#&gt;    df[3, 2] 37.1 39.2 43.9   39.9 40.8 283.3   100</span>
+<span class="co">#&gt;  df$name[3] 26.7 28.8 31.3   30.0 31.4  62.6   100</span>
+<span class="co">#&gt;  df[3, &quot;v&quot;] 24.4 26.3 27.5   26.8 27.6  40.4   100</span></code></pre></div>
 <p>The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.</p>
 </div>
 </div>
@@ -519,7 +517,7 @@ gitbook.start({
 },
 "download": ["_main.pdf"],
 "toc": {
-"collapse": "subsection"
+"collapse": "section"
 }
 });
 });
