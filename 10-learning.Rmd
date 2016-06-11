@@ -4,66 +4,73 @@ knit: "bookdown::preview_chapter"
 
 # Efficient Learning
 
-As with any vibrant open source software community, R is fast moving. This can be disorientating because it means
-that you can never 'finish' learning R. On the other hand it can make R a fascinating subject: there is always
-more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more
-elegantly and that can be really satisfying. Therefore *learning how to learn* is one of the most important skills you
-will learn if you want to learn R *in depth* and for the long-term. We emphasise *depth* of learning because it
-is more efficient to learn something properly than to Google it repeatedly every time we forget how it works.
+As with any vibrant open source software community, R is fast moving. This can be
+disorientating because it means that you can never 'finish' learning R. On the other
+hand it can make R a fascinating subject: there is always more to learn. Even
+experienced R users keep finding new functionality that helps solve problems quicker
+and more elegantly. Therefore *learning how to learn* is one of the most important
+skills you will learn if you want to learn R *in depth*. We emphasise *depth* of
+learning because it is more efficient to learn something properly than to Google it
+repeatedly every time we forget how it works.
 
-This chapter equips you with concepts and tips that will accelerate the transition from an R *hacker* to an R
-*programmer*. This inevitably involves effective use of R's help, reading R source code and use of online
-material.
+This chapter equips you with concepts and tips that will accelerate the transition
+from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's
+help, reading R source code and use of online material.
 
 ## Top 5 tips for efficient learning
 
-- Monitor the [R tag](stackoverflow.com/questions/tagged/r) at stackoverflow
-- Read about the latest developments in the R Journal
-- Regularly browse R-bloggers to give an overview of the R eco-system
-- If asking a question, simplify your code and data as much as possible; it should be reproducible
-- Subscribe (but not necessarily post) to the mailing list `R-devel`
+- Monitor the [R tag](stackoverflow.com/questions/tagged/r) at stackoverflow for new questions.
+- Read about the latest developments in the R Journal.
+- Regularly browse R-bloggers to get an overview of the R eco-system.
+- If asking a question, simplify your code and data as much as possible; the question should be reproducible.
+- Subscribe (but not necessarily post) to the `R-devel` mailing list to gain a deeper insight into the R language.
 
 ## Using R Help
 
 The R-project website contains seven detailed manuals about the [R language](https://cran.r-project.org/doc/manuals/r-release/R-lang.html), development, 
 installation and data import. While the manuals are long, they do contain all necessary information. 
-In particular, if you are developing a package and want to submit that package to CRAN, you must confirm that you 
+In particular if you are developing a package and want to submit that package to CRAN, you must confirm that you 
 have read the [extension](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) documentation.
 
-All functions have help files. For example, to see the help file for `plot`, just type:
+All functions have help files. For example to see the help file for `plot`, just
+type:
 
 ```{r eval=FALSE}
 ## Or help("plot")
 ?plot
 ```
-The resulting help page is divided into a number of sections. The most helpful section (I find)
-is the examples (at the bottom of the help page) showing precisely
-how the function works. You can either copy and paste the code, or actually run the example code
-using the `example` command:.
+The resulting help page is divided into a number of sections. The most _helpful_
+section (I find) is the examples (at the bottom of the help page) showing precisely
+how the function works. You can either copy and paste the code, or actually run the
+example code using the `example` command:.
 
 ```{r eval=FALSE}
 example(plot)
 ```
 
-Another useful section in the help file is `See Also:`. In the `plot` help file, it gives pointers to 3d plotting.
+Another useful section in the help file is `See Also:`. In the `plot` help file, it
+gives pointers to 3d plotting.
 
-To look for help about a certain *topic* rather than a specific *function* use `??topic`, which is analogous to `?function`. To search for information about regression in all installed packages, for example, use the following command:
+To look for help about a certain *topic* rather than a specific *function* use
+`??topic`, which is analogous to `?function`. To search for information about
+regression in all installed packages, for example, use the following command:
 
 ```{r, eval=FALSE}
 ## Or help.search("regression")
 ??regression
 ```
 
-To search more specifically for objects the `appropos` function can be useful. To search for all objects and
-functions in the current workspace containing the text string `lm`, for example, one would enter:
+To search more specifically for objects the `appropos` function can be useful. To
+search for all objects and functions in the current workspace containing the text
+string `lm`, for example, one would enter:
 
 ```{r, echo=-2}
 ## Showing the first six results
 apropos("lm")[1:6]
 ```
 
-Sometimes a package will contain vignettes. To browse any vignettes associated with a particular package, we can
-use the handy function
+Sometimes a package will contain vignettes. To browse any vignettes associated with a
+particular package, we can use the handy function
 
 ```{r eval=FALSE}
 browseVignettes(package = "benchmarkme")
@@ -71,43 +78,55 @@ browseVignettes(package = "benchmarkme")
 
 ### Reading R source code
 
-
-R is open source. This means that we view the underlying source code and examine any function. Of course 
-the code is complex, and diving straight into the source code won't help that much. However, watching
-to the github R source code [mirror](https://github.com/wch/r-source/) will allow you to monitor 
-small changes that occur in the wider changes. Likewise examining the R source of small functions, 
-such as `NCOL` is informative, e.g. `getFunction("NCOL")`
+R is open source. This means that we view the underlying source code and examine any
+function. Of course the code is complex, and diving straight into the source code
+won't help that much. However, watching to the github R source code
+[mirror](https://github.com/wch/r-source/) will allow you to monitor small changes
+that occur. This gives a nice entry point into a complex code base. Likewise examining
+the source of small functions, such as `NCOL` is informative, e.g.
+`getFunction("NCOL")`
 
 ```{block, type="rmdtip"}
 Subscribing to the R NEWS [blog](https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/)
 is an easy way of keeping track of future changes.
 ```
 
-Many R packages are developed in the open on github or r-forge. Select a few well known packages 
-and examine their source. A good package to start with is [drat](https://github.com/eddelbuettel/drat). 
-This is a relatively simple package developed by Dirk Eddelbuettel (author of Rcpp) that only
-contains a few functions. But it gives you an excellent pointer into software development 
-by one of the key R package writers.
-  
+Many R packages are developed in the open on github or r-forge. Select a few well
+known packages and examine their source. A good package to start with is
+[drat](https://github.com/eddelbuettel/drat). This is a relatively simple package
+developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It
+gives you an excellent pointer into software development by one of the key R package
+writers.
 
 ## Online resources
 
-There is plenty of help available. [R-bloggers](http://www.r-bloggers.com/) is a blog aggregator of content contributed by bloggers who write about R 
-(in English). It is a great way to get exposed to new and different packages. Similarly, monitoring the [#rstats](https://twitter.com/search?q=%23rstats) twitter tag keeps you up-to-date with the latest packages. 
+There is plenty of online help available. [R-bloggers](http://www.r-bloggers.com/) is
+a blog aggregator of content contributed by bloggers who write about R (in English).
+It is a great way to get exposed to new and different packages. Similarly monitoring
+the [#rstats](https://twitter.com/search?q=%23rstats) twitter tag keeps you up-to-date
+with the latest news.
 
-The [R-journal](https://journal.r-project.org/) regularly publishes articles describing new R
-packages, as well as general programming hints. Similarly, the articles in the [Journal of Statistical Software](https://www.jstatsoft.org/)
-have a strong R bias.
+The [R-journal](https://journal.r-project.org/) regularly publishes articles
+describing new R packages, as well as general programming hints. Similarly, the
+articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a
+strong R bias.
 
-There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before requesting help, 
-read a few other questions to learn the format of the site. Make sure you search previous questions so you are not
-duplicating work. Perhaps the most important point is that people aren't under __any__ obligation to answer your question. 
-One of the fantastic things about the open-source community is that you can ask questions and one
-of core developers may answer your question free; but everyone is busy!
+There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before
+requesting help, read a few other questions to learn the format of the site. Make sure
+you search previous questions so you are not duplicating work. Perhaps the most
+important point is that people aren't under __any__ obligation to answer your
+question. One of the fantastic things about the open-source community is that you can
+ask questions and one of core developers may answer your question free; but remember,
+everyone is busy!
 
 ### Stackoverflow
 
-The number one place on the internet for getting help on programming is [Stackoverflow](http://www.stackoverflow.com). This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps answers remain relevant. 
+The number one place on the internet for getting help on programming is
+[Stackoverflow](http://www.stackoverflow.com). This website provides a platform for
+asking and answering questions. Through site membership, questions and answers are
+voted up or down. Users of Stackoverflow earn reputation points when their question or
+answer is up-voted. Anyone (with enough reputation) can edit a question or answer.
+This helps the content remain relevant.
 
 Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). Each tag has a page describing the tag. The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using `r-faq`, a few question that often crop up. 
 
