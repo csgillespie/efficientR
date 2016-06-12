@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="efficient-collaboration.html">
-<link rel="next" href="package-dependencies.html">
+<link rel="prev" href="package-dependencies.html">
+
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -355,139 +355,125 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="efficient-learning" class="section level1">
-<h1><span class="header-section-number">10</span> Efficient Learning</h1>
-<p>As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never ‘finish’ learning R. On the other hand it can make R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly and that can be really satisfying. Therefore <em>learning how to learn</em> is one of the most important skills you will learn if you want to learn R <em>in depth</em> and for the long-term. We emphasise <em>depth</em> of learning because it is more efficient to learn something properly than to Google it repeatedly every time we forget how it works.</p>
-<p>This chapter equips you with concepts and tips that will accelerate the transition from an R <em>hacker</em> to an R <em>programmer</em>. This inevitably involves effective use of R’s help, reading R source code and use of online material.</p>
-<div id="using-r-help" class="section level2">
-<h2><span class="header-section-number">10.1</span> Using R Help</h2>
-<p>All functions have help files. For example, to see the help file for <code>plot</code>, just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">?plot</code></pre></div>
-<p>Note: this is the same as <code>help(&quot;plot&quot;)</code>. Note that the resulting help page is divided into many sections. The example section is very helpful in showing precisely how the function works. You can either copy and paste the code, or actually run the example code using the <code>example</code> command:.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(plot)</code></pre></div>
-<p>Another useful section in the help file is <code>See Also:</code>. In the <code>plot</code> help file, it gives pointers to 3d plotting.</p>
-<p>To look for help about a certain <em>topic</em> rather than a specific <em>function</em> use <code>??topic</code>, which is analogous to <code>?function</code>. To search for information about regression in all installed packages, for example, use the following command:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">??regression</code></pre></div>
-<p>Note that this is shorthand <code>help.search(&quot;regression&quot;)</code>.</p>
-<p>To search more specifically for objects the <code>appropos</code> function can be useful. To search for all objects and functions in the current workspace containing the text string <code>lm</code>, for example, one would enter:</p>
-<pre><code>#&gt;  [1] &quot;.__C__anova.glm&quot;      &quot;.__C__anova.glm.null&quot; &quot;.__C__diagonalMatrix&quot;
-#&gt;  [4] &quot;.__C__generalMatrix&quot;  &quot;.__C__glm&quot;            &quot;.__C__glm.null&quot;      
-#&gt;  [7] &quot;.__C__lm&quot;             &quot;.__C__lMatrix&quot;        &quot;.__C__mlm&quot;           
-#&gt; [10] &quot;.__C__optionalMethod&quot; &quot;.__T__colMeans:base&quot;  &quot;.colMeans&quot;           
-#&gt; [13] &quot;.lm.fit&quot;              &quot;bm_matrix_cal_lm&quot;     &quot;colMeans&quot;            
-#&gt; [16] &quot;colMeans&quot;             &quot;confint.lm&quot;           &quot;contr.helmert&quot;       
-#&gt; [19] &quot;dummy.coef.lm&quot;        &quot;getAllMethods&quot;        &quot;glm&quot;                 
-#&gt; [22] &quot;glm.control&quot;          &quot;glm.fit&quot;              &quot;KalmanForecast&quot;      
-#&gt; [25] &quot;KalmanLike&quot;           &quot;KalmanRun&quot;            &quot;KalmanSmooth&quot;        
-#&gt; [28] &quot;kappa.lm&quot;             &quot;lm&quot;                   &quot;lm.fit&quot;              
-#&gt; [31] &quot;lm.influence&quot;         &quot;lm.wfit&quot;              &quot;model.matrix.lm&quot;     
-#&gt; [34] &quot;nlm&quot;                  &quot;nlminb&quot;               &quot;predict.glm&quot;         
-#&gt; [37] &quot;predict.lm&quot;           &quot;residuals.glm&quot;        &quot;residuals.lm&quot;        
-#&gt; [40] &quot;summary.glm&quot;          &quot;summary.lm&quot;</code></pre>
-<p>Sometimes a package will contain vignettes. To browse any vignettes associated with a particular package, we can use the handy function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;benchmarkme&quot;</span>)</code></pre></div>
-</div>
-<div id="reading-r-source-code" class="section level2">
-<h2><span class="header-section-number">10.2</span> Reading R source code</h2>
-</div>
-<div id="learning-online" class="section level2">
-<h2><span class="header-section-number">10.3</span> Learning online</h2>
-<div id="reproducible-example" class="section level3">
-<h3><span class="header-section-number">10.3.1</span> Reproducible example</h3>
-<p>Asking questions on stackoverflow and R-help is hard. Your question should contain just enough information that you problem is clear and can be reproducibed, while at the same time avoid unnecessary details. Fortunately, there is a SO question - <a href="http://stackoverflow.com/q/5963269/203420">How to make a great R reproducible example?</a> - that provides excellent guidence!</p>
-</div>
-<div id="minimal-data-set" class="section level3">
-<h3><span class="header-section-number">10.3.2</span> Minimal data set</h3>
-<p>What is the smallest data set you can construct that will reproduce your issue? Your actualy data set may contain <span class="math inline">\(10^5\)</span> rows and <span class="math inline">\(10^4\)</span> columns, but to get your idea across, you might only need <span class="math inline">\(5\)</span> rows and <span class="math inline">\(3\)</span> columns. Making small example data sets is easy. For example, to create a data frame with two numeric columns and a column of characters we use</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-example_df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">rnorm</span>(<span class="dv">5</span>), <span class="dt">y=</span><span class="kw">rnorm</span>(<span class="dv">5</span>), <span class="dt">z=</span><span class="kw">sample</span>(LETTERS, <span class="dv">5</span>))</code></pre></div>
-<p>Note the call to <code>set.seed</code> that ensures anyone who runs the code will get the same random number stream. Alternatively, you use one of the many data sets that come with R - <code>library(help=&quot;datasets&quot;)</code>.</p>
-<p>If creating an example data set isn’t possible, then use <code>dput</code> on your actual data set. This will create an ASCII text representation of the object that will enable anyone to recreate the object</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dput</span>(example_df)
-<span class="co">#&gt; structure(list(x = c(-0.626453810742332, 0.183643324222082, -0.835628612410047, </span>
-<span class="co">#&gt; 1.59528080213779, 0.329507771815361), y = c(-0.820468384118015, </span>
-<span class="co">#&gt; 0.487429052428485, 0.738324705129217, 0.575781351653492, -0.305388387156356</span>
-<span class="co">#&gt; ), z = structure(c(4L, 2L, 3L, 1L, 5L), .Label = c(&quot;C&quot;, &quot;F&quot;, </span>
-<span class="co">#&gt; &quot;P&quot;, &quot;Y&quot;, &quot;Z&quot;), class = &quot;factor&quot;)), .Names = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;), row.names = c(NA, </span>
-<span class="co">#&gt; -5L), class = &quot;data.frame&quot;)</span></code></pre></div>
-</div>
-<div id="minimal-example" class="section level3">
-<h3><span class="header-section-number">10.3.3</span> Minimal example</h3>
-<p>What you should not do, is simply copy and paste your entire function into your question. It’s unlikely that your entire function doesn’t work, so just simplify it the bare minimum. For example,</p>
-<!-- https://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example -->
-<!-- Producing minimal code -->
-<!-- This should be the easy part but often isn't. What you should not do, is: -->
-<!-- add all kind of data conversions. Make sure the provided data is already in the correct format (unless that is the problem of course) -->
-<!-- copy-paste a whole function / chunk of code that gives an error. First try to locate which lines exactly result in the error. More often than not you'll find out what the problem is yourself. -->
-<!-- What you should do, is: -->
-<!-- add which packages should be used if you use any. -->
-<!-- if you open connections or make files, add some code to close them or delete the files (using unlink()) -->
-<!-- if you change options, make sure the code contains a statement to revert them back to the original ones. (eg op <- par(mfrow=c(1,2)) ...some code... par(op) ) -->
-<!-- test run your code in a new, empty R session to make sure the code is runnable. People should be able to just copy-paste your data and your code in the console and get exactly the same as you have. -->
-<!-- Give extra information -->
-<!-- In most cases, just the R version and the operating system will suffice. When conflicts arise with packages, giving the output of sessionInfo() can really help. When talking about connections to other applications (be it through ODBC or anything else), one should also provide version numbers for those, and if possible also the necessary information on the setup -->
-</div>
-</div>
-<div id="online-resources" class="section level2">
-<h2><span class="header-section-number">10.4</span> Online resources</h2>
-<p>When asking a question, here are a few pointers:</p>
-<ul>
-<li>Make your example reproducible.</li>
-<li>Clearly state your problem. Don’t confuse a statistical problem with an R problem.</li>
-<li>Read a few other questions to learn the format of the site.</li>
-<li>People aren’t under <strong>any</strong> obligation to answer your question!</li>
-</ul>
-<div id="stackoverflow" class="section level3">
-<h3><span class="header-section-number">10.4.1</span> Stackoverflow</h3>
-<p>The number one place on the internet for getting help on programming is <a href="http://www.stackoverflow.com">Stackoverflow</a>. This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps answers remain relevant.</p>
-<p>Questions are tagged. The R questions can be found under the <a href="http://stackoverflow.com/questions/tagged/r">R tag</a>. Each tag has a page describing the tag. The <a href="https://stackoverflow.com/tags/r/info">R page</a> contains links to Official documentation, free resources, and various other links</p>
-<p>Members of the Stackoverflow R community have tagged, using <code>r-faq</code>, a few question that often crop up.</p>
-<ul>
-<li><a href="http://stackoverflow.com/q/102056/203420">How to search for R materials</a>.</li>
-</ul>
-</div>
-<div id="mailing-lists-help-dev-package" class="section level3">
-<h3><span class="header-section-number">10.4.2</span> Mailing lists: help, dev, package</h3>
-</div>
-<div id="r-bloggers" class="section level3">
-<h3><span class="header-section-number">10.4.3</span> r-bloggers</h3>
-</div>
-<div id="twitter-rstats" class="section level3">
-<h3><span class="header-section-number">10.4.4</span> twitter: <code>#rstats</code></h3>
-</div>
-</div>
-<div id="conferences" class="section level2">
-<h2><span class="header-section-number">10.5</span> Conferences</h2>
-<div id="user" class="section level3">
-<h3><span class="header-section-number">10.5.1</span> useR!</h3>
-</div>
-<div id="local-groups" class="section level3">
-<h3><span class="header-section-number">10.5.2</span> Local groups</h3>
-</div>
-</div>
-<div id="code" class="section level2">
-<h2><span class="header-section-number">10.6</span> Code</h2>
-</div>
-<div id="look-at-the-source-code" class="section level2">
-<h2><span class="header-section-number">10.7</span> Look at the source code</h2>
-<pre><code>* e.g. `NCOL`
-* Learn from well known packages 
-* git version of R
-* Monitor changes in the NEWS</code></pre>
-<div id="r-journal-and-journal-of-statistical-software" class="section level3">
-<h3><span class="header-section-number">10.7.1</span> R-journal and Journal of Statistical Software</h3>
-</div>
-<div id="the-manuals" class="section level3">
-<h3><span class="header-section-number">10.7.2</span> The manuals</h3>
-<p>Those two should be mentioned somewhere as further reading, as those are one of the best reference manuals about the language and its proper use.</p>
-<ul>
-<li>(R-lang)[<a href="https://cran.r-project.org/doc/manuals/r-release/R-lang.html" class="uri">https://cran.r-project.org/doc/manuals/r-release/R-lang.html</a>]</li>
-<li>(R-exts)[<a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html" class="uri">https://cran.r-project.org/doc/manuals/r-release/R-exts.html</a>]</li>
-</ul>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
 
+<div id="refs" class="references">
+<div>
+<p>Berkun, Scott. 2005. <em>The Art of Project Management</em>. O’Reilly.</p>
+</div>
+<div>
+<p>Braun, John, and Duncan J Murdoch. 2007. <em>A First Course in Statistical Programming with R</em>. Vol. 25. Cambridge University Press Cambridge.</p>
+</div>
+<div>
+<p>Burns, Patrick. 2011. <em>The R Inferno</em>. Lulu.com.</p>
+</div>
+<div>
+<p>Chang, Winston. 2012. <em>R Graphics Cookbook</em>. O’Reilly Media.</p>
+</div>
+<div>
+<p>Codd, E. F. 1979. “Extending the database relational model to capture more meaning.” <em>ACM Transactions on Database Systems</em> 4 (4): 397–434. doi:<a href="https://doi.org/10.1145/320107.320109">10.1145/320107.320109</a>.</p>
+</div>
+<div>
+<p>Cotton, Richard. 2013. <em>Learning R</em>. O’Reilly Media.</p>
+</div>
+<div>
+<p>———. 2016. <em>Testing R Code</em>. <a href="https://www.crcpress.com/Testing-R-Code/Cotton/p/book/9781498763653" class="uri">https://www.crcpress.com/Testing-R-Code/Cotton/p/book/9781498763653</a>.</p>
+</div>
+<div>
+<p>Eddelbuettel, Dirk. 2010. “Benchmarking Single-and Multi-Core BLAS Implementations and GPUs for Use with R.” Mathematica.</p>
+</div>
+<div>
+<p>———. 2013. <em>Seamless R and C++ Integration with Rcpp</em>. Springer.</p>
+</div>
+<div>
+<p>Eddelbuettel, Dirk, and Romain François. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
+</div>
+<div>
+<p>Eddelbuettel, Dirk, Romain François, J. Allaire, John Chambers, Douglas Bates, and Kevin Ushey. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
+</div>
+<div>
+<p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1). ACM: 5–48.</p>
+</div>
+<div>
+<p>Grant, Christine A, Louise M Wallace, and Peter C Spurgeon. 2013. “An Exploration of the Psychological Factors Affecting Remote E-Worker’s Job Effectiveness, Well-Being and Work-Life Balance.” <em>Employee Relations</em> 35 (5). Emerald Group Publishing Limited: 527–46.</p>
+</div>
+<div>
+<p>Grolemund, G., and H. Wickham. n.d. <em>R for Data Science</em>. O’Reilly Media.</p>
+</div>
+<div>
+<p>Janert, Philipp K. 2010. <em>Data Analysis with Open Source Tools</em>. “ O’Reilly Media, Inc.”</p>
+</div>
+<div>
+<p>Jensen, Jørgen Dejgård. 2011. “Can Worksite Nutritional Interventions Improve Productivity and Firm Profitability? A Literature Review.” <em>Perspectives in Public Health</em> 131 (4). SAGE Publications: 184–92.</p>
+</div>
+<div>
+<p>Kersten, Martin L, Stratos Idreos, Stefan Manegold, Erietta Liarou, and others. 2011. “The Researcher’s Guide to the Data Deluge: Querying a Scientific Database in Just a Few Seconds.” <em>PVLDB Challenges and Visions</em> 3.</p>
+</div>
+<div>
+<p>Kruchten, Philippe, Robert L Nord, and Ipek Ozkaya. 2012. “Technical Debt: From Metaphor to Theory and Practice.” <em>Ieee Software</em>, no. 6. IEEE: 18–21.</p>
+</div>
+<div>
+<p>Lovelace, Ada Countess. 1842. “Translator’s Notes to an Article on Babbage’s Analytical Engine.” <em>Scientific Memoirs</em> 3: 691–731.</p>
+</div>
+<div>
+<p>McCallum, Ethan, and Stephen Weston. 2011. <em>Parallel R</em>. O’Reilly Media.</p>
+</div>
+<div>
+<p>McConnell, Steve. 2004. <em>Code Complete</em>. Pearson Education.</p>
+</div>
+<div>
+<p>Pereira, Michelle Jessica, Brooke Kaye Coombes, Tracy Anne Comans, and Venerina Johnston. 2015. “The Impact of Onsite Workplace Health-Enhancing Physical Activity Interventions on Worker Productivity: A Systematic Review.” <em>Occupational and Environmental Medicine</em> 72 (6). BMJ Publishing Group Ltd: 401–12.</p>
+</div>
+<div>
+<p>PMBoK, A. 2000. “Guide to the Project Management Body of Knowledge.” <em>Project Management Institute, Pennsylvania USA</em>.</p>
+</div>
+<div>
+<p>Sekhon, Jasjeet S. 2006. “The Art of Benchmarking: Evaluating the Performance of R on Linux and OS X.” <em>The Political Methodologist</em> 14 (1): 15–19.</p>
+</div>
+<div>
+<p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div>
+<p>Visser, Marco D., Sean M. McMahon, Cory Merow, Philip M. Dixon, Sydne Record, and Eelke Jongejans. 2015. “Speeding Up Ecological and Evolutionary Computations in R; Essentials of High Performance Computing for Biologists.” Edited by Francis Ouellette. <em>PLOS Computational Biology</em> 11 (3): e1004140. doi:<a href="https://doi.org/10.1371/journal.pcbi.1004140">10.1371/journal.pcbi.1004140</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
+</div>
+<div>
+<p>———. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+</div>
+<div>
+<p>———. 2015. <em>R Packages</em>. O’Reilly Media.</p>
+</div>
+<div>
+<p>Xie, Yihui. 2015. <em>Dynamic Documents with R and Knitr</em>. Vol. 29. CRC Press.</p>
 </div>
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -496,8 +482,8 @@ example_df =<span class="st"> </span><span class="kw">data.frame</span>(<span cl
           </div>
         </div>
       </div>
-<a href="efficient-collaboration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="package-dependencies.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="package-dependencies.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -524,7 +510,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/10-learning.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/appendix.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],

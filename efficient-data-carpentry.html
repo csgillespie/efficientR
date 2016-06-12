@@ -334,6 +334,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
 
@@ -746,9 +747,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min    lq  mean median    uq  max neval</span>
-<span class="co">#&gt;     with_select  9.7  9.73  9.79   9.74  9.77 10.0     5</span>
-<span class="co">#&gt;  without_select 16.3 16.57 32.58  16.68 17.18 96.2     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq   max neval</span>
+<span class="co">#&gt;     with_select 10.1 14.2 14.7   16.3 16.3  16.7     5</span>
+<span class="co">#&gt;  without_select 18.4 26.7 45.8   27.0 27.2 129.6     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -1059,7 +1060,7 @@ df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span
 <p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). The wider issue of manipulation is a large topic with major potential implications for efficiency <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span> and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the <strong>broom</strong> package provides a standard output format for model results, easing interpretation (see <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html">the broom vignette</a>).</p>
 <div class="rmdnote">
 <p>
-Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and auto-completion. This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation. The affix <code><em></code> can be added to functions in <strong>dplyr</strong> and <strong>tidyr</strong> to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(df, agesex, c(“sex”, “age”), 1)</code> is <code>separate</em>(df, “agesex”, c(“sex”, “age”), 1)</code>.
+Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation. The affix <code><em></code> can be added to functions in <strong>dplyr</strong> and <strong>tidyr</strong> to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(df, agesex, c(“sex”, “age”), 1)</code> is <code>separate</em>(df, “agesex”, c(“sex”, “age”), 1)</code>.
 </p>
 </div>
 </div>
