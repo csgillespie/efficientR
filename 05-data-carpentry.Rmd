@@ -106,6 +106,16 @@ The final line in the code chunk above shows a neat feature of **rio** and some 
 file.remove("output.xlsx")
 ```
 
+### Accessing data stored in packages
+
+Most well documented packages provide some example data for you to play with. This can be really useful for demonstrating use cases in domain specific areas, that uses a particular data format. To see all the datasets associated with a particular package, use the function `data(package = "package_name")`. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr", verbose = T)`.
+
+Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the subfolder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all of the external files within the **readr** package, for example, one could use the following command:
+
+```{r}
+list.files(system.file("extdata", package = "readr"))
+```
+
 ### The feather file format
 
 Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
