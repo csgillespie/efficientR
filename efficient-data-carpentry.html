@@ -422,7 +422,7 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 </div>
 <div id="accessing-data-stored-in-packages" class="section level3">
 <h3><span class="header-section-number">5.1.3</span> Accessing data stored in packages</h3>
-<p>Most well documented packages provide some example data for you to play with. This can be really useful for demonstrating use cases in domain specific areas, that uses a particular data format. To see all the datasets associated with a particular package, use the function <code>data(package = &quot;package_name&quot;)</code>. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;, verbose = T)</code>.</p>
+<p>Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command <code>data(package = &quot;package_name&quot;)</code> will show the datasets in a package. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;)</code>.</p>
 <p>Raw data (i.e. data which has not been converted into R’s native <code>.Rds</code> format) is usually located with the subfolder <code>extdata</code> in R (which corresponds to <code>inst/extdata</code> when developing packages. The function <code>system.file</code> outputs file paths associated with specific packages. To see all of the external files within the <strong>readr</strong> package, for example, one could use the following command:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>))
 <span class="co">#&gt; [1] &quot;compound.log&quot;      &quot;epa78.txt&quot;         &quot;example.log&quot;      </span>
@@ -746,9 +746,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
-<span class="co">#&gt;     with_select  9.13  9.17  9.43   9.38  9.71  9.76     5</span>
-<span class="co">#&gt;  without_select 14.87 15.23 15.72  15.34 15.96 17.18     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min    lq  mean median    uq  max neval</span>
+<span class="co">#&gt;     with_select  9.7  9.73  9.79   9.74  9.77 10.0     5</span>
+<span class="co">#&gt;  without_select 16.3 16.57 32.58  16.68 17.18 96.2     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
