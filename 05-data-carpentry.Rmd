@@ -106,6 +106,34 @@ The final line in the code chunk above shows a neat feature of **rio** and some 
 file.remove("output.xlsx")
 ```
 
+### Accessing data stored in packages
+
+Most well documented packages provide some example data for you to play with. This can be really useful for demonstrating use cases in domain specific areas, that uses a particular data format. To see all the datasets associated with a particular package, use the function `data(package = "package_name")`. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr", verbose = T)`.
+
+Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the subfolder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all of the external files within the **readr** package, for example, one could use the following command:
+
+```{r}
+list.files(system.file("extdata", package = "readr"))
+```
+
+Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
+
+```{r, eval=FALSE}
+system.file(package = "readr")
+#> [1] "/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr"
+"/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/"
+```
+
+Hitting `Tab` after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure \@ref(fig:intelli).
+
+```{r intelli, echo=FALSE, fig.cap="Discovering files in R packages using RStudio's 'intellisense'.", out.width="50%", fig.align='center'}
+knitr::include_graphics("figures/rstudio-package-filepath-intellisense.png")
+```
+
+
+
+
+
 ### The feather file format
 
 Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
