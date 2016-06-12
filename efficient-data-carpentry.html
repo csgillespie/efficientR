@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-10">
+<meta name="date" content="2016-06-12">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -216,11 +216,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#importing-data"><i class="fa fa-check"></i><b>5.1</b> Importing data</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#getting-data-from-the-internet"><i class="fa fa-check"></i><b>5.1.1</b> Getting data from the internet</a></li>
 <li class="chapter" data-level="5.1.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.1.2</b> Versatile data import with rio</a></li>
-<li class="chapter" data-level="5.1.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.1.3</b> The feather file format</a></li>
-<li class="chapter" data-level="5.1.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.1.4</b> Efficient data export: .Rdata or .Rds?</a></li>
-<li class="chapter" data-level="5.1.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.1.5</b> A benchmark of methods for file import and export</a></li>
-<li class="chapter" data-level="5.1.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#fread"><i class="fa fa-check"></i><b>5.1.6</b> Fast data reading</a></li>
-<li class="chapter" data-level="5.1.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.1.7</b> Preprocessing outside R</a></li>
+<li class="chapter" data-level="5.1.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.1.3</b> Accessing data stored in packages</a></li>
+<li class="chapter" data-level="5.1.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.1.4</b> The feather file format</a></li>
+<li class="chapter" data-level="5.1.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.1.5</b> Efficient data export: .Rdata or .Rds?</a></li>
+<li class="chapter" data-level="5.1.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.1.6</b> A benchmark of methods for file import and export</a></li>
+<li class="chapter" data-level="5.1.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#fread"><i class="fa fa-check"></i><b>5.1.7</b> Fast data reading</a></li>
+<li class="chapter" data-level="5.1.8" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.1.8</b> Preprocessing outside R</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>5.2</b> Working with databases</a></li>
 <li class="chapter" data-level="5.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>5.3</b> Tidying data with tidyr</a></li>
@@ -419,8 +420,28 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
 </div>
+<div id="accessing-data-stored-in-packages" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Accessing data stored in packages</h3>
+<p>Most well documented packages provide some example data for you to play with. This can be really useful for demonstrating use cases in domain specific areas, that uses a particular data format. To see all the datasets associated with a particular package, use the function <code>data(package = &quot;package_name&quot;)</code>. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;, verbose = T)</code>.</p>
+<p>Raw data (i.e. data which has not been converted into R’s native <code>.Rds</code> format) is usually located with the subfolder <code>extdata</code> in R (which corresponds to <code>inst/extdata</code> when developing packages. The function <code>system.file</code> outputs file paths associated with specific packages. To see all of the external files within the <strong>readr</strong> package, for example, one could use the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>))
+<span class="co">#&gt; [1] &quot;compound.log&quot;      &quot;epa78.txt&quot;         &quot;example.log&quot;      </span>
+<span class="co">#&gt; [4] &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot; &quot;mtcars.csv&quot;       </span>
+<span class="co">#&gt; [7] &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
+<p>Further, to ‘look around’ to see what files are stored in a particular package, one could type the following, taking advantage of RStudio’s intellisense file completion capabilities (using copy and paste to enter the file path):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
+<span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span>
+<span class="st">&quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/&quot;</span></code></pre></div>
+<p>Hitting <code>Tab</code> after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure <a href="efficient-data-carpentry.html#fig:intelli">5.1</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:intelli"></span>
+<img src="figures/rstudio-package-filepath-intellisense.png" alt="Discovering files in R packages using RStudio's 'intellisense'." width="50%" />
+<p class="caption">
+Figure 5.1: Discovering files in R packages using RStudio’s ‘intellisense’.
+</p>
+</div>
+</div>
 <div id="the-feather-file-format" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> The feather file format</h3>
+<h3><span class="header-section-number">5.1.4</span> The feather file format</h3>
 <p>Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the <code>df_co2</code> dataset loaded previously in both R and Python:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;feather&quot;</span>)
 <span class="kw">write_feather</span>(df_co2, <span class="st">&quot;data/co2.feather&quot;</span>)
@@ -431,7 +452,7 @@ path <span class="op">=</span> <span class="st">&#39;data/co2.feather&#39;</span
 df <span class="op">=</span> feather.read_dataframe(path)</code></pre></div>
 </div>
 <div id="efficient-data-export-.rdata-or-.rds" class="section level3">
-<h3><span class="header-section-number">5.1.4</span> Efficient data export: .Rdata or .Rds?</h3>
+<h3><span class="header-section-number">5.1.5</span> Efficient data export: .Rdata or .Rds?</h3>
 <p>Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large <code>.shp</code> file, for example, can take more than ten times longer to load than a <code>.Rds</code> or <code>.Rdata</code> file.</p>
 <p><code>.Rds</code> and <code>.RData</code> are R’s native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats that are central to the history of file import and export in R:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(df_co2, <span class="dt">file =</span> <span class="st">&quot;data/co2.RData&quot;</span>)
@@ -514,7 +535,7 @@ filesize_co2 =<span class="st"> </span><span class="kw">data.frame</span>(
 <p>The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perpectives. It is striking to note that R’s native formats can be <strong>over 100 times</strong> more space efficient than plain text (.csv) and other binary (<code>.feather</code>) formats. But how does each method compare from a computational efficiency perpective?</p>
 </div>
 <div id="a-benchmark-of-methods-for-file-import-and-export" class="section level3">
-<h3><span class="header-section-number">5.1.5</span> A benchmark of methods for file import and export</h3>
+<h3><span class="header-section-number">5.1.6</span> A benchmark of methods for file import and export</h3>
 <p>The read and write times for the functions showcased above are presented in Table <a href="efficient-data-carpentry.html#tab:rtimes">5.2</a> and Table <a href="efficient-data-carpentry.html#tab:wtimes">5.3</a> respectively.</p>
 <table>
 <caption><span id="tab:rtimes">Table 5.2: </span>Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row ‘co2’ dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
@@ -643,7 +664,7 @@ filesize_co2 =<span class="st"> </span><span class="kw">data.frame</span>(
 <p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native functions for saving <code>.Rds</code> and <code>.RData</code> formats, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>save</code> and <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
 </div>
 <div id="fread" class="section level3">
-<h3><span class="header-section-number">5.1.6</span> Fast data reading</h3>
+<h3><span class="header-section-number">5.1.7</span> Fast data reading</h3>
 <p>There is often more than one way to read data into R. A simple <code>.csv</code>, for example, file can be imported using a wide range of methods, with implications for computational efficiency. This section investigates methods for getting data into R, with a focus on delimited text formats, as these are ubiquitous, and a focus on three approaches: base R’s plain text reading functions such as <code>read.delim</code>, which are derived from <code>read.table</code>; the <strong>data.table</strong> approach, which uses the function <code>fread</code>; and the newer <strong>readr</strong> package which provides <code>read_csv</code> and other <code>read_</code> functions such as <code>read_tsv</code>.</p>
 <div class="rmdnote">
 <p>
@@ -651,19 +672,19 @@ Note that a function ‘derived from’ another in this context means that it ca
 </p>
 </div>
 <p>Although this section is focussed on reading text files, it demonstrate the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantages of addition package dependency (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that <em>require</em> a certain package to load in R: the readstata13 package, for example, was developed solely to read in <code>.dta</code> files generated by versions of Stata 13 and above.</p>
-<p>Figure <a href="efficient-data-carpentry.html#fig:readr-vs-base">5.1</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around 1 MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
+<p>Figure <a href="efficient-data-carpentry.html#fig:readr-vs-base">5.2</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around 1 MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
 <p>For files beyond 100 MB in size <code>fread</code> and <code>read_csv</code> can be expected to be around <em>5 times faster</em> than <code>read.delim</code>. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still take less than a minute with <code>read.csv</code>), but could represent an important speed-up if you frequently load large text files.</p>
 <div class="figure"><span id="fig:readr-vs-base"></span>
 <img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of `base`, `data.table` and `readr` functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file.." width="576" />
 <p class="caption">
-Figure 5.1: Benchmarks of <code>base</code>, <code>data.table</code> and <code>readr</code> functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file..
+Figure 5.2: Benchmarks of <code>base</code>, <code>data.table</code> and <code>readr</code> functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file..
 </p>
 </div>
 <p>When tested on a large (4 GB) .csv file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section <a href="hardware.html#ram">8.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made significantly faster by pre-specifying the column types at the outset, e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.csv</span>(file_name, <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>))</code></pre></div>
 <p>See the associated help files for further details.</p>
 <!-- Idea: test the functions on text data -->
-<p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="efficient-data-carpentry.html#tab:voyages">5.4</a> shows that <code>read_tsv</code> is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="efficient-data-carpentry.html#fig:readr-vs-base">5.1</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
+<p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="efficient-data-carpentry.html#tab:voyages">5.4</a> shows that <code>read_tsv</code> is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="efficient-data-carpentry.html#fig:readr-vs-base">5.2</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
@@ -725,9 +746,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select  9.78  9.84 10.0   10.1 10.1 10.2     5</span>
-<span class="co">#&gt;  without_select 16.93 16.96 17.7   17.3 18.1 19.2     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
+<span class="co">#&gt;     with_select  9.13  9.17  9.43   9.38  9.71  9.76     5</span>
+<span class="co">#&gt;  without_select 14.87 15.23 15.72  15.34 15.96 17.18     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -774,7 +795,7 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
 <p>The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on ‘under the hood’ of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R.</p>
 </div>
 <div id="preprocessing-outside-r" class="section level3">
-<h3><span class="header-section-number">5.1.7</span> Preprocessing outside R</h3>
+<h3><span class="header-section-number">5.1.8</span> Preprocessing outside R</h3>
 <p>There are circumstances when datasets become too large to read directly into R. Reading in 4 GB text file using the functions tested above, for example, consumed all available RAM on an 16 GB machine! To overcome the limitation that R reads all data directly into RAM, external <em>stream processing</em> tools can be used to preprocess large text files. The following command, using the shell command <code>split</code>, for example, would break a large multi GB file many one GB chunks, each of which is more manageable for R:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">split</span> -b100m bigfile.csv</code></pre></div>
 <p>The result is a series of files, set to 100 MB each with the <code>-b100m</code> argument in the above code. By default these will be called <code>xaa</code>, <code>xab</code> and which could be read in <em>one chunk at a time</em> (e.g. using <code>read.csv</code>, <code>fread</code> or <code>read_csv</code>, described in the previous section) without crashing most modern computers.</p>
@@ -887,7 +908,7 @@ rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
 <span class="co">#&gt; Source: local data frame [3 x 3]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   religion Income Count</span>
-<span class="co">#&gt;      (chr)  (chr) (int)</span>
+<span class="co">#&gt;      &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 Agnostic  &lt;$10k    27</span>
 <span class="co">#&gt; 2  Atheist  &lt;$10k    12</span>
 <span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
@@ -1059,7 +1080,7 @@ idata <span class="co"># print the dataset </span>
 <span class="co">#&gt; Source: local data frame [6,925 x 9]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;    Country Name Country Code  Year Year Code</span>
-<span class="co">#&gt;           (chr)        (chr) (int)     (chr)</span>
+<span class="co">#&gt;           &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;     &lt;chr&gt;</span>
 <span class="co">#&gt; 1   Afghanistan          AFG  1974    YR1974</span>
 <span class="co">#&gt; 2   Afghanistan          AFG  1975    YR1975</span>
 <span class="co">#&gt; 3   Afghanistan          AFG  1976    YR1976</span>
@@ -1067,11 +1088,11 @@ idata <span class="co"># print the dataset </span>
 <span class="co">#&gt; 5   Afghanistan          AFG  1978    YR1978</span>
 <span class="co">#&gt; ..          ...          ...   ...       ...</span>
 <span class="co">#&gt; Variables not shown: Income share held by highest 10% [SI.DST.10TH.10]</span>
-<span class="co">#&gt;   (chr), Income share held by lowest 10% [SI.DST.FRST.10] (chr), GINI</span>
-<span class="co">#&gt;   index [SI.POV.GINI] (chr), Survey mean consumption or income per capita,</span>
-<span class="co">#&gt;   bottom 40% (2005 PPP $ per day) [SI.SPR.PC40] (chr), Survey mean</span>
+<span class="co">#&gt;   &lt;chr&gt;, Income share held by lowest 10% [SI.DST.FRST.10] &lt;chr&gt;, GINI</span>
+<span class="co">#&gt;   index [SI.POV.GINI] &lt;chr&gt;, Survey mean consumption or income per capita,</span>
+<span class="co">#&gt;   bottom 40% (2005 PPP $ per day) [SI.SPR.PC40] &lt;chr&gt;, Survey mean</span>
 <span class="co">#&gt;   consumption or income per capita, total population (2005 PPP $ per day)</span>
-<span class="co">#&gt;   [SI.SPR.PCAP] (chr)</span></code></pre></div>
+<span class="co">#&gt;   [SI.SPR.PCAP] &lt;chr&gt;.</span></code></pre></div>
 <p><strong>dplyr</strong> is much faster than base implementations of various operations, but it has the potential to be even faster if <em>parallel</em> versions are developed.</p>
 <p>You should not be expecting to learn the <strong>dplyr</strong> package in one sitting: the package is large and can be seen as a language in its own right. Following the ‘walk before you run’ principle, we’ll start simple, by filtering and aggregating rows, building on the previous section on tidying data.</p>
 <div id="renaming-columns" class="section level3">
@@ -1214,7 +1235,7 @@ Note the use of the symbols <code>\.</code> (to escape the special <code>.</code
 <span class="co">#&gt; Source: local data frame [188 x 2]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;              Country mean_eco2</span>
-<span class="co">#&gt;               (fctr)     (dbl)</span>
+<span class="co">#&gt;               &lt;fctr&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1        Afghanistan       NaN</span>
 <span class="co">#&gt; 2            Albania     0.641</span>
 <span class="co">#&gt; 3            Algeria    23.015</span>
@@ -1231,7 +1252,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; Source: local data frame [176 x 2]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;        Country  gini</span>
-<span class="co">#&gt;          (chr) (dbl)</span>
+<span class="co">#&gt;          &lt;chr&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  Afghanistan   NaN</span>
 <span class="co">#&gt; 2      Albania  30.4</span>
 <span class="co">#&gt; 3      Algeria  37.8</span>
@@ -1254,7 +1275,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; Source: local data frame [176 x 7]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;        Country   obs med_t10  sdev   n30  sdn30   dif</span>
-<span class="co">#&gt;          (chr) (int)   (dbl) (dbl) (int)  (dbl) (dbl)</span>
+<span class="co">#&gt;          &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  Afghanistan    40      NA   NaN     0     NA    NA</span>
 <span class="co">#&gt; 2      Albania    40    24.4  1.25     3  0.364  2.78</span>
 <span class="co">#&gt; 3      Algeria    40    29.8  3.44     2  3.437  4.86</span>
@@ -1296,7 +1317,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; Source: local data frame [5 x 2]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;    Year  gini</span>
-<span class="co">#&gt;   (int) (dbl)</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  1980  46.9</span>
 <span class="co">#&gt; 2  1993  46.0</span>
 <span class="co">#&gt; 3  2013  44.5</span>
@@ -1335,14 +1356,14 @@ aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Austr
 <p>To boost performance, one can set ‘keys’. These are ‘<a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">supercharged rownames</a>’ which order the table based on one or more variables. This allows a <em>binary search</em> algorithm to subset the rows of interest, which is much, much faster than the <em>vector scan</em> approach used in base R (see <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html"><code>vignette(&quot;datatable-keys-fast-subset&quot;)</code></a>). <strong>data.table</strong> uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise <code>.()</code> syntax below).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setkey</span>(idata_dt, Country)
 aus3b =<span class="st"> </span>idata_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
-<p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="efficient-data-carpentry.html#fig:dtplot">5.2</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
+<p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="efficient-data-carpentry.html#fig:dtplot">5.3</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
 <div class="figure"><span id="fig:dtplot"></span>
 <img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="576" />
 <p class="caption">
-Figure 5.2: Benchmark illustrating the performance gains to be expected for different dataset sizes.
+Figure 5.3: Benchmark illustrating the performance gains to be expected for different dataset sizes.
 </p>
 </div>
-<p>Figure <a href="efficient-data-carpentry.html#fig:dtplot">5.2</a> demonstrates that <strong>data.table</strong> is <em>much faster</em> than base R and <strong>dplyr</strong> at subsetting. As with using external packages to read in data (see Section <a href="efficient-data-carpentry.html#fread">5.1.6</a>), the relative benefits of <strong>data.table</strong> improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on <strong>dplyr</strong> as the dataset size reaches half a Gigabyte. Interestingly, even the ‘non key’ implementation of <strong>data.table</strong> subset method is faster than the alternatives: this is because <strong>data.table</strong> creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.</p>
+<p>Figure <a href="efficient-data-carpentry.html#fig:dtplot">5.3</a> demonstrates that <strong>data.table</strong> is <em>much faster</em> than base R and <strong>dplyr</strong> at subsetting. As with using external packages to read in data (see Section <a href="efficient-data-carpentry.html#fread">5.1.7</a>), the relative benefits of <strong>data.table</strong> improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on <strong>dplyr</strong> as the dataset size reaches half a Gigabyte. Interestingly, even the ‘non key’ implementation of <strong>data.table</strong> subset method is faster than the alternatives: this is because <strong>data.table</strong> creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.</p>
 <p>This section has introduced <strong>data.table</strong> as a complimentary approach to base and <strong>dplyr</strong> methods for data processing and illustrated the performance gains of using <em>keys</em> for subsetting tables. <strong>data.table</strong> is a mature and powerful package which uses clever computational principles implemented in C to provide efficient methods for a number of other operations for data analysis. These include highly efficient data reshaping, dataset merging (also known as joining, as with <code>left_join</code> in <strong>dplyr</strong>) and grouping. These are explained in the vignettes <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf"><code>datatable-intro</code></a> and <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html"><code>datatable-reshape</code></a>. The <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html"><code>datatable-reference-semantics</code></a> vignette explains <strong>data.table</strong>’s unique syntax.</p>
 
 </div>

@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-10">
+<meta name="date" content="2016-06-12">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -216,11 +216,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#importing-data"><i class="fa fa-check"></i><b>5.1</b> Importing data</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#getting-data-from-the-internet"><i class="fa fa-check"></i><b>5.1.1</b> Getting data from the internet</a></li>
 <li class="chapter" data-level="5.1.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.1.2</b> Versatile data import with rio</a></li>
-<li class="chapter" data-level="5.1.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.1.3</b> The feather file format</a></li>
-<li class="chapter" data-level="5.1.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.1.4</b> Efficient data export: .Rdata or .Rds?</a></li>
-<li class="chapter" data-level="5.1.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.1.5</b> A benchmark of methods for file import and export</a></li>
-<li class="chapter" data-level="5.1.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#fread"><i class="fa fa-check"></i><b>5.1.6</b> Fast data reading</a></li>
-<li class="chapter" data-level="5.1.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.1.7</b> Preprocessing outside R</a></li>
+<li class="chapter" data-level="5.1.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.1.3</b> Accessing data stored in packages</a></li>
+<li class="chapter" data-level="5.1.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.1.4</b> The feather file format</a></li>
+<li class="chapter" data-level="5.1.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.1.5</b> Efficient data export: .Rdata or .Rds?</a></li>
+<li class="chapter" data-level="5.1.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.1.6</b> A benchmark of methods for file import and export</a></li>
+<li class="chapter" data-level="5.1.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#fread"><i class="fa fa-check"></i><b>5.1.7</b> Fast data reading</a></li>
+<li class="chapter" data-level="5.1.8" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.1.8</b> Preprocessing outside R</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>5.2</b> Working with databases</a></li>
 <li class="chapter" data-level="5.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>5.3</b> Tidying data with tidyr</a></li>
@@ -538,9 +539,14 @@ Some of R’s startup arguments can be controlled interactively in RStudio. See 
 </ul>
 <p>It is important to know the location of the <code>.Rprofile</code> and <code>.Renviron</code> set-up files that are being used out of these three options. R only uses one <code>.Rprofile</code> and one <code>.Renviron</code> in any session: if you have a <code>.Rprofile</code> file in your current project, R will ignore <code>.Rprofile</code> in <code>R_HOME</code> and <code>HOME</code>. Likewise, <code>.Rprofile</code> in <code>HOME</code> overrides <code>.Rprofile</code> in <code>R_HOME</code>. The same applies to <code>.Renviron</code>: you should remember that adding project specific environment variables with <code>.Renviron</code> will de-activate other <code>.Renviron</code> files.</p>
 <p>To create a project-specific start-up script, simply create a <code>.Rprofile</code> file in the project’s root directory and start adding R code, e.g. via <code>file.edit(&quot;.Rprofile&quot;)</code>. Remember that this will make <code>.Rprofile</code> in the home directory be ignored. The following commands will open your <code>.Rprofile</code> from within an R editor:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.edit</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Rprofile&quot;</span>)) <span class="co"># edit .Rprofile in HOME</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>) <span class="co"># edit .Rprofile in HOME</span>
 <span class="kw">file.edit</span>(<span class="st">&quot;.Rprofile&quot;</span>) <span class="co"># edit project specific .Rprofile</span></code></pre></div>
-<p>Note that editing the <code>.Renviron</code> file in the same locations will have the same effect. The following code will create a user specific <code>.Renviron</code> file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.</p>
+<div class="rmdwarning">
+<p>
+Warning: file paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that has single backslashes (<code>&lt;/code&gt;), such as <code>C:.csv</code>, as provided by Windows, this will generate the error: <code>Error: ‘’ is an unrecognized escape in character string starting “”C:“</code>. To overcome this issue R provides two functions, <code>file.path</code> and <code>normalizePath</code>. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: <code>file.path(”C:“,”DATA“,”data.csv“)</code>. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. <code>normalizePath(”C:/DATA/data.csv“)</code>, for example, outputs <code>C:\DATA\data.csv</code> on a Windows machine but <code>C:/DATA/data.csv</code> on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
+</p>
+</div>
+<p>Editing the <code>.Renviron</code> file in the same locations will have the same effect. The following code will create a user specific <code>.Renviron</code> file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))
 if(!<span class="kw">file.exists</span>(user_renviron)) <span class="co"># check to see if the file already exists</span>
   <span class="kw">file.create</span>(user_renviron)
