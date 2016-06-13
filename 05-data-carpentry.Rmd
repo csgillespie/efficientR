@@ -21,6 +21,18 @@ Fortunately, done efficiciently, at the outset of your project (rather than half
 - Data processing with **dplyr**
 - Data processing with **data.table**
 
+## Top 5 tips for efficient data carpentry
+
+- File format decisions can have a huge impact on the efficiency of data import and export operations. Use `.Rds` files with `readRDS` and `saveRDS` for keeping local copies of clean data.
+
+- Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by **tidyr**.
+
+- Use efficient functions for reading and writing plain text files, such as `read_csv` and `fread`, from the **readr** and **data.table** packages respectively.
+
+- Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in some contexts where speed is critical.
+
+- Using the ` %>%` 'pipe' operator in combination with **dplyr**'s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.
+
 ## Importing data
 
 With the accelerating digital revolution and increasing download rates worldwide, an increasing proportion of the world's data is available online. Further, and increasing amount of data is *open access*, available to the public to download and use as they please. For these reasons we begin this section by exploring some ways to download and import data from the web. Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
@@ -710,7 +722,8 @@ idata$gini = as.numeric(idata$gini)
 mean(idata$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
-However, the purpose of programming languages is to *automate* tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts a `data.frame` to a numeric `matrix`:
+However, the purpose of programming languages is to *automate* tasks and reduce typing.
+The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts a `data.frame` to a numeric `matrix`:
 
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
@@ -727,8 +740,10 @@ idata[id] = as.numeric(unlist(idata[id]))
 *Another* one-liner to acheive the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE}
-idata = mutate_each(idata, funs(as.numeric), id)
+idata_mutate = mutate_each(idata, funs(as.numeric), id)
 ```
+
+
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
 
