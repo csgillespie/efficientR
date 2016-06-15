@@ -59,7 +59,7 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO2. Note that this dataset is also available from the **datasets** package.
+This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO^2^. Note that this dataset is also available from the **datasets** package.
 
 ```{r, eval=FALSE}
 url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
@@ -845,17 +845,18 @@ The GHG dataset used in the subsequent code reports the amount of greenhouse gas
 ```
 
 ```{r, warning=FALSE}
+# data available online, from github.com/csgillespie/efficient_pkg
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-df = read.csv(fname)
-names(df)
-nrow(df)
-length(unique(df$Country))
+co2_ems = read.csv(fname)
+names(co2_ems)
+nrow(co2_ems)
+length(unique(co2_ems$Country))
 ```
 
-Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can cleaning can be done in base R using the following command:
+Note that while there are almost 8000 rows, there are less than 200 countries. Note also that the column names are messy, typical of data from external sources (they would be less messy if we had used the **readr** package). Referring back to Section \@ref(renaming-columns), the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can cleaning can be done in base R using the following command:
 
 ```{r}
-names(df) = gsub("\\..*", "", names(df)) # clean column names
+names(co2_ems) = gsub("\\..*", "", names(co2_ems)) # clean column names
 ```
 
 ```{block, gsub, type='rmdnote'}
@@ -867,13 +868,13 @@ A quirk of R is that the grouping variable must be supplied as a list.
 Next we'll see a way of writing this that is neater.]
 
 ```{r}
-e_ems = aggregate(df$Electricity, list(df$Country),
-                  mean, na.rm  = TRUE, data = df)
+e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
+                  mean, na.rm  = TRUE, data = co2_ems)
 nrow(e_ems)
 ```
 
 Another way to specify the `by` argument is with the tilde (`~`).
-Thus `df$Electricity, list(df$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
+Thus `co2_ems$Electricity, list(co2_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
 
 The resulting data frame now has the same number of rows as there are countries:
 the aggregation has successfully reduced the number of rows we need to deal with.
@@ -883,17 +884,19 @@ Now it is easier to find out per-country statistics, such as the three lowest em
 head(e_ems[order(e_ems$x),], 3)
 ```
 
-To aggregate the dataset using **dplyr** package one would divide the task in two: to *group* the dataset first and then to summarise, as illustrated below:
+To aggregate the dataset using **dplyr** package one would divide the task in two: to *group* the dataset first and then to summarise, as illustrated below.
 
 ```{r, message=FALSE}
 library("dplyr")
-group_by(df, Country) %>%
+group_by(co2_ems, Country) %>%
   summarise(mean_eco2 = mean(Electricity, na.rm  = TRUE))
 ```
 
 ```{block, unix-philosophy, type='rmdnote'}
 The example above relates to a philosophical question in programming: how much work should one function do?  The [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well".  And shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual `group_by` and `summarise` stages.
 ```
+
+To reinforce the point, this operation is also performed below on the `idata` dataset:
 
 ```{r}
 countries = group_by(idata, Country)
@@ -936,7 +939,7 @@ summary statistics
 
 ```{r, echo=FALSE, eval=FALSE}
 # Using dplyr::rename
-df = rename(df,
+co2_ems = rename(co2_ems,
              ECO2 = Electricity.Heat..CO2...MtCO2.,
              MCO2 = Manufacturing.Construction..CO2...MtCO2.,
              TCO2 = Transportation..CO2...MtCO2.,
@@ -1004,6 +1007,36 @@ top_n(
 ```
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
+
+## Combining datasets
+
+The usefulness of many datasets can be greatly enhanced if they are combined with other data. If we could merge the `co2_ems` data with data on geographic location, for example, we could see where the largest polluting countries are. 
+
+```{r}
+library(ggmap)
+world = map_data("world")
+names(world)
+```
+
+Comparing the `co2_ems` data with this new dataset of the `world`, it is clear that the column `region` contains the same information in both. We can verify the extent of this overlap using the `%in%` functions, which finds out how many elements in one vector are in another vector:
+
+```{r}
+# save the result as 'm', for match
+summary({m = co2_ems$Country %in% world$region})
+```
+
+This comparison exercise has been fruitful: almost 90% of the values in the former dataset can be found in the latter. But what about the country names that do now match? We can identify these as follows:
+
+```{r}
+unique(co2_ems$Country[!m])
+```
+
+It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches in the world dataset. We can use fuzzy matching to rectify this:
+
+
+
+llustrated below using the `left_join` function below.
+
 
 ## Data processing with data.table
 
