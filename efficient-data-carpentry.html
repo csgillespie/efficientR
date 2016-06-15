@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.0.72 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-14">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -236,7 +236,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.5.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>5.5.5</b> Data aggregation</a></li>
 <li class="chapter" data-level="5.5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>5.5.6</b> Chaining operations</a></li>
 </ul></li>
-<li class="chapter" data-level="5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>5.6</b> Data processing with data.table</a></li>
+<li class="chapter" data-level="5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>5.6</b> Combining datasets</a></li>
+<li class="chapter" data-level="5.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>5.7</b> Data processing with data.table</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html"><i class="fa fa-check"></i><b>6</b> Efficient visualisation</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html#rough-outline"><i class="fa fa-check"></i><b>6.1</b> Rough outline</a></li>
@@ -384,7 +385,7 @@ Using R for basic file management can help create a reproducible workflow, as il
 <span class="kw">download.file</span>(url, <span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># download file</span>
 <span class="kw">unzip</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;data&quot;</span>) <span class="co"># unzip files</span>
 <span class="kw">file.remove</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># tidy up by removing the zip file</span></code></pre></div>
-<p>This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with <code>df = read.csv(url)</code>. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don’t have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO2. Note that this dataset is also available from the <strong>datasets</strong> package.</p>
+<p>This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with <code>df = read.csv(url)</code>. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don’t have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO<sup>2</sup>. Note that this dataset is also available from the <strong>datasets</strong> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv&quot;</span>
 <span class="kw">download.file</span>(url, <span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
@@ -747,9 +748,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 14.7 15.1 15.2   15.3 15.5 15.5     5</span>
-<span class="co">#&gt;  without_select 23.9 24.0 24.6   24.1 24.5 26.4     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.35 10.7 12.9   12.6 15.8 15.9     5</span>
+<span class="co">#&gt;  without_select 18.52 21.6 22.7   22.6 25.0 25.6     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -1195,9 +1196,10 @@ df1 =<span class="st"> </span>df[!all_na] <span class="co"># subset the datafram
 The GHG dataset used in the subsequent code reports the amount of greenhouse gas emissions emitted by country and by year for the major economic sectors. It was provided by the World Resources Institute and is available in raw form from their website: <a href="http://www.wri.org/resources/data-sets/cait-country-greenhouse-gas-emissions-data">wri.org/resources/data-sets/</a>.
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
-df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
-<span class="kw">names</span>(df)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># data available online, from github.com/csgillespie/efficient_pkg</span>
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+co2_ems =<span class="st"> </span><span class="kw">read.csv</span>(fname)
+<span class="kw">names</span>(co2_ems)
 <span class="co">#&gt; [1] &quot;X&quot;                                       </span>
 <span class="co">#&gt; [2] &quot;Country&quot;                                 </span>
 <span class="co">#&gt; [3] &quot;Year&quot;                                    </span>
@@ -1206,32 +1208,32 @@ df =<span class="st"> </span><span class="kw">read.csv</span>(fname)
 <span class="co">#&gt; [6] &quot;Transportation..CO2...MtCO2.&quot;            </span>
 <span class="co">#&gt; [7] &quot;Other.Fuel.Combustion..CO2...MtCO2.&quot;     </span>
 <span class="co">#&gt; [8] &quot;Fugitive.Emissions..CO2...MtCO2.&quot;</span>
-<span class="kw">nrow</span>(df)
+<span class="kw">nrow</span>(co2_ems)
 <span class="co">#&gt; [1] 7896</span>
-<span class="kw">length</span>(<span class="kw">unique</span>(df$Country))
+<span class="kw">length</span>(<span class="kw">unique</span>(co2_ems$Country))
 <span class="co">#&gt; [1] 188</span></code></pre></div>
-<p>Note that while there are almost 8000 rows, there are less than 200 countries. Referring back to Section <a href="efficient-data-carpentry.html#renaming-columns">5.5.1</a>, the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can cleaning can be done in base R using the following command:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(df) =<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">..*&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">names</span>(df)) <span class="co"># clean column names</span></code></pre></div>
+<p>Note that while there are almost 8000 rows, there are less than 200 countries. Note also that the column names are messy, typical of data from external sources (they would be less messy if we had used the <strong>readr</strong> package). Referring back to Section <a href="efficient-data-carpentry.html#renaming-columns">5.5.1</a>, the next stage should be to rename the columns so they are more convenient to work with. Having checked the verbose column names, this can cleaning can be done in base R using the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(co2_ems) =<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">..*&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">names</span>(co2_ems)) <span class="co"># clean column names</span></code></pre></div>
 <div class="rmdnote">
 <p>
 Note the use of the symbols <code>\.</code> (to escape the special <code>.</code> symbol), <code>.</code> and <code>*</code> in the above cleaning operation. This is part of a regular expression or <em>regex</em>, a powerful set of tools for cleaning text strings. See the Pattern matching section in <code>vignette(“stringr”)</code> for more on this.
 </p>
 </div>
 <p>After the variable names have been updated, we can aggregate.<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(df$Electricity, <span class="kw">list</span>(df$Country),
-                  mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>, <span class="dt">data =</span> df)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">e_ems =<span class="st"> </span><span class="kw">aggregate</span>(co2_ems$Electricity, <span class="kw">list</span>(co2_ems$Country),
+                  mean, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>, <span class="dt">data =</span> co2_ems)
 <span class="kw">nrow</span>(e_ems)
 <span class="co">#&gt; [1] 188</span></code></pre></div>
-<p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). Thus <code>df$Electricity, list(df$Country)</code> can usefully be replaced by <code>Electricity ~ Country</code>, which is more concise. Note that the <code>data</code> argument must be specified for this to work, however.</p>
+<p>Another way to specify the <code>by</code> argument is with the tilde (<code>~</code>). Thus <code>co2_ems$Electricity, list(co2_ems$Country)</code> can usefully be replaced by <code>Electricity ~ Country</code>, which is more concise. Note that the <code>data</code> argument must be specified for this to work, however.</p>
 <p>The resulting data frame now has the same number of rows as there are countries: the aggregation has successfully reduced the number of rows we need to deal with. Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(e_ems[<span class="kw">order</span>(e_ems$x),], <span class="dv">3</span>)
 <span class="co">#&gt;     Group.1      x</span>
 <span class="co">#&gt; 77  Iceland 0.0179</span>
 <span class="co">#&gt; 121   Nepal 0.0233</span>
 <span class="co">#&gt; 18    Benin 0.0464</span></code></pre></div>
-<p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below:</p>
+<p>To aggregate the dataset using <strong>dplyr</strong> package one would divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-<span class="kw">group_by</span>(df, Country) %&gt;%
+<span class="kw">group_by</span>(co2_ems, Country) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; Source: local data frame [188 x 2]</span>
 <span class="co">#&gt; </span>
@@ -1248,6 +1250,7 @@ Note the use of the symbols <code>\.</code> (to escape the special <code>.</code
 The example above relates to a philosophical question in programming: how much work should one function do? The <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should “do one thing well”. And shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual <code>group_by</code> and <code>summarise</code> stages.
 </p>
 </div>
+<p>To reinforce the point, this operation is also performed below on the <code>idata</code> dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
 <span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; Source: local data frame [176 x 2]</span>
@@ -1345,8 +1348,39 @@ The example above relates to a philosophical question in programming: how much w
 <p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham, n.d.)</span>.</p>
 </div>
 </div>
+<div id="combining-datasets" class="section level2">
+<h2><span class="header-section-number">5.6</span> Combining datasets</h2>
+<p>The usefulness of many datasets can be greatly enhanced if they are combined with other data. If we could merge the <code>co2_ems</code> data with data on geographic location, for example, we could see where the largest polluting countries are.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggmap)
+world =<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;world&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  # maps v3.1: updated &#39;world&#39;: all lakes moved to separate new #</span>
+<span class="co">#&gt;  # &#39;lakes&#39; database. Type &#39;?world&#39; or &#39;news(package=&quot;maps&quot;)&#39;.  #</span>
+<span class="kw">names</span>(world)
+<span class="co">#&gt; [1] &quot;long&quot;      &quot;lat&quot;       &quot;group&quot;     &quot;order&quot;     &quot;region&quot;    &quot;subregion&quot;</span></code></pre></div>
+<p>Comparing the <code>co2_ems</code> data with this new dataset of the <code>world</code>, it is clear that the column <code>region</code> contains the same information in both. We can verify the extent of this overlap using the <code>%in%</code> functions, which finds out how many elements in one vector are in another vector:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save the result as &#39;m&#39;, for match</span>
+<span class="kw">summary</span>({m =<span class="st"> </span>co2_ems$Country %in%<span class="st"> </span>world$region})
+<span class="co">#&gt;    Mode   FALSE    TRUE    NA&#39;s </span>
+<span class="co">#&gt; logical     840    7056       0</span></code></pre></div>
+<p>This comparison exercise has been fruitful: almost 90% of the values in the former dataset can be found in the latter. But what about the country names that do now match? We can identify these as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unique</span>(co2_ems$Country[!m])
+<span class="co">#&gt;  [1] Antigua &amp; Barbuda          Bahamas, The              </span>
+<span class="co">#&gt;  [3] Bosnia &amp; Herzegovina       Congo, Dem. Rep.          </span>
+<span class="co">#&gt;  [5] Congo, Rep.                Cote d&#39;Ivoire             </span>
+<span class="co">#&gt;  [7] European Union (15)        European Union (28)       </span>
+<span class="co">#&gt;  [9] Gambia, The                Korea, Dem. Rep. (North)  </span>
+<span class="co">#&gt; [11] Korea, Rep. (South)        Macedonia, FYR            </span>
+<span class="co">#&gt; [13] Russian Federation         Saint Kitts &amp; Nevis       </span>
+<span class="co">#&gt; [15] Saint Vincent &amp; Grenadines Sao Tome &amp; Principe       </span>
+<span class="co">#&gt; [17] Trinidad &amp; Tobago          United Kingdom            </span>
+<span class="co">#&gt; [19] United States              World                     </span>
+<span class="co">#&gt; 188 Levels: Afghanistan Albania Algeria Angola ... Zimbabwe</span></code></pre></div>
+<p>It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as ‘Gambia, The’ and the United States clearly should have matches in the world dataset. We can use fuzzy matching to rectify this:</p>
+<p>llustrated below using the <code>left_join</code> function below.</p>
+</div>
 <div id="data-processing-with-data.table" class="section level2">
-<h2><span class="header-section-number">5.6</span> Data processing with data.table</h2>
+<h2><span class="header-section-number">5.7</span> Data processing with data.table</h2>
 <p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a> so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dply</strong> provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend <strong>dplyr</strong>. However, <strong>data.table</strong> has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.</p>
 <p>This section provides a few examples to illustrate how <strong>data.table</strong> differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it’s a matter of preference.</p>
 <p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="efficient-data-carpentry.html#filtering-columns">5.5.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>

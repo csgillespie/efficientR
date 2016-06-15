@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.0.72 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-14">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -236,7 +236,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.5.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>5.5.5</b> Data aggregation</a></li>
 <li class="chapter" data-level="5.5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>5.5.6</b> Chaining operations</a></li>
 </ul></li>
-<li class="chapter" data-level="5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>5.6</b> Data processing with data.table</a></li>
+<li class="chapter" data-level="5.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>5.6</b> Combining datasets</a></li>
+<li class="chapter" data-level="5.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>5.7</b> Data processing with data.table</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html"><i class="fa fa-check"></i><b>6</b> Efficient visualisation</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html#rough-outline"><i class="fa fa-check"></i><b>6.1</b> Rough outline</a></li>
@@ -524,7 +525,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 })</code></pre></div>
 The above code provides an interactive HTML page (figure <a href="efficient-performance.html#fig:profvis1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).
 <div class="figure"><span id="fig:profvis1"></span>
-<img src="images/profvis1.png" alt="Output from profvis"  />
+<img src="images/profvis1.png" alt="Output from profvis" width="649" />
 <p class="caption">
 Figure 7.1: Output from profvis
 </p>
@@ -543,7 +544,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgilles
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
 <span class="kw">profvis</span>(<span class="kw">SimulateMonopoly</span>(<span class="dv">10000</span>))</code></pre></div>
 <p>to get</p>
-<p><img src="images/profvis_monopoly.png" alt="" /><!-- --></p>
+<p><img src="images/profvis_monopoly.png" width="681" /></p>
 <p>The output from <code>profvis</code> shows that the vast majority of time is spent in the <code>move</code> function. In Monopoly rolling a double (a pair of 1’s, 2’s, …, 6’s) is special:</p>
 <ul>
 <li>Roll two dice (<code>total1</code>): <code>total_score = total1</code>;</li>
@@ -699,7 +700,7 @@ Figure 7.2: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2af8fefec8a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b745ae448a0&gt;, x, y)</span></code></pre></div>
 <p>We can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
