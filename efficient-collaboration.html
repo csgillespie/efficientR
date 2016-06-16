@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-15">
+<meta name="date" content="2016-06-16">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -454,7 +454,7 @@ It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is eas
 <p>To prevent <code>=</code> being interpreted as an argument passing operator, you can enclose the function call in curly braces:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({expr3 =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">10e5</span>)}) 
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.087   0.000   0.087</span></code></pre></div>
+<span class="co">#&gt;   0.088   0.000   0.089</span></code></pre></div>
 </div>
 <div id="spacing" class="section level3">
 <h3><span class="header-section-number">9.1.8</span> Spacing</h3>
@@ -550,11 +550,41 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 </div>
 <div id="refactoring" class="section level2">
 <h2><span class="header-section-number">9.3</span> Refactoring code</h2>
-<p>Nobody is born being able to program. Learning to program involves a great deal of trail and error and it is likely that your code, in terms of programming efficiency and style, will improve over time (e.g. after reading books such as this!). Thus you may discover code you wrote months ago and say ‘did I <em>really</em> write that?’. From a collaboration perspective, you may want to incorporate someone else’s code in your project, but with updated style.</p>
-<p>This process of re-purposing or updating code is called refactoring. An example would be messy code using many objects and packages. The refactored code would be much clearer, efficient and more concise. There is no ‘magic bullet’ formula to refactor code, but a <a href="https://en.wikipedia.org/wiki/Code_refactoring">series of techniques</a> can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a ‘high level’ so you identify quickly its key components and hopefully write it in a better form.</p>
+<p>It is likely that your skills as an R programmer will improve over time (e.g. after reading books such as this!). Furthermore, as R packages evolve, the best way to accomplish a task 6 months ago may not be the best way to accomplish it now. Thus it is likely that you will want to rewrite your code at some point. From a collaboration perspective, you may also need to adapt someone else’s code to be more efficient. This is <em>refactoring</em>.</p>
+<p>An example would be messy code that creates many objects and uses overlapping packages. The refactored code would be much clearer, efficient and more concise. There is no ‘magic bullet’ formula to refactor code, but a <a href="https://en.wikipedia.org/wiki/Code_refactoring">series of techniques</a> can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a ‘high level’ so you identify quickly its key components and hopefully write it in a better form.</p>
+<p>Let’s use some code introduced in Chapter 5 as an example of something that could be written more efficiently:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># old code</span>
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+co2_ems =<span class="st"> </span><span class="kw">read.csv</span>(fname)
+<span class="kw">names</span>(co2_ems) =<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">..*&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">names</span>(co2_ems)) 
+e_ems =<span class="st"> </span><span class="kw">aggregate</span>(co2_ems$Electricity, <span class="kw">list</span>(co2_ems$Country),
+                  mean, <span class="dt">data =</span> co2_ems)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># new code</span>
+<span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ghg-ems.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+co2_ems =<span class="st"> </span>readr::<span class="kw">read_csv</span>(fname)
+co2_elec_agg =<span class="st"> </span><span class="kw">group_by</span>(co2_ems, Country) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Elec =</span> <span class="kw">mean</span>(<span class="st">`</span><span class="dt">Electricity/Heat (CO2) (MtCO2)</span><span class="st">`</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<p>Although both approaches generate the same output data using the same number of lines of code (5), the new, refactored code is better in a number of ways. It is more efficient to type (containing 10 fewer characters) and more efficient to run (it is around 20% faster). More importantly, the refactored code is more readable and easily extended, which is a vital consideration from the perspective of efficient collaboration. Adding the following line after the penultimate bracket in the second code chunk would create a new aggregate variable, for example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">, Trans =<span class="st"> </span><span class="kw">mean</span>(<span class="st">`</span><span class="dt">Transportation (CO2) (MtCO2)</span><span class="st">`</span>, <span class="dt">na.rm=</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>Furthermore, by using the origin column names, the refactored code remains more faithful to the source data. The benefits of being explicit and verbose (i.e. including the units in the variable names) will likely outweigh the costs of additional characters in the analysis process when it comes to publishing the results.</p>
+<div class="rmdnote">
+<p>
+Note that the number of lines of code is not a good measure of code efficiency. Clear and easily readable that is many lines of code is better than code that is compressed into a few lines that is tricky to read. Do not be afraid to make functions with multiple arguments more than one line. The <code>%&gt;%</code> pipe operator encourages multi-line code that is easy to read. The number of <em>characters</em> in code is a better measure, but is still an imperfect measure of efficiency, let alone readability.
+</p>
+</div>
 <div id="exercises-21" class="section level4">
 <h4><span class="header-section-number">9.3.0.1</span> Exercises</h4>
-<p>Refactor the following code to make it more efficient.</p>
+<p>Refactor the following code chunk to make it more efficient:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">letters =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;c&quot;</span>),
+  <span class="dt">numbers =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)
+)
+<span class="kw">aggregate</span>(df$numbers, <span class="kw">list</span>(df$letters), sum)
+<span class="co">#&gt;   Group.1  x</span>
+<span class="co">#&gt; 1       a  3</span>
+<span class="co">#&gt; 2       b  7</span>
+<span class="co">#&gt; 3       c 11</span></code></pre></div>
 
 </div>
 </div>
