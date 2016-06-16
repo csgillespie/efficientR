@@ -305,9 +305,57 @@ A pull request (PR) is a mechanism on GitHub by which your code can be added to 
 
 ## Refactoring code {#refactoring}
 
-Nobody is born being able to program. Learning to program involves a great deal of trail and error and it is likely that your code, in terms of programming efficiency and style, will improve over time (e.g. after reading books such as this!). Thus you may discover code you wrote months ago and say 'did I *really* write that?'. From a collaboration perspective, you may want to incorporate someone else's code in your project, but with updated style.
+It is likely that your skills as an R programmer will improve over time (e.g. after reading books such as this!). Furthermore, as R packages evolve, the best way to accomplish a task 6 months ago may not be the best way to accomplish it now. Thus it is likely that you will want to rewrite your code at some point. From a collaboration perspective, you may also need to adapt someone else's code to be more efficient. This is *refactoring*.
 
-This process of re-purposing or updating code is called refactoring. An example would be messy code using many objects and packages. The refactored code would be much clearer, efficient and more concise. There is no 'magic bullet' formula to refactor code, but a [series of techniques](https://en.wikipedia.org/wiki/Code_refactoring) can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a 'high level' so you identify quickly its key components and hopefully write it in a better form.
+An example would be messy code that creates many objects and uses overlapping packages. The refactored code would be much clearer, efficient and more concise. There is no 'magic bullet' formula to refactor code, but a [series of techniques](https://en.wikipedia.org/wiki/Code_refactoring) can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a 'high level' so you identify quickly its key components and hopefully write it in a better form.
+
+Let's use some code introduced in Chapter 5 as an example of something that could be written more efficiently:
+
+```{r, eval=FALSE}
+# old code
+fname = system.file("extdata/ghg-ems.csv", package = "efficient")
+co2_ems = read.csv(fname)
+names(co2_ems) = gsub("\\..*", "", names(co2_ems)) 
+e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
+                  mean, data = co2_ems)
+```
+
+```{r, eval=FALSE}
+# new code
+library("dplyr")
+fname = system.file("extdata/ghg-ems.csv", package = "efficient")
+co2_ems = readr::read_csv(fname)
+co2_elec_agg = group_by(co2_ems, Country) %>% 
+  summarise(Elec = mean(`Electricity/Heat (CO2) (MtCO2)`, na.rm = TRUE))
+```
+
+Although both approaches generate the same output data using the same number of lines of code (5), the new, refactored code is better in a number of ways. It is more efficient to type (containing 10 fewer characters) and more efficient to run (it is around 20% faster). More importantly, the refactored code is more readable and easily extended, which is a vital consideration from the perspective of efficient collaboration. Adding the following line after the penultimate bracket in the second code chunk would create a new aggregate variable, for example:
+
+```{r, eval=FALSE}
+, Trans = mean(`Transportation (CO2) (MtCO2)`, na.rm= TRUE)
+```
+
+Furthermore, by using the origin column names, the refactored code remains more faithful to the source data. The benefits of being explicit and verbose (i.e. including the units in the variable names) will likely outweigh the costs of additional characters in the analysis process when it comes to publishing the results.
+
+
+```{r, echo=FALSE, eval=FALSE}
+# benchmarking code
+system.time({
+  fname = system.file("extdata/ghg-ems.csv", package = "efficient")
+  co2_ems = read.csv(fname)
+  names(co2_ems) = gsub("\\..*", "", names(co2_ems)) # clean column names
+  e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
+                  mean, data = co2_ems)
+})
+
+
+system.time({
+  fname = system.file("extdata/ghg-ems.csv", package = "efficient")
+  co2_ems = readr::read_csv(fname)
+  co2_elec_agg = group_by(co2_ems, Country) %>% 
+    summarise(Elec = mean(`Electricity/Heat (CO2) (MtCO2)`, na.rm = TRUE))
+})
+```
 
 #### Exercises
 
