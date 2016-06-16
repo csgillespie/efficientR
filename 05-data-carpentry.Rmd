@@ -1062,7 +1062,7 @@ world$Country[world$Country == "USA"] = "United States"
 
 To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
 
-```{r co2-clean, echo=FALSE}
+```{r co2-clean, echo=FALSE, eval=FALSE}
 i = n[1]
 match_df = data_frame(co2_name = n, w_name = NA)
 for(i in n){
@@ -1111,7 +1111,8 @@ world$Country[grep("Vincent", world$Country)] =
 # save the result as 'm', for match
 c_u = unique(co2_ems$Country)
 w_u = unique(world$Country)
-# summary({m = c_u %in% w_u})
+m = c_u %in% w_u
+# summary(m)
 n = c_u[!m]
 ```
 
@@ -1119,15 +1120,15 @@ n = c_u[!m]
 There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets), as illustrated below:
 
 ```{r}
-nrow({world_co2 = left_join(co2_ems, world)})
-nrow({inner_join(co2_ems, world)})
+nrow({world_co2 = left_join(world, co2_ems)})
+nrow(inner_join(world, co2_ems))
 ```
 
-Figure \@ref(fig:wco2) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
+Note that `inner_join` removes rows from the `world` dataset which have no match in `co2_ems`: if we were to plot the resulting dataset, the continent or Antarctica and a number of countries not represented in the `co2_ems` dataset would be absent. Figure \@ref(fig:wco2) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
 
 ```{r, eval=FALSE}
-world_co2_2012 = filter(world_co2, Year == 2012)
-ggplot(world_co2, aes(long, lat)) +
+world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
+ggplot(world_co2_2012, aes(long, lat)) +
   geom_polygon(aes(fill = All, group = group))
 ```
 
@@ -1137,7 +1138,7 @@ knitr::include_graphics("figures/world_co2.png")
 
 ```{r, eval=FALSE, echo=FALSE}
 library(scales)
-world_co2_2012 = filter(world_co2, Year == 2012)
+world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
 ggplot(world_co2_2012, aes(long, lat, group = group)) +
   geom_polygon(aes(fill = All)) +
   geom_path(size = 0.2) +
@@ -1148,7 +1149,7 @@ ggplot(world_co2_2012, aes(long, lat, group = group)) +
     name = expression(MtCO[2])) +
   coord_equal() +
   theme_nothing(legend = TRUE)
-ggsave("figures/world_co2.png")
+# ggsave("figures/world_co2.png")
 ```
 
 ## Data processing with data.table
