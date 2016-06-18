@@ -495,7 +495,6 @@ cafes_tbl = tbl(cafes_db, sql("SELECT * FROM tblDonnations"))
 library("dplyr")
 ```
 
-
 Of course, the above example will not work because there is no pre-existing SQL database on your computer. To see the method work on your computer we will create an SQLite database from within R, building on the **dplyr** databases vignette (see `vignette('databases')`).
 
 There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
@@ -641,15 +640,23 @@ The wider issue of manipulation is a large topic with major potential implicatio
 Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(df, agesex, c("sex", "age"), 1)` is `separate_(df, "agesex", c("sex", "age"), 1)`.
 ```
 
-## Data processing with dplyr {#dplyr}
+## Efficient data processing with dplyr {#dplyr}
 
-Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section \@ref(pkgs)): **dplyr**. We selected this package, which roughly means 'data pliers' for large datasets, because it has a number of advantages compared with base R and **data.table** approaches to data processing:
+After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.
+
+Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data pliers'. **dplyr** has a number of advantages over base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-We demonstrate how **dplyr** works with a number of worked examples. These will show another major advantage of **dplyr**: it reduces the *inefficient* overheads associated with learning new functions, which can be a time consuming and frustrating process. **dplyr** reduces this inefficiency by providing a small number of key functions, which have intuitive names. Despite the apparent simplicity of these functions, they are powerful when used in combination. Using the ` %>%` 'pipe' operator, **dplyr** code can be clear, consistent and easy to read, write and learn.
+Furthermore, **dplyr** provide a small number of intuitevily named functions, 'verbs' which can be linked together to accomplish most common data processing tasks. This reduces the *inefficiency* of learning new functions (see Chapter \@ref(efficient-learning) and encourages a consisten coding style that is easy to read, write and learn, helping with collaboration (see Chapter \@ref(efficient-collaboration). **dplyr**'s verbs are presented in Table \@ref(tab:verbs)
+
+```{r verbs, echo=FALSE}
+verbs = read_csv("data/verbs.csv")
+knitr::kable(verbs, caption = "dplyr 'verb' functions.")
+```
+
 
 The starting point is a dataset on economic equality provided by the World Bank, loaded as follows:
 
