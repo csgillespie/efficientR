@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-06-16">
+<meta name="date" content="2016-06-18">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -205,7 +205,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3.3" data-path="efficient-workflow.html"><a href="efficient-workflow.html#visualising-plans-with-r"><i class="fa fa-check"></i><b>4.3.3</b> Visualising plans with R</a></li>
 <li class="chapter" data-level="4.3.4" data-path="efficient-workflow.html"><a href="efficient-workflow.html#exercises-10"><i class="fa fa-check"></i><b>4.3.4</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="efficient-workflow.html"><a href="efficient-workflow.html#pkgs"><i class="fa fa-check"></i><b>4.4</b> Package selection</a><ul>
+<li class="chapter" data-level="4.4" data-path="efficient-workflow.html"><a href="efficient-workflow.html#package-selection"><i class="fa fa-check"></i><b>4.4</b> Package selection</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="efficient-workflow.html"><a href="efficient-workflow.html#searching-for-r-packages"><i class="fa fa-check"></i><b>4.4.1</b> Searching for R packages</a></li>
 <li class="chapter" data-level="4.4.2" data-path="efficient-workflow.html"><a href="efficient-workflow.html#how-to-select-a-package"><i class="fa fa-check"></i><b>4.4.2</b> How to select a package</a></li>
 </ul></li>
@@ -228,7 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>5.3</b> Working with databases</a></li>
 <li class="chapter" data-level="5.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>5.4</b> Tidying data with tidyr</a></li>
-<li class="chapter" data-level="5.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>5.5</b> Data processing with dplyr</a><ul>
+<li class="chapter" data-level="5.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>5.5</b> Efficient data processing with dplyr</a><ul>
 <li class="chapter" data-level="5.5.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>5.5.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="5.5.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>5.5.2</b> Changing column classes</a></li>
 <li class="chapter" data-level="5.5.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>5.5.3</b> Filtering rows</a></li>
@@ -749,9 +749,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median    uq  max neval</span>
-<span class="co">#&gt;     with_select  9.28  9.39  9.97    9.5  9.79 11.9     5</span>
-<span class="co">#&gt;  without_select 15.17 15.29 15.78   15.8 15.95 16.7     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.62  9.98 10.5   10.0 10.2 12.5     5</span>
+<span class="co">#&gt;  without_select 16.63 16.69 16.8   16.8 16.8 17.1     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-data-carpentry.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
@@ -1067,14 +1067,62 @@ Note that in the above code chunks we used non standard evaluation, which means 
 </div>
 </div>
 <div id="dplyr" class="section level2">
-<h2><span class="header-section-number">5.5</span> Data processing with dplyr</h2>
-<p>Tidy data is easier and often faster to process than messy data. As with many aspects of R programming there are many ways to process a dataset, some more efficient than others. Following our own advice, we have selected a package for data processing early on (see Section <a href="efficient-workflow.html#pkgs">4.4</a>): <strong>dplyr</strong>. We selected this package, which roughly means ‘data pliers’ for large datasets, because it has a number of advantages compared with base R and <strong>data.table</strong> approaches to data processing:</p>
+<h2><span class="header-section-number">5.5</span> Efficient data processing with dplyr</h2>
+<p>After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.</p>
+<p>Following the advice in Section <a href="efficient-workflow.html#package-selection">4.4</a>, we have carefully selected an appropriate package for these tasks: <strong>dplyr</strong>, which roughly means ‘data pliers’. <strong>dplyr</strong> has a number of advantages over base R and <strong>data.table</strong> approaches to data processing:</p>
 <ul>
 <li><strong>dplyr</strong> is fast to run and intuitive to type</li>
 <li><strong>dplyr</strong> works well with tidy data, as described above</li>
 <li><strong>dplyr</strong> works well with databases, providing efficiency gains on large datasets</li>
 </ul>
-<p>We demonstrate how <strong>dplyr</strong> works with a number of worked examples. These will show another major advantage of <strong>dplyr</strong>: it reduces the <em>inefficient</em> overheads associated with learning new functions, which can be a time consuming and frustrating process. <strong>dplyr</strong> reduces this inefficiency by providing a small number of key functions, which have intuitive names. Despite the apparent simplicity of these functions, they are powerful when used in combination. Using the <code>%&gt;%</code> ‘pipe’ operator, <strong>dplyr</strong> code can be clear, consistent and easy to read, write and learn.</p>
+<p>Furthermore, <strong>dplyr</strong> provide a small number of intuitevily named functions, ‘verbs’ which can be linked together to accomplish most common data processing tasks. This reduces the <em>inefficiency</em> of learning new functions (see Chapter <a href="efficient-learning.html#efficient-learning">10</a> and encourages a consisten coding style that is easy to read, write and learn, helping with collaboration (see Chapter <a href="efficient-collaboration.html#efficient-collaboration">9</a>. <strong>dplyr</strong>’s verbs are presented in Table <a href="efficient-data-carpentry.html#tab:verbs">5.10</a></p>
+<table>
+<caption><span id="tab:verbs">Table 5.10: </span>dplyr ‘verb’ functions.</caption>
+<thead>
+<tr class="header">
+<th align="left">dplyr function(s)</th>
+<th align="left">Description</th>
+<th align="left">Base R functions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">filter(), slice()</td>
+<td align="left">Subset rows by attribute (filter) or position (slice)</td>
+<td align="left">subset(), []</td>
+</tr>
+<tr class="even">
+<td align="left">arrange()</td>
+<td align="left">Return data ordered by variable(s)</td>
+<td align="left">sort()</td>
+</tr>
+<tr class="odd">
+<td align="left">select(), rename()</td>
+<td align="left">Subset and rename columns</td>
+<td align="left">[], <code>names←</code>()</td>
+</tr>
+<tr class="even">
+<td align="left">distinct()</td>
+<td align="left">Return unique rows</td>
+<td align="left">unique()</td>
+</tr>
+<tr class="odd">
+<td align="left">mutate(), transmute()</td>
+<td align="left">Create new variables (transmute drops existing variables)</td>
+<td align="left">$</td>
+</tr>
+<tr class="even">
+<td align="left">summarise()</td>
+<td align="left">Collapse data into a single row</td>
+<td align="left">aggregate()</td>
+</tr>
+<tr class="odd">
+<td align="left">sample_n(), sample_frac()</td>
+<td align="left">Return a sample of the data</td>
+<td align="left">sample()</td>
+</tr>
+</tbody>
+</table>
 <p>The starting point is a dataset on economic equality provided by the World Bank, loaded as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
 fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
