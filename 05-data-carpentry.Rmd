@@ -608,9 +608,9 @@ knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' datas
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-rawt = gather(raw[1:3,1:4], Income, Count, -religion)
-rawtp = rawt[c(1:3, nrow(rawt)),]
-knitr::kable(rawt, caption = "Long form of the Pew dataset represented above.")
+rawt = gather(raw, Income, Count, -religion)
+rawt_mini = gather(raw[1:3,1:4], Income, Count, -religion)
+knitr::kable(rawt_mini, caption = "Long form of the Pew dataset represented above.")
 ```
 
 - Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with `separate`, as illustrated in Table \@ref(tab:to-separate) and \@ref(tab:separated).
@@ -655,9 +655,24 @@ verbs = read_csv("data/verbs.csv")
 knitr::kable(verbs, caption = "dplyr 'verb' functions.")
 ```
 
-Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator.
+Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
 
-To demonstrate the power of **dplyr**, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
+```{r}
+data("ghg_ems", package = "efficient")
+top_table =
+  ghg_ems %>%
+  filter(!grepl("World|Europe", Country)) %>% 
+  group_by(Country) %>% 
+  summarise(Mean = mean(Transportation),
+            Growth = diff(range(Transportation))) %>% 
+  top_n(3, Mean)
+```
+
+```{r speed, echo=FALSE}
+knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).")
+```
+
+Building on the 'learning by doing' ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
 
 ```{r, message=FALSE}
 library("readr")
