@@ -723,7 +723,7 @@ saveRDS(idata, "data/idata-renamed.Rds")
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`sapply(idata, class)` is an alternative way to query the class of columns in a dataset.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, "")` is an alternative way to query the class of columns in a dataset.]
 
 ```{r}
 idata = readRDS("data/idata-renamed.Rds")
@@ -745,7 +745,7 @@ The following code chunk re-classifies all of the numeric variables using `data.
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
 idata[id] = data.matrix(idata[id])
-sapply(idata, class)
+vapply(idata, class, "")
 ```
 
 As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
@@ -830,7 +830,7 @@ Looking at the output, it becomes clear that the majority of the variables only 
 
 ```{r}
 # Identify the variable which are all NA
-all_na = sapply(df, function(x) all(is.na(x)))
+all_na = vapply(df, function(x) all(is.na(x)), T)
 summary(all_na) # summary of the results
 df1 = df[!all_na] # subset the dataframe
 ```
@@ -870,28 +870,21 @@ Note that while there are almost 8000 rows, there are less than 200 countries.
 Note that the `ghg_ems` column names were cleaned using the command `word(names(ghg_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
 ```
 
-After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
-A quirk of R is that the grouping variable must be supplied as a list.
-Next we'll see a way of writing this that is neater.]
+<!-- Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries). -->
+<!-- Another way to specify the `by` argument is with the tilde (`~`). -->
+<!-- Thus `ghg_ems$Electricity, list(ghg_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however. -->
 
-```{r}
-e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),
+<!-- The resulting data frame now has the same number of rows as there are countries: -->
+<!-- the aggregation has successfully reduced the number of rows we need to deal with. -->
+<!-- Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production: -->
+
+<!-- ```{r} -->
+<!-- head(e_ems[order(e_ems$x),], 3) -->
+<!-- ``` -->
+
+To aggregate the dataset using **dplyr** package, you divide the task in two: to *group* the dataset first and then to summarise, as illustrated below.^[The equivalent code in base R is: `e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),
                   mean, na.rm  = TRUE, data = ghg_ems)
-nrow(e_ems)
-```
-
-Another way to specify the `by` argument is with the tilde (`~`).
-Thus `ghg_ems$Electricity, list(ghg_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
-
-The resulting data frame now has the same number of rows as there are countries:
-the aggregation has successfully reduced the number of rows we need to deal with.
-Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production:
-
-```{r}
-head(e_ems[order(e_ems$x),], 3)
-```
-
-To aggregate the dataset using **dplyr** package one would divide the task in two: to *group* the dataset first and then to summarise, as illustrated below.
+nrow(e_ems)`.]
 
 ```{r, message=FALSE}
 library("dplyr")
