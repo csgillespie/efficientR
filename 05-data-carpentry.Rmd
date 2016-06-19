@@ -844,16 +844,16 @@ Data aggregation is the process of creating summaries of data based on a groupin
 ```{r, warning=FALSE}
 # data available online, from github.com/csgillespie/efficient_pkg
 fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-co2_ems = read_csv(fname)
-names(co2_ems)
-nrow(co2_ems)
-length(unique(co2_ems$Country))
+ghg_ems = read_csv(fname)
+names(ghg_ems)
+nrow(ghg_ems)
+length(unique(ghg_ems$Country))
 ```
 
 Note that while there are almost 8000 rows, there are less than 200 countries.
 
 ```{block, gsub, type='rmdnote'}
-Note that the `co2_ems` column names were cleaned using the command `word(names(co2_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
+Note that the `ghg_ems` column names were cleaned using the command `word(names(ghg_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
 ```
 
 After the variable names have been updated, we can aggregate.^[Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries).
@@ -861,13 +861,13 @@ A quirk of R is that the grouping variable must be supplied as a list.
 Next we'll see a way of writing this that is neater.]
 
 ```{r}
-e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
-                  mean, na.rm  = TRUE, data = co2_ems)
+e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),
+                  mean, na.rm  = TRUE, data = ghg_ems)
 nrow(e_ems)
 ```
 
 Another way to specify the `by` argument is with the tilde (`~`).
-Thus `co2_ems$Electricity, list(co2_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
+Thus `ghg_ems$Electricity, list(ghg_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however.
 
 The resulting data frame now has the same number of rows as there are countries:
 the aggregation has successfully reduced the number of rows we need to deal with.
@@ -881,7 +881,7 @@ To aggregate the dataset using **dplyr** package one would divide the task in tw
 
 ```{r, message=FALSE}
 library("dplyr")
-group_by(co2_ems, Country) %>%
+group_by(ghg_ems, Country) %>%
   summarise(mean_eco2 = mean(Electricity, na.rm  = TRUE))
 ```
 
@@ -932,7 +932,7 @@ summary statistics
 
 ```{r, echo=FALSE, eval=FALSE}
 # Using dplyr::rename
-co2_ems = rename(co2_ems,
+ghg_ems = rename(ghg_ems,
              ECO2 = Electricity.Heat..CO2...MtCO2.,
              MCO2 = Manufacturing.Construction..CO2...MtCO2.,
              TCO2 = Transportation..CO2...MtCO2.,
@@ -1003,7 +1003,7 @@ This section has provided only a taster of what is possible **dplyr** and why it
 
 ## Combining datasets
 
-The usefulness of a dataset can sometimes be greatly enhanced by combining it with other data. If we could merge the global `co2_ems` dataset with geographic data, for example, we could visualise the spatial distribution of climate pollution. For the purposes of this section we join `co2_ems` to the `world` data provided by **ggmap** to illustrate the concepts and methods of data *joining* (also referred to as merging).
+The usefulness of a dataset can sometimes be greatly enhanced by combining it with other data. If we could merge the global `ghg_ems` dataset with geographic data, for example, we could visualise the spatial distribution of climate pollution. For the purposes of this section we join `ghg_ems` to the `world` data provided by **ggmap** to illustrate the concepts and methods of data *joining* (also referred to as merging).
 
 ```{r}
 library(ggmap)
@@ -1011,22 +1011,22 @@ world = map_data("world")
 names(world)
 ```
 
-Visually compare this new dataset of the `world` with `co2_ems` (e.g. via `View(world); View(co2_ems)`). It is clear that the column `region` in the former contains the same information as `Country` in the latter. This will be the *joining variable*; renaming it in `world` will make the join more efficient. 
+Visually compare this new dataset of the `world` with `ghg_ems` (e.g. via `View(world); View(ghg_ems)`). It is clear that the column `region` in the former contains the same information as `Country` in the latter. This will be the *joining variable*; renaming it in `world` will make the join more efficient. 
 
 ```{r}
 world = rename(world, Country = region)
-co2_ems$All = rowSums(co2_ems[4:8])
+ghg_ems$All = rowSums(ghg_ems[4:8])
 ```
 
 ```{block same-class, type = "rmdtip"}
 Ensure that both joining variables have the same class (combining `character` and `factor` columns can cause havoc).
 ```
 
-How large is the overlap between `co2_ems$Country` and `world$Country`? We can find out using the `%in%` operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many *unique* country names from `co2_ems` are present in the `world` dataset:
+How large is the overlap between `ghg_ems$Country` and `world$Country`? We can find out using the `%in%` operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many *unique* country names from `ghg_ems` are present in the `world` dataset:
 
 ```{r}
 # save the result as 'm', for match
-c_u = unique(co2_ems$Country)
+c_u = unique(ghg_ems$Country)
 w_u = unique(world$Country)
 summary({m = c_u %in% w_u})
 ```
@@ -1045,7 +1045,7 @@ grep(n[1], w_u) # no match
 (w_u1 = w_u[fm])
 ```
 
-What just happened? We verified that first unmatching country in the `co2_ems` dataset was not in the `world` country names with a `grep`. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10` after trial and error). The results show that the country `Antigua & Barbuda` from the `co2_ems` data is matched *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
+What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names with a `grep`. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10` after trial and error). The results show that the country `Antigua & Barbuda` from the `ghg_ems` data is matched *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
 
 ```{r}
 world$Country[world$Country %in% w_u1] = n[1]
@@ -1103,10 +1103,10 @@ world$Country[grep("Russia", world$Country)] =
 world$Country[grep("Vincent", world$Country)] =
   c_u[grep("Vincent", c_u)]
 
-# co2_ems = co2_ems[!co2_ems$Country == "World",]
+# ghg_ems = ghg_ems[!ghg_ems$Country == "World",]
 
 # save the result as 'm', for match
-c_u = unique(co2_ems$Country)
+c_u = unique(ghg_ems$Country)
 w_u = unique(world$Country)
 m = c_u %in% w_u
 # summary(m)
@@ -1117,11 +1117,11 @@ n = c_u[!m]
 There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets), as illustrated below:
 
 ```{r}
-nrow({world_co2 = left_join(world, co2_ems)})
-nrow(inner_join(world, co2_ems))
+nrow({world_co2 = left_join(world, ghg_ems)})
+nrow(inner_join(world, ghg_ems))
 ```
 
-Note that `inner_join` removes rows from the `world` dataset which have no match in `co2_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `co2_ems` dataset would be absent. Figure \@ref(fig:wco2) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
+Note that `inner_join` removes rows from the `world` dataset which have no match in `ghg_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `ghg_ems` dataset would be absent. Figure \@ref(fig:wco2) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
 
 ```{r, eval=FALSE}
 world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
