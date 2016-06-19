@@ -505,7 +505,7 @@ There are many wider considerations in relation to databases that we will not co
 
 #### Exercises {-}
 
-Follow the worked example below to create and query a database on land prices in the UK using **dplyr**'s back-end to SQLite.
+Follow the worked example below to create and query a database on land prices in the UK using **dplyr** as a front end to an SQLite database.
 
 The first stage is to download and read-in the data:
 
@@ -646,19 +646,20 @@ After tidying your data, the next stage is generally data processing. This inclu
 
 Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data pliers'. **dplyr** has a number of advantages over base R and **data.table** approaches to data processing:
 
-- **dplyr** is fast to run and intuitive to type
+- **dplyr** is fast to run (due to its C++ backend) and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(efficient-learning). It has small number of intuitively named functions, or 'verbs', that can solve a wide range of data processing challenges. This encourages a consistent coding style. **dplyr**'s verbs are presented in Table \@ref(tab:verbs).
+Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(efficient-learning). It has small number of intuitively named functions, or 'verbs'. These can be used in combination with each other, and the grouping function `group_by()`, to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
 
 ```{r verbs, echo=FALSE}
 verbs = read_csv("data/verbs.csv")
 knitr::kable(verbs, caption = "dplyr 'verb' functions.")
 ```
 
+Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator.
 
-The starting point is a dataset on economic equality provided by the World Bank, loaded as follows:
+To demonstrate the power of **dplyr**, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
 
 ```{r, message=FALSE}
 library("readr")
@@ -667,14 +668,10 @@ idata = read_csv(fname)
 idata # print the dataset 
 ```
 
-**dplyr** is much faster than base implementations of various
-operations, but it has the potential to be even faster
-if *parallel* versions are developed.
-
-You should not be expecting to learn the **dplyr** package in one sitting:
+You should not be expecting to master **dplyr**'s functionality in one sitting:
 the package is large and can be seen as
 a language in its own right. Following the 'walk before you run' principle,
-we'll start simple, by filtering and aggregating rows, building on the previous section on tidying data.
+we'll start simple, by filtering and aggregating rows.
 
 ### Renaming columns
 
