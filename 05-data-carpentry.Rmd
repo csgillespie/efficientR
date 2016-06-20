@@ -75,12 +75,12 @@ df_co2 = read.csv("data/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
-The example below illustrates this using the WDI package (not supported by ROpenSci) which accesses the World Bank's World Development Indicators:
+The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:
 
 ```{r, eval=FALSE}
 library("WDI") # load the WDI library (must be installed)
 WDIsearch("CO2") # search for data on a topic
-df = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
+co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
 ```
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
@@ -104,10 +104,10 @@ library(rio)
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 
 # Import the file (uses the fread function from data.table)
-df = import(fname)
+voyages = import(fname)
 
 # Export the file as an Excel spreadsheet
-export(df, "output.xlsx")
+export(voyages, "output.xlsx")
 ```
 
 ```{block, json, type='rmdtip'}
@@ -164,7 +164,7 @@ df_co2_feather = read_feather("data/co2.feather")
 import feather
 import feather
 path = 'data/co2.feather'
-df = feather.read_dataframe(path)
+df_co2_feather = feather.read_dataframe(path)
 ```
 
 ### Efficient data export: .Rdata or .Rds?
@@ -529,16 +529,16 @@ knitr::kable(rawt_mini, caption = "Long form of the Pew dataset represented abov
 ```{r}
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
-df = data.frame(agesex, n) # create a data frame
-separate(df, agesex, c("sex", "age"), 1)
+agesex_df = data.frame(agesex, n) # create a data frame
+separate(agesex_df, agesex, c("sex", "age"), 1)
 ```
 
 ```{r to-separate, echo=FALSE,}
-knitr::kable(df, caption = "Joined age and sex variables in one column")
+knitr::kable(agesex_df, caption = "Joined age and sex variables in one column")
 ```
 
 ```{r separated, echo=FALSE}
-knitr::kable(separate(df, agesex, c("sex", "age"), 1),
+knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the funtion `separate`.")
 ```
 
@@ -546,7 +546,7 @@ There are other tidying operations that **tidyr** can perform, as described in t
 The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
 ```{block, non-standard evaluation, type='rmdnote'}
-Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(df, agesex, c("sex", "age"), 1)` is `separate_(df, "agesex", c("sex", "age"), 1)`.
+Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 ```
 
 ## Efficient data processing with dplyr {#dplyr}
@@ -567,6 +567,8 @@ knitr::kable(verbs, caption = "dplyr 'verb' functions.")
 ```
 
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
+
+<!-- __XXX__ Colin write stuff  -->
 
 ```{r}
 library("dplyr")
@@ -682,9 +684,9 @@ As with other operations there are other ways of achieving the same result in R,
 idata[id] = apply(idata[id], 2, as.numeric)
 
 # Another alternative method using a for loop
-idata.df = as.data.frame(idata)
+idata_df = as.data.frame(idata)
 for(i in id){
-  idata.df[,i] = as.numeric(idata.df[,i])
+  idata_df[,i] = as.numeric(idata_df[,i])
 }
 ```
 
@@ -720,14 +722,14 @@ Imagine that we have a text file called `miniaa` which is large enough to consum
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
-df = read_csv(fname) # load imaginary large data
-dim(df)
+miniaa = read_csv(fname) # load imaginary large data
+dim(miniaa)
 ```
 
 Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
 ```{r, eval=FALSE}
-glimpse(df)
+glimpse(miniaa)
 #> $ NPI                   (int) 1679576722, ...
 #> $ Entity Type Code      (int) 1, 1, 2,    ...
 #> $ Replacement NPI       (lgl) NA, NA, NA, ...
@@ -742,15 +744,15 @@ Looking at the output, it becomes clear that the majority of the variables only 
 
 ```{r}
 # Identify the variable which are all NA
-all_na = vapply(df, function(x) all(is.na(x)), T)
+all_na = vapply(miniaa, function(x) all(is.na(x)), T)
 summary(all_na) # summary of the results
-df1 = df[!all_na] # subset the dataframe
+miniaa1 = miniaa[!all_na] # subset the dataframe
 ```
 
-The new `df` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
+The new `miniaa` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
 
-```{r}
-saveRDS(df1, "data/miniaa.Rds")
+```{r, eval=FALSE}
+saveRDS(miniaa1, "data/miniaa.Rds")
 ```
 
 #### Exercises
@@ -760,7 +762,7 @@ saveRDS(df1, "data/miniaa.Rds")
 2. How many times smaller is the .Rds file saved above compared with the .csv file? (Hint: use `file.size()`.)
 
 ```{r, include=FALSE}
-object.size(df1) / object.size(df)
+object.size(miniaa1) / object.size(miniaa)
 file.size(fname) / file.size("data/miniaa.Rds")
 ```
 
