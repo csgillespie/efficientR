@@ -7,9 +7,9 @@ knit: "bookdown::preview_chapter"
   
 # Efficient data carpentry
 
-There are many words for processing and analysing data. You can clean, hack, manipulate, munge, refine and tidy your datasets, ready for the next stage, typically modelling and visualisation. Each verb says something about perceptions towards the process: it is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception of data handling is dangerous and counter-productive. For this reason we call the process the more respectable job of *data carpentry*.
+There are many words for data processing. You can **clean**, **hack**, **manipulate**, **munge**, **refine** and **tidy** your dataset, ready for the next stage. Typically this is modelling and visualisation, although it can generate useful results in its own right. Each word says something about perceptions towards the process: data processing is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception is wrong. Getting your data 'ship shape' is a respectable and in some cases vital skill. For this reason we use the more admirable term *data carpentry*.
 
-Getting your data 'ship shape' is a respectable and valuable skill. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
+The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
 
 Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in the previous Chapter, can cripple your workflow, working with messy data can lead to project management hell.
 
@@ -29,13 +29,17 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 
 - Use efficient functions for reading and writing plain text files, such as `read_csv` and `fread`, from the **readr** and **data.table** packages respectively.
 
-- Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in some contexts where speed is critical.
+- Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in contexts where speed is critical.
 
 - Using the ` %>%` 'pipe' operator in combination with **dplyr**'s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.
 
 ## Efficiently importing data
 
-With the accelerating digital revolution, an increasing proportion of the world's data is available online. Further, an increasing proportion of data is *open access*, free for anyone to download. For these reasons downloading and importing data from the web is the first . Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
+The majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project, so this is a 
+
+This section explains how to efficiently read a wide range of datasets into R. We will look at getting data from the internet (this section is covered first because an increasing proportion of the world's data is available online); efficiently importing data from a wide variety of data formats with the **rio** package; accessing data stored in R packages; 
+
+With the accelerating digital revolution, an . Further, an increasing proportion of data is *open access*, free for anyone to download. For these reasons downloading and importing data from the web is the first . Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
 
 Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
@@ -284,7 +288,7 @@ knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and rela
 
 The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
-### Fast data reading {#fread}
+### Fast import of plain text formats {#fread}
 
 There is often more than one way to read data into R. A simple `.csv`, for example, file can be imported using a wide range of methods, with implications for computational efficiency. This section investigates methods for getting data into R, with a focus on delimited text formats, as these are ubiquitous, and a focus on three approaches: base R's plain text reading functions such as `read.delim`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
 
@@ -565,6 +569,7 @@ knitr::kable(verbs, caption = "dplyr 'verb' functions.")
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
 
 ```{r}
+library("dplyr")
 data("ghg_ems", package = "efficient")
 top_table =
   ghg_ems %>%
