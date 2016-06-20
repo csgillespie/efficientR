@@ -7,18 +7,18 @@ knit: "bookdown::preview_chapter"
   
 # Efficient data carpentry
 
-There are many words for processing and analysing data. You can clean, hack, manipulate, munge, refine and tidy your datasets, ready for the next stage, typically modelling and visualisation. Each verb says something about perceptions towards the process: it is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception of data handling is dangerous and counter-productive. For this reason we call the process the more respectable job of *data carpentry*.
+There are many words for data processing. You can **clean**, **hack**, **manipulate**, **munge**, **refine** and **tidy** your dataset, ready for the next stage. Typically this is modelling and visualisation, although it can generate useful results in its own right. Each word says something about perceptions towards the process: data processing is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception is wrong. Getting your data 'ship shape' is a respectable and in some cases vital skill. For this reason we use the more admirable term *data carpentry*.
 
-Getting your data 'ship shape' is a respectable and valuable skill. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
+The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
 
 Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in the previous Chapter, can cripple your workflow, working with messy data can lead to project management hell.
 
 Fortunately, done efficiently, at the outset of your project (rather than half way through, when it may be too late) and using appropriate tools this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of book. In it we cover the following topics:
 
-- Importing data
-- Working with databases
+- Efficiently importing data
 - Tidying data with **tidyr**
-- Data processing with **dplyr**
+- Processing data with **dplyr**
+- Working with databases
 - Data processing with **data.table**
 
 ## Top 5 tips for efficient data carpentry
@@ -29,13 +29,17 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 
 - Use efficient functions for reading and writing plain text files, such as `read_csv` and `fread`, from the **readr** and **data.table** packages respectively.
 
-- Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in some contexts where speed is critical.
+- Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in contexts where speed is critical.
 
 - Using the ` %>%` 'pipe' operator in combination with **dplyr**'s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.
 
-## Importing data
+## Efficiently importing data
 
-With the accelerating digital revolution and increasing download rates worldwide, an increasing proportion of the world's data is available online. Further, and increasing amount of data is *open access*, available to the public to download and use as they please. For these reasons we begin this section by exploring some ways to download and import data from the web. Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
+The majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project, so this is a 
+
+This section explains how to efficiently read a wide range of datasets into R. We will look at getting data from the internet (this section is covered first because an increasing proportion of the world's data is available online); efficiently importing data from a wide variety of data formats with the **rio** package; accessing data stored in R packages; 
+
+With the accelerating digital revolution, an . Further, an increasing proportion of data is *open access*, free for anyone to download. For these reasons downloading and importing data from the web is the first . Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
 
 Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
@@ -71,12 +75,12 @@ df_co2 = read.csv("data/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
-The example below illustrates this using the WDI package (not supported by ROpenSci) which accesses the World Bank's World Development Indicators:
+The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:
 
 ```{r, eval=FALSE}
 library("WDI") # load the WDI library (must be installed)
 WDIsearch("CO2") # search for data on a topic
-df = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
+co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
 ```
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
@@ -100,10 +104,10 @@ library(rio)
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 
 # Import the file (uses the fread function from data.table)
-df = import(fname)
+voyages = import(fname)
 
 # Export the file as an Excel spreadsheet
-export(df, "output.xlsx")
+export(voyages, "output.xlsx")
 ```
 
 ```{block, json, type='rmdtip'}
@@ -160,14 +164,14 @@ df_co2_feather = read_feather("data/co2.feather")
 import feather
 import feather
 path = 'data/co2.feather'
-df = feather.read_dataframe(path)
+df_co2_feather = feather.read_dataframe(path)
 ```
 
 ### Efficient data export: .Rdata or .Rds?
 
 Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large `.shp` file, for example, can take more than ten times longer to load than a `.Rds` or `.Rdata` file.
 
-`.Rds` and `.RData` are R's native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats that are central to the history of file import and export in R:
+`.Rds` and `.RData` are R's native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats:
 
 ```{r}
 save(df_co2, file = "data/co2.RData")
@@ -284,7 +288,7 @@ knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and rela
 
 The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
-### Fast data reading {#fread}
+### Fast import of plain text formats {#fread}
 
 There is often more than one way to read data into R. A simple `.csv`, for example, file can be imported using a wide range of methods, with implications for computational efficiency. This section investigates methods for getting data into R, with a focus on delimited text formats, as these are ubiquitous, and a focus on three approaches: base R's plain text reading functions such as `read.delim`, which are derived from `read.table`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
 
@@ -447,99 +451,6 @@ Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
 A more efficient way to work with very large datasets is via databases.
 
-## Working with databases
-
-Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
-R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
-
-**RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
-**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
-
-Imagine you have access to a database on donations for a community café.
-
-```{r, eval=FALSE}
-# Connect to a database driver
-library("RMySQL") # also loads DBI package
-con = dbConnect(MySQL(), username = "me", password = pwd, dbname = "cafes")
-
-# List available tables
-dbListTables(con)
-rs = dbSendQuery(con, "SELECT * FROM tblDonnations")
-df_head = dbFetch(rs, n = 6) # extract first 6 rows
-```
-
-The above code chunk shows how the function `dbConnect` connects to an external database, in this case a MySQL database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
-
-```{block, password-tip, type='rmdtip'}
-Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in Chapter 2. Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
-```
-
-Recently there has been a shift to the 'noSQL' approach for storing large datasets.
-This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
-
-MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
-A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
-(see Section \@ref(dplyr)).
-
-To access a database in R via **dplyr**, one must use one of the `src_` functions to create a source. Continuing with the MySQL example above, one would create a `tbl` object, that can be queried by **dplyr** as follows:
-
-```{r, eval=FALSE}
-library("dplyr")
-cafes_db = src_mysql(user = "me", password = pwd, dbname = "cafes")
-cafes_tbl = tbl(cafes_db, sql("SELECT * FROM tblDonnations"))
-```
-
-```{r, echo=FALSE, message=FALSE}
-library("dplyr")
-```
-
-Of course, the above example will not work because there is no pre-existing SQL database on your computer. To see the method work on your computer we will create an SQLite database from within R, building on the **dplyr** databases vignette (see `vignette('databases')`).
-
-There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
-
-- [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
-- The `databases` vignette from the **dplyr** package.
-- [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
-
-#### Exercises {-}
-
-Follow the worked example below to create and query a database on land prices in the UK using **dplyr** as a front end to an SQLite database.
-
-The first stage is to download and read-in the data:
-
-```{r, eval=FALSE}
-url = paste0("http://prod.publicdata.landregistry.gov.uk",
-  ".s3-website-eu-west-1.amazonaws.com/pp-monthly-update.txt")
-download.file(url = url, destfile = "pp-monthly-update.txt")
-land_df = readr::read_csv("pp-monthly-update.txt")
-```
-
-To avoid downloading the file from the internet, you can subset of this data that is provided by the **efficient** package that accompanies this book:
-
-```{r}
-library("efficient")
-data("land_df")
-```
-
-The next stage is to create an SQLite database to hold the data:
-
-```{r}
-# install.packages("RSQLite") # Requires RSQLite package
-my_db = src_sqlite("land.sqlite3", create = TRUE)
-land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
-class(land_sqlite)
-```
-
-From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
-
-```{r}
-# Method 1: using sql
-tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
-
-# Method 2: using dplyr
-select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
-```
-
 ## Tidying data with tidyr
 
 A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014]. Converting data into a 'tidy' form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on a few large vectors than many short vectors.
@@ -618,16 +529,16 @@ knitr::kable(rawt_mini, caption = "Long form of the Pew dataset represented abov
 ```{r}
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
-df = data.frame(agesex, n) # create a data frame
-separate(df, agesex, c("sex", "age"), 1)
+agesex_df = data.frame(agesex, n) # create a data frame
+separate(agesex_df, agesex, c("sex", "age"), 1)
 ```
 
 ```{r to-separate, echo=FALSE,}
-knitr::kable(df, caption = "Joined age and sex variables in one column")
+knitr::kable(agesex_df, caption = "Joined age and sex variables in one column")
 ```
 
 ```{r separated, echo=FALSE}
-knitr::kable(separate(df, agesex, c("sex", "age"), 1),
+knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the funtion `separate`.")
 ```
 
@@ -635,7 +546,7 @@ There are other tidying operations that **tidyr** can perform, as described in t
 The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
 ```{block, non-standard evaluation, type='rmdnote'}
-Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(df, agesex, c("sex", "age"), 1)` is `separate_(df, "agesex", c("sex", "age"), 1)`.
+Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 ```
 
 ## Efficient data processing with dplyr {#dplyr}
@@ -657,7 +568,10 @@ knitr::kable(verbs, caption = "dplyr 'verb' functions.")
 
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
 
+<!-- __XXX__ Colin write stuff  -->
+
 ```{r}
+library("dplyr")
 data("ghg_ems", package = "efficient")
 top_table =
   ghg_ems %>%
@@ -770,9 +684,9 @@ As with other operations there are other ways of achieving the same result in R,
 idata[id] = apply(idata[id], 2, as.numeric)
 
 # Another alternative method using a for loop
-idata.df = as.data.frame(idata)
+idata_df = as.data.frame(idata)
 for(i in id){
-  idata.df[,i] = as.numeric(idata.df[,i])
+  idata_df[,i] = as.numeric(idata_df[,i])
 }
 ```
 
@@ -808,14 +722,14 @@ Imagine that we have a text file called `miniaa` which is large enough to consum
 
 ```{r}
 fname = system.file("extdata/miniaa", package = "efficient")
-df = read_csv(fname) # load imaginary large data
-dim(df)
+miniaa = read_csv(fname) # load imaginary large data
+dim(miniaa)
 ```
 
 Note that the data frame has 329 columns, and imagine it has millions of rows, instead of 9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
 ```{r, eval=FALSE}
-glimpse(df)
+glimpse(miniaa)
 #> $ NPI                   (int) 1679576722, ...
 #> $ Entity Type Code      (int) 1, 1, 2,    ...
 #> $ Replacement NPI       (lgl) NA, NA, NA, ...
@@ -830,15 +744,15 @@ Looking at the output, it becomes clear that the majority of the variables only 
 
 ```{r}
 # Identify the variable which are all NA
-all_na = vapply(df, function(x) all(is.na(x)), T)
+all_na = vapply(miniaa, function(x) all(is.na(x)), T)
 summary(all_na) # summary of the results
-df1 = df[!all_na] # subset the dataframe
+miniaa1 = miniaa[!all_na] # subset the dataframe
 ```
 
-The new `df` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
+The new `miniaa` object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R's binary data format:
 
-```{r}
-saveRDS(df1, "data/miniaa.Rds")
+```{r, eval=FALSE}
+saveRDS(miniaa1, "data/miniaa.Rds")
 ```
 
 #### Exercises
@@ -848,7 +762,7 @@ saveRDS(df1, "data/miniaa.Rds")
 2. How many times smaller is the .Rds file saved above compared with the .csv file? (Hint: use `file.size()`.)
 
 ```{r, include=FALSE}
-object.size(df1) / object.size(df)
+object.size(miniaa1) / object.size(miniaa)
 file.size(fname) / file.size("data/miniaa.Rds")
 ```
 
@@ -1155,6 +1069,100 @@ ggplot(world_co2_2012, aes(long, lat, group = group)) +
   theme_nothing(legend = TRUE)
 # ggsave("figures/world_co2.png")
 ```
+
+## Working with databases
+
+Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
+
+**RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
+**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
+
+Imagine you have access to a database on donations for a community café.
+
+```{r, eval=FALSE}
+# Connect to a database driver
+library("RMySQL") # also loads DBI package
+con = dbConnect(MySQL(), username = "me", password = pwd, dbname = "cafes")
+
+# List available tables
+dbListTables(con)
+rs = dbSendQuery(con, "SELECT * FROM tblDonnations")
+df_head = dbFetch(rs, n = 6) # extract first 6 rows
+```
+
+The above code chunk shows how the function `dbConnect` connects to an external database, in this case a MySQL database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
+
+```{block, password-tip, type='rmdtip'}
+Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in `.Renviron`, described in Chapter 2. Assuming you had saved your password as the environment variable `PSWRD`, you could enter `pwd = Sys.getenv("PSWRD")` to minimise the risk of exposing your password through accidentally releasing the code or your session history.
+```
+
+Recently there has been a shift to the 'noSQL' approach for storing large datasets.
+This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
+
+MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
+A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
+(see Section \@ref(dplyr)).
+
+To access a database in R via **dplyr**, one must use one of the `src_` functions to create a source. Continuing with the MySQL example above, one would create a `tbl` object, that can be queried by **dplyr** as follows:
+
+```{r, eval=FALSE}
+library("dplyr")
+cafes_db = src_mysql(user = "me", password = pwd, dbname = "cafes")
+cafes_tbl = tbl(cafes_db, sql("SELECT * FROM tblDonnations"))
+```
+
+```{r, echo=FALSE, message=FALSE}
+library("dplyr")
+```
+
+Of course, the above example will not work because there is no pre-existing SQL database on your computer. To see the method work on your computer we will create an SQLite database from within R, building on the **dplyr** databases vignette (see `vignette('databases')`).
+
+There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
+
+- [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
+- The `databases` vignette from the **dplyr** package.
+- [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
+
+#### Exercises {-}
+
+Follow the worked example below to create and query a database on land prices in the UK using **dplyr** as a front end to an SQLite database.
+
+The first stage is to download and read-in the data:
+
+```{r, eval=FALSE}
+url = paste0("http://prod.publicdata.landregistry.gov.uk",
+  ".s3-website-eu-west-1.amazonaws.com/pp-monthly-update.txt")
+download.file(url = url, destfile = "pp-monthly-update.txt")
+land_df = readr::read_csv("pp-monthly-update.txt")
+```
+
+To avoid downloading the file from the internet, you can subset of this data that is provided by the **efficient** package that accompanies this book:
+
+```{r}
+library("efficient")
+data("land_df")
+```
+
+The next stage is to create an SQLite database to hold the data:
+
+```{r}
+# install.packages("RSQLite") # Requires RSQLite package
+my_db = src_sqlite("land.sqlite3", create = TRUE)
+land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
+class(land_sqlite)
+```
+
+From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
+
+```{r}
+# Method 1: using sql
+tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
+
+# Method 2: using dplyr
+select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
+```
+
 
 ## Data processing with data.table
 
