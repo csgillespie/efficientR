@@ -19,7 +19,7 @@ for(i in 1:length(f)){
 doc_stats
 
 # # code to rename chapters (run once)
-# oldnums = 6:10
+# oldnums = 5:10
 # newnums = oldnums + 1
 # oldnums[nchar(oldnums) == 1] = paste0("0", oldnums[nchar(oldnums) == 1])
 # newnums[nchar(newnums) == 1] = paste0("0", newnums[nchar(newnums) == 1])
@@ -32,4 +32,4 @@ doc_stats
 # }
 # 
 # fnew
-# 
+
