@@ -353,21 +353,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="programming" class="section level1">
 <h1><span class="header-section-number">3</span> Efficient programming</h1>
-<p>Many people who use R would not describe themselves as “programmers”. Instead they have advanced domain level knowledge, but little formal programming training. This chapter comes from this point of view; someone who has uses standard R data structures, such as vectors and data frames, but lacks formal training. In this chapter we will discuss “big picture” programming techniques. General R programming techniques about optimising your code, before describing idiomatic programming structures. We conclude the chapter by examining relatively easy ways of speeding up code using the <strong>compiler</strong> package and multiple CPUs.</p>
+<p>Many people who use R would not describe themselves as “programmers”. Instead they tend to have advanced domain level knowledge, understand standard R data structures, such as vectors and data frames, but have little formal training in computing. Sound familiar? In that case this chapter is for you.</p>
+<p>In this chapter we will discuss “big picture” programming techniques. We cover general concepts and R programming techniques about code optimisation, before describing idiomatic programming structures. We conclude the chapter by examining relatively easy ways of speeding up code using the <strong>compiler</strong> package and parallel processing, using multiple CPUs.</p>
 <!-- Weak title -->
 <div id="general-advice" class="section level2">
 <h2><span class="header-section-number">3.1</span> General advice</h2>
-<p>C and Fortran demand more from the programmer. The coder must declare the type of every variable they use and has the burdensome responsible of memory management. The payback is that it allows the compiler to better predict how the program behaves and so make clever optimisations.</p>
+<p>Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of every variable used and give you the burdensome responsibility of memory management. The advantage of such languages, compared with R, is that they are faster to run. The disadvantage is that they take longer to learn and type.</p>
 <div class="rmdnote">
 <p>
 The wikipedia page on compiler opimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).
 </p>
 </div>
-<p>In R we don’t (tend to) worry about data types. However this means that it’s possible to write R programs that are incredibly slow. While optimisations such as going parallel can double speed, poor code can easily run 100’s of times slower. If you spend any time programming in R, then <span class="citation">(Burns <a href="#ref-Burns2011">2011</a>)</span> should be considered essential reading.</p>
+<p>R users don’t tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run 100’s of times slower, so it’s important to understand the causes of slow code. These are covered in <span class="citation">Burns (<a href="#ref-Burns2011">2011</a>)</span>, which should be considered essential reading for any aspiring R programmers.</p>
 <p>Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function <code>runif</code> only contains a single line that consists of a call to <code>C_runif</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function (n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) 
   <span class="kw">.Call</span>(C_runif, n, min, max)</code></pre></div>
-<p>The <strong>golden rule</strong> in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose <code>x</code> is a standard vector of length <code>n</code>. Then</p>
+<p>A <strong>golden rule</strong> in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose <code>x</code> is a standard vector of length <code>n</code>. Then</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span>x +<span class="st"> </span><span class="dv">1</span></code></pre></div>
 <p>involves a single function call to the <code>+</code> function. Whereas the <code>for</code> loop</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(i in <span class="dv">1</span>:n) 
@@ -502,7 +503,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.386   0.009   2.395</span></code></pre></div>
+<span class="co">#&gt;   2.832   0.012   2.845</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -586,7 +587,7 @@ bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</sp
 <p>In some cases it isn’t clear what should be returned, a message, a <code>NA</code> value or an error. For example, suppose we wish to download data from a web site.</p>
 <p>The function <code>GET</code> from the <strong>httr</strong> package can be used to download a webpage. When the we attempt to download data, the function also obtains an HTML status code. If the page exists, the function will return text (with the correct status code), e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/&quot;</span>) <span class="co"># Status: 200</span></code></pre></div>
-<p>If the url is incorrect, e.g. a broken link or is a redirect, then we can interogate the output and use the Status to determine what to do next.</p>
+<p>If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the output and use the Status to determine what to do next.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/made_up&quot;</span>) <span class="co"># Status: 404</span></code></pre></div>
 <p>By examining the error code, the user has complete flexibility. However if the web-page doesn’t exist</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google1.com/&quot;</span>)</code></pre></div>
@@ -784,7 +785,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x3ef66e8&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x34b0ab8&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -867,7 +868,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x41b7200&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3b8b3b8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

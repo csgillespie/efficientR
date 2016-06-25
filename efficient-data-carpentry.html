@@ -727,7 +727,7 @@ idata =<span class="st"> </span><span class="kw">rename</span>(idata,
 <p>However, the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts a <code>data.frame</code> to a numeric <code>matrix</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id =<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
 idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id])
-<span class="kw">vapply</span>(idata, class, <span class="st">&quot;&quot;</span>)
+<span class="kw">vapply</span>(idata, class, <span class="kw">character</span>(<span class="dv">1</span>))
 <span class="co">#&gt;      Country Country Code         Year    Year Code        top10 </span>
 <span class="co">#&gt;  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;    &quot;numeric&quot; </span>
 <span class="co">#&gt;        bot10         gini     b40_cons   gdp_percap </span>
@@ -763,7 +763,8 @@ miniaa =<span class="st"> </span><span class="kw">read_csv</span>(fname) <span c
 <span class="co">#&gt; ...</span></code></pre></div>
 <p>Looking at the output, it becomes clear that the majority of the variables only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
-all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)), T)
+all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)),
+                <span class="kw">logical</span>(<span class="dv">1</span>))
 <span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span>
 <span class="co">#&gt;    Mode   FALSE    NA&#39;s </span>
 <span class="co">#&gt; logical     329       0</span>
@@ -1115,7 +1116,7 @@ Figure 6.2: Benchmark illustrating the performance gains to be expected for diff
 <div class="footnotes">
 <hr />
 <ol start="15">
-<li id="fn15"><p><code>vapply(idata, class, &quot;&quot;)</code> is an alternative way to query the class of columns in a dataset.<a href="efficient-data-carpentry.html#fnref15">↩</a></p></li>
+<li id="fn15"><p><code>vapply(idata, class, character(1))</code> is an alternative way to query the class of columns in a dataset.<a href="efficient-data-carpentry.html#fnref15">↩</a></p></li>
 <li id="fn16"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="efficient-data-carpentry.html#fnref16">↩</a></p></li>
 <li id="fn17"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="efficient-data-carpentry.html#fnref17">↩</a></p></li>
 <li id="fn18"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="efficient-data-carpentry.html#fnref18">↩</a></p></li>
