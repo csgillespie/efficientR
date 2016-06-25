@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="preface.html">
-<link rel="next" href="efficient-set-up.html">
+<link rel="prev" href="efficient-workflow.html">
+<link rel="next" href="efficient-data-carpentry.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -351,139 +351,464 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<div id="who-this-book-is-for" class="section level2">
-<h2><span class="header-section-number">1.1</span> Who this book is for</h2>
-<p>This book is for anyone who wants to make their R code faster to type, faster to run and more scalable. These considerations generally come <em>after</em> learning the very basics of R for data analysis: we assume you are either accustomed to R or proficient at programming in other languages, although the book could still be of use for beginners. Thus the book should be of use to three groups, albeit in different ways:</p>
+<div id="efficient-inputoutput" class="section level1">
+<h1><span class="header-section-number">5</span> Efficient input/output</h1>
+<p>Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the ‘outside world’ again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. Yet the majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project. Conversely,</p>
+<p>This section explains how to efficiently read a wide range of datasets into R. We will look at getting data from the internet (this section is covered first because an increasing proportion of the world’s data is available online); efficiently importing data from a wide variety of data formats with the <strong>rio</strong> package; accessing data stored in R packages;</p>
+<p>With the accelerating digital revolution, an . Further, an increasing proportion of data is <em>open access</em>, free for anyone to download. For these reasons downloading and importing data from the web is the first . Next we briefly outline two developments for data import: the <strong>rio</strong> package and the <code>.feather</code> data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common <em>plain text</em> file formats from the <strong>readr</strong> and <strong>data.table</strong> packages can improve load speeds when working with these files.</p>
+<p>Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.</p>
+<div id="top-5-tips-for-efficient-data-carpentry" class="section level2">
+<h2><span class="header-section-number">5.1</span> Top 5 tips for efficient data carpentry</h2>
 <ul>
-<li><p>For <strong>programmers with little R knowledge</strong> this book will help you navigate the quirks of R to make it work efficiently: it is easy to write slow R code if you treat as if it were another language.</p></li>
-<li><p>For <strong>R users who have little experience of programming</strong> this book will show you many concepts and ‘tricks of the trade’, some of which are borrowed from Computer Science, that will make your work more time effective.</p></li>
-<li><p>An R beginner, you should probably read this book in parallel with other R resources such as the numerous, vignettes, tutorials and online articles that the R community has produced. At a bare minimum you should have R installed on your computer (see section <a href="efficient-set-up.html#r-version">2.3</a> for information on how best to install R on new computers).</p></li>
+<li>File format decisions can have a huge impact on the efficiency of data import and export operations. Use <code>.Rds</code> files with <code>readRDS</code> and <code>saveRDS</code> for keeping local copies of clean data.</li>
 </ul>
 </div>
-<div id="what-is-efficiency" class="section level2">
-<h2><span class="header-section-number">1.2</span> What is efficiency?</h2>
-<p>In everyday life efficiency roughly means ‘working well’. An efficient vehicle goes far without guzzling gas. An efficient worker gets the job done fast without stress. And an efficient light shines bright with a minimum of energy consumption. In this final sense, efficiency (<span class="math inline">\(\eta\)</span>) has a formal definition as the ratio of work done (<span class="math inline">\(W\)</span> e.g. light output) over effort (<span class="math inline">\(Q\)</span> energy consumption):</p>
-<p><span class="math display">\[
-\eta = \frac{W}{Q}
-\]</span></p>
-<p>In the context of computer programming efficiency can be defined narrowly or broadly. The narrow sense, <em>algorithmic efficiency</em> refers to the way a particular task is undertaken. This concept dates back to the very origins of computing, as illustrated by the following quote by <span class="citation">Lovelace (<a href="#ref-lovelace1842translator">1842</a>)</span> in her notes on the work of Charles Babbage, one of the pioneers of early computing:</p>
-<blockquote>
-<p>In almost every computation a great variety of arrangements for the succession of the processes is possible, and various considerations must influence the selections amongst them for the purposes of a calculating engine. One essential object is to choose that arrangement which shall tend to reduce to a minimum the time necessary for completing the calculation.</p>
-</blockquote>
-<p>The issue of having a ‘great variety’ of ways to solve a problem has not gone away with the invention of advanced computer languages: R is notorious for allowing users to solve problems in many ways, and this notoriety has only grown with the proliferation of community contributed package. In this book we want to focus on the <em>best</em> way of solving problems, from an efficiency perspective.</p>
-<p>The second, broader definition of efficient computing is productivity. This is the amount of <em>useful</em> work a <em>person</em> (not a computer) can do per unit time. It may be possible to rewrite your codebase in C to make it 100 times faster. But if this takes 100 human hours it may not be worth it. Computers can chug away day and night. People cannot. Human productivity is the subject of Chapter <a href="efficient-workflow.html#efficient-workflow">4</a>.</p>
-<p>By the end of this book you should know how to write R code that is efficient from both <em>algorithmic</em> and <em>productivity</em> perspectives. Efficient code is also concise, elegant and easy to maintain, vital when working on large projects.</p>
-</div>
-<div id="why-efficiency" class="section level2">
-<h2><span class="header-section-number">1.3</span> Why efficiency?</h2>
-<p>Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: in an age of Big Data and stagnating computer clockspeeds (see Chapter <a href="hardware.html#hardware">9</a>), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can “solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research” <span class="citation">(Visser et al. <a href="#ref-visser_speeding_2015">2015</a>)</span>.</p>
-<p>A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK’s Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. To help his workflow he developed a function, <code>line2route()</code> in the <strong>stplanr</strong> to batch process calls to the (<a href="http://www.cyclestreets.net/">cyclestreets.net</a>) API. But after a few thousand routes the code slowed to a standstill. Yet hundreds of thousands were needed. This endangered the contract. After eliminating internet connection issues, it was found that the slowdown was due to a bug in <code>line2route()</code>: it suffered from the ‘vector growing problem’, discussed in Section <a href="programming.html#memory-allocation">3.1.1</a>.</p>
-<p>The solution was simple. A <a href="https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47">single commit</a> made <code>line2route()</code> more than <em>ten times faster</em> and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be <em>essential</em>.</p>
-</div>
-<div id="what-is-efficient-r-programming" class="section level2">
-<h2><span class="header-section-number">1.4</span> What is efficient R programming?</h2>
-<p>Efficient R programming is the implementation of efficient programming practices in R. All languages are different, so efficient R code does not look like efficient code in another language. Many packages have been optimised for performance so, for some operations, acheiving maximum computational efficiency may simply be a case of selecting the appropriate package and using it correctly. There are many ways to get the same result in R, and some are very slow. Therefore <em>not</em> writing slow code should be prioritized over writing fast code.</p>
-<p>Returning to the analogy of the two cars sketched in the preface, efficient R programming for some use cases can simply mean trading in your heavy and gas guzzling hummer for a normal hatchback. The search for optimal performance often has diminishing returns so it is important to find bottlenecks in your code to prioritise work for maximum increases in computational efficency.</p>
-</div>
-<div id="touch-typing" class="section level2">
-<h2><span class="header-section-number">1.5</span> Touch typing</h2>
-<p>The other side of the efficiency coin is programmer efficiency. There are many things that will help increase the productivity of yourself and your collaborators, not least following the advice of <span class="citation">Janert (<a href="#ref-janert2010data">2010</a>)</span> to ‘think more work less’. The evidence suggests that good diet, physical activity, plenty of sleep and a healthy work-life balance can all boost your speed and effectiveness at work <span class="citation">(Jensen <a href="#ref-jensen2011can">2011</a>; Pereira et al. <a href="#ref-pereira2015impact">2015</a>; Grant, Wallace, and Spurgeon <a href="#ref-grant2013exploration">2013</a>)</span>.</p>
-<p>While we recommend the reader to reflect on this evidence and their own well-being, this is not a self help book. It is about programming. However, there is one non-programming skill that <em>can</em> have a huge impact on productivity: touch typing. This skill can be relatively painless to learn, and can have a huge impact on your ability to write, modify and test R code quickly. Learning to touch type properly will pay off in small increments throughout the rest of your programming life (of course, the benefits are not constrained to R programming).</p>
-<p>The key difference between a touch typist and someone who constantly looks down at the keyboard, or who uses only two or three fingers for typing, is hand placement. Touch typing involves positioning your hands on the keyboard with each finger of both hands touching or hovering over a specific letter (Figure <a href="introduction.html#fig:touch">1.1</a>). This takes time and some discipline to learn. Fortunately there are many resources that will help you get in the habit of touch typing early, including open source software projects <a href="https://sourceforge.net/projects/klavaro/">Klavaro</a> and <a href="https://sourceforge.net/projects/typefaster/">TypeFaster</a>.</p>
-<div class="figure"><span id="fig:touch"></span>
-<img src="figures/800px-QWERTY-home-keys-position.png" alt="The starting position for touch typing, with the fingers over the 'home keys'. Source: [Wikipedia](https://commons.wikimedia.org/wiki/File:QWERTY-home-keys-position.svg) under the Creative Commons license." width="\textwidth" />
-<p class="caption">
-Figure 1.1: The starting position for touch typing, with the fingers over the ‘home keys’. Source: <a href="https://commons.wikimedia.org/wiki/File:QWERTY-home-keys-position.svg">Wikipedia</a> under the Creative Commons license.
+<div id="getting-data-from-the-internet" class="section level2">
+<h2><span class="header-section-number">5.2</span> Getting data from the internet</h2>
+<p>The code chunk below shows how the functions <code>download.file</code><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> and <code>unzip</code> can be used to download and unzip a dataset from the internet. R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the <code>data</code> directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data’s <em>provenance</em>. Note also that part of the dataset is stored in the <strong>efficient</strong> package.</p>
+<div class="rmdnote">
+<p>
+Using R for basic file management can help create a reproducible workflow, as illustrated below. The data downloaded in the following code chunk is a multi-table dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group and described more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>. From this dataset we primarily use the ‘voyages’ table with lists Dutch shipping expeditions by their date of departure.
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://www.monetdb.org/sites/default/files/voc_tsvs.zip&quot;</span>
+<span class="kw">download.file</span>(url, <span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># download file</span>
+<span class="kw">unzip</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;data&quot;</span>) <span class="co"># unzip files</span>
+<span class="kw">file.remove</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># tidy up by removing the zip file</span></code></pre></div>
+<p>This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with <code>df = read.csv(url)</code>. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don’t have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO<sup>2</sup>. Note that this dataset is also available from the <strong>datasets</strong> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv&quot;</span>
+<span class="kw">download.file</span>(url, <span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
+<p>There are now many R packages to assist with the download and import of data. The organisation <a href="https://ropensci.org/">ROpenSci</a> supports a number of these. The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>) <span class="co"># load the WDI library (must be installed)</span>
+<span class="kw">WDIsearch</span>(<span class="st">&quot;CO2&quot;</span>) <span class="co"># search for data on a topic</span>
+co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class="dt">indicator =</span> <span class="st">&quot;EN.CO2.TRAN.ZS&quot;</span>) <span class="co"># import data</span></code></pre></div>
+<p>There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data’s origin (e.g. <code># Downloaded from http://example.com</code>) before referring to the dataset can greatly improve the utility of the code to yourself and others.</p>
 </div>
-<div id="benchmarking" class="section level2">
-<h2><span class="header-section-number">1.6</span> Benchmarking</h2>
-<p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying things from one benchmark to the next and recording the results after changing things allows experimentation to see which bits of code are fastest. Benchmarking is important in the efficient programmer’s toolkit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it. The easiest way to benchmark a function is to use <code>system.time()</code>. The <strong>microbenchmark</strong> package is more flexible and runs a test many times (by default <span class="math inline">\(1000\)</span>), enabling the user to detect microsecond difference in code performance.</p>
-<div id="benchmarking-example" class="section level3">
-<h3><span class="header-section-number">1.6.1</span> Benchmarking example</h3>
-<p>A good example is testing different methods to look-up an element of a dataframe.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
-df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">name =</span> <span class="kw">c</span>(letters[<span class="dv">1</span>:<span class="dv">4</span>]))
-<span class="kw">microbenchmark</span>(
-  df[<span class="dv">3</span>, <span class="dv">2</span>],
-  df$name[<span class="dv">3</span>],
-  df[<span class="dv">3</span>, <span class="st">&#39;v&#39;</span>]
-)
-<span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;        expr  min   lq mean median   uq   max neval</span>
-<span class="co">#&gt;    df[3, 2] 21.0 22.5 24.9   23.0 23.7 121.7   100</span>
-<span class="co">#&gt;  df$name[3] 15.1 16.8 18.3   17.8 18.6  30.9   100</span>
-<span class="co">#&gt;  df[3, &quot;v&quot;] 13.4 14.5 16.0   14.9 15.6  30.7   100</span></code></pre></div>
-<p>The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.</p>
-</div>
-</div>
-<div id="profiling" class="section level2">
-<h2><span class="header-section-number">1.7</span> Profiling</h2>
-<p>Benchmarking generally tests execution time of one function against another. Profiling, on the other hand, is about testing large chunks of code.</p>
-<p>It is difficult to over-emphasise the importance of profiling for efficient R programming. Without a profile of what took longest, you will have only a vague idea of why your code is taking so long to run. The example below (which generates Figure <a href="introduction.html#fig:icesheet">1.3</a> an image of ice-sheet retreat from 1985 to 2015) shows how profiling can be used to identify bottlenecks in your R scripts:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
-<span class="kw">profvis</span>(<span class="dt">expr =</span> {
-  
-  <span class="co"># Stage 1: load packages</span>
-  <span class="kw">library</span>(<span class="st">&quot;rnoaa&quot;</span>)
-  <span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)
-  
-  <span class="co"># Stage 2: load and process data</span>
-  out =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/out-ice.Rds&quot;</span>)
-  df =<span class="st"> </span>dplyr::<span class="kw">rbind_all</span>(out, <span class="dt">id =</span> <span class="st">&quot;Year&quot;</span>)
-  
-  <span class="co"># Stage 3: visualise output</span>
-  <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(long, lat, <span class="dt">group =</span> <span class="kw">paste</span>(group, Year))) +
-<span class="st">    </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Year)) 
-  <span class="kw">ggsave</span>(<span class="st">&quot;figures/icesheet-test.png&quot;</span>)
-}, <span class="dt">interval =</span> <span class="fl">0.01</span>, <span class="dt">prof_output =</span> <span class="st">&quot;ice-prof&quot;</span>)</code></pre></div>
-<p>The result of this profiling exercise are displayed in Figure <a href="introduction.html#fig:profvis-ice">1.2</a>.</p>
-<div class="figure"><span id="fig:profvis-ice"></span>
-<img src="figures/profvis-ice.png" alt="Profiling results of loading and plotting NASA data on icesheet retreat." width="340" />
-<p class="caption">
-Figure 1.2: Profiling results of loading and plotting NASA data on icesheet retreat.
-</p>
-</div>
-<div class="figure"><span id="fig:icesheet"></span>
-<img src="figures/icesheet-change.png" alt="Visualisation of North Pole icesheet decline, generated using the code profiled using the profvis package." width="926" />
-<p class="caption">
-Figure 1.3: Visualisation of North Pole icesheet decline, generated using the code profiled using the profvis package.
-</p>
-</div>
+<div id="versatile-data-import-with-rio" class="section level2">
+<h2><span class="header-section-number">5.3</span> Versatile data import with rio</h2>
+<p><strong>rio</strong> is is a ‘A Swiss-Army Knife for Data I/O’, providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include <code>.csv</code>, <code>.feather</code>, <code>.json</code>, <code>.dta</code>, <code>.xls</code>, <code>.xlsx</code> and Google Sheets (see the package’s <a href="https://github.com/leeper/rio">github page</a> for up-to-date information). Below we illustrate three of <strong>rio</strong>’s key functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rio)
 
+<span class="co"># Specify a file</span>
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/voc_voyages.tsv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+
+<span class="co"># Import the file (uses the fread function from data.table)</span>
+voyages =<span class="st"> </span><span class="kw">import</span>(fname)
+
+<span class="co"># Export the file as an Excel spreadsheet</span>
+<span class="kw">export</span>(voyages, <span class="st">&quot;output.xlsx&quot;</span>)</code></pre></div>
+<div class="rmdtip">
+<p>
+The ability to import and use <code>.json</code> data is becoming increasingly common as it a standard output format for many APIs and the <strong>jsonlite</strong> and <strong>geojsonio</strong> packages have been developed to make this as easy as possible.
+</p>
+</div>
+<div id="exercises-11" class="section level3 unnumbered">
+<h3>Exercises</h3>
+<p>The final line in the code chunk above shows a neat feature of <strong>rio</strong> and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the <code>output.xlsx</code> file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient and non-secure file format from your system to preserve precious disk space:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(<span class="st">&quot;output.xlsx&quot;</span>)
+<span class="co">#&gt; Warning in file.remove(&quot;output.xlsx&quot;): cannot remove file &#39;output.xlsx&#39;,</span>
+<span class="co">#&gt; reason &#39;No such file or directory&#39;</span>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-lovelace1842translator">
-<p>Lovelace, Ada Countess. 1842. “Translator’s Notes to an Article on Babbage’s Analytical Engine.” <em>Scientific Memoirs</em> 3: 691–731.</p>
+<div id="accessing-data-stored-in-packages" class="section level2">
+<h2><span class="header-section-number">5.4</span> Accessing data stored in packages</h2>
+<p>Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command <code>data(package = &quot;package_name&quot;)</code> will show the datasets in a package. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;)</code>.</p>
+<p>Raw data (i.e. data which has not been converted into R’s native <code>.Rds</code> format) is usually located with the sub-folder <code>extdata</code> in R (which corresponds to <code>inst/extdata</code> when developing packages. The function <code>system.file</code> outputs file paths associated with specific packages. To see all of the external files within the <strong>readr</strong> package, for example, one could use the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>))
+<span class="co">#&gt; [1] &quot;compound.log&quot;      &quot;epa78.txt&quot;         &quot;example.log&quot;      </span>
+<span class="co">#&gt; [4] &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot; &quot;mtcars.csv&quot;       </span>
+<span class="co">#&gt; [7] &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
+<p>Further, to ‘look around’ to see what files are stored in a particular package, one could type the following, taking advantage of RStudio’s intellisense file completion capabilities (using copy and paste to enter the file path):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
+<span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span>
+<span class="st">&quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/&quot;</span></code></pre></div>
+<p>Hitting <code>Tab</code> after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure <a href="efficient-inputoutput.html#fig:intelli">5.1</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:intelli"></span>
+<img src="figures/rstudio-package-filepath-intellisense.png" alt="Discovering files in R packages using RStudio's 'intellisense'." width="50%" />
+<p class="caption">
+Figure 5.1: Discovering files in R packages using RStudio’s ‘intellisense’.
+</p>
 </div>
-<div id="ref-visser_speeding_2015">
-<p>Visser, Marco D., Sean M. McMahon, Cory Merow, Philip M. Dixon, Sydne Record, and Eelke Jongejans. 2015. “Speeding Up Ecological and Evolutionary Computations in R; Essentials of High Performance Computing for Biologists.” Edited by Francis Ouellette. <em>PLOS Computational Biology</em> 11 (3): e1004140. doi:<a href="https://doi.org/10.1371/journal.pcbi.1004140">10.1371/journal.pcbi.1004140</a>.</p>
 </div>
-<div id="ref-janert2010data">
-<p>Janert, Philipp K. 2010. <em>Data Analysis with Open Source Tools</em>. “ O’Reilly Media, Inc.”</p>
+<div id="the-feather-file-format" class="section level2">
+<h2><span class="header-section-number">5.5</span> The feather file format</h2>
+<p>Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the <code>df_co2</code> dataset loaded previously in both R and Python:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;feather&quot;</span>)
+<span class="kw">write_feather</span>(df_co2, <span class="st">&quot;data/co2.feather&quot;</span>)
+df_co2_feather =<span class="st"> </span><span class="kw">read_feather</span>(<span class="st">&quot;data/co2.feather&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> feather
+<span class="im">import</span> feather
+path <span class="op">=</span> <span class="st">&#39;data/co2.feather&#39;</span>
+df_co2_feather <span class="op">=</span> feather.read_dataframe(path)</code></pre></div>
 </div>
-<div id="ref-jensen2011can">
-<p>Jensen, Jørgen Dejgård. 2011. “Can Worksite Nutritional Interventions Improve Productivity and Firm Profitability? A Literature Review.” <em>Perspectives in Public Health</em> 131 (4). SAGE Publications: 184–92.</p>
+<div id="efficient-data-export-.rdata-or-.rds" class="section level2">
+<h2><span class="header-section-number">5.6</span> Efficient data export: .Rdata or .Rds?</h2>
+<p>Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large <code>.shp</code> file, for example, can take more than ten times longer to load than a <code>.Rds</code> or <code>.Rdata</code> file.</p>
+<p><code>.Rds</code> and <code>.RData</code> are R’s native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(df_co2, <span class="dt">file =</span> <span class="st">&quot;data/co2.RData&quot;</span>)
+<span class="kw">saveRDS</span>(df_co2, <span class="st">&quot;data/co2.Rds&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;data/co2.RData&quot;</span>)
+df_co2_rds =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/co2.Rds&quot;</span>)
+<span class="kw">identical</span>(df_co2, df_co2_rds)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>The first method is the most widely used. It uses uses the <code>save</code> function which takes any number of R objects and writes them to a file, which must be specified by the <code>file =</code> argument. <code>save</code> is like <code>save.image</code>, which saves <em>all</em> the objects currently loaded in R.</p>
+<p>The second method is slightly less used but we recommend it. Apart from being slightly more concise for saving single R objects, the <code>readRDS</code> function is more flexible: as shown in the subsequent line, the resulting object can be assigned to any name. In this case we called it <code>df_co2_rds</code> (which we show to be identical to <code>df_co2</code>, loaded with the <code>load</code> command) but we could have called it anything or simply printed it to the console.</p>
+<p>Using <code>saveRDS</code> is good practice because it forces you to specify object names. If you use <code>save</code> without care, you could forget the names of the objects you saved and accidentally overwrite objects that already existed.</p>
+<p>How space efficient are these file export methods? We can explore this question using the functions <code>list.files</code> and <code>file.size</code>, as illustrated below. The results, which also show how the <em>relative</em> space saving of native R formats increase with dataset size, are shown in Table <a href="efficient-inputoutput.html#tab:sizes">5.1</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">files_co2 =<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> <span class="st">&quot;data&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;co2.&quot;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)
+filesize_co2 =<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">Format =</span> <span class="kw">gsub</span>(<span class="dt">pattern =</span> <span class="st">&quot;data/&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot;&quot;</span>, files_co2),
+  <span class="dt">Size =</span> <span class="kw">file.size</span>(files_co2) /<span class="st"> </span><span class="dv">1000</span>
+  )</code></pre></div>
+<table>
+<caption><span id="tab:sizes">Table 5.1: </span>Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row ‘co2’ dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
+<thead>
+<tr class="header">
+<th align="left">Format</th>
+<th align="right">Size</th>
+<th align="right">Rel</th>
+<th align="right">Size (10x)</th>
+<th align="right">Rel (10x)</th>
+<th align="right">Size (100x)</th>
+<th align="right">Rel (100x)</th>
+<th align="right">Size (1000x)</th>
+<th align="right">Rel (1000x)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">co2.csv</td>
+<td align="right">13.8</td>
+<td align="right">3.0</td>
+<td align="right">160.3</td>
+<td align="right">29.4</td>
+<td align="right">1649.7</td>
+<td align="right">147.3</td>
+<td align="right">16964.9</td>
+<td align="right">271</td>
+</tr>
+<tr class="even">
+<td align="left">co2.feather</td>
+<td align="right">9.7</td>
+<td align="right">2.1</td>
+<td align="right">93.9</td>
+<td align="right">17.2</td>
+<td align="right">936.3</td>
+<td align="right">83.6</td>
+<td align="right">9360.3</td>
+<td align="right">150</td>
+</tr>
+<tr class="odd">
+<td align="left">co2.RData</td>
+<td align="right">4.7</td>
+<td align="right">1.0</td>
+<td align="right">5.5</td>
+<td align="right">1.0</td>
+<td align="right">11.2</td>
+<td align="right">1.0</td>
+<td align="right">62.6</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">co2.Rds</td>
+<td align="right">4.7</td>
+<td align="right">1.0</td>
+<td align="right">5.5</td>
+<td align="right">1.0</td>
+<td align="right">11.2</td>
+<td align="right">1.0</td>
+<td align="right">62.6</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. It is striking to note that R’s native formats can be <strong>over 100 times</strong> more space efficient than plain text (.csv) and other binary (<code>.feather</code>) formats. But how does each method compare from a computational efficiency perceptive?</p>
 </div>
-<div id="ref-pereira2015impact">
-<p>Pereira, Michelle Jessica, Brooke Kaye Coombes, Tracy Anne Comans, and Venerina Johnston. 2015. “The Impact of Onsite Workplace Health-Enhancing Physical Activity Interventions on Worker Productivity: A Systematic Review.” <em>Occupational and Environmental Medicine</em> 72 (6). BMJ Publishing Group Ltd: 401–12.</p>
+<div id="a-benchmark-of-methods-for-file-import-and-export" class="section level2">
+<h2><span class="header-section-number">5.7</span> A benchmark of methods for file import and export</h2>
+<p>The read and write times for the functions showcased above are presented in Table <a href="efficient-inputoutput.html#tab:rtimes">5.2</a> and Table <a href="efficient-inputoutput.html#tab:wtimes">5.3</a> respectively.</p>
+<table>
+<caption><span id="tab:rtimes">Table 5.2: </span>Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row ‘co2’ dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="right">Time</th>
+<th align="right">Rel</th>
+<th align="right">Time (10x)</th>
+<th align="right">Rel (10x)</th>
+<th align="right">Time (100x)</th>
+<th align="right">Rel (100x)</th>
+<th align="right">Time (1000x)</th>
+<th align="right">Rel (1000x)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">read.csv</td>
+<td align="right">1.8</td>
+<td align="right">15.1</td>
+<td align="right">13.1</td>
+<td align="right">110.8</td>
+<td align="right">141.5</td>
+<td align="right">250.7</td>
+<td align="right">1639.3</td>
+<td align="right">450.0</td>
+</tr>
+<tr class="even">
+<td align="left">read_feather</td>
+<td align="right">0.1</td>
+<td align="right">1.0</td>
+<td align="right">0.1</td>
+<td align="right">1.0</td>
+<td align="right">0.6</td>
+<td align="right">1.0</td>
+<td align="right">3.6</td>
+<td align="right">1.0</td>
+</tr>
+<tr class="odd">
+<td align="left">load</td>
+<td align="right">0.2</td>
+<td align="right">1.4</td>
+<td align="right">0.4</td>
+<td align="right">3.3</td>
+<td align="right">2.6</td>
+<td align="right">4.6</td>
+<td align="right">28.1</td>
+<td align="right">7.7</td>
+</tr>
+<tr class="even">
+<td align="left">readRDS</td>
+<td align="right">0.1</td>
+<td align="right">1.1</td>
+<td align="right">0.4</td>
+<td align="right">3.0</td>
+<td align="right">2.5</td>
+<td align="right">4.5</td>
+<td align="right">27.7</td>
+<td align="right">7.6</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:wtimes">Table 5.3: </span>Absolute and relative (compared with the smallest size for each column) write times for the 3 column, 468 row ‘co2’ dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="right">Time</th>
+<th align="right">Rel</th>
+<th align="right">Time (10x)</th>
+<th align="right">Rel (10x)</th>
+<th align="right">Time (100x)</th>
+<th align="right">Rel (100x)</th>
+<th align="right">Time (1000x)</th>
+<th align="right">Rel (1000x)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">write.csv</td>
+<td align="right">2.8</td>
+<td align="right">6.9</td>
+<td align="right">21.1</td>
+<td align="right">33.0</td>
+<td align="right">197.3</td>
+<td align="right">27.5</td>
+<td align="right">2312.4</td>
+<td align="right">27.6</td>
+</tr>
+<tr class="even">
+<td align="left">save_feather</td>
+<td align="right">0.4</td>
+<td align="right">1.0</td>
+<td align="right">0.6</td>
+<td align="right">1.0</td>
+<td align="right">7.2</td>
+<td align="right">1.0</td>
+<td align="right">142.8</td>
+<td align="right">1.7</td>
+</tr>
+<tr class="odd">
+<td align="left">save</td>
+<td align="right">1.7</td>
+<td align="right">4.2</td>
+<td align="right">1.6</td>
+<td align="right">2.5</td>
+<td align="right">10.5</td>
+<td align="right">1.5</td>
+<td align="right">95.3</td>
+<td align="right">1.1</td>
+</tr>
+<tr class="even">
+<td align="left">saveRDS</td>
+<td align="right">1.7</td>
+<td align="right">4.2</td>
+<td align="right">1.5</td>
+<td align="right">2.3</td>
+<td align="right">9.5</td>
+<td align="right">1.3</td>
+<td align="right">83.9</td>
+<td align="right">1.0</td>
+</tr>
+</tbody>
+</table>
+<p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native functions for saving <code>.Rds</code> and <code>.RData</code> formats, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>save</code> and <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
 </div>
-<div id="ref-grant2013exploration">
-<p>Grant, Christine A, Louise M Wallace, and Peter C Spurgeon. 2013. “An Exploration of the Psychological Factors Affecting Remote E-Worker’s Job Effectiveness, Well-Being and Work-Life Balance.” <em>Employee Relations</em> 35 (5). Emerald Group Publishing Limited: 527–46.</p>
+<div id="fread" class="section level2">
+<h2><span class="header-section-number">5.8</span> Fast import of plain text formats</h2>
+<p>There is often more than one way to read data into R. A simple <code>.csv</code>, for example, file can be imported using a wide range of methods, with implications for computational efficiency. This section investigates methods for getting data into R, with a focus on delimited text formats, as these are ubiquitous, and a focus on three approaches: base R’s plain text reading functions such as <code>read.delim</code>, which are derived from <code>read.table</code>; the <strong>data.table</strong> approach, which uses the function <code>fread</code>; and the newer <strong>readr</strong> package which provides <code>read_csv</code> and other <code>read_</code> functions such as <code>read_tsv</code>.</p>
+<div class="rmdnote">
+<p>
+Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv</code> and <code>read.delim</code> in fact are <em>wrappers</em> for the more generic function <code>read.table</code>. This can be seen in the source code of <code>read.csv</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = “,”)</code>.
+</p>
 </div>
+<p>Although this section is focussed on reading text files, it demonstrate the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantages of addition package dependency (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that <em>require</em> a certain package to load in R: the <strong>readstata13</strong> package, for example, was developed solely to read in <code>.dta</code> files generated by versions of Stata 13 and above.</p>
+<p>Figure <a href="efficient-inputoutput.html#fig:readr-vs-base">5.2</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around 1 MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
+<p>For files beyond 100 MB in size <code>fread</code> and <code>read_csv</code> can be expected to be around <em>5 times faster</em> than <code>read.delim</code>. This efficiency gain may be inconsequential for a one-off file of 100 MB running on a fast computer (which still takes less than a minute with <code>read.csv</code>), but could represent an important speed-up if you frequently load large text files.</p>
+<div class="figure"><span id="fig:readr-vs-base"></span>
+<img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of `base`, `data.table` and `readr` functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file.." width="576" />
+<p class="caption">
+Figure 5.2: Benchmarks of <code>base</code>, <code>data.table</code> and <code>readr</code> functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file..
+</p>
+</div>
+<p>When tested on a large (4 GB) .csv file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section <a href="hardware.html#ram">9.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in <code>?read.table</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.csv</span>(file_name, <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>))</code></pre></div>
+<!-- Idea: test the functions on text data -->
+<p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="efficient-inputoutput.html#tab:voyages">5.4</a> shows that <code>read_tsv</code> is around 3 times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="efficient-inputoutput.html#fig:readr-vs-base">5.2</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/voc_voyages.tsv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+res_v =<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>,
+  <span class="dt">base_read =</span> voyages_base &lt;-<span class="st"> </span><span class="kw">read.delim</span>(fname),
+  <span class="dt">readr_read =</span> voyages_readr &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(fname),
+  <span class="dt">dt_fread =</span> voyages_dt &lt;-<span class="st"> </span><span class="kw">fread</span>(fname))</code></pre></div>
+<table>
+<caption><span id="tab:voyages">Table 5.4: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset relative to the mean execution time of <code>fread</code>, around 0.02 seconds on a modern computer.</caption>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="right">min</th>
+<th align="right">mean</th>
+<th align="right">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">base_read</td>
+<td align="right">10.7</td>
+<td align="right">11.1</td>
+<td align="right">11.4</td>
+</tr>
+<tr class="even">
+<td align="left">readr_read</td>
+<td align="right">3.4</td>
+<td align="right">4.7</td>
+<td align="right">13.5</td>
+</tr>
+<tr class="odd">
+<td align="left">dt_fread</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+</tr>
+</tbody>
+</table>
+<p>The benchmark above produces warning messages (not shown) for the <code>read_tsv</code> and <code>fread</code> functions but not the slowest base function <code>read.delim</code>. An exploration of these functions can shed light on the speed/robustness trade-off.</p>
+<ul>
+<li>The <strong>readr</strong> function <code>read_csv</code> generates a warning for row 2841 in the <code>built</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first 1000 rows, rather than all rows, as base <code>read.*</code> functions do.</li>
+</ul>
+<p>As illustrated by printing the result for the row which generated a warning, the <code>read_tsv</code> output is more sensible than the <code>read.delim</code> output: <code>read.delim</code> coerced the date field into a factor based on a single entry which is a text. <code>read_tsv</code> coerced the variable into a numeric vector, as illustrated below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(voyages_base$built) <span class="co"># coerced to a factor</span>
+<span class="co">#&gt; [1] &quot;factor&quot;</span>
+<span class="kw">class</span>(voyages_readr$built) <span class="co"># numeric based on first 1000 rows</span>
+<span class="co">#&gt; [1] &quot;numeric&quot;</span>
+voyages_base$built[<span class="dv">2841</span>] <span class="co"># contains the text responsible for coercion</span>
+<span class="co">#&gt; [1] 1721-01-01</span>
+<span class="co">#&gt; 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</span>
+voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span>
+<span class="co">#&gt; [1] NA</span></code></pre></div>
+<ul>
+<li>The <strong>data.table</strong> function <code>fread</code> generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were <code>Bumped to type character on data row ...</code>, with the offending rows printed in place of <code>...</code>. Instead of changing the offending values to <code>NA</code>, as <strong>readr</strong> does for the <code>built</code> column (9), <code>fread</code> automatically converts any columns it thought of as numeric into characters. An additional feature of <code>fread</code> is that it can read-in a selection of the columns, either by their index or name, using the <code>select</code> argument. This is illustrated below by reading in only half (the first 11) columns from the voyages dataset and comparing the result with <code>fread</code>’ing all the columns in.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">5</span>,
+  <span class="dt">with_select =</span> <span class="kw">fread</span>(fname, <span class="dt">select =</span> <span class="dv">1</span>:<span class="dv">11</span>),
+  <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
+  )
+<span class="co">#&gt; Unit: milliseconds</span>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.02  9.04  9.54   9.08  9.3 11.3     5</span>
+<span class="co">#&gt;  without_select 13.79 13.82 13.99  13.83 13.8 14.7     5</span></code></pre></div>
+<p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>.</p>
+<table>
+<caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="left">number</th>
+<th align="left">boatname</th>
+<th align="left">built</th>
+<th align="left">departure_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">base_read</td>
+<td align="left">integer</td>
+<td align="left">factor</td>
+<td align="left">factor</td>
+<td align="left">factor</td>
+</tr>
+<tr class="even">
+<td align="left">readr_read</td>
+<td align="left">integer</td>
+<td align="left">character</td>
+<td align="left">numeric</td>
+<td align="left">Date</td>
+</tr>
+<tr class="odd">
+<td align="left">dt_fread</td>
+<td align="left">integer</td>
+<td align="left">character</td>
+<td align="left">character</td>
+<td align="left">character</td>
+</tr>
+</tbody>
+</table>
+<p>Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a> shows 4 main similarities and differences between the three read types of read function:</p>
+<ul>
+<li>For uniform data such as the ‘number’ variable in Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>, all reading methods yield the same result (integer in this case).</li>
+<li>For columns that are obviously characters such as ‘boatname’, the base method results in factors (unless <code>stringsAsFactors</code> is set to <code>TRUE</code>) whereas <code>fread</code> and <code>read_csv</code> functions return characters.</li>
+<li>For columns in which the first 1000 rows are of one type but which contain anomalies, such as ‘built’ and ‘departure_data’ in the shipping example, <code>fread</code> coerces the result to characters. <code>read_csv</code> and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to <code>NA</code>. This is illustrated in <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>, where <code>read_tsv</code> produces a <code>numeric</code> class for the ‘built’ variable, ignoring the non numeric text in row 2841.</li>
+<li><code>read_*</code> functions generate objects of class <code>tbl_df</code>, an extension of the <code>data.frame</code>, as discussed in Section <a href="efficient-data-carpentry.html#dplyr">6.3</a>. <code>fread</code> generates objects of class <code>data.table</code>. These can be used as standard data frames but differ subtly in their behaviour.</li>
+</ul>
+<p>The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on ‘under the hood’ of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R.</p>
+<div id="preprocessing-outside-r" class="section level3">
+<h3><span class="header-section-number">5.8.1</span> Preprocessing outside R</h3>
+<p>There are circumstances when datasets become too large to read directly into R. Reading in 4 GB text file using the functions tested above, for example, consumed all available RAM on an 16 GB machine! To overcome the limitation that R reads all data directly into RAM, external <em>stream processing</em> tools can be used to preprocess large text files. The following command, using the shell command <code>split</code>, for example, would break a large multi GB file many one GB chunks, each of which is more manageable for R:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">split</span> -b100m bigfile.csv</code></pre></div>
+<p>The result is a series of files, set to 100 MB each with the <code>-b100m</code> argument in the above code. By default these will be called <code>xaa</code>, <code>xab</code> and which could be read in <em>one chunk at a time</em> (e.g. using <code>read.csv</code>, <code>fread</code> or <code>read_csv</code>, described in the previous section) without crashing most modern computers.</p>
+<p>Splitting a large file into individual chunks may allow it to be read into R. This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way. A more efficient way to work with very large datasets is via databases.</p>
+
+<!-- To do: -->
+<!-- Talk about merge vs *_join -->
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="14">
+<li id="fn14"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="efficient-inputoutput.html#fnref14">↩</a></p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="preface.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="efficient-set-up.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="efficient-workflow.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="efficient-data-carpentry.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -510,7 +835,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/05-input-output.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],
