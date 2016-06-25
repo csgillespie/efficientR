@@ -218,7 +218,7 @@ saveRDS(idata, "data/idata-renamed.Rds")
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, "")` is an alternative way to query the class of columns in a dataset.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, character(1))` is an alternative way to query the class of columns in a dataset.]
 
 ```{r}
 idata = readRDS("data/idata-renamed.Rds")
@@ -240,7 +240,7 @@ The following code chunk re-classifies all of the numeric variables using `data.
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
 idata[id] = data.matrix(idata[id])
-vapply(idata, class, "")
+vapply(idata, class, character(1))
 ```
 
 As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
@@ -325,7 +325,8 @@ Looking at the output, it becomes clear that the majority of the variables only 
 
 ```{r}
 # Identify the variable which are all NA
-all_na = vapply(miniaa, function(x) all(is.na(x)), T)
+all_na = vapply(miniaa, function(x) all(is.na(x)),
+                logical(1))
 summary(all_na) # summary of the results
 miniaa1 = miniaa[!all_na] # subset the dataframe
 ```
