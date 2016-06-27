@@ -4,18 +4,24 @@ knit: "bookdown::preview_chapter"
 
 # Efficient input/output
 
-Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. Yet the majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it much easier for your R projects to interact with the outside world.
+Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. Yet the majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it much easier for your R projects to interact with the outside world. This chapter explains how to efficiently read a wide range of datasets into R.
 
-This section explains how to efficiently read a wide range of datasets into R. We will look at getting data from the internet (this section is covered first because an increasing proportion of the world's data is available online); efficiently importing data from a wide variety of data formats with the **rio** package; accessing data stored in R packages; 
-
-With the accelerating digital revolution, an . Further, an increasing proportion of data is *open access*, free for anyone to download. For these reasons downloading and importing data from the web is the first . Next we briefly outline two developments for data import: the **rio** package and the `.feather` data format, which can make data import efficient from programmer and computational perspectives. The section finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
+With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue. Downloading and importing data from the web is therefore covered first. Next we briefly outline two developments for efficient data import: the **rio** package and the `.feather` data format. Benchmarks throughout the chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. The chapter finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
 
 Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
 
-## Top 5 tips for efficient data carpentry
+## Top 5 tips for efficient data I/O
 
-- File format decisions can have a huge impact on the efficiency of data import and export operations. Use `.Rds` files with `readRDS` and `saveRDS` for keeping local copies of clean data.
+- Keep the names of local files download from the internet unchanged. This will help you traces the *provenance* of the data in the future.
+
+- R's native file format is `.Rds`. These files can imported and exported using `readRDS` and `saveRDS` for fast and space efficient data storage.
+
+- Use `import()` from the **rio** package to efficiently import data from a wide range of formats, avoiding the hassle of loading format-specific libraries.
+
+- Use **readr** or **data.table** versions of `read.table()` to efficiently import large text files.
+
+- Use `file.size()` and `object.size()` to keep track of the size of files and R objects and take action if they get too big.
 
 ## Getting data from the internet
 
@@ -423,4 +429,4 @@ The result is a series of files, set to 100 MB each with the `-b100m` argument i
 
 Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
-A more efficient way to work with very large datasets is via databases.
+A more efficient way to work with very large datasets is via databases, covered in the next chapter.
