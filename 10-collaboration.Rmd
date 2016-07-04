@@ -4,8 +4,6 @@ knit: "bookdown::preview_chapter"
 
 # Efficient collaboration
 
-<!-- Comment on speech marks-->
-
 Large projects inevitably involve many people. This poses risks but also opportunities for improving computational efficiency and productivity, especially if project collaborators are reading and committing code. This chapter provides guidance on how to minimise the risks and maximise the benefits of collaborative R programming. 
 
 Collaborative working has a number of benefits. A team with a diverse skill set is usually stronger than a team with a very narrow focus. It makes sense to specialize: clearly defining roles such as statistician, front-end developer, system administrator and project manager will make your team stronger. Even if you are working alone, dividing the work into discrete branches in this way can be useful, as discussed in Chapter \@ref(efficient-workflow).
@@ -22,10 +20,10 @@ To be a successful programmer you need to use a consistent programming style.
 There is no single 'correct' style. To some extent good style is subjective and down to personal taste. There are, however, general principles that
 most programmers agree on, such as:
 
-- Use modular code
-- Comment your code
-- Don't Repeat Yourself (DRY)
-- Be concise, clear and consistent
+- Use modular code;
+- Comment your code;
+- Don't Repeat Yourself (DRY);
+- Be concise, clear and consistent.
 
 Good coding style will make you more efficient even if you are the only person who reads it.
 When your code is read by multiple readers or you are developing code with
@@ -138,7 +136,7 @@ Avoid using names of existing functions. Do not, for example, use `data` as a va
 The `lubridate` package is a good example of a package that has a consistent naming system, 
 to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
 
-```{r results="hide"}
+```{r results="hide", message=FALSE}
 library("lubridate")
 ymd("2012-01-02")
 dmy("02-01-2012")
@@ -165,12 +163,6 @@ The second line will raise an error. When we use `=` in a function call, it chan
 _assignment_ operator to an _argument passing_ operator. For further information about
 assignment, see `?assignOps`.
 
-To prevent `=` being interpreted as an argument passing operator, you can enclose the function call in curly braces:
-
-```{r}
-system.time({expr3 = rnorm(10e5)}) 
-```
-
 ### Spacing
 
 Consistent spacing is an easy way of making your code more readable. Even a simple command such as `x = x + 1` takes a bit more time to understand when the spacing is removed, i.e. `x=x+1`. You should add a space around the operators `+`, `-`, `\` and `*`. Include a space around the assignment operators, `<-` and `=`. Additionally, add a space around any comparison operators such as `==` and `<`. The latter rule helps avoid bugs 
@@ -186,7 +178,7 @@ x[x < -1]
 The exceptions to the space rule are `:`, `::` and `:::`, as well as `$` and `@` symbols for selecting sub-parts of objects. As with English, add a space after a comma, e.g.
 
 ```{r eval=FALSE}
-cpu_speed[year > 1990, ]
+z[z$colA > 1990, ]
 ```
 
 ### Indentation
@@ -210,7 +202,7 @@ Typing this straight into R will result in an error.
 An opening curly brace, `{` should not go on its own line and 
 should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside a curly braces should be indented (and RStudio will enforce this rule), as shown below.
 
-```{r}
+```{r, results="hide"}
 # Good style
 if(x < 5){
   x
@@ -219,14 +211,6 @@ if(x < 5){
 }
 ```
 
-Be consistent with one line control statements. Some people prefer to avoid using braces:
-
-```{r}
-# No braces
-if(x < 5)
-  x else
-    y
-```
 
 ### Exercises
 
@@ -247,7 +231,7 @@ Commits are the basic units of version control. Keep your commits 'atomic': each
 Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you mush 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in Figure \@ref(fig:rstudio-git). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
 [GitHub's help pages](https://help.github.com/).]
 
-```{r rstudio-git, fig.cap="The Git tab in RStudio", echo=FALSE}
+```{r rstudio-git, fig.cap="The Git tab in RStudio", echo=FALSE, fig.out="\\textwidth"}
 knitr::include_graphics("figures/rstudio-git.png")
 ```
 
@@ -259,7 +243,7 @@ Once Git has been linked to your RStudio installation, it can be used to track c
 
 RStudio provides a useful GUI for navigating past commits. This allows you to see the entire history of your project. To navigate and view the details of past commits click on the Diff button in the Git pane, as illustrated in Figure \@ref(fig:rstudio-githist).
 
-```{r rstudio-githist, fig.cap="The Git history navigation interface", echo=FALSE}
+```{r rstudio-githist, fig.cap="The Git history navigation interface", echo=FALSE, out.width="\\textwidth"}
 knitr::include_graphics("figures/rstudio-githist.png")
 ```
 
@@ -267,7 +251,7 @@ knitr::include_graphics("figures/rstudio-githist.png")
 
 GitHub is an online platform that makes sharing your work and collaborative code easy. There are alternatives such as [GitLab](https://about.gitlab.com/). The focus here is on GitHub as it's by far the most popular among R developers. Also, through the command `devtools::install_github()`, preview versions of a package can be installed and updated in an instant. This makes 'GitHub packages' a great way to access the latest functionality. And GitHub makes it easy to get your work 'out there' to the world for efficiently collaborating with others, without the restraints placed on CRAN packages.
 
-To install the GitHub version of the the benchmark package, for example one would enter:
+To install the GitHub version of the **benchmarkme** package, for example one would enter
 
 ```{r, eval=FALSE}
 devtools::install_github("csgillespie/benchmarkme")
@@ -278,7 +262,6 @@ Note that `csgillespie` is the GitHub user and `benchmarkme` is the package name
 ```{block, note-text, type='rmdcaution'}
 Warning: although GitHub is fantastic for collaboration, it can end up creating more problems than it solves if your collaborators are not git-literate. In one project, Robin eventually abandoned using GitHub to collaborate after his collaborator found it impossible to work with. More time was being spent debugging git/GitHub than actually working. Our advice therefore is to **never impose git** and always ensure that other lines of communication (e.g. phone calls, emails) are open as different people prefer different ways of communicating.
 ```
-
 
 ### Branches, forks, pulls and clones
 
@@ -360,7 +343,7 @@ system.time({
 })
 ```
 
-#### Exercises
+#### Exercise {-}
 
 Refactor the following code chunk to make it more efficient:
 
