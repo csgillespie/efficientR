@@ -76,11 +76,7 @@ A good example is testing different methods to look-up an element of a dataframe
 ```{r}
 library("microbenchmark")
 df = data.frame(v = 1:4, name = c(letters[1:4]))
-microbenchmark(
-  df[3, 2],
-  df$name[3],
-  df[3, 'v']
-)
+microbenchmark(df[3, 2], df$name[3], df[3, 'v'])
 ```
 
 The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.
@@ -112,7 +108,7 @@ profvis(expr = {
 
 The result of this profiling exercise are displayed in Figure \@ref(fig:profvis-ice).
 
-```{r profvis-ice, echo=FALSE, fig.cap="Profiling results of loading and plotting NASA data on icesheet retreat."}
+```{r profvis-ice, echo=FALSE, fig.cap="Profiling results of loading and plotting NASA data on icesheet retreat.", out.width="\\textwidth"}
 knitr::include_graphics("figures/profvis-ice.png")
 ```
 
