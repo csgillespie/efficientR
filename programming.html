@@ -504,7 +504,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.671   0.004   2.676</span></code></pre></div>
+<span class="co">#&gt;   3.384   0.008   3.392</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -551,15 +551,15 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 <p>When we create a function we often want the function to give feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques of communicating with the user.</p>
 <div id="fatal-errors-stop" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Fatal errors: <code class="unnumbered">stop</code></h3>
-<p>Fatal errors are raised by calling the <code>stop</code>, i.e. execution is terminated. When <code>stop</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm</code> the first argument is the <code>n</code>, if the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised.</p>
+<p>Fatal errors are raised by calling the <code>stop</code>, i.e. execution is terminated. When <code>stop</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised.</p>
 <p>Errors can be caught using <code>try</code> and <code>tryCatch</code>. For example,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## silent suppresses the error message
-good =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>, <span class="dt">silent=</span><span class="ot">TRUE</span>)
-bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> &quot;1&quot;</span>, <span class="dt">silent=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p>When we inspect the objects, <code>good</code> just contains the number <code>2</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Suppress the error message</span>
+good =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)
+bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> &quot;1&quot;</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>When we inspect the objects, the variable <code>good</code> just contains the number <code>2</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">good
 <span class="co">#&gt; [1] 2</span></code></pre></div>
-<p>However, <code>bad</code> is a character string with class <code>try-error</code> and an <code>condition</code> attribute that contains</p>
+<p>However, the <code>bad</code> object is a character string with class <code>try-error</code> and a <code>condition</code> attribute that contains the error message</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bad
 <span class="co">#&gt; [1] &quot;Error in 1 + \&quot;1\&quot; : non-numeric argument to binary operator\n&quot;</span>
 <span class="co">#&gt; attr(,&quot;class&quot;)</span>
@@ -568,7 +568,7 @@ bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</sp
 <span class="co">#&gt; &lt;simpleError in 1 + &quot;1&quot;: non-numeric argument to binary operator&gt;</span></code></pre></div>
 <p>We can use this information in a standard conditional statement</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">class</span>(bad) ==<span class="st"> &quot;try-error&quot;</span>)
-  ## Do something </code></pre></div>
+  <span class="co"># Do something </span></code></pre></div>
 <p>Further details on error handling, as well as some excellent advice on general debugging techniques, are given in <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>.</p>
 </div>
 <div id="warnings-warning" class="section level3">
@@ -581,19 +581,19 @@ bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</sp
 <div id="informative-output-message-and-cat" class="section level3">
 <h3><span class="header-section-number">3.2.3</span> Informative output: <code>message</code> and <code class="unnumbered">cat</code></h3>
 <p>To give informative output, use the <code>message</code> function. In my package for fitting powerlaws, I use messages to give the user an estimate of expected run time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
-<p>Another function used for printing messages is <code>cat</code>. In general <code>cat</code> should only be used in actual <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
+<p>Another function used for printing messages is <code>cat</code>. In general <code>cat</code> should only be used in <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
 </div>
 <div id="example-retrieving-a-web-resource" class="section level3">
 <h3><span class="header-section-number">3.2.4</span> Example: Retrieving a web resource</h3>
 <p>In some cases it isn’t clear what should be returned, a message, a <code>NA</code> value or an error. For example, suppose we wish to download data from a web site.</p>
-<p>The function <code>GET</code> from the <strong>httr</strong> package can be used to download a webpage. When the we attempt to download data, the function also obtains an HTML status code. If the page exists, the function will return text (with the correct status code), e.g.</p>
+<p>The function <code>GET</code> from the <strong>httr</strong> package can be used to download a webpage. When we attempt to download data, the function also obtains an HTML status code. If the page exists, the function will return text (with the correct status code), e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/&quot;</span>) <span class="co"># Status: 200</span></code></pre></div>
 <p>If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the output and use the Status to determine what to do next.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/made_up&quot;</span>) <span class="co"># Status: 404</span></code></pre></div>
 <p>By examining the error code, the user has complete flexibility. However if the web-page doesn’t exist</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google1.com/&quot;</span>)</code></pre></div>
 <p>or if we don’t have an internet connection, then <code>GET</code> raises an error via <code>stop</code>. Instead of raising an error the author could have returned <code>NA</code> (the web-page isn’t available). However for the typically use case, it’s not clear how returning <code>NA</code> would be helpful.</p>
-<p>The <code>install_github</code> function in the **devtools* package either installs the package or raises an error. When an error is raised, the function uses a combination of <code>message</code> and <code>stop</code> to indicate the source of an error, e.g.</p>
+<p>The <code>install_github</code> function in the <strong>devtools</strong> package either installs the package or raises an error. When an error is raised, the function uses a combination of <code>message</code> and <code>stop</code> to indicate the source of an error, e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;bad/package&quot;</span>)
 <span class="co">#&gt; Downloading GitHub repo bad/package@master</span>
 <span class="co">#&gt; from URL https://api.github.com/repos/bad/package/zipball/master</span>
@@ -614,8 +614,12 @@ what can the user do if the function cannot complete it's purpose.
 <h3><span class="header-section-number">3.2.5</span> Invisible returns</h3>
 <p>The <code>invisible</code> function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regression_plot =<span class="st"> </span>function(x, y, ...) {
-  <span class="kw">plot</span>(x, y, ...)
+  <span class="co"># Plot and pass additional arguments to default plot method</span>
+  <span class="kw">plot</span>(x, y, ...) 
+  
+  <span class="co"># Fit regression model </span>
   model =<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x)
+  <span class="co"># Add line of best fit to the plot</span>
   <span class="kw">abline</span>(model)
   <span class="kw">invisible</span>(model)
 }</code></pre></div>
@@ -641,9 +645,11 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 </div>
 <div id="example-graphics" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Example: Graphics</h3>
-<p>Factors are used for ordering in graphics. For instance, suppose we have a data set where the variable <code>type</code>, takes one of three values, <code>small</code>, <code>medium</code> and <code>large</code>. Clearly there is an ordering. Using a standard <code>boxplot</code> call, <code>boxplot(y ~ type)</code>, would create a boxplot where the <span class="math inline">\(x\)</span>-axis was alphabetically ordered. By converting <code>type</code> into factor, we can easily specify the correct ordering.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(y ~<span class="st"> </span>type)
-<span class="kw">boxplot</span>(y ~<span class="st"> </span><span class="kw">factor</span>(type, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;Small&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;Large&quot;</span>)))</code></pre></div>
+<p>Factors can be used for ordering in graphics. For instance, suppose we have a data set where the variable <code>type</code>, takes one of three values, <code>small</code>, <code>medium</code> and <code>large</code>. Clearly there is an ordering. Using a standard <code>boxplot</code> call,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(y ~<span class="st"> </span>type)</code></pre></div>
+<p>would create a boxplot where the <span class="math inline">\(x\)</span>-axis was alphabetically ordered. By converting <code>type</code> into factor, we can easily specify the correct ordering.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(y ~<span class="st"> </span><span class="kw">factor</span>(type, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;Small&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;Large&quot;</span>)))</code></pre></div>
+<p><img src="_main_files/figure-html/boxplot_factor-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="example-analysis-of-variance" class="section level3">
 <h3><span class="header-section-number">3.3.3</span> Example: Analysis of variance</h3>
@@ -786,7 +792,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x45b1060&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x456e138&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -869,7 +875,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3560dc0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x33440a0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
