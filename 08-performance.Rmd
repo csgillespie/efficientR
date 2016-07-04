@@ -325,12 +325,12 @@ which profiles the code and creates an interactive HTML page. The first argument
 ```{r, eval=FALSE}
 library("profvis")
 profvis({
-  data(movies, package="ggplot2movies")
+  data(movies, package="ggplot2movies") # Load data
   movies = movies[movies$Comedy==1, ]
   plot(movies$year, movies$rating)
-  model = loess(rating ~ year, data=movies)
+  model = loess(rating ~ year, data=movies) # loess regression line
   j = order(movies$year)
-  lines(movies$year[j], model$fitted[j])
+  lines(movies$year[j], model$fitted[j]) # Add line to the plot
 })
 ```
 
@@ -346,8 +346,8 @@ the right panel also highlights that most of the execution time is spent on the
 `loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
 which in turn calls `.C` function.
 
-The conclusion from this graph, is that if optimisation were required, it would make
-sense to focus on the `loess` and possibly the `order` functions calls.
+The conclusion from this graph is that if optimisation were required, it would make
+sense to focus on the `loess` and possibly the `order` function calls.
  
 <!-- http://rpubs.com/wch/123888 -->
 
@@ -368,7 +368,7 @@ print(x, viewer=TRUE, width="1300px", height="300px")
 
 ### Example: Monopoly Simulation
 
-Monopoly is a board games that originated in the United States over 100 years ago. The
+Monopoly is a board game that originated in the United States over $100$ years ago. The
 object of the game is to go round the board and purchase squares (properties). If
 other players land on your properties they have to pay a tax. The player with the most
 money at the end of the game, wins. To make things more interesting, there are Chance
@@ -376,13 +376,14 @@ and Community Chest squares. If you land on one of these squares, you draw card,
 may send to you to other parts of the board. The other special square, is Jail. One
 way of entering Jail is to roll three successive doubles.
 
-The **efficient** package contains a simulate monopoly function that attempts to find
-the probability of landing on a certain square using a Monte-Carlo algorithm. The
+The **efficient** package contains a Monte-Carlo function for simulating a simplified game of monopoly. 
+By keeping track of where a person lands when going round the board, we obtain an estimate of the
+probability of landing on a certain square. The
 entire code is around 100 lines long. In order for `profvis` to fully profile the
 code, the **efficient** package needs to be installed from source
 
 ```{r eval=FALSE}
-## args is also a valid argument for install.packages
+# args is also a valid argument for install.packages
 devtools::install_github("csgillespie/efficient_pkg", args="--with-keep.source")
 ```
 
@@ -394,7 +395,7 @@ profvis(SimulateMonopoly(10000))
 
 to get
 
-```{r echo=FALSE}
+```{r echo=FALSE, out.width="\textwidth"}
 knitr::include_graphics("images/profvis_monopoly.png")
 ```
 
@@ -407,10 +408,10 @@ The output from `profvis` shows that the vast majority of time is spent in the
  * If you get a double, roll again (`total3`) and `total_score = total1 + total2 + total3`;
  * If roll three is a double, Go To Jail, otherwise move `total_score`.
 
-The `move` function spends around 50% of the time is spent creating a data frame, 25%
+The `move` function spends around 50% of the time creating a data frame, 25%
 time calculating row sums, and the remainder on a comparison operations. This piece of
 code can be optimised fairly easily (will still retaining the same overall structure)
-by incorporating the following improvements[^Solutions are available in the
+by incorporating the following improvements^[Solutions are available in the
 **efficient** package vignette.]:
 
   * Use a matrix instead of a data frame;
@@ -444,18 +445,17 @@ which gives a 25-fold speed improvement.
 
 #### Exercise {-}
 
-The `move` function uses a vectorised solution. Whenever we move, we always roll six
+The `move` function above uses a vectorised solution. Whenever we move, we always roll six
 dice, then examine the outcome and determine the number of doubles. However, this is
 potentially wasteful, since the probability of getting one double is $1/6$ and two
 doubles is $1/36$. Another method is too only roll additional dice if and when they
 are needed. Implement and time this solution.
 
-
 ## Parallel computing
 
 This chapter provides a brief foray into the word of parallel computing and only looks
 at shared memory systems. The idea is to give a flavour of what is possible, instead
-of covering all possible varities. For a fuller account, see [@mccallum2011].
+of covering all possible varities. For a fuller account, see @mccallum2011.
 
 In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
 with base R. The **parallel** package must still be loaded before use however, and
@@ -490,7 +490,7 @@ function, amongst other things, specifies the number of processors to use.
 Parallel computing is ideal for Monte-Carlo simulations. Each core independently
 simulates a realisation from model. At the end, we gather up the results. In the
 **efficient** package, there is a function that simulates a single game of Snakes and
-Ladders - `snakes_ladders()`[^The idea for this example came to one of the authors
+Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
 after a particularly long and dull game of Snakes and Ladders with his son.]
 
 If we wanted to simulate `N` games we could use `sapply`
@@ -503,7 +503,7 @@ sapply(1:N, snakes_ladders)
 Rewriting this code to make use of the **parallel** package is straightforward. We
 begin by making a cluster object
 
-```{r, eval=FALSE, echo=3}
+```{r, eval=FALSE, echo=2}
 library("efficient")
 library("parallel")
 cl = makeCluster(4)
