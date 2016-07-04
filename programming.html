@@ -512,7 +512,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.592   0.004   2.597</span></code></pre></div>
+<span class="co">#&gt;   2.731   0.013   2.743</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -524,7 +524,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 </ul>
 The function <code>monte_carlo_vec</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo</code>.
 <div class="figure" style="text-align: center"><span id="fig:6-2"></span>
-<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="0.7\textwidth" />
+<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
 <p class="caption">
 Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
 </p>
@@ -800,7 +800,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x39b54d0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x5055c98&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -883,7 +883,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x2b32d20&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x41d8f10&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -913,7 +913,7 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000<
 <span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></code></pre></div>
 <p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:6-4">3.3</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:6-4"></span>
-<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="0.7\textwidth" />
+<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="70%" />
 <p class="caption">
 Figure 3.3: Comparsion of mean functions.
 </p>
