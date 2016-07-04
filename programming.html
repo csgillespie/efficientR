@@ -159,10 +159,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="efficient-set-up.html"><a href="efficient-set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
-<li class="chapter" data-level="2.6.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#revolution-r"><i class="fa fa-check"></i><b>2.6.2</b> Revolution R</a></li>
-<li class="chapter" data-level="2.6.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.3</b> Other interpreters</a></li>
-<li class="chapter" data-level="2.6.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.4</b> Useful BLAS/benchmarking resources</a></li>
-<li class="chapter" data-level="2.6.5" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-5"><i class="fa fa-check"></i><b>2.6.5</b> Exercises</a></li>
+<li class="chapter" data-level="2.6.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.2</b> Other interpreters</a></li>
+<li class="chapter" data-level="2.6.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.3</b> Useful BLAS/benchmarking resources</a></li>
+<li class="chapter" data-level="2.6.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-5"><i class="fa fa-check"></i><b>2.6.4</b> Exercises</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
@@ -505,7 +504,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.849   0.004   2.853</span></code></pre></div>
+<span class="co">#&gt;   2.671   0.004   2.676</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -787,7 +786,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x46c59a0&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x45b1060&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -865,12 +864,12 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 </div>
 <div id="the-byte-compiler" class="section level2">
 <h2><span class="header-section-number">3.6</span> The byte compiler</h2>
-<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
+<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
 <p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3c696c8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3560dc0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -934,8 +933,8 @@ I always set the compile level to the maximum value of 3.
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref8">↩</a></p></li>
+<ol start="7">
+<li id="fn7"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref7">↩</a></p></li>
 </ol>
 </div>
             </section>

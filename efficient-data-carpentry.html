@@ -159,10 +159,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="efficient-set-up.html"><a href="efficient-set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="efficient-set-up.html"><a href="efficient-set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
-<li class="chapter" data-level="2.6.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#revolution-r"><i class="fa fa-check"></i><b>2.6.2</b> Revolution R</a></li>
-<li class="chapter" data-level="2.6.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.3</b> Other interpreters</a></li>
-<li class="chapter" data-level="2.6.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.4</b> Useful BLAS/benchmarking resources</a></li>
-<li class="chapter" data-level="2.6.5" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-5"><i class="fa fa-check"></i><b>2.6.5</b> Exercises</a></li>
+<li class="chapter" data-level="2.6.2" data-path="efficient-set-up.html"><a href="efficient-set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.2</b> Other interpreters</a></li>
+<li class="chapter" data-level="2.6.3" data-path="efficient-set-up.html"><a href="efficient-set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.3</b> Useful BLAS/benchmarking resources</a></li>
+<li class="chapter" data-level="2.6.4" data-path="efficient-set-up.html"><a href="efficient-set-up.html#exercises-5"><i class="fa fa-check"></i><b>2.6.4</b> Exercises</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
@@ -699,7 +698,7 @@ idata =<span class="st"> </span><span class="kw">rename</span>(idata,
 </div>
 <div id="changing-column-classes" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> Changing column classes</h3>
-<p>The <em>class</em> of R objects is critical to performance. If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a <code>data.frame</code> can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object), as illustrated below, with the inequality data loaded previously.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></p>
+<p>The <em>class</em> of R objects is critical to performance. If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a <code>data.frame</code> can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object), as illustrated below, with the inequality data loaded previously.<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
 <span class="kw">str</span>(idata)
 <span class="co">#&gt; Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    6925 obs. of  9 variables:</span>
@@ -737,7 +736,7 @@ idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id
 <p><strong>dplyr</strong> offers an alternative and more flexible way of filtering data, using <code>filter()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Base R: idata[idata$Country == &quot;Australia&quot;,]
 aus2 =<span class="st"> </span><span class="kw">filter</span>(idata, Country ==<span class="st"> &quot;Australia&quot;</span>)</code></pre></div>
-<p>In addition to being more flexible (see <code>?filter</code>), <code>filter</code> is slightly faster than base R’s notation.<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a> Note that <strong>dplyr</strong> does not use the <code>$</code> symbol: it knows that that <code>Country</code> is a variable of <code>idata</code>: the first argument of <strong>dplyr</strong> functions usually a <code>data.frame</code>, and subsequent in this context variable names can be treated as vector objects.<a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
+<p>In addition to being more flexible (see <code>?filter</code>), <code>filter</code> is slightly faster than base R’s notation.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a> Note that <strong>dplyr</strong> does not use the <code>$</code> symbol: it knows that that <code>Country</code> is a variable of <code>idata</code>: the first argument of <strong>dplyr</strong> functions usually a <code>data.frame</code>, and subsequent in this context variable names can be treated as vector objects.<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a></p>
 <p>There are <strong>dplyr</strong> equivalents of many base R functions but these usually work slightly differently. The <strong>dplyr</strong> equivalent of <code>aggregate</code>, for example is to use the grouping function <code>group_by</code> in combination with the general purpose function <code>summarise</code> (not to be confused with <code>summary</code> in base R), as we shall see in Section <a href="efficient-data-carpentry.html#data-aggregation">6.4.5</a>. For consistency, however, we next look at filtering columns.</p>
 </div>
 <div id="filtering-columns" class="section level3">
@@ -799,7 +798,7 @@ Note that the <code>ghg_ems</code> column names were cleaned using the command <
 <!-- ```{r} -->
 <!-- head(e_ems[order(e_ems$x),], 3) -->
 <!-- ``` -->
-<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a></p>
+<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">group_by</span>(ghg_ems, Country) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
@@ -1060,7 +1059,7 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 </div>
 <div id="data-processing-with-data.table" class="section level2">
 <h2><span class="header-section-number">6.7</span> Data processing with data.table</h2>
-<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a> so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dply</strong> provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend <strong>dplyr</strong>. However, <strong>data.table</strong> has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.</p>
+<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dply</strong> provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend <strong>dplyr</strong>. However, <strong>data.table</strong> has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.</p>
 <p>This section provides a few examples to illustrate how <strong>data.table</strong> differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it’s a matter of preference.</p>
 <p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="efficient-data-carpentry.html#filtering-columns">6.4.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
@@ -1099,12 +1098,12 @@ Figure 6.2: Benchmark illustrating the performance gains to be expected for diff
 </div>
 <div class="footnotes">
 <hr />
-<ol start="15">
-<li id="fn15"><p><code>vapply(idata, class, character(1))</code> is an alternative way to query the class of columns in a dataset.<a href="efficient-data-carpentry.html#fnref15">↩</a></p></li>
-<li id="fn16"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="efficient-data-carpentry.html#fnref16">↩</a></p></li>
-<li id="fn17"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="efficient-data-carpentry.html#fnref17">↩</a></p></li>
-<li id="fn18"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="efficient-data-carpentry.html#fnref18">↩</a></p></li>
-<li id="fn19"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="efficient-data-carpentry.html#fnref19">↩</a></p></li>
+<ol start="14">
+<li id="fn14"><p><code>vapply(idata, class, character(1))</code> is an alternative way to query the class of columns in a dataset.<a href="efficient-data-carpentry.html#fnref14">↩</a></p></li>
+<li id="fn15"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="efficient-data-carpentry.html#fnref15">↩</a></p></li>
+<li id="fn16"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="efficient-data-carpentry.html#fnref16">↩</a></p></li>
+<li id="fn17"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="efficient-data-carpentry.html#fnref17">↩</a></p></li>
+<li id="fn18"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="efficient-data-carpentry.html#fnref18">↩</a></p></li>
 </ol>
 </div>
             </section>
