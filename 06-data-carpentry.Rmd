@@ -26,7 +26,7 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 
 - Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by **tidyr**.
 
-- Use efficient functions for reading and writing plain text files, such as `read_csv` and `fread`, from the **readr** and **data.table** packages respectively.
+- Use the `tbl` class, the defined by the **tibble** package and the default object type of **dplyr**, to make data frames efficient to print and easier to work with.
 
 - Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in contexts where speed is critical.
 
@@ -127,9 +127,11 @@ knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
 The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
-```{block, non-standard evaluation, type='rmdnote'}
-Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
+```{block, nse, type='rmdnote'}
+Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
 ```
+
+Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be autocompleted by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 
 ## Efficient data frames with tibble
 
