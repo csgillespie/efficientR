@@ -502,7 +502,7 @@ sapply(1:N, snakes_ladders)
 Rewriting this code to make use of the **parallel** package is straightforward. We
 begin by making a cluster object
 
-```{r, eval=FALSE, echo=2}
+```{r, eval=FALSE, echo=2:3}
 library("efficient")
 library("parallel")
 cl = makeCluster(4)
@@ -539,7 +539,7 @@ simulate = function(cores) {
 ```
 
 ```{block, type="rmdtip"}
-Another common use of `on.exit` is in conjunction with the `par` function. If you use
+Another common use of `on.exit` is with the `par` function. If you use
 `par` to change graphical parameters within a function, `on.exit` ensures these
 parameters are reset to their previous value when the function ends.
 ```
@@ -548,19 +548,19 @@ parameters are reset to their previous value when the function ends.
 
 ```{r echo=FALSE}
 library("efficient")
+library("parallel")
 ```
 
 Another way of running code in parallel is to use the `mclapply` and `mcmapply`
 functions, i.e.
 ```{r results="hide"}
-## This will run on Windows, but will only use 1 core
+# This will run on Windows, but will only use 1 core
 mclapply(1:2, snakes_ladders)
 ```
 These functions use forking, that is creating a new copy of a process running on the
 CPU. However Windows does not support this low-level functionality in the way that
-Linux does. If I'm writing code that is only for me, then I use `mclapply` since I
-avoid starting and stopping clusters. However if the code is to be shared with a
-windows user, I use `makeCluster` since it is cross-platform.
+Linux does. If I'm writing code that I don't intend to share, I use `mclapply` since it 
+is more efficient.
 
 ## Rcpp
 
@@ -584,7 +584,7 @@ bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and
 recursive functions.
 
 C++ is a powerful programming language about which entire books have been written.
-This chapter therefore is focussed on getting started and provide a flavour of what is
+This section therefore is focussed on getting started and provide a flavour of what is
 possible. It is structured as follows. After ensuring that your computer is set-up for
 **Rcpp** in Section \@ref(pre-requisites), we proceed by creating a simple C++
 function, to show how C++ compares with R (Section \@ref(simple-c)). This is converted
@@ -609,7 +609,7 @@ The code in this chapter was generated using version `r packageDescription("Rcpp
 install.packages("Rcpp")
 ```
 
-**Rcpp** is well documented, as illustrated by package's
+**Rcpp** is well documented, as illustrated by the number of vignettes on the package's
 [CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its
 popularity, many other packages depend on **Rcpp**, which can be seen by looking at
 the `Reverse Imports` section.
@@ -646,10 +646,10 @@ In C++ it is a bit more long winded
 /* Return type double
  * Two arguments, also doubles
  */
-  double add_c(double x, double y) { 
-    double value = x + y;
-    return value;
-  }
+double add_c(double x, double y) { 
+  double value = x + y;
+  return value;
+}
 ```
 
 If we were writing a C++ programme we would also need another function called `main`.
@@ -685,25 +685,27 @@ function
 ```{r}
 add_c
 ```
-
-We can call the `add_c` function in the usual way
+and can call the `add_c` function in the usual way
 
 ```{r}
 add_c(1, 2)
 ```
 
-and we don't have to worry about compilers. Also, if you include this function in a
+We don't have to worry about compilers. Also, if you include this function in a
 package, users don't have to worry about any of the **Rcpp** magic. It just works.
 
 ### C++ data types {#c-types}
 
 The most basic type of variable is an integer, `int`. An `int` variable can store a
-value in the range $-32768$ to $+32767$. (There is also something called an unsigned
-int, which goes from $0$ to $65,535$). There are also `long int` data types, which
-range from $0$ to $2^{31}-1$.}. To store floating point numbers, there are single
+value in the range $-32768$ to $+32767$. To store floating point numbers, there are single
 precision numbers, `float` and double precision numbers, `double`. A `double` takes
 twice as much memory as a `float`. For __single__ characters, we use the `char` data
 type.
+
+```{block, type="rmdnote"}
+There is also something called an unsigned
+int, which goes from $0$ to $65,535$ and a `long int` that ranges  from $0$ to $2^{31}-1$.
+```
 
 ```{r cpptypes, echo=FALSE}
 tmp = data.frame(Type = c("char", "int", "float", "double", "void"), 
@@ -729,8 +731,7 @@ the function call `sourceCpp("path/to/file.cpp")` to compile them. However we ne
 include a few headers at the top of the file. The first line we add gives us access to
 the **Rcpp** functions. The file `Rcpp.h` contains a list of function and class
 definitions supplied by **Rcpp**. This file will be located where **Rcpp** is
-installed. Alternatively you can view it [online](https://github.com/RcppCore/Rcpp).
-The `include` line
+installed. The `include` line
 
 ```{Rcpp eval=FALSE}
 #include <Rcpp.h>
@@ -769,7 +770,7 @@ double add_c(double x, double y) {
 There are two main benefits with putting your C++ functions in separate files. First,
 we have the benefit of syntax highlighting (RStudio has great support for C++
 editing). Second, it's easier to make syntax errors when the switching between R and
-C++ in the same file. To save space, we we'll omit the headers for the remainder of
+C++ in the same file. To save space we we'll omit the headers for the remainder of
 the chapter.
 
 ### Vectors and loops
@@ -778,7 +779,7 @@ Let's now consider a slightly more complicated example. Here we want to write ou
 function that calculates the mean. This is just an illustrative example: R's version
 is much better and more robust to scale differences in our data. For comparison, let's
 create a corresponding R function - this is the same function we used in chapter
-\@ref{programming}. The function takes a single vector `x` as input, and returns the
+\@ref(programming). The function takes a single vector `x` as input, and returns the
 mean value, `m`:
 
 ```{r}
@@ -791,7 +792,7 @@ mean_r = function(x) {
 }
 ```
 
-This is a very bad R function. We should just use the base function `mean` for real
+This is a very bad R function; we should just use the base function `mean` for real
 world applications. However the purpose of `mean_r` is to provide a comparison for the
 C++ version, which we will write in a similar way.
 
@@ -826,7 +827,7 @@ sourceCpp("src/mean_c.cpp")
 
 Although the C++ version is similar, there are a few crucial differences.
 
-1. We use the `.size()` method to find the length of `x`
+1. We use the `.size()` method to find the length of `x`.
 1. The `for` loop has a more complicated syntax.
     ```{Rcpp eval=FALSE}
     for (variable initialization; condition; variable update ) {
@@ -852,10 +853,9 @@ Then call the `microbenchmark` function (results plotted in figure
 
 ```{r cache=TRUE, echo=-1, eval=FALSE}
 com_mean_r = compiler::cmpfun(mean_r)
-## com_mean_r is the compiled version of mean_r
+# com_mean_r is the compiled version of mean_r
 z = microbenchmark(
-  mean(x), mean_r(x),
-  com_mean_r(x), mean_c(x),
+  mean(x), mean_r(x), com_mean_r(x), mean_c(x),
   times=1000
 )
 ```
@@ -888,7 +888,7 @@ double test1() {
 4. Change `b = b + a` to `b += a` to make you code more `C` like. 
 5. (Hard) What's the difference between `i++` and `++i`?
 
-#### Matrices
+#### Matrices {-}
 
 Each vector type has a corresponding matrix equivalent: `NumericMatrix`,
 `IntegerMatrix`, `CharacterMatrix` and `LogicalMatrix`. We use these types in a
@@ -911,12 +911,11 @@ similar way to how we used `NumericVector`'s. The main differences are:
 **Rcpp** sugar brings a higher-level of abstraction to C++ code written using the
 **Rcpp** API. What this means in practice is that we can write C++ code in the style
 of R. For example, suppose we wanted to find the squared difference of two vectors; a
-residual in regression. In R, we would we would use
+squared residual in regression. In R we would use
 ```{r}
 sq_diff_r = function(x, y) (x - y)^2
 ```
-Rewriting the function in standard C++, we would more effort. Assuming we have the
-correct headers, we would try something like
+Rewriting the function in standard C++ would give
 
 ```{Rcpp eval=FALSE}
 NumericVector res_c(NumericVector x, NumericVector y) {
@@ -956,9 +955,9 @@ The aim of this section was to provide an introduction to `Rcpp`. One of the sel
 features of `Rcpp` is that there is a great deal of documentation available.
 
  * The Rcpp [website](http://www.rcpp.org/);
- * The original Journal of Statistical Software paper describing `Rcpp` (@Eddelbuettel2011)
- and the follow-up book (@Eddelbuettel2013);
- * A very readable chapter on `Rcpp` that goes into a bit more detail than this section (@Wickham2014);
+ * The original Journal of Statistical Software paper describing `Rcpp`
+ and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
+ * @Wickham2014 provides a very readable chapter on `Rcpp` that goes into a bit more detail than this section;
  * The `Rcpp` section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
  Questions are often answered by the `Rcpp` authors.
  
