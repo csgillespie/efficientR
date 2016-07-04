@@ -262,28 +262,28 @@ There are three main techniques of communicating with the user.
 
 Fatal errors are raised by calling the `stop`, i.e. execution is terminated. When
 `stop` is called, there is no way for a function to continue. For instance, when we
-generate random numbers using `rnorm` the first argument is the `n`, if the number of
+generate random numbers using `rnorm` the first argument is the sample size,`n`. If the number of
 observations to return less than $1$, an error is raised.
 
 Errors can be caught using `try` and `tryCatch`. For example, 
 ```{r}
-## silent suppresses the error message
-good = try(1 + 1, silent=TRUE)
-bad = try(1 + "1", silent=TRUE)
+# Suppress the error message
+good = try(1 + 1, silent = TRUE)
+bad = try(1 + "1", silent = TRUE)
 ```
-When we inspect the objects, `good` just contains the number `2`:
+When we inspect the objects, the variable `good` just contains the number `2`
 ```{r}
 good
 ```
-However, `bad` is a character string with class `try-error` and an `condition`
-attribute that contains
+However, the `bad` object is a character string with class `try-error` and a `condition`
+attribute that contains the error message
 ```{r}
 bad
 ```
 We can use this information in a standard conditional statement
 ```{r eval=FALSE}
 if(class(bad) == "try-error")
-  ## Do something 
+  # Do something 
 ```
 Further details on error handling, as well as some excellent advice on general
 debugging techniques, are given in [@Wickham2014].
@@ -306,7 +306,7 @@ powerlaws, I use messages to give the user an estimate of expected run time. Sim
 to warnings, messages can be suppressed with `suppressMessages`.
   
 Another function used for printing messages is `cat`. In general `cat` should only be
-used in actual `print`/`show` methods, e.g. look at the function definition of the
+used in `print`/`show` methods, e.g. look at the function definition of the
 S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
 
 ### Example: Retrieving a web resource
@@ -315,7 +315,7 @@ In some cases it isn't clear what should be returned, a message, a `NA` value or
 error. For example, suppose we wish to download data from a web site. 
 
 The function `GET` from the **httr** package can be used to download a webpage. When
-the we attempt to download data, the function also obtains an HTML status code. If the
+we attempt to download data, the function also obtains an HTML status code. If the
 page exists, the function will return text (with the correct status code), e.g.
 ```{r eval=FALSE}
 GET("http://google.com/") # Status: 200
@@ -335,7 +335,7 @@ Instead of raising an error the author could have returned `NA` (the web-page is
 available). However for the typically use case, it's not clear how returning `NA`
 would be helpful.
 
-The `install_github` function in the **devtools* package either installs the
+The `install_github` function in the **devtools** package either installs the
 package or raises an error. When an error is raised, the function uses a combination
 of `message` and `stop` to indicate the source of an error, e.g.
 ```{r, eval=FALSE}
@@ -367,8 +367,12 @@ assigned, but are not printed when they are not assigned. For example suppose we
 a function that plots the data and fits a straight line
 ```{r}
 regression_plot = function(x, y, ...) {
-  plot(x, y, ...)
+  # Plot and pass additional arguments to default plot method
+  plot(x, y, ...) 
+  
+  # Fit regression model 
   model = lm(y ~ x)
+  # Add line of best fit to the plot
   abline(model)
   invisible(model)
 }
@@ -420,18 +424,20 @@ sort(fac_m)
 
 ### Example: Graphics
 
-Factors are used for ordering in graphics. For instance, suppose we have a data set
+Factors can be used for ordering in graphics. For instance, suppose we have a data set
 where the variable `type`, takes one of three values, `small`, `medium` and `large`.
-Clearly there is an ordering. Using a standard `boxplot` call, `boxplot(y ~ type)`,
-would create a boxplot where the $x$-axis was alphabetically ordered. By converting
-`type` into factor, we can easily specify the correct ordering.
-```{r, boxplot_factor, eval=TRUE, echo=6:7, fig.keep="none"}
+Clearly there is an ordering. Using a standard `boxplot` call, 
+```{r fig.keep="none", echo=6}
 set.seed(1)
 level = c("Small", "Medium", "Large")
 type = rep(level, each=30)
 y = rnorm(90)
 type_factor = factor(type, levels=level)
 boxplot(y ~ type)
+```
+would create a boxplot where the $x$-axis was alphabetically ordered. By converting
+`type` into factor, we can easily specify the correct ordering.
+```{r, boxplot_factor, eval=TRUE, efig.keep="none"}
 boxplot(y ~ factor(type, levels=c("Small", "Medium", "Large")))
 ```
 
