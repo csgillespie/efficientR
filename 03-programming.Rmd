@@ -4,43 +4,45 @@ knit: "bookdown::preview_chapter"
 
 # Efficient programming {#programming}
  
-Many people who use R would not describe themselves as "programmers". Instead they
-have advanced domain level knowledge, but little formal programming training. This
-chapter comes from this point of view; someone who has uses standard R data
-structures, such as vectors and data frames, but lacks formal training. In this
-chapter we will discuss "big picture" programming techniques. General R programming
-techniques about optimising your code, before describing idiomatic programming
+Many people who use R would not describe themselves as "programmers". Instead they tend to
+have advanced domain level knowledge, understand standard R data
+structures, such as vectors and data frames, but have little formal training in computing.
+Sound familiar? In that case this chapter is for you.
+
+In this
+chapter we will discuss "big picture" programming techniques. We cover general concepts and R programming
+techniques about code optimisation, before describing idiomatic programming
 structures. We conclude the chapter by examining relatively easy ways of speeding up
-code using the **compiler** package and multiple CPUs.
+code using the **compiler** package and parallel processing, using multiple CPUs.
 
 <!-- Weak title -->
 ## General advice
 
-C and Fortran demand more from the programmer. The coder must declare the type of
-every variable they use and has the burdensome responsible of memory management. The
-payback is that it allows the compiler to better predict how the program behaves and
-so make clever optimisations.
+Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
+every variable used and give you the burdensome responsibility of memory management. The
+advantage of such languages, compared with R, is that they are faster to run.
+The disadvantage is that they take longer to learn and type.
 
 ```{block, type="rmdnote"}
 The wikipedia page on compiler opimisations gives a nice overview of standard
 optimisation techniques (https://en.wikipedia.org/wiki/Optimizing_compiler).
 ```
 
-In R we don't (tend to) worry about data types. However this means that it's possible
-to write R programs that are incredibly slow. While optimisations such as going
-parallel can double speed, poor code can easily run 100's of times slower. If you
-spend any time programming in R, then [@Burns2011] should be considered essential
-reading.
+R users don't tend to worry about data types.
+This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going
+parallel can double speed, poor code can easily run 100's of times slower, so it's important to understand the causes of slow code. These are covered in @Burns2011, which should be considered essential
+reading for any aspiring R programmers.
 
 Ultimately calling an R function always ends up calling some underlying C/Fortran
 code. For example the base R function `runif` only contains a single line that
 consists of a call to `C_runif`.
+
 ```{r eval=TRUE, results="hide"}
 function (n, min = 0, max = 1) 
   .Call(C_runif, n, min, max)
 ```
 
-The **golden rule** in R programming is to access the underlying C/Fortran routines as
+A **golden rule** in R programming is to access the underlying C/Fortran routines as
 quickly as possible; the fewer functions calls required to achieve this, the better.
 For example, suppose `x` is a standard vector of length `n`. Then
 ```{r echo=3}
@@ -318,7 +320,7 @@ page exists, the function will return text (with the correct status code), e.g.
 ```{r eval=FALSE}
 GET("http://google.com/") # Status: 200
 ```
-If the url is incorrect, e.g. a broken link or is a redirect, then we can interogate the
+If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the
 output and use the Status to determine what to do next.
 ```{r eval=FALSE}
 GET("http://google.com/made_up") # Status: 404
