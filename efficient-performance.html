@@ -440,8 +440,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00231 0.00336 0.0551 0.00561 0.00615 5.01   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73701 0.81743 1.0475 0.85078 1.09978 6.02   100</span></code></pre></div>
+<span class="co">#&gt;  ex_mat[1, ] 0.00252 0.00338 0.0515 0.00561 0.00617 4.59   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.78664 0.84352 1.1203 0.90782 1.11386 9.29   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -535,7 +535,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
   <span class="kw">lines</span>(movies$year[j], model$fitted[j]) <span class="co"># Add line to the plot</span>
 })</code></pre></div>
 The above code provides an interactive HTML page (figure <a href="efficient-performance.html#fig:profvis1">8.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).
-<div class="figure"><span id="fig:profvis1"></span>
+<div class="figure" style="text-align: center"><span id="fig:profvis1"></span>
 <img src="images/profvis1.png" alt="Output from profvis" width="\textwidth" />
 <p class="caption">
 Figure 8.1: Output from profvis
@@ -555,7 +555,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgilles
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
 <span class="kw">profvis</span>(<span class="kw">SimulateMonopoly</span>(<span class="dv">10000</span>))</code></pre></div>
 <p>to get</p>
-<p><img src="images/profvis_monopoly.png" width="\textwidth" /></p>
+<p><img src="images/profvis_monopoly.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>The output from <code>profvis</code> shows that the vast majority of time is spent in the <code>move</code> function. In Monopoly rolling a double (a pair of 1’s, 2’s, …, 6’s) is special:</p>
 <ul>
 <li>Roll two dice (<code>total1</code>): <code>total_score = total1</code>;</li>
@@ -650,8 +650,8 @@ Another common use of <code>on.exit</code> is with the <code>par</code> function
 <div id="rcpp" class="section level2">
 <h2><span class="header-section-number">8.5</span> Rcpp</h2>
 <p>Sometimes R is just slow. You’ve tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as <strong>Rcpp</strong>, <strong>rJava</strong>, <strong>rPython</strong> and recently <strong>V8</strong>. These provide R interfaces to C++, Java, Python and JavaScript respectively. <strong>Rcpp</strong> is the most popular of these (Figure <a href="efficient-performance.html#fig:cranlog">8.2</a>).</p>
-<div class="figure"><span id="fig:cranlog"></span>
-<img src="_main_files/figure-html/cranlog-1.png" alt="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages." width="576" />
+<div class="figure" style="text-align: center"><span id="fig:cranlog"></span>
+<img src="_main_files/figure-html/cranlog-1.png" alt="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages." width="70%" />
 <p class="caption">
 Figure 8.2: Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.
 </p>
@@ -711,7 +711,7 @@ Figure 8.2: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ad6815578a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8280eb28a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -823,8 +823,8 @@ z =<span class="st"> </span><span class="kw">microbenchmark</span>(
   <span class="dt">times=</span><span class="dv">1000</span>
 )</code></pre></div>
 <p>In this simple example, the Rcpp variant is around <span class="math inline">\(100\)</span> times faster than the corresponding R version. This sort of speed-up is not uncommon when switching to an Rcpp solution.</p>
-<div class="figure"><span id="fig:rcppcomp"></span>
-<img src="_main_files/figure-html/rcppcomp-1.png" alt="Comparison of mean functions." width="576" />
+<div class="figure" style="text-align: center"><span id="fig:rcppcomp"></span>
+<img src="_main_files/figure-html/rcppcomp-1.png" alt="Comparison of mean functions." width="70%" />
 <p class="caption">
 Figure 8.3: Comparison of mean functions.
 </p>

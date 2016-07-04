@@ -674,8 +674,7 @@ idata <span class="co"># print the dataset </span>
 <span class="co">#&gt; 2  Afghanistan          AFG  1975    YR1975</span>
 <span class="co">#&gt; 3  Afghanistan          AFG  1976    YR1976</span>
 <span class="co">#&gt; 4  Afghanistan          AFG  1977    YR1977</span>
-<span class="co">#&gt; 5  Afghanistan          AFG  1978    YR1978</span>
-<span class="co">#&gt; # ... with 6,920 more rows, and 5 more variables: Income share held by</span>
+<span class="co">#&gt; # ... with 6,921 more rows, and 5 more variables: Income share held by</span>
 <span class="co">#&gt; #   highest 10% [SI.DST.10TH.10] &lt;chr&gt;, Income share held by lowest 10%</span>
 <span class="co">#&gt; #   [SI.DST.FRST.10] &lt;chr&gt;, GINI index [SI.POV.GINI] &lt;chr&gt;, Survey mean</span>
 <span class="co">#&gt; #   consumption or income per capita, bottom 40% (2005 PPP $ per day)</span>
@@ -805,14 +804,13 @@ Note that the <code>ghg_ems</code> column names were cleaned using the command <
 <span class="kw">group_by</span>(ghg_ems, Country) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; # A tibble: 188 x 2</span>
-<span class="co">#&gt;             Country mean_eco2</span>
-<span class="co">#&gt;               &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       Afghanistan       NaN</span>
-<span class="co">#&gt; 2           Albania     0.641</span>
-<span class="co">#&gt; 3           Algeria    23.015</span>
-<span class="co">#&gt; 4            Angola     0.791</span>
-<span class="co">#&gt; 5 Antigua &amp; Barbuda       NaN</span>
-<span class="co">#&gt; # ... with 183 more rows</span></code></pre></div>
+<span class="co">#&gt;       Country mean_eco2</span>
+<span class="co">#&gt;         &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Afghanistan       NaN</span>
+<span class="co">#&gt; 2     Albania     0.641</span>
+<span class="co">#&gt; 3     Algeria    23.015</span>
+<span class="co">#&gt; 4      Angola     0.791</span>
+<span class="co">#&gt; # ... with 184 more rows</span></code></pre></div>
 <div class="rmdnote">
 <p>
 The example above relates to a philosophical question in programming: how much work should one function do? The <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should “do one thing well”. And shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual <code>group_by</code> and <code>summarise</code> stages.
@@ -828,8 +826,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; 2     Albania  30.4</span>
 <span class="co">#&gt; 3     Algeria  37.8</span>
 <span class="co">#&gt; 4      Angola  50.6</span>
-<span class="co">#&gt; 5   Argentina  48.1</span>
-<span class="co">#&gt; # ... with 171 more rows</span></code></pre></div>
+<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
 <p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
   <span class="co"># number of rows per country</span>
@@ -850,8 +847,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; 2     Albania    40    24.4  1.25     3  0.364  2.78</span>
 <span class="co">#&gt; 3     Algeria    40    29.8  3.44     2  3.437  4.86</span>
 <span class="co">#&gt; 4      Angola    40    38.6 11.30     2 11.300 15.98</span>
-<span class="co">#&gt; 5   Argentina    40    36.3  3.18    23  3.182 11.00</span>
-<span class="co">#&gt; # ... with 171 more rows</span></code></pre></div>
+<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
 <p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
 <ul>
 <li>the number of rows in each country group</li>
@@ -891,7 +887,7 @@ The example above relates to a philosophical question in programming: how much w
 <span class="co">#&gt; 2  1993  46.0</span>
 <span class="co">#&gt; 3  2013  44.5</span>
 <span class="co">#&gt; 4  1981  43.6</span>
-<span class="co">#&gt; 5  2012  43.6</span></code></pre></div>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
 <p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
 <ol style="list-style-type: decimal">
 <li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
@@ -973,8 +969,8 @@ w_u =<span class="st"> </span><span class="kw">unique</span>(world$Country)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world_co2_2012 =<span class="st"> </span><span class="kw">filter</span>(world_co2, Year ==<span class="st"> </span><span class="dv">2012</span> |<span class="st"> </span><span class="kw">is.na</span>(Year))
 <span class="kw">ggplot</span>(world_co2_2012, <span class="kw">aes</span>(long, lat)) +
 <span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> All, <span class="dt">group =</span> group))</code></pre></div>
-<div class="figure"><span id="fig:wco2"></span>
-<img src="figures/world_co2.png" alt="The geographical distribution of carbon dioxide emissions in 2012." width="653" />
+<div class="figure" style="text-align: center"><span id="fig:wco2"></span>
+<img src="figures/world_co2.png" alt="The geographical distribution of carbon dioxide emissions in 2012." width="\textwidth" />
 <p class="caption">
 Figure 6.1: The geographical distribution of carbon dioxide emissions in 2012.
 </p>
@@ -1046,7 +1042,6 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 <span class="co">#&gt; 2 123500   1.14e+09 TR13 8JH</span>
 <span class="co">#&gt; 3 217950   1.17e+09 PL33 9DL</span>
 <span class="co">#&gt; 4 147000   1.16e+09 EX39 5XT</span>
-<span class="co">#&gt; 5 166000   1.16e+09 EX39 5XT</span>
 <span class="co">#&gt; # ... with more rows</span>
 
 <span class="co"># Method 2: using dplyr</span>
@@ -1060,7 +1055,6 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 <span class="co">#&gt; 2 123500   1.14e+09 TR13 8JH          T</span>
 <span class="co">#&gt; 3 217950   1.17e+09 PL33 9DL          D</span>
 <span class="co">#&gt; 4 147000   1.16e+09 EX39 5XT          T</span>
-<span class="co">#&gt; 5 166000   1.16e+09 EX39 5XT          S</span>
 <span class="co">#&gt; # ... with more rows</span></code></pre></div>
 </div>
 </div>
@@ -1077,8 +1071,8 @@ aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Austr
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setkey</span>(idata_dt, Country)
 aus3b =<span class="st"> </span>idata_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
 <p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="efficient-data-carpentry.html#fig:dtplot">6.2</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
-<div class="figure"><span id="fig:dtplot"></span>
-<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="576" />
+<div class="figure" style="text-align: center"><span id="fig:dtplot"></span>
+<img src="_main_files/figure-html/dtplot-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="0.7\textwidth" />
 <p class="caption">
 Figure 6.2: Benchmark illustrating the performance gains to be expected for different dataset sizes.
 </p>
