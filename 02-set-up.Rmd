@@ -1054,30 +1054,11 @@ depends heavily on the type of computations you are undertaking.
 local(source("code/02-blas.R", local=TRUE))
 ```
 
-### Revolution R
-
-Revolution R is the main software product offered by Revolution Analytics,
-which was recently purchased by Microsoft, implying it has substantial development resources.
-It is "100%" compatible with R",
-supporting all available packages through the MRAN package repository.
-Revolution R provides faster performance on for certain functions
-than base R, through its use of 
-MKL, an implementation of BLAS (as described above).
-Revolution R is available as a free and open source product,
-'Revolution R Open' (RRO), and is reported to be
-faster than base R installations.^[See
-[brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/](http://www.brodrigues.co/2014/11/11/benchmarks-r-blas-atlas-rro/), which finds Revolution R to be marginally faster than R using
-OpenBLAS and ATLAS BLAS implementations and
-[Faster BLAS in R](http://brettklamer.com/diversions/statistical/faster-blas-in-r/), which does not.]
-
-Additional benchmarks reported by @eddelbuettel2010benchmarking show the MKL
-implementations of R used in RRO and the commercial edition
-to be substantially faster than the reference case.
-
 ### Other interpreters
 
 The R *language* can be separated from the R *interpreter*. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.
 
+  * [Microsoft R Open](http://www.revolutionanalytics.com/microsoft-r-open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that is uses multithreaded mathematics libraries, which can improve performance.
   * [Rho](https://github.com/rho-devel/rho) (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).
 
  * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
