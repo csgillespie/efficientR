@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-04">
+<meta name="date" content="2016-07-05">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -367,7 +367,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li><p>Give data processing the proper time and attention it needs as it could save hours of frustration in the long run.</p></li>
 <li><p>Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by <strong>tidyr</strong>.</p></li>
-<li><p>Use efficient functions for reading and writing plain text files, such as <code>read_csv</code> and <code>fread</code>, from the <strong>readr</strong> and <strong>data.table</strong> packages respectively.</p></li>
+<li><p>Use the <code>tbl</code> class, the defined by the <strong>tibble</strong> package and the default object type of <strong>dplyr</strong>, to make data frames efficient to print and easier to work with.</p></li>
 <li><p>Don’t rely on base R for data processing. We recommend <strong>dplyr</strong> for most applications, although <strong>data.table</strong> may be optimal in contexts where speed is critical.</p></li>
 <li><p>Using the <code>%&gt;%</code> ‘pipe’ operator in combination with <strong>dplyr</strong>’s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.</p></li>
 </ul>
@@ -389,6 +389,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Gathering: this means making ‘wide’ tables ‘long’ by converting column names to a new variable. This is done is done with the function <code>gather</code> (the inverse of which is <code>spread</code>) , as illustrated in Table <a href="efficient-data-carpentry.html#tab:tpew">6.1</a> and Table <a href="efficient-data-carpentry.html#tab:tpewt">6.2</a> and in the code block below:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
 raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
 <span class="kw">dim</span>(raw)
 <span class="co">#&gt; [1] 18 10</span>
@@ -404,7 +405,7 @@ rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
 <span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
 <div class="rmdtip">
 <p>
-Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>tidyr</strong> uses the <code>tbl</code> class from the <strong>tibble</strong> package (described below).
+Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>readr</strong> creates <code>tbl</code> objects from the <strong>tibble</strong> package (described in the next section).
 </p>
 </div>
 <table>
@@ -549,9 +550,10 @@ agesex_df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n
 <p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). The wider issue of manipulation is a large topic with major potential implications for efficiency <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span> and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the <strong>broom</strong> package provides a standard output format for model results, easing interpretation (see <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html">the broom vignette</a>).</p>
 <div class="rmdnote">
 <p>
-Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation. The affix <code><em></code> can be added to functions in <strong>dplyr</strong> and <strong>tidyr</strong> to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(agesex_df, agesex, c(“sex”, “age”), 1)</code> is <code>separate</em>(agesex_df, “agesex”, c(“sex”, “age”), 1)</code>.
+Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation.
 </p>
 </div>
+<p>Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be autocompleted by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix <code>_</code> can be added to <strong>dplyr</strong> and <strong>tidyr</strong> function names to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(agesex_df, agesex, c(&quot;sex&quot;, &quot;age&quot;), 1)</code> is <code>separate_(agesex_df, &quot;agesex&quot;, c(&quot;sex&quot;, &quot;age&quot;), 1)</code>.</p>
 </div>
 <div id="efficient-data-frames-with-tibble" class="section level2">
 <h2><span class="header-section-number">6.3</span> Efficient data frames with tibble</h2>
@@ -645,8 +647,7 @@ top_table =
 </tbody>
 </table>
 <p>Building on the ‘learning by doing’ ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
-fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 idata =<span class="st"> </span><span class="kw">read_csv</span>(fname)
 idata <span class="co"># print the dataset </span>
 <span class="co">#&gt; # A tibble: 6,925 x 9</span>
@@ -738,11 +739,10 @@ miniaa =<span class="st"> </span><span class="kw">read_csv</span>(fname) <span c
 <span class="co">#&gt; ...</span></code></pre></div>
 <p>Looking at the output, it becomes clear that the majority of the variables only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
-all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">all</span>(<span class="kw">is.na</span>(x)),
-                <span class="kw">logical</span>(<span class="dv">1</span>))
+all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">anyNA</span>(x), <span class="kw">logical</span>(<span class="dv">1</span>))
 <span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span>
-<span class="co">#&gt;    Mode   FALSE    NA&#39;s </span>
-<span class="co">#&gt; logical     329       0</span>
+<span class="co">#&gt;    Mode   FALSE    TRUE    NA&#39;s </span>
+<span class="co">#&gt; logical     321       8       0</span>
 miniaa1 =<span class="st"> </span>miniaa[!all_na] <span class="co"># subset the dataframe</span></code></pre></div>
 <p>The new <code>miniaa</code> object has fewer than a third of the original columns. Another way to save storage space, beyond removing the superfluous columns, is to save the dataset in R’s binary data format:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(miniaa1, <span class="st">&quot;data/miniaa.Rds&quot;</span>)</code></pre></div>

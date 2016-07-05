@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-04">
+<meta name="date" content="2016-07-05">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -441,6 +441,7 @@ df_co2_feather =<span class="st"> </span><span class="kw">read_feather</span>(<s
 <span class="im">import</span> feather
 path <span class="op">=</span> <span class="st">&#39;data/co2.feather&#39;</span>
 df_co2_feather <span class="op">=</span> feather.read_dataframe(path)</code></pre></div>
+<!-- __XXX__ Colin write something about feather in relation to Apache arrow here. -->
 </div>
 <div id="efficient-data-export-.rdata-or-.rds" class="section level2">
 <h2><span class="header-section-number">5.6</span> Efficient data export: .Rdata or .Rds?</h2>
@@ -736,9 +737,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select  9.83 10.6 10.9   10.7 11.1 12.5     5</span>
-<span class="co">#&gt;  without_select 16.64 18.4 21.4   20.0 24.7 27.0     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
+<span class="co">#&gt;     with_select  9.57  9.59  9.73   9.69  9.83  9.99     5</span>
+<span class="co">#&gt;  without_select 15.83 16.18 16.80  16.48 16.56 18.94     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
