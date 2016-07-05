@@ -228,8 +228,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
-<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.2</b> Tidying data with tidyr</a></li>
-<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.3</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
 <li class="chapter" data-level="6.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
@@ -239,7 +239,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.6</b> Chaining operations</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
-<li class="chapter" data-level="6.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a></li>
+<li class="chapter" data-level="6.6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#databases-and-dplyr"><i class="fa fa-check"></i><b>6.6.1</b> Databases and <strong>dplyr</strong></a></li>
+</ul></li>
 <li class="chapter" data-level="6.7" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="efficient-visualisation.html"><a href="efficient-visualisation.html"><i class="fa fa-check"></i><b>7</b> Efficient visualisation</a><ul>
@@ -737,9 +739,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
-<span class="co">#&gt;     with_select  9.57  9.59  9.73   9.69  9.83  9.99     5</span>
-<span class="co">#&gt;  without_select 15.83 16.18 16.80  16.48 16.56 18.94     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.72  9.75  9.93   9.79 10.0 10.4     5</span>
+<span class="co">#&gt;  without_select 16.29 16.39 16.94  16.57 16.9 18.5     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
