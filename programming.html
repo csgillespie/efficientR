@@ -187,12 +187,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.6</b> Caching variables</a><ul>
-<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.6.1</b> Function closures</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a></li>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.7</b> The byte compiler</a><ul>
-<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.7.1</b> Example: the mean function</a></li>
-<li class="chapter" data-level="3.7.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.7.2</b> Compiling code</a></li>
+<li class="chapter" data-level="3.8" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.8</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.8.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="3.8.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.8.2</b> Compiling code</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="efficient-workflow.html"><a href="efficient-workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
@@ -228,8 +229,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
-<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.2</b> Tidying data with tidyr</a></li>
-<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.3</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
 <li class="chapter" data-level="6.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
@@ -482,7 +483,6 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <li>It’s neater.</li>
 <li>It doesn’t contain a bug when <code>x</code> is of length <span class="math inline">\(0\)</span>.</li>
 </ul>
-<!-- __XXX__ Colin add a section on the apply family somewhere around here (reckon it deserves a section of its own) -->
 <div id="exercises-6" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Time the two methods for calculating the log sum. Try different values of <span class="math inline">\(n\)</span>.</p>
@@ -515,7 +515,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.712   0.013   2.736</span></code></pre></div>
+<span class="co">#&gt;   2.688   0.031   2.720</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -758,10 +758,53 @@ Figure 3.2: S3 image method for data of class <code>dist</code>.
 <li><p>Use a combination of <code>unclass</code> and <code>str</code> on a data frame to confirm that it is indeed a list.</p></li>
 <li><p>Use the function <code>length</code> on a data frame. What is return? Why?</p></li>
 </ol>
+<!-- __XXX__ Colin add a section on the apply family somewhere around here (reckon it deserves a section of its own) -->
 </div>
+</div>
+<div id="the-apply-family" class="section level2">
+<h2><span class="header-section-number">3.6</span> The apply family</h2>
+<table>
+<caption><span id="tab:unnamed-chunk-99">Table 3.1: </span>The apply family of functions from base R</caption>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>apply</code></td>
+<td align="left">Apply functions over array margins</td>
+</tr>
+<tr class="even">
+<td align="left"><code>by</code></td>
+<td align="left">Apply a function to a data frame split by factors</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>eapply</code></td>
+<td align="left">Apply a function over values in an environment</td>
+</tr>
+<tr class="even">
+<td align="left"><code>lapply</code></td>
+<td align="left">Apply a function over a list or vector</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>mapply</code></td>
+<td align="left">Apply a function to ,ultiple list or vector arguments</td>
+</tr>
+<tr class="even">
+<td align="left"><code>rapply</code></td>
+<td align="left">Recursively apply a function to a list</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>tapply</code></td>
+<td align="left">Apply a function over a ragged array</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="caching-variables" class="section level2">
-<h2><span class="header-section-number">3.6</span> Caching variables</h2>
+<h2><span class="header-section-number">3.7</span> Caching variables</h2>
 <p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>log(x)</code> in multiple function calls with the object <code>log_x</code> that is defined once and reused. This small saving in time quickly multiplies when the cached variable is used inside a <code>for</code> loop.</p>
 <p>A more advanced form of caching is to use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
 <p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit regression line to data. The user can remove points and refit the line. An example function would be</p>
@@ -786,7 +829,7 @@ m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)
 <p>Construct a box plot of timings for the standard plotting function and the memoised version.</p>
 </div>
 <div id="function-closures" class="section level3">
-<h3><span class="header-section-number">3.6.1</span> Function closures</h3>
+<h3><span class="header-section-number">3.7.1</span> Function closures</h3>
 <div class="rmdwarning">
 <p>
 The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation"><span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span> for a detailed introduction.
@@ -803,7 +846,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x4221ea8&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x482b950&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -880,17 +923,17 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 </div>
 </div>
 <div id="the-byte-compiler" class="section level2">
-<h2><span class="header-section-number">3.7</span> The byte compiler</h2>
+<h2><span class="header-section-number">3.8</span> The byte compiler</h2>
 <p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
 <p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x2fe9028&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3806690&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
-<h3><span class="header-section-number">3.7.1</span> Example: the mean function</h3>
+<h3><span class="header-section-number">3.8.1</span> Example: the mean function</h3>
 <p>The <strong>compiler</strong> package comes with R, so we just need to load the package in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)</code></pre></div>
 <p>Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the <code>m</code> variable.</p>
@@ -923,7 +966,7 @@ Figure 3.3: Comparsion of mean functions.
 </div>
 </div>
 <div id="compiling-code" class="section level3">
-<h3><span class="header-section-number">3.7.2</span> Compiling code</h3>
+<h3><span class="header-section-number">3.8.2</span> Compiling code</h3>
 <p>There are a number of ways to compile code. The easiest is to compile individual functions using <code>cmpfun</code>, but this obviously doesn’t scale. If you create a package, you can automatically compile the package on installation by adding</p>
 <pre><code>ByteCompile: true</code></pre>
 <p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>

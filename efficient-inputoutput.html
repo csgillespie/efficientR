@@ -187,12 +187,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.6</b> Caching variables</a><ul>
-<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.6.1</b> Function closures</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a></li>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.7</b> The byte compiler</a><ul>
-<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.7.1</b> Example: the mean function</a></li>
-<li class="chapter" data-level="3.7.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.7.2</b> Compiling code</a></li>
+<li class="chapter" data-level="3.8" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.8</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.8.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="3.8.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.8.2</b> Compiling code</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="efficient-workflow.html"><a href="efficient-workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
@@ -228,8 +229,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
-<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.2</b> Tidying data with tidyr</a></li>
-<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.3</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
 <li class="chapter" data-level="6.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
@@ -739,9 +740,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 14.2 14.4 15.1   15.6 15.6 15.7     5</span>
-<span class="co">#&gt;  without_select 25.2 25.7 26.4   25.8 26.7 28.7     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  8.96  9.02  9.59   9.02  9.2 11.7     5</span>
+<span class="co">#&gt;  without_select 14.10 14.14 14.54  14.21 14.6 15.6     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="efficient-inputoutput.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>

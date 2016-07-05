@@ -187,12 +187,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.6</b> Caching variables</a><ul>
-<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.6.1</b> Function closures</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a></li>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.7</b> The byte compiler</a><ul>
-<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.7.1</b> Example: the mean function</a></li>
-<li class="chapter" data-level="3.7.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.7.2</b> Compiling code</a></li>
+<li class="chapter" data-level="3.8" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.8</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.8.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="3.8.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.8.2</b> Compiling code</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="efficient-workflow.html"><a href="efficient-workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
@@ -228,8 +229,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
 <li class="chapter" data-level="6.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
-<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.2</b> Tidying data with tidyr</a></li>
-<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.3</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
 <li class="chapter" data-level="6.4" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="efficient-data-carpentry.html"><a href="efficient-data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
@@ -374,8 +375,49 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><p>Using the <code>%&gt;%</code> ‘pipe’ operator in combination with <strong>dplyr</strong>’s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.</p></li>
 </ul>
 </div>
+<div id="efficient-data-frames-with-tibble" class="section level2">
+<h2><span class="header-section-number">6.2</span> Efficient data frames with tibble</h2>
+<strong>tibble</strong> is a package that defines a new data frame class for R, the <code>tbl_df</code>. These ‘tibble diffs’ (as their inventor <a href="https://github.com/hadley/tibble">suggests</a> they should be pronounced) are like the base class <code>data.frame</code>, but with more user friendly printing, subsetting, and factor handling.
+<div class="rmdnote">
+<p>
+A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <code>tbl</code>, and <code>data.frame</code>. Since the object has the <code>data.frame</code> tag, this means that if a <code>tbl_df</code> or <code>tbl</code> method isn’t available, the object will be passed on to the appropriate <code>data.frame</code> function.
+</p>
+</div>
+<p>To create a tibble data frame, we just use <code>data_frame</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
+<span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt;       x     y</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span>
+<span class="co">#&gt; 1     1     A</span>
+<span class="co">#&gt; 2     2     B</span>
+<span class="co">#&gt; 3     3     C</span></code></pre></div>
+<p>The example above illustrates the main differences between the <strong>tibble</strong> and base R approach to data frames:</p>
+<ul>
+<li>When printed, the tibble diff reports the class of each variable. <code>data.frame</code> objects do not.</li>
+<li>Character vectors are not coerced into factors when they are incorporated into a <code>tbl_df</code>, as can be seen by the <code>&lt;chr&gt;</code> heading between the variable name and the second column. By contrast, <code>data.frame()</code> coerces characters into factors which can cause problems further down the line.</li>
+<li>When printing a tibble diff to screen, only the first ten rows are displayed. The number columns printed depends on the window size.</li>
+</ul>
+<p>Other differences can be found in the associated help page - <code>help(&quot;tibble&quot;)</code>.</p>
+<div class="rmdnote">
+<p>
+You can create a tibble data frame row-by-row using the <code>frame_data</code> function.
+</p>
+</div>
+<div id="exericse" class="section level4 unnumbered">
+<h4>Exericse</h4>
+<p>Create the following data frame</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_base =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colA =</span> <span class="st">&quot;A&quot;</span>)</code></pre></div>
+<p>Try and guess the output of the following commands</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(df_base)
+df_base$colA
+df_base$col
+df_base$colB</code></pre></div>
+<p>Now create a tibble data frame and repeat the above commands.</p>
+</div>
+</div>
 <div id="tidying-data-with-tidyr" class="section level2">
-<h2><span class="header-section-number">6.2</span> Tidying data with tidyr</h2>
+<h2><span class="header-section-number">6.3</span> Tidying data with tidyr</h2>
 <p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>, so getting it into a suitable form early could save hours in the future. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.</p>
 <p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling. The process of reshaping is illustrated by Tables <a href="efficient-data-carpentry.html#tab:tpew">6.1</a> and <a href="efficient-data-carpentry.html#tab:tpewt">6.2</a>, provided by <span class="citation">H. Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p>
 <p>These tables may look different, but they contain precisely the same information. Column names in the ‘wide’ form in Table <a href="efficient-data-carpentry.html#tab:tpew">6.1</a> became a new variable in the ‘long’ form in Table <a href="efficient-data-carpentry.html#tab:tpewt">6.2</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. For tabular presentation the wide form may be better. Wide data can also be less memory consuming because it requires fewer cells.</p>
@@ -407,7 +449,7 @@ rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
 <span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
 <div class="rmdtip">
 <p>
-Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>readr</strong> creates <code>tbl</code> objects from the <strong>tibble</strong> package (described in the next section).
+Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>readr</strong> creates <code>tbl</code> objects from the <strong>tibble</strong> package.
 </p>
 </div>
 <table>
@@ -557,47 +599,6 @@ Note that the above code used non standard evaluation, which means not surroundi
 </div>
 <p>Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix <code>_</code> can be added to <strong>dplyr</strong> and <strong>tidyr</strong> function names to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(agesex_df, agesex, c(&quot;sex&quot;, &quot;age&quot;), 1)</code> is <code>separate_(agesex_df, &quot;agesex&quot;, c(&quot;sex&quot;, &quot;age&quot;), 1)</code>.</p>
 </div>
-<div id="efficient-data-frames-with-tibble" class="section level2">
-<h2><span class="header-section-number">6.3</span> Efficient data frames with tibble</h2>
-<strong>tibble</strong> is a package that defines a new data frame class for R, the <code>tbl_df</code>. These ‘tibble diffs’ (as their inventor <a href="https://github.com/hadley/tibble">suggests</a> they should be pronounced) are like the base class <code>data.frame</code>, but with more user friendly printing, subsetting, and factor handling.
-<div class="rmdnote">
-<p>
-A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <code>tbl</code>, and <code>data.frame</code>. Since the object has the <code>data.frame</code> tag, this means that if a <code>tbl_df</code> or <code>tbl</code> method isn’t available, the object will be passed on to the appropriate <code>data.frame</code> function.
-</p>
-</div>
-<p>To create a tibble data frame, we just use <code>data_frame</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
-<span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;       x     y</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span>
-<span class="co">#&gt; 1     1     A</span>
-<span class="co">#&gt; 2     2     B</span>
-<span class="co">#&gt; 3     3     C</span></code></pre></div>
-<p>The example above illustrates the main differences between the <strong>tibble</strong> and base R approach to data frames:</p>
-<ul>
-<li>When printed, the tibble diff reports the class of each variable. <code>data.frame</code> objects do not.</li>
-<li>Character vectors are not coerced into factors when they are incorporated into a <code>tbl_df</code>, as can be seen by the <code>&lt;chr&gt;</code> heading between the variable name and the second column. By contrast, <code>data.frame()</code> coerces characters into factors which can cause problems further down the line.</li>
-<li>When printing a tibble diff to screen, only the first ten rows are displayed. The number columns printed depends on the window size.</li>
-</ul>
-<p>Other differences can be found in the associated help page - <code>help(&quot;tibble&quot;)</code>.</p>
-<div class="rmdnote">
-<p>
-You can create a tibble data frame row-by-row using the <code>frame_data</code> function.
-</p>
-</div>
-<div id="exericse" class="section level4 unnumbered">
-<h4>Exericse</h4>
-<p>Create the following data frame</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_base =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colA =</span> <span class="st">&quot;A&quot;</span>)</code></pre></div>
-<p>Try and guess the output of the following commands</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(df_base)
-df_base$colA
-df_base$col
-df_base$colB</code></pre></div>
-<p>Now create a tibble data frame and repeat the above commands.</p>
-</div>
-</div>
 <div id="dplyr" class="section level2">
 <h2><span class="header-section-number">6.4</span> Efficient data processing with dplyr</h2>
 <p>After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.</p>
@@ -742,7 +743,7 @@ aus2 =<span class="st"> </span><span class="kw">filter</span>(idata, Country ==<
 <span class="co">#&gt;     &lt;int&gt; ...</span>
 <span class="co">#&gt; ...</span></code></pre></div>
 <p>The majority of variables in this dataset only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
-<!-- __XXX__ This isn't correct (I know I suggest it). `anyNA` detects if there are any NA's. According to your comment it -->
+<!-- __XXX__ This isn't correct (I know I suggested it). `anyNA` detects if there are any NA's. According to your comment it -->
 <!-- should be `!sum(!is.na(x))` - but there are no columns that are all NA's -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
 all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">anyNA</span>(x), <span class="kw">logical</span>(<span class="dv">1</span>))
@@ -1038,7 +1039,7 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 <p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dply</strong> provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend <strong>dplyr</strong>. However, <strong>data.table</strong> has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.</p>
 <p>This section provides a few examples to illustrate how <strong>data.table</strong> differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it’s a matter of preference.</p>
 <p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="efficient-data-carpentry.html#filtering-columns">6.4.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>
-<!-- __XXX__ Anything read from data/* isn't reproducible for the reader-->
+<!-- __XXX__ Anything read from data/* isn't reproducible for the reader. MOve to the package?-->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
 idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
 idata_dt =<span class="st"> </span><span class="kw">data.table</span>(idata) <span class="co"># convert to data.table class</span>
