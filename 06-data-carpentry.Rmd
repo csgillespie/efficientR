@@ -195,7 +195,8 @@ verbs = read_csv("data/verbs.csv")
 
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
 
-<!-- __XXX__ Colin write stuff on lazy evaluation, the collect or explain functions. -->
+<!-- __XXX__ This bit of code just appears out of nowhere. What's ghg_ems? It doesn't actually follow from the paragraph above (the final 
+sentence finishes with a full stop) -->
 
 ```{r, message=FALSE}
 library("dplyr")
@@ -257,7 +258,7 @@ names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ### Changing column classes
 
 <!-- __XXX__ The bit below is a bit odd. The data frame is a tibble. The class is printed in a column. I 
-also think that your vapply command is nicer, with `str` being more appropriate for the footnote.-->
+also think that your vapply command is **much** nicer, with `str` being more appropriate for the footnote.-->
 
 The *class* of R objects is critical to performance.
 If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, character(1))` is an alternative way to query the class of columns in a dataset.]
@@ -278,6 +279,7 @@ mean(idata$gini, na.rm = TRUE) # now the mean is calculated
 However the purpose of programming languages is to *automate* tasks and reduce typing.
 The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts the data frame to a numeric `matrix`:
 
+<!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
 idata[id] = data.matrix(idata[id])
@@ -290,11 +292,12 @@ As is so often the case with R, there are many ways to solve the problem. Below 
 idata[id] = as.numeric(unlist(idata[id]))
 ```
 
-<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last -->
+<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=-2}
 idata_mutate = mutate_each(idata, "as.numeric", id)
+#save(idata_mutate, file="../efficient_pkg/data/idata_mutate.RData")
 ```
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
@@ -343,6 +346,7 @@ dim(miniaa)
 
 Note that the data frame has 329 columns, and imagine it has millions of rows, instead of $9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
 
+<!-- __XXX__ I didn't find this helpful for a large data set -->
 ```{r, eval=FALSE}
 glimpse(miniaa)
 #> Observations: 9
@@ -382,7 +386,7 @@ nrow(ghg_ems)
 length(unique(ghg_ems$Country))
 ```
 
-Note that while there are almost 8000 rows, there are less than 200 countries.
+Note that while there are almost $8000$ rows, there are fewer than 200 countries.
 
 ```{block, gsub, type='rmdnote'}
 Note that the `ghg_ems` column names were cleaned using the command `word(names(ghg_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
@@ -417,7 +421,8 @@ The example above relates to a philosophical question in programming: how much w
 To reinforce the point, this operation is also performed below on the `idata` dataset:
 
 ```{r}
-countries = group_by(idata, Country)
+data(idata_mutate, package="efficient")
+countries = group_by(idata_mutate, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
@@ -483,7 +488,7 @@ Here's how chains work to organise the analysis in a
 logical step-by-step manner:
 
 ```{r tidy=FALSE}
-idata %>% 
+idata_mutate %>% 
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
@@ -530,15 +535,16 @@ This section has provided only a taster of what is possible **dplyr** and why it
 
 The usefulness of a dataset can sometimes be greatly enhanced by combining it with other data. If we could merge the global `ghg_ems` dataset with geographic data, for example, we could visualise the spatial distribution of climate pollution. For the purposes of this section we join `ghg_ems` to the `world` data provided by **ggmap** to illustrate the concepts and methods of data *joining* (also referred to as merging).
 
-```{r}
-library(ggmap)
+```{r, message=FALSE}
+library("ggmap")
 world = map_data("world")
 names(world)
 ```
 
 Visually compare this new dataset of the `world` with `ghg_ems` (e.g. via `View(world); View(ghg_ems)`). It is clear that the column `region` in the former contains the same information as `Country` in the latter. This will be the *joining variable*; renaming it in `world` will make the join more efficient. 
 
-```{r}
+```{r, echo=-1}
+data(ghg_ems, package = "efficient")
 world = rename(world, Country = region)
 ghg_ems$All = rowSums(ghg_ems[3:7])
 ```
@@ -558,6 +564,7 @@ summary({m = c_u %in% w_u})
 
 This comparison exercise has been fruitful: most of the countries in the `co2` dataset exist in the `world` dataset. But what about the 20 country names that do not match? We can identify these as follows:
 
+<!-- __XXX__ This doesn't look very dplyr like -->
 ```{r}
 (n = c_u[!m]) # non-matching country names in world data
 ```
@@ -572,16 +579,18 @@ grep(n[1], w_u) # no match
 
 What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names with a `grep`. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10` after trial and error). The results show that the country `Antigua & Barbuda` from the `ghg_ems` data is matched *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
 
+<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
 ```{r}
 world$Country[world$Country %in% w_u1] = n[1]
 ```
 
 Fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. This can be fixed manually:
 
+<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
 ```{r}
 world$Country[world$Country == "USA"] = "United States"
 ```
-
+<!-- __XXX__ Point people to a vignette in the package -->
 To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
 
 ```{r co2-clean, echo=FALSE, eval=FALSE}
@@ -659,7 +668,7 @@ knitr::include_graphics("figures/world_co2.png")
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
-library(scales)
+library("scales")
 world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
 ggplot(world_co2_2012, aes(long, lat, group = group)) +
   geom_polygon(aes(fill = All)) +
@@ -682,19 +691,23 @@ R can connect to databases in a number of ways, which are briefly touched on bel
 **RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
 **RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
-Imagine you have access to a database on donations for a community café.
-
-```{r, eval=FALSE}
-# Connect to a database driver
-library("RMySQL") # also loads DBI package
-con = dbConnect(MySQL(), username = "me", password = pwd, dbname = "cafes")
-
-# List available tables
-dbListTables(con)
-rs = dbSendQuery(con, "SELECT * FROM tblDonnations")
-df_head = dbFetch(rs, n = 6) # extract first 6 rows
+```{r echo=FALSE, message=FALSE}
+# Set up temporary data base for next section.
+data("ghg_ems", package = "efficient")
+ghg_db = tempfile()
+db = dplyr::src_sqlite(path=ghg_db, create=TRUE)
+wb_sqlite = dplyr::copy_to(db, ghg_ems, temporary = FALSE)
 ```
+Imagine you have access to a database that contains the `ghg_ems` data set.
 
+```{r, message=FALSE, results="hide"}
+# Connect to a database driver
+library("RSQLite")
+con = dbConnect(SQLite(), dbname = ghg_db) # Also username & password arguments
+dbListTables(con)
+rs = dbSendQuery(con, "SELECT * FROM `ghg_ems` WHERE (`Country` != 'World')")
+df_head = dbFetch(rs, n = 6) # extract first 6 row
+```
 The above code chunk shows how the function `dbConnect` connects to an external database, in this case a MySQL database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
 
 ```{block, password-tip, type='rmdtip'}
@@ -705,22 +718,7 @@ Recently there has been a shift to the 'noSQL' approach for storing large datase
 This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
 
 MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
-A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. A new development showcased in this tutorial is the ability to interact with databases using exactly the same syntax used to interact with R objects stored in RAM. This innovation was made possible by **dplyr**, an R library for data processing that aims to provide a unified 'front end' to perform a wide range of analysis task on datasets using a variety of 'back ends' which do the number crunching. This is one of the main advantages of **dplyr**
-(see Section \@ref(dplyr)).
-
-To access a database in R via **dplyr**, one must use one of the `src_` functions to create a source. Continuing with the MySQL example above, one would create a `tbl` object, that can be queried by **dplyr** as follows:
-
-```{r, eval=FALSE}
-library("dplyr")
-cafes_db = src_mysql(user = "me", password = pwd, dbname = "cafes")
-cafes_tbl = tbl(cafes_db, sql("SELECT * FROM tblDonnations"))
-```
-
-```{r, echo=FALSE, message=FALSE}
-library("dplyr")
-```
-
-Of course, the above example will not work because there is no pre-existing SQL database on your computer. To see the method work on your computer we will create an SQLite database from within R, building on the **dplyr** databases vignette (see `vignette('databases')`).
+A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. 
 
 There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
 
@@ -728,24 +726,36 @@ There are many wider considerations in relation to databases that we will not co
 - The `databases` vignette from the **dplyr** package.
 - [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
 
-#### Exercises {-}
+### Databases and **dplyr**
 
-Follow the worked example below to create and query a database on land prices in the UK using **dplyr** as a front end to an SQLite database.
+To access a database in R via **dplyr**, one must use one of the `src_` functions to create a source. Continuing with the SQLite example above, one would create a `tbl` object, that can be queried by **dplyr** as follows:
 
-The first stage is to download and read-in the data:
-
-```{r, eval=FALSE}
-url = paste0("http://prod.publicdata.landregistry.gov.uk",
-  ".s3-website-eu-west-1.amazonaws.com/pp-monthly-update.txt")
-download.file(url = url, destfile = "pp-monthly-update.txt")
-land_df = readr::read_csv("pp-monthly-update.txt")
+```{r, message=FALSE}
+library("dplyr")
+ghg_db = src_sqlite(ghg_db)
+ghg_tbl = tbl(ghg_db, "ghg_ems")
 ```
 
-To avoid downloading the file from the internet, you can subset of this data that is provided by the **efficient** package that accompanies this book:
+The `ghg_tbl` object can then be queried in a similar way as a standard data frame. For example, suppose we wished to 
+filter by `Country`. Then we use the `filter` function as before
+```{r}
+rm_world = ghg_tbl %>%
+  filter(Country != "World")
+```
+In the above code, **dplyr** has actually generated the necessary SQL command, which can be examined using `explain(rm_world)`.
+When working with databases, **dplyr** use lazy evaluation. The SQL command associated with `rm_world` hasn't yet been executed, this is why
+`tail(rm_world)` doesn't work. By using lazy evaluation, **dplyr** is more efficient at handling large data structures since it avoids unnecessary copying. 
+When you want your SQL command to be executed, use `collect(rm_world)`.
+
+ 
+#### Exercises {-}
+
+Follow the worked example below to create and query a database on land prices in the UK using **dplyr** as a front end to an SQLite database. 
+The first stage is to read-in the data:
 
 ```{r}
-library("efficient")
-data("land_df")
+# See help("land_df", package="efficient") for detials
+data(land_df, package="efficient")
 ```
 
 The next stage is to create an SQLite database to hold the data:
@@ -779,6 +789,8 @@ so it should be stated at the outset that which to use can be a matter of person
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
 The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
+
+<!-- __XXX__ Anything read from data/* isn't reproducible for the reader-->
 
 ```{r}
 library("data.table")
