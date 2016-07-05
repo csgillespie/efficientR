@@ -26,7 +26,7 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 
 - Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by **tidyr**.
 
-- Use efficient functions for reading and writing plain text files, such as `read_csv` and `fread`, from the **readr** and **data.table** packages respectively.
+- Use the `tbl` class, the defined by the **tibble** package and the default object type of **dplyr**, to make data frames efficient to print and easier to work with.
 
 - Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in contexts where speed is critical.
 
@@ -73,6 +73,7 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 
 ```{r}
 library("tidyr")
+library("readr")
 raw = read_csv("data/pew.csv") # read in the 'wide' dataset
 dim(raw)
 rawt = gather(raw, Income, Count, -religion)
@@ -85,7 +86,7 @@ Note
 that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
 Note that when we print the object `rawt[1:3,]`, the class of each variable is given
 (`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
-This is because **tidyr** uses the `tbl` class from the **tibble** package (described below).
+This is because **readr** creates `tbl` objects from the **tibble** package (described in the next section).
 ```
 
 ```{r tpew, echo=FALSE}
@@ -126,9 +127,11 @@ knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
 The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
-```{block, non-standard evaluation, type='rmdnote'}
-Note that in the above code chunks we used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation. The affix `_` can be added to functions in **dplyr** and **tidyr** to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
+```{block, nse, type='rmdnote'}
+Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
 ```
+
+Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be autocompleted by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 
 ## Efficient data frames with tibble
 
@@ -211,7 +214,6 @@ knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of a
 Building on the 'learning by doing' ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
 
 ```{r, message=FALSE}
-library("readr")
 fname = system.file("extdata/world-bank-ineq.csv", package = "efficient")
 idata = read_csv(fname)
 idata # print the dataset 
@@ -361,8 +363,7 @@ Looking at the output, it becomes clear that the majority of the variables only 
 
 ```{r}
 # Identify the variable which are all NA
-all_na = vapply(miniaa, function(x) all(is.na(x)),
-                logical(1))
+all_na = vapply(miniaa, function(x) anyNA(x), logical(1))
 summary(all_na) # summary of the results
 miniaa1 = miniaa[!all_na] # subset the dataframe
 ```
