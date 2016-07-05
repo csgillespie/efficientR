@@ -131,12 +131,16 @@ The wider issue of manipulation is a large topic with major potential implicatio
 Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
 ```
 
-Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be autocompleted by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
+Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 
 ## Efficient data frames with tibble
 
 **tibble** is a package that defines a new data frame class for R, the `tbl_df`. These 'tibble diffs' (as their inventor [suggests](https://github.com/hadley/tibble) they should be pronounced) are like the base class `data.frame`, but with more user friendly printing, subsetting, and factor handling.
-
+```{block, type="rmdnote"}
+A tibble data frame is an S3 object with three classes, `tbl_df`, `tbl`, and `data.frame`. Since 
+the object has the `data.frame` tag, this means that if a `tbl_df` or `tbl` method isn't available, 
+the object will be passed on to the appropriate `data.frame` function.
+```
 To create a tibble data frame, we just use `data_frame` function
 
 ```{r}
@@ -238,7 +242,7 @@ Note also the syntax:
 library("dplyr")
 idata = rename(idata, Country = `Country Name`)
 ```
-
+<!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
 To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated for clarity.
 
 ```{r}
@@ -258,6 +262,9 @@ saveRDS(idata, "data/idata-renamed.Rds")
 
 ### Changing column classes
 
+<!-- __XXX__ The bit below is a bit odd. The data frame is a tibble. The class is printed in a column. I 
+also think that your vapply command is nicer, with `str` being more appropriate for the footnote.-->
+
 The *class* of R objects is critical to performance.
 If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, character(1))` is an alternative way to query the class of columns in a dataset.]
 
@@ -268,15 +275,15 @@ str(idata)
 
 This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
 
-Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 ("Country", "Country Code", "Year" and "Year Code") should be numeric. We can re-assign the classes of the numeric variables one-by one:
+Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
 
 ```{r}
 idata$gini = as.numeric(idata$gini)
 mean(idata$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
-However, the purpose of programming languages is to *automate* tasks and reduce typing.
-The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts a `data.frame` to a numeric `matrix`:
+However the purpose of programming languages is to *automate* tasks and reduce typing.
+The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts the data frame to a numeric `matrix`:
 
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
@@ -293,10 +300,8 @@ idata[id] = as.numeric(unlist(idata[id]))
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE}
-idata_mutate = mutate_each(idata, funs(as.numeric), id)
+idata_mutate = mutate_each(idata, "as.numeric", id)
 ```
-
-
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
 
@@ -338,8 +343,7 @@ Large datasets often contain much worthless or blank information. This consumes 
 Imagine that we have a text file called `miniaa` which is large enough to consume most of your computer's RAM. We can load it with the following command:
 
 ```{r}
-fname = system.file("extdata/miniaa", package = "efficient")
-miniaa = read_csv(fname) # load imaginary large data
+data(miniaa, package="efficient") # load imaginary large data
 dim(miniaa)
 ```
 
@@ -347,18 +351,22 @@ Note that the data frame has 329 columns, and imagine it has millions of rows, i
 
 ```{r, eval=FALSE}
 glimpse(miniaa)
-#> $ NPI                   (int) 1679576722, ...
-#> $ Entity Type Code      (int) 1, 1, 2,    ...
-#> $ Replacement NPI       (lgl) NA, NA, NA, ...
+#> Observations: 9
+#> Variables: 329
+#> $ NPI          
+#>     <int> ...
 #> ...
 ```
 
-Looking at the output, it becomes clear that the majority of the variables only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
+
+The majority of variables in this dataset only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
 
 ```{r, echo=FALSE}
 # TODO: demonstrate dplyr::select
 ```
 
+<!-- __XXX__ This isn't correct (I know I suggest it). `anyNA` detects if there are any NA's. According to your comment it -->
+<!-- should be `!sum(!is.na(x))` - but there are no columns that are all NA's -->
 ```{r}
 # Identify the variable which are all NA
 all_na = vapply(miniaa, function(x) anyNA(x), logical(1))
