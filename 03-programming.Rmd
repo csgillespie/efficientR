@@ -237,31 +237,6 @@ local(source("code/03-programming_f1.R", local=TRUE))
 Verify that `monte_carlo_vec` is faster than `monte_carlo`. How does this relate to 
 the number of darts, i.e. the size of `N`, that is used
 
-### Type consistency
-
-When programming it is helpful if the return value from a function always takes the
-same form. Unfortunately, not all of base R functions follow this idiom. For example
-the functions `sapply` and `[.data.frame` aren't type consistent
-```{r, results="hide"}
-two_cols = data.frame(x = 1:5, y = letters[1:5])
-zero_cols = data.frame()
-sapply(two_cols, class)  # a character vector
-sapply(zero_cols, class) # a list
-two_cols[, 1:2]          # a data.frame
-two_cols[, 1]            # an integer vector
-```
-This can cause unexpected problems. The functions `lapply` and `vapply` are type
-consistent. Likewise `dplyr::select` and `dplyr:filter`. The **purrr** package has
-some type consistent alternatives to base R functions. For example, `map_dbl` etc. to
-replace `Map` and `flatten_df` to replace `unlist`.
-
-#### Exercises {-}
-
-1. Rewrite the `sapply` function calls above using `vapply` to ensure type consistency.
-
-1. How would you make subsetting data frames with `[` type consistent? Hint: look at
-the `drop` argument.
-
 ## Communicating with the user
 
 When we create a function we often want the function to give feedback on the current
@@ -603,19 +578,129 @@ indeed a list.
 <!-- __XXX__ Colin add a section on the apply family somewhere around here (reckon it deserves a section of its own) --> 
 ## The apply family
 
+The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
+each element of an object. For example, you can apply a function to row or column of a matrix, or each element of a list. 
+A list of available functions is given in \@ref(tab:apply-family), with a short description. In
+general, the apply functions have similar properties:
 
-```{r echo=FALSE}
+  * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
+  * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is
+  given as an argument.
+
+Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, 
+we will cover the three main functions, `apply`, `lapply`, and `sapply`. Since the apply functions are covered in 
+most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources 
+at the end of this section.
+
+```{block, type="rmdnote"}
+Most people rarely use the other apply functions. For example, I have only found `eapply` 
+useful once. Students in my class uploaded R scipts. Using `source`, I was able to read
+in the scripts to a separate environment. I then applied a marking scheme to each
+environment using `eapply`. Using separate environments, avoided name classes.
+```
+
+```{r apply-family, echo=FALSE}
 dd = tibble::frame_data(
   ~Function, ~Description,
-"`apply`",             "Apply functions over array margins",
-"`by`",               "Apply a function to a data frame split by factors",
-"`eapply`",            "Apply a function over values in an environment",
-"`lapply`",            "Apply a function over a list or vector",
-"`mapply`",            "Apply a function to ,ultiple list or vector arguments",
-"`rapply`",            "Recursively apply a function to a list",
-"`tapply`",            "Apply a function over a ragged array")
-knitr::kable(dd, caption="The apply family of functions from base R")
+"`apply`", "Apply functions over array margins",
+"`by`",    "Apply a function to a data frame split by factors",
+"`eapply`", "Apply a function over values in an environment",
+"`lapply`", "Apply a function over a list or vector",
+"`mapply`", "Apply a function to multiple list or vector arguments",
+"`rapply`", "Recursively apply a function to a list",
+"`tapply`", "Apply a function over a ragged array")
+knitr::kable(dd, caption="The apply family of functions from base R", row.names = FALSE)
 ```
+
+The `apply` function is used to apply a function to the rows or columns of a matrix. In many data science
+problems, this is a common task. For example,
+to calculate the standard deviation of the row
+```{r, results="hide"}
+data("ex_mat", package="efficient")
+# 1 is the maring and corresponds to rows
+row_sd = apply(ex_mat, 1, sd)
+```
+The second argument is the `MARGIN`. This is a vector giving the subscripts which the function (the third argument)
+will be applied over. When the object is a matrix, a margin of `1` indicates rows and `2` indicates columns. 
+So to calculate the column standard deviations, the second argument is changed to `2` 
+```{r, results="hide"}
+col_med = apply(ex_mat, 2, sd)
+```
+Additional arguments can be passed to the function that is to be applied to the data, e.g.
+```{r}
+row_sd = apply(ex_mat, 1, sd, na.rm=TRUE)
+```
+The `apply` function also works on higher dimensional arrays; a one dimensional array is a vector, 
+a two dimensional array is a matrix.
+
+The `lapply` function is similar to `apply`; the main differences are the input types are vectors or lists and the return type is
+a list. Essentially, we apply a function to each element of a list or vector. Similarly, `sapply` and `vapply`, but the return type is not necessary 
+a list.
+
+### Example: the movies data set
+
+The internet movie [database](http://imdb.com/), is a website that collects movie data supplied 
+by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon.
+The `ggplot2movies` package contains about sixty thousand movies. Each movies 
+
+
+```{r}
+data(movies, package="ggplot2movies")
+ratings = movies[,7:16]
+means = apply(ratings, 2, mean)
+rating = 1:10
+plot(rating, means, type="l")
+sds = apply(ratings, 2, sd)
+sds
+segments(rating, means - 2*sds,  y1 = means + 2*sds)
+
+```
+
+```{r}
+rating_by_len = tapply(movies$length, movies$rating, mean)
+plot(names(rating_by_len), rating_by_len)
+```
+
+### Type consistency
+
+When programming it is helpful if the return value from a function always takes the
+same form. Unfortunately, not all of base R functions follow this idiom. For example
+the functions `sapply` and `[.data.frame` aren't type consistent
+```{r, results="hide"}
+two_cols = data.frame(x = 1:5, y = letters[1:5])
+zero_cols = data.frame()
+sapply(two_cols, class)  # a character vector
+sapply(zero_cols, class) # a list
+two_cols[, 1:2]          # a data.frame
+two_cols[, 1]            # an integer vector
+```
+This can cause unexpected problems. The functions `lapply` and `vapply` are type
+consistent. Likewise `dplyr::select` and `dplyr:filter`. The **purrr** package has
+some type consistent alternatives to base R functions. For example, `map_dbl` etc. to
+replace `Map` and `flatten_df` to replace `unlist`.
+
+#### Other resources {-}
+
+Almost every R book has a section on the apply function. Below, we've given the resources we feel are 
+most helpful.
+
+  * Each function has a number of examples in the associated help page. You can directly 
+  access the examples using the `example` function, e.g. to run the `apply` examples, use
+  `example("apply")`.
+  * There is a very detailed Stackoverflow [answer](http://stackoverflow.com/q/3505701/203420)
+  description when, where and how to use each of the functions.
+  * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/)
+  giving an overview of the functions.
+  * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes 
+  the interplay between loops and functional programming in more detail [@grolemund_r_2016], while @Wickham2014 
+  gives a more in-depth description of the topic.
+
+#### Exercises {-}
+
+1. Rewrite the `sapply` function calls above using `vapply` to ensure type consistency.
+
+1. How would you make subsetting data frames with `[` type consistent? Hint: look at
+the `drop` argument.
 
 ## Caching variables
 
