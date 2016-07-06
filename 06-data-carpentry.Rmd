@@ -187,8 +187,14 @@ Following the advice in Section \@ref(package-selection), we have carefully sele
 Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(efficient-learning). It has small number of intuitively named functions, or 'verbs'. These can be used in combination with each other, and the grouping function `group_by()`, to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
 
 ```{r verbs, echo=FALSE}
-verbs = read_csv("data/verbs.csv")
-# knitr::kable(verbs, caption = "dplyr 'verb' functions.")
+verbs = frame_data(
+  ~dplyr, ~functions, ~Description, ~Base,
+  "A", "B", "C", "D"
+)
+  
+verbs =                         read_csv("data/dplyr-verbs.csv")
+# verbs = read_csv("data/reshape-pew.csv")
+knitr::kable(verbs, caption = "dplyr verb functions.")
 ```
 
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
