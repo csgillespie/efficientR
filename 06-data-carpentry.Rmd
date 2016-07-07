@@ -660,7 +660,7 @@ nrow({world_co2 = left_join(world, ghg_ems)})
 nrow(inner_join(world, ghg_ems))
 ```
 
-Note that `inner_join` removes rows from the `world` dataset which have no match in `ghg_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `ghg_ems` dataset would be absent. Figure \@ref(fig:wco2) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
+Note that `inner_join` removes rows from the `world` dataset which have no match in `ghg_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `ghg_ems` dataset would be absent. Figure \@ref(fig:6-1) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
 
 ```{r, eval=FALSE}
 world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
@@ -668,8 +668,8 @@ ggplot(world_co2_2012, aes(long, lat)) +
   geom_polygon(aes(fill = All, group = group))
 ```
 
-```{r wco2, echo=FALSE, fig.cap="The geographical distribution of carbon dioxide emissions in 2012.", out.width="100%"}
-knitr::include_graphics("figures/world_co2.png")
+```{r 6-1, echo=FALSE, fig.cap="The geographical distribution of carbon dioxide emissions in 2012.", out.width="100%"}
+knitr::include_graphics("figures/f6_1_world_co2.png")
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -813,7 +813,7 @@ setkey(idata_dt, Country)
 aus3b = idata_dt[.("Australia")]
 ```
 
-The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:dtplot), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
+The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
@@ -842,10 +842,10 @@ for(i in seq(10, 1000, length.out = 10)){
 saveRDS(res, "data/res-datatable.Rds")
 ```
 
-```{r dtplot, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}
-local(source("code/04-project-planning_f4.R", local=TRUE))
+```{r 6-2, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}
+local(source("code/06-data-carpentry_f2.R", local=TRUE))
 ```
 
-Figure \@ref(fig:dtplot) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
+Figure \@ref(fig:6-2) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
 
 In summary, this section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing. It offers performance gains due to its implementation in C and use of *keys* for subsetting tables. **data.table** offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with `left_join` in **dplyr**); and grouping. For further information on **data.table**, we recommend reading the package's [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf), [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html) and [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignettes.
