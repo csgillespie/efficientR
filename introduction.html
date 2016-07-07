@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.0.74 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.75 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -169,14 +169,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
 <li class="chapter" data-level="3.2.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>3.2.2</b> Vectorised code</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
-<li class="chapter" data-level="3.2.3" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.2.3</b> Type consistency</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
 <li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning</code></a></li>
 <li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message</code> and <code class="unnumbered">cat</code></a></li>
 <li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#example-retrieving-a-web-resource"><i class="fa fa-check"></i><b>3.3.4</b> Example: Retrieving a web resource</a></li>
-<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-7"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="3.3.5" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.5</b> Invisible returns</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
@@ -187,7 +186,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
+<li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
+</ul></li>
 <li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
 <li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
 </ul></li>
@@ -412,9 +414,9 @@ df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt"
 <span class="kw">microbenchmark</span>(df[<span class="dv">3</span>, <span class="dv">2</span>], df$name[<span class="dv">3</span>], df[<span class="dv">3</span>, <span class="st">&#39;v&#39;</span>])
 <span class="co">#&gt; Unit: microseconds</span>
 <span class="co">#&gt;        expr  min   lq mean median   uq   max neval</span>
-<span class="co">#&gt;    df[3, 2] 22.9 24.1 27.7   24.6 25.6 204.8   100</span>
-<span class="co">#&gt;  df$name[3] 16.3 17.6 19.6   18.6 19.7  63.1   100</span>
-<span class="co">#&gt;  df[3, &quot;v&quot;] 14.8 16.0 17.4   16.7 17.2  29.6   100</span></code></pre></div>
+<span class="co">#&gt;    df[3, 2] 23.3 24.8 28.6   25.4 26.2 210.8   100</span>
+<span class="co">#&gt;  df$name[3] 16.2 17.5 19.7   18.7 19.7  75.8   100</span>
+<span class="co">#&gt;  df[3, &quot;v&quot;] 14.7 16.4 17.9   17.0 17.6  43.1   100</span></code></pre></div>
 <p>The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.</p>
 </div>
 </div>

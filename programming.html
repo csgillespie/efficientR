@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.0.74 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.75 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -169,14 +169,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
 <li class="chapter" data-level="3.2.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>3.2.2</b> Vectorised code</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
-<li class="chapter" data-level="3.2.3" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.2.3</b> Type consistency</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
 <li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning</code></a></li>
 <li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message</code> and <code class="unnumbered">cat</code></a></li>
 <li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#example-retrieving-a-web-resource"><i class="fa fa-check"></i><b>3.3.4</b> Example: Retrieving a web resource</a></li>
-<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-7"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="3.3.5" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.5</b> Invisible returns</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
@@ -187,7 +186,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
+<li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
+</ul></li>
 <li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
 <li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
 </ul></li>
@@ -491,7 +493,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <h4>Example: Monte-Carlo integration</h4>
 <p>It’s also important to make full use of R functions that use vectors. For example, suppose we wish to estimate the integral <span class="math display">\[
 \int_0^1 x^2 dx
-\]</span> using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in <a href="programming.html#fig:6-2">3.1</a>).</p>
+\]</span> using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in <a href="programming.html#fig:3-1">3.1</a>).</p>
 <p><em>Monte Carlo Integration</em></p>
 <ol style="list-style-type: decimal">
 <li>Initialise: <code>hits = 0</code></li>
@@ -515,7 +517,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;    2.65    0.00    2.66</span></code></pre></div>
+<span class="co">#&gt;   3.120   0.016   3.137</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -526,8 +528,8 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <li>Using <code>sum</code> is quicker than an equivalent for loop.</li>
 </ul>
 The function <code>monte_carlo_vec</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo</code>.
-<div class="figure" style="text-align: center"><span id="fig:6-2"></span>
-<img src="_main_files/figure-html/6-2-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
+<div class="figure" style="text-align: center"><span id="fig:3-1"></span>
+<img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
 <p class="caption">
 Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
 </p>
@@ -537,24 +539,6 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 <div id="exercise-1" class="section level3 unnumbered">
 <h3>Exercise</h3>
 <p>Verify that <code>monte_carlo_vec</code> is faster than <code>monte_carlo</code>. How does this relate to the number of darts, i.e. the size of <code>N</code>, that is used</p>
-</div>
-<div id="type-consistency" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> Type consistency</h3>
-<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all of base R functions follow this idiom. For example the functions <code>sapply</code> and <code>[.data.frame</code> aren’t type consistent</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span>:<span class="dv">5</span>])
-zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()
-<span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span>
-<span class="kw">sapply</span>(zero_cols, class) <span class="co"># a list</span>
-two_cols[, <span class="dv">1</span>:<span class="dv">2</span>]          <span class="co"># a data.frame</span>
-two_cols[, <span class="dv">1</span>]            <span class="co"># an integer vector</span></code></pre></div>
-<p>This can cause unexpected problems. The functions <code>lapply</code> and <code>vapply</code> are type consistent. Likewise <code>dplyr::select</code> and <code>dplyr:filter</code>. The <strong>purrr</strong> package has some type consistent alternatives to base R functions. For example, <code>map_dbl</code> etc. to replace <code>Map</code> and <code>flatten_df</code> to replace <code>unlist</code>.</p>
-<div id="exercises-7" class="section level4 unnumbered">
-<h4>Exercises</h4>
-<ol style="list-style-type: decimal">
-<li><p>Rewrite the <code>sapply</code> function calls above using <code>vapply</code> to ensure type consistency.</p></li>
-<li><p>How would you make subsetting data frames with <code>[</code> type consistent? Hint: look at the <code>drop</code> argument.</p></li>
-</ol>
-</div>
 </div>
 </div>
 <div id="communicating-with-the-user" class="section level2">
@@ -617,7 +601,7 @@ The key idea is
 what can the user do if the function cannot complete it's purpose.
 -->
 </div>
-<div id="exercises-8" class="section level3 unnumbered">
+<div id="exercises-7" class="section level3 unnumbered">
 <h3>Exercises</h3>
 <p>The <code>stop</code> function has an argument <code>call.</code> that indicates if the function call should be part of the error message. Create a function and experiment with this option.</p>
 </div>
@@ -751,7 +735,7 @@ Figure 3.2: S3 image method for data of class <code>dist</code>.
 </p>
 </div>
 <p>Many S3 methods work in the same way as the simple <code>image.dist</code> function created above: the object is manipulated into a standard format, then passed to the standard method. Creating S3 methods for standard functions such as <code>summary</code>, <code>mean</code>, and <code>plot</code> provides a nice uniform interface to a wide variety of data types.</p>
-<div id="exercises-9" class="section level4 unnumbered">
+<div id="exercises-8" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>A data frame is just an R list, with class <code>data.frame</code>.</p>
 <ol style="list-style-type: decimal">
@@ -763,8 +747,19 @@ Figure 3.2: S3 image method for data of class <code>dist</code>.
 </div>
 <div id="the-apply-family" class="section level2">
 <h2><span class="header-section-number">3.6</span> The apply family</h2>
+<p>The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in <a href="programming.html#tab:apply-family">3.1</a>, with a short description. In general, the all apply functions have similar properties:</p>
+<ul>
+<li>Each function takes at least two arguments: an object and another function. The function is passed as an argument.</li>
+<li>Every apply function has the dots, <code>...</code>, argument that is used to pass on arguments to the function that is given as an argument.</li>
+</ul>
+<p>Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, we will cover the three main functions, <code>apply</code>, <code>lapply</code>, and <code>sapply</code>. Since the apply functions are covered in most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources at the end of this section.</p>
+<div class="rmdnote">
+<p>
+Most people rarely use the other apply functions. For example, I have only used <code>eapply</code> once. Students in my class uploaded R scipts. Using <code>source</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply</code>. Using separate environments, avoided object name clashes.
+</p>
+</div>
 <table>
-<caption><span id="tab:unnamed-chunk-99">Table 3.1: </span>The apply family of functions from base R</caption>
+<caption><span id="tab:apply-family">Table 3.1: </span>The apply family of functions from base R</caption>
 <thead>
 <tr class="header">
 <th align="left">Function</th>
@@ -790,7 +785,7 @@ Figure 3.2: S3 image method for data of class <code>dist</code>.
 </tr>
 <tr class="odd">
 <td align="left"><code>mapply</code></td>
-<td align="left">Apply a function to ,ultiple list or vector arguments</td>
+<td align="left">Apply a function to multiple list or vector arguments</td>
 </tr>
 <tr class="even">
 <td align="left"><code>rapply</code></td>
@@ -802,6 +797,67 @@ Figure 3.2: S3 image method for data of class <code>dist</code>.
 </tr>
 </tbody>
 </table>
+<p>The <code>apply</code> function is used to apply a function to the each row or column of a matrix. In many data science problems, this is a common task. For example, to calculate the standard deviation of the row we have</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+<span class="co"># MARGIN=1: corresponds to rows</span>
+row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</code></pre></div>
+<p>The first argument of <code>apply</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_med =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</code></pre></div>
+<p>Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the <code>na.rm</code> argument to the <code>sd</code> function, we have</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p>The <code>apply</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
+<p>The <code>lapply</code> function is similar to <code>apply</code>; the main differences are the input types are vectors or lists and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply</code> and <code>vapply</code> are similar to <code>lapply</code>, but the return type is not necessary a list.</p>
+<div id="example-the-movies-data-set" class="section level3">
+<h3><span class="header-section-number">3.6.1</span> Example: the movies data set</h3>
+<p>The internet movie <a href="http://imdb.com/">database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon. The <code>ggplot2movies</code> package contains about sixty thousand movies stored as a data frame</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(movies, <span class="dt">package=</span><span class="st">&quot;ggplot2movies&quot;</span>)</code></pre></div>
+<p>Movies are rated between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span> by fans. Columns <span class="math inline">\(7\)</span> to <span class="math inline">\(16\)</span> of the <code>movies</code> data set gives the percentage of voters for a particular rating.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ratings =<span class="st"> </span>movies[, <span class="dv">7</span>:<span class="dv">16</span>]</code></pre></div>
+<p>For example, 4.5% of voters, rated the first movie a rating of <span class="math inline">\(1\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ratings[<span class="dv">1</span>, ]
+<span class="co">#&gt; # A tibble: 1 x 10</span>
+<span class="co">#&gt;      r1    r2    r3    r4    r5    r6    r7    r8    r9   r10</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1   4.5   4.5   4.5   4.5  14.5  24.5  24.5  14.5   4.5   4.5</span></code></pre></div>
+<p>We can use the <code>apply</code> function to investigate voting patterns. The function <code>nnet::which.is.max</code> finds the maximum position in a vector, but breaks ties at random; <code>which.max</code> just returns the first value. Using <code>apply</code>, we can easily determine the most popular rating for each movie and plot the results</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">popular =<span class="st"> </span><span class="kw">apply</span>(ratings, <span class="dv">1</span>, nnet::which.is.max)
+<span class="kw">plot</span>(<span class="kw">table</span>(popular))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:3-2"></span>
+<img src="_main_files/figure-html/3-2-1.png" alt="Movie voting preferences." width="70%" />
+<p class="caption">
+Figure 3.3: Movie voting preferences.
+</p>
+</div>
+<p>Figure @{fig:3-2} highlights that voting patterns are clearly not uniform between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span>. The most popular vote is the highest rating, <span class="math inline">\(10\)</span>. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at <span class="math inline">\(1\)</span>). Rating a movie <span class="math inline">\(7\)</span> is also a popular choice (search the web for “most popular number” and <span class="math inline">\(7\)</span> dominates the rankings.)</p>
+</div>
+<div id="type-consistency" class="section level3">
+<h3><span class="header-section-number">3.6.2</span> Type consistency</h3>
+<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all of base R functions follow this idiom. For example the functions <code>sapply</code> and <code>[.data.frame</code> aren’t type consistent</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span>:<span class="dv">5</span>])
+zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()
+<span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span>
+<span class="kw">sapply</span>(zero_cols, class) <span class="co"># a list</span>
+two_cols[, <span class="dv">1</span>:<span class="dv">2</span>]          <span class="co"># a data.frame</span>
+two_cols[, <span class="dv">1</span>]            <span class="co"># an integer vector</span></code></pre></div>
+<p>This can cause unexpected problems. The functions <code>lapply</code> and <code>vapply</code> are type consistent. Likewise <code>dplyr::select</code> and <code>dplyr:filter</code>. The <strong>purrr</strong> package has some type consistent alternatives to base R functions. For example, <code>map_dbl</code> etc. to replace <code>Map</code> and <code>flatten_df</code> to replace <code>unlist</code>.</p>
+<div id="other-resources" class="section level4 unnumbered">
+<h4>Other resources</h4>
+<p>Almost every R book has a section on the apply function. Below, we’ve given the resources we feel are most helpful.</p>
+<ul>
+<li>Each function has a number of examples in the associated help page. You can directly access the examples using the <code>example</code> function, e.g. to run the <code>apply</code> examples, use <code>example(&quot;apply&quot;)</code>.</li>
+<li>There is a very detailed Stackoverflow <a href="http://stackoverflow.com/q/3505701/203420">answer</a> description when, where and how to use each of the functions.</li>
+<li>In a similar vein, Neil Saunders has a nice blog <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">post</a> giving an overview of the functions.</li>
+<li>The apply functions are an example of functional programming. Chapter 16 of <em>R for data Science</em> describes the interplay between loops and functional programming in more detail <span class="citation">(Grolemund and Wickham, n.d.)</span>, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
+</ul>
+</div>
+<div id="exercises-9" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li><p>Rewrite the <code>sapply</code> function calls above using <code>vapply</code> to ensure type consistency.</p></li>
+<li><p>How would you make subsetting data frames with <code>[</code> type consistent? Hint: look at the <code>drop</code> argument.</p></li>
+</ol>
+</div>
+</div>
 </div>
 <div id="caching-variables" class="section level2">
 <h2><span class="header-section-number">3.7</span> Caching variables</h2>
@@ -846,7 +902,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x48a4d00&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x3eac210&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -929,7 +985,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3880480&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3c9e558&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -957,11 +1013,11 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000<
 <span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span>
 <span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span>
 <span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></code></pre></div>
-<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:6-4">3.3</a>).</p>
-<div class="figure" style="text-align: center"><span id="fig:6-4"></span>
-<img src="_main_files/figure-html/6-4-1.png" alt="Comparsion of mean functions." width="70%" />
+<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:3-3">3.4</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:3-3"></span>
+<img src="_main_files/figure-html/3-3-1.png" alt="Comparsion of mean functions." width="70%" />
 <p class="caption">
-Figure 3.3: Comparsion of mean functions.
+Figure 3.4: Comparsion of mean functions.
 </p>
 </div>
 </div>
