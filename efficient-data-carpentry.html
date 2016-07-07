@@ -661,9 +661,7 @@ Note that the above code used non standard evaluation, which means not surroundi
 </tr>
 </tbody>
 </table>
-<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of <strong>dplyr</strong>’s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table <a href="efficient-data-carpentry.html#tab:speed">6.6</a>.</p>
-<!-- __XXX__ This bit of code just appears out of nowhere. What's ghg_ems? It doesn't actually follow from the paragraph above (the final 
-sentence finishes with a full stop) -->
+<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greehouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 top_table =
@@ -671,8 +669,10 @@ top_table =
 <span class="st">  </span><span class="kw">filter</span>(!<span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(Country) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Mean =</span> <span class="kw">mean</span>(Transportation),
-            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Mean)</code></pre></div>
+            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) %&gt;%
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Growth) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(Growth))</code></pre></div>
+<p>The results, illustrated in table <a href="efficient-data-carpentry.html#tab:speed">6.6</a>, show that the USA has the highest growth and average emissions from the transport sector, followed closely by China. The aim of this code chunk, which you are not expected to completely understand, is to provide a taster of <strong>dplyr</strong>’s unique syntax.</p>
 <table>
 <caption><span id="tab:speed">Table 6.6: </span>The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).</caption>
 <thead>
@@ -684,19 +684,19 @@ top_table =
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">United States</td>
+<td align="right">1462</td>
+<td align="right">709</td>
+</tr>
+<tr class="even">
 <td align="left">China</td>
 <td align="right">214</td>
 <td align="right">656</td>
 </tr>
-<tr class="even">
-<td align="left">Japan</td>
-<td align="right">197</td>
-<td align="right">155</td>
-</tr>
 <tr class="odd">
-<td align="left">United States</td>
-<td align="right">1462</td>
-<td align="right">709</td>
+<td align="left">India</td>
+<td align="right">85</td>
+<td align="right">170</td>
 </tr>
 </tbody>
 </table>
@@ -894,6 +894,7 @@ countries =<span class="st"> </span><span class="kw">group_by</span>(idata_mutat
 <div id="exercises-12" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
+<li><p>Refer back to the greenhouse gas emissions example at the outset of section <a href="efficient-data-carpentry.html#dplyr">6.4</a>, in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?</p></li>
 <li><p>Referring back to Section <a href="efficient-data-carpentry.html#renaming-columns">6.4.1</a>, rename the variables 4 to 8 using the <strong>dplyr</strong> function <code>rename</code>. Follow the pattern <code>ECO2</code>, <code>MCO2</code> etc.</p></li>
 <li><p>Explore <strong>dplyr</strong>’s documentation, starting with the introductory vignette, accessed by entering <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html"><code>vignette(&quot;introduction&quot;)</code></a>.</p></li>
 <li><p>Test additional <strong>dplyr</strong> ‘verbs’ on the <code>idata</code> dataset. (More vignette names can be discovered by typing <code>vignette(package = &quot;dplyr&quot;)</code>.)</p></li>
