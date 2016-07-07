@@ -195,10 +195,7 @@ verbs = read_csv("data/dplyr-verbs.csv")
 knitr::kable(verbs, caption = "dplyr verb functions.")
 ```
 
-Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of **dplyr**'s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table \@ref(tab:speed).
-
-<!-- __XXX__ This bit of code just appears out of nowhere. What's ghg_ems? It doesn't actually follow from the paragraph above (the final 
-sentence finishes with a full stop) -->
+Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magittr** package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greehouse gas emissions from the **efficient** package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012: 
 
 ```{r, message=FALSE}
 library("dplyr")
@@ -208,9 +205,13 @@ top_table =
   filter(!grepl("World|Europe", Country)) %>% 
   group_by(Country) %>% 
   summarise(Mean = mean(Transportation),
-            Growth = diff(range(Transportation))) %>% 
-  top_n(3, Mean)
+            Growth = diff(range(Transportation))) %>%
+  top_n(3, Growth) %>%
+  arrange(desc(Growth))
 ```
+
+The results, illustrated in table \@ref(tab:speed), show that the USA has the highest growth and average emissions from the transport sector, followed closely by China.
+The aim of this code chunk, which you are not expected to completely understand, is to provide a taster of **dplyr**'s unique syntax.
 
 ```{r speed, echo=FALSE}
 knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).")
@@ -459,6 +460,8 @@ summary statistics
 - the range of gini index values reported for each country.
 
 #### Exercises {-}
+
+1. Refer back to the greenhouse gas emissions example at the outset of section \@ref(dplyr), in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?
 
 1. Referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the **dplyr** function `rename`. Follow the pattern `ECO2`, `MCO2` etc.
 
