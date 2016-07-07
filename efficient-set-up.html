@@ -605,7 +605,7 @@ fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <sp
 <div id="setting-options" class="section level4">
 <h4><span class="header-section-number">2.4.5.1</span> Setting options</h4>
 <p>The function <code>options</code>, used above, contains a number of default settings. Typing <code>options()</code> provides a good indication of what be configured. Because <code>options()</code> are often related to personal preference (with few implications for reproducibility), that you will want for many your R sessions, <code>.Rprofile</code> in your home directory or in your project’s folder are sensible places to set them. Other illustrative options are shown below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt=</span><span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits=</span><span class="dv">4</span>, <span class="dt">show.signif.stars=</span><span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">show.signif.stars =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>This changes three default options in a single line.</p>
 <ul>
 <li>The R prompt, from the boring <code>&gt;</code> to the exciting <code>R&gt;</code>.</li>
@@ -639,7 +639,7 @@ fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <sp
 <span class="co">#&gt;       useR! 2004, Vienna (May 2004)</span></code></pre></div>
 <p>It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to <code>~/.Rprofile</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">interactive</span>()) 
-  <span class="kw">try</span>(fortunes::<span class="kw">fortune</span>(), <span class="dt">silent=</span><span class="ot">TRUE</span>)</code></pre></div>
+  <span class="kw">try</span>(fortunes::<span class="kw">fortune</span>(), <span class="dt">silent =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>The <code>interactive</code> function tests whether R is being used interactively in a terminal. The <code>fortune</code> function is called within <code>try</code>. If the <strong>fortunes</strong> package is not available, we avoid raising an error and move on. By using <code>::</code> we avoid adding the <strong>fortunes</strong> package to our list of attached packages.</p>
 <div class="rmdtip">
 <p>
@@ -648,9 +648,9 @@ Typing <code>search()</code>, gives the list of attached packages. By using <cod
 </div>
 <p>The function <code>.Last</code>, if it exists in the <code>.Rprofile</code>, is always run at the end of the session. We can use it to install the <strong>fortunes</strong> package if needed. To load the package, we use <code>require</code>, since if the package isn’t installed, the <code>require</code> function returns <code>FALSE</code> and raises a warning.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.Last =<span class="st"> </span>function() {
-  cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(!<span class="kw">require</span>(fortunes, <span class="dt">quietly=</span><span class="ot">TRUE</span>))
+  cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(!<span class="kw">require</span>(fortunes, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))
   if(cond) 
-    <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
+    <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent =</span> <span class="ot">TRUE</span>)
   <span class="kw">message</span>(<span class="st">&quot;Goodbye at &quot;</span>, <span class="kw">date</span>(), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
 }</code></pre></div>
 </div>
@@ -857,7 +857,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
   <span class="kw">-</span> graphics/
   <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre></div>
 <p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
-<p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(Wickham <a href="#ref-Wickham_2015">2015</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
+<p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
 <p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
 </div>
 <div id="exercises-4" class="section level3 unnumbered">
@@ -925,7 +925,7 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <p>Cotton, Richard. 2013. <em>Learning R</em>. O’Reilly Media.</p>
 </div>
 <div id="ref-Wickham_2015">
-<p>Wickham, Hadley. 2015. <em>R Packages</em>. O’Reilly Media.</p>
+<p>Wickham, Hadley. 2015c. <em>R Packages</em>. O’Reilly Media.</p>
 </div>
 </div>
 <div class="footnotes">
