@@ -380,8 +380,8 @@ Using R for basic file management can help create a reproducible workflow, as il
 <span class="kw">file.remove</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># tidy up by removing the zip file</span></code></pre></div>
 <p>This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with <code>df = read.csv(url)</code>. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don’t have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO<sup>2</sup>. Note that this dataset is also available from the <strong>datasets</strong> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv&quot;</span>
-<span class="kw">download.file</span>(url, <span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
+<span class="kw">download.file</span>(url, <span class="st">&quot;data/co2.csv&quot;</span>)
+df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
 <p>There are now many R packages to assist with the download and import of data. The organisation <a href="https://ropensci.org/">ROpenSci</a> supports a number of these. The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>) <span class="co"># load the WDI library (must be installed)</span>
 <span class="kw">WDIsearch</span>(<span class="st">&quot;CO2&quot;</span>) <span class="co"># search for data on a topic</span>
@@ -392,13 +392,10 @@ co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class=
 <h2><span class="header-section-number">5.3</span> Versatile data import with rio</h2>
 <p><strong>rio</strong> is is a ‘A Swiss-Army Knife for Data I/O’, providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include <code>.csv</code>, <code>.feather</code>, <code>.json</code>, <code>.dta</code>, <code>.xls</code>, <code>.xlsx</code> and Google Sheets (see the package’s <a href="https://github.com/leeper/rio">github page</a> for up-to-date information). Below we illustrate three of <strong>rio</strong>’s key functions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)
-
 <span class="co"># Specify a file</span>
 fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/voc_voyages.tsv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
-
 <span class="co"># Import the file (uses the fread function from data.table)</span>
 voyages =<span class="st"> </span><span class="kw">import</span>(fname)
-
 <span class="co"># Export the file as an Excel spreadsheet</span>
 <span class="kw">export</span>(voyages, <span class="st">&quot;output.xlsx&quot;</span>)</code></pre></div>
 <div class="rmdtip">
@@ -738,9 +735,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select  9.8 10.1 10.2   10.2 10.3 10.8     5</span>
-<span class="co">#&gt;  without_select 18.0 18.3 18.6   18.7 18.9 19.0     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.39  9.41  9.71   9.42 10.1 10.2     5</span>
+<span class="co">#&gt;  without_select 16.56 17.51 17.85  17.99 18.1 19.1     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data (described in a note at the beginning of this section) in Table <a href="input-outpu.html#tab:colclasses">5.5</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.5: </span>Execution time of base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in a 1 MB dataset</caption>
