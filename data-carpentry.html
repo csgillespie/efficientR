@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Efficient R programming</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
+  <meta name="generator" content="bookdown 0.0.75 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Efficient R programming" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://csgillespie.github.io/efficientR/" />
+  <meta property="og:image" content="https://csgillespie.github.io/efficientR/figures/f0_full.png" />
+  <meta property="og:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="github-repo" content="csgillespie/efficientR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Efficient R programming" />
+  <meta name="twitter:site" content="@csgillespie" />
+  <meta name="twitter:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="twitter:image" content="https://csgillespie.github.io/efficientR/figures/f0_full.png" />
+
+<meta name="author" content="Colin Gillespie">
+<meta name="author" content="Robin Lovelace">
+
+<meta name="date" content="2016-07-07">
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="input-outpu.html">
+<link rel="next" href="performance.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Efficient R programming</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to Efficient R Programming</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#authors"><i class="fa fa-check"></i>Authors</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who this book is for</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-is-efficiency"><i class="fa fa-check"></i><b>1.2</b> What is efficiency?</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#why-efficiency"><i class="fa fa-check"></i><b>1.3</b> Why efficiency?</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#what-is-efficient-r-programming"><i class="fa fa-check"></i><b>1.4</b> What is efficient R programming?</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#touch-typing"><i class="fa fa-check"></i><b>1.5</b> Touch typing</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#benchmarking"><i class="fa fa-check"></i><b>1.6</b> Benchmarking</a><ul>
+<li class="chapter" data-level="1.6.1" data-path="introduction.html"><a href="introduction.html#benchmarking-example"><i class="fa fa-check"></i><b>1.6.1</b> Benchmarking example</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#profiling"><i class="fa fa-check"></i><b>1.7</b> Profiling</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="set-up.html"><a href="set-up.html"><i class="fa fa-check"></i><b>2</b> Efficient set-up</a><ul>
+<li class="chapter" data-level="2.1" data-path="set-up.html"><a href="set-up.html#top-5-tips-for-an-efficient-r-set-up"><i class="fa fa-check"></i><b>2.1</b> Top 5 tips for an efficient R set-up</a></li>
+<li class="chapter" data-level="2.2" data-path="set-up.html"><a href="set-up.html#operating-system"><i class="fa fa-check"></i><b>2.2</b> Operating system</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="set-up.html"><a href="set-up.html#operating-system-and-resource-monitoring"><i class="fa fa-check"></i><b>2.2.1</b> Operating system and resource monitoring</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="set-up.html"><a href="set-up.html#r-version"><i class="fa fa-check"></i><b>2.3</b> R version</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="set-up.html"><a href="set-up.html#installing-r"><i class="fa fa-check"></i><b>2.3.1</b> Installing R</a></li>
+<li class="chapter" data-level="2.3.2" data-path="set-up.html"><a href="set-up.html#updating-r"><i class="fa fa-check"></i><b>2.3.2</b> Updating R</a></li>
+<li class="chapter" data-level="2.3.3" data-path="set-up.html"><a href="set-up.html#installing-r-packages"><i class="fa fa-check"></i><b>2.3.3</b> Installing R packages</a></li>
+<li class="chapter" data-level="2.3.4" data-path="set-up.html"><a href="set-up.html#deps"><i class="fa fa-check"></i><b>2.3.4</b> Installing R packages with dependencies</a></li>
+<li class="chapter" data-level="2.3.5" data-path="set-up.html"><a href="set-up.html#updating-r-packages"><i class="fa fa-check"></i><b>2.3.5</b> Updating R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="set-up.html"><a href="set-up.html#r-startup"><i class="fa fa-check"></i><b>2.4</b> R startup</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="set-up.html"><a href="set-up.html#r-startup-arguments"><i class="fa fa-check"></i><b>2.4.1</b> R startup arguments</a></li>
+<li class="chapter" data-level="2.4.2" data-path="set-up.html"><a href="set-up.html#an-overview-of-rs-startup-files"><i class="fa fa-check"></i><b>2.4.2</b> An overview of R’s startup files</a></li>
+<li class="chapter" data-level="2.4.3" data-path="set-up.html"><a href="set-up.html#the-location-of-startup-files"><i class="fa fa-check"></i><b>2.4.3</b> The location of startup files</a></li>
+<li class="chapter" data-level="2.4.4" data-path="set-up.html"><a href="set-up.html#rprofile"><i class="fa fa-check"></i><b>2.4.4</b> The <code>.Rprofile</code> file</a></li>
+<li class="chapter" data-level="2.4.5" data-path="set-up.html"><a href="set-up.html#an-example-.rprofile-file"><i class="fa fa-check"></i><b>2.4.5</b> An example <code>.Rprofile</code> file</a></li>
+<li class="chapter" data-level="2.4.6" data-path="set-up.html"><a href="set-up.html#renviron"><i class="fa fa-check"></i><b>2.4.6</b> The <code>.Renviron</code> file</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="set-up.html"><a href="set-up.html#rstudio"><i class="fa fa-check"></i><b>2.5</b> RStudio</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="set-up.html"><a href="set-up.html#install-rstudio"><i class="fa fa-check"></i><b>2.5.1</b> Installing and updating RStudio</a></li>
+<li class="chapter" data-level="2.5.2" data-path="set-up.html"><a href="set-up.html#window-pane-layout"><i class="fa fa-check"></i><b>2.5.2</b> Window pane layout</a></li>
+<li class="chapter" data-level="2.5.3" data-path="set-up.html"><a href="set-up.html#rstudio-options"><i class="fa fa-check"></i><b>2.5.3</b> RStudio options</a></li>
+<li class="chapter" data-level="2.5.4" data-path="set-up.html"><a href="set-up.html#autocompletion"><i class="fa fa-check"></i><b>2.5.4</b> Autocompletion</a></li>
+<li class="chapter" data-level="2.5.5" data-path="set-up.html"><a href="set-up.html#keyboard-shortcuts"><i class="fa fa-check"></i><b>2.5.5</b> Keyboard shortcuts</a></li>
+<li class="chapter" data-level="2.5.6" data-path="set-up.html"><a href="set-up.html#object-display-and-output-table"><i class="fa fa-check"></i><b>2.5.6</b> Object display and output table</a></li>
+<li class="chapter" data-level="2.5.7" data-path="set-up.html"><a href="set-up.html#project-management"><i class="fa fa-check"></i><b>2.5.7</b> Project management</a></li>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-4"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="set-up.html"><a href="set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="set-up.html"><a href="set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
+<li class="chapter" data-level="2.6.2" data-path="set-up.html"><a href="set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.2</b> Other interpreters</a></li>
+<li class="chapter" data-level="2.6.3" data-path="set-up.html"><a href="set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.3</b> Useful BLAS/benchmarking resources</a></li>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-5"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
+<li class="chapter" data-level="3.1" data-path="programming.html"><a href="programming.html#top-5-tips-for-efficient-programming"><i class="fa fa-check"></i><b>3.1</b> Top 5 tips for efficient programming</a></li>
+<li class="chapter" data-level="3.2" data-path="programming.html"><a href="programming.html#general-advice"><i class="fa fa-check"></i><b>3.2</b> General advice</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>3.2.2</b> Vectorised code</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
+<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning</code></a></li>
+<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message</code> and <code class="unnumbered">cat</code></a></li>
+<li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#example-retrieving-a-web-resource"><i class="fa fa-check"></i><b>3.3.4</b> Example: Retrieving a web resource</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-7"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="3.3.5" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.5</b> Invisible returns</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#example-months-of-the-year"><i class="fa fa-check"></i><b>3.4.1</b> Example: Months of the year</a></li>
+<li class="chapter" data-level="3.4.2" data-path="programming.html"><a href="programming.html#example-graphics"><i class="fa fa-check"></i><b>3.4.2</b> Example: Graphics</a></li>
+<li class="chapter" data-level="3.4.3" data-path="programming.html"><a href="programming.html#example-analysis-of-variance"><i class="fa fa-check"></i><b>3.4.3</b> Example: Analysis of variance</a></li>
+<li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
+<li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
+<li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.8</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.8.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="3.8.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.8.2</b> Compiling code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
+<li class="chapter" data-level="4.1" data-path="workflow.html"><a href="workflow.html#top-5-tips-for-efficient-workflow"><i class="fa fa-check"></i><b>4.1</b> Top 5 tips for efficient workflow</a></li>
+<li class="chapter" data-level="4.2" data-path="workflow.html"><a href="workflow.html#a-project-planning-typology"><i class="fa fa-check"></i><b>4.2</b> A project planning typology</a></li>
+<li class="chapter" data-level="4.3" data-path="workflow.html"><a href="workflow.html#project-planning-and-management"><i class="fa fa-check"></i><b>4.3</b> Project planning and management</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="workflow.html"><a href="workflow.html#chunking-your-work"><i class="fa fa-check"></i><b>4.3.1</b> ‘Chunking’ your work</a></li>
+<li class="chapter" data-level="4.3.2" data-path="workflow.html"><a href="workflow.html#smart"><i class="fa fa-check"></i><b>4.3.2</b> Making your workflow SMART</a></li>
+<li class="chapter" data-level="4.3.3" data-path="workflow.html"><a href="workflow.html#visualising-plans-with-r"><i class="fa fa-check"></i><b>4.3.3</b> Visualising plans with R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="workflow.html"><a href="workflow.html#package-selection"><i class="fa fa-check"></i><b>4.4</b> Package selection</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="workflow.html"><a href="workflow.html#searching-for-r-packages"><i class="fa fa-check"></i><b>4.4.1</b> Searching for R packages</a></li>
+<li class="chapter" data-level="4.4.2" data-path="workflow.html"><a href="workflow.html#how-to-select-a-package"><i class="fa fa-check"></i><b>4.4.2</b> How to select a package</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="workflow.html"><a href="workflow.html#publication"><i class="fa fa-check"></i><b>4.5</b> Publication</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="workflow.html"><a href="workflow.html#dynamic-documents-with-knitr"><i class="fa fa-check"></i><b>4.5.1</b> Dynamic documents with knitr</a></li>
+<li class="chapter" data-level="4.5.2" data-path="workflow.html"><a href="workflow.html#r-packages"><i class="fa fa-check"></i><b>4.5.2</b> R packages</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="input-outpu.html"><a href="input-outpu.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a><ul>
+<li class="chapter" data-level="5.1" data-path="input-outpu.html"><a href="input-outpu.html#top-5-tips-for-efficient-data-io"><i class="fa fa-check"></i><b>5.1</b> Top 5 tips for efficient data I/O</a></li>
+<li class="chapter" data-level="5.2" data-path="input-outpu.html"><a href="input-outpu.html#getting-data-from-the-internet"><i class="fa fa-check"></i><b>5.2</b> Getting data from the internet</a></li>
+<li class="chapter" data-level="5.3" data-path="input-outpu.html"><a href="input-outpu.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.3</b> Versatile data import with rio</a><ul>
+<li class="chapter" data-level="" data-path="input-outpu.html"><a href="input-outpu.html#exercises-11"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="input-outpu.html"><a href="input-outpu.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.4</b> Accessing data stored in packages</a></li>
+<li class="chapter" data-level="5.5" data-path="input-outpu.html"><a href="input-outpu.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.5</b> The feather file format</a></li>
+<li class="chapter" data-level="5.6" data-path="input-outpu.html"><a href="input-outpu.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.6</b> Efficient data export: .Rdata or .Rds?</a></li>
+<li class="chapter" data-level="5.7" data-path="input-outpu.html"><a href="input-outpu.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.7</b> A benchmark of methods for file import and export</a></li>
+<li class="chapter" data-level="5.8" data-path="input-outpu.html"><a href="input-outpu.html#fread"><i class="fa fa-check"></i><b>5.8</b> Fast import of plain text formats</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="input-outpu.html"><a href="input-outpu.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.8.1</b> Preprocessing outside R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
+<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
+<li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
+<li class="chapter" data-level="6.4" data-path="data-carpentry.html"><a href="data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="data-carpentry.html"><a href="data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
+<li class="chapter" data-level="6.4.2" data-path="data-carpentry.html"><a href="data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
+<li class="chapter" data-level="6.4.3" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>6.4.3</b> Filtering rows</a></li>
+<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-columns"><i class="fa fa-check"></i><b>6.4.4</b> Filtering columns</a></li>
+<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.5</b> Data aggregation</a></li>
+<li class="chapter" data-level="6.4.6" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.6</b> Chaining operations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="data-carpentry.html"><a href="data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
+<li class="chapter" data-level="6.6" data-path="data-carpentry.html"><a href="data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#databases-and-dplyr"><i class="fa fa-check"></i><b>6.6.1</b> Databases and <strong>dplyr</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="data-carpentry.html"><a href="data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient performance</a><ul>
+<li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
+<li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.2</b> Efficient base R</a><ul>
+<li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if</code> vs <code>ifelse</code> functions</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sorting-and-ordering"><i class="fa fa-check"></i>Sorting and ordering</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
+<li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#string-concatenation"><i class="fa fa-check"></i>String concatenation</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
+<li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#matrices"><i class="fa fa-check"></i>Matrices</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.3</b> Code profiling</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.3.1</b> Getting started with <strong>profvis</strong></a></li>
+<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#example-monopoly-simulation"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#parallel-computing"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.4.1</b> Parallel versions of apply functions</a></li>
+<li class="chapter" data-level="7.4.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.4.2</b> Example: Snakes and Ladders</a></li>
+<li class="chapter" data-level="7.4.3" data-path="performance.html"><a href="performance.html#exit-functions-with-care"><i class="fa fa-check"></i><b>7.4.3</b> Exit functions with care</a></li>
+<li class="chapter" data-level="7.4.4" data-path="performance.html"><a href="performance.html#process-forking"><i class="fa fa-check"></i><b>7.4.4</b> Process forking</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#rcpp"><i class="fa fa-check"></i><b>7.5</b> Rcpp</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#pre-requisites"><i class="fa fa-check"></i><b>7.5.1</b> Pre-requisites</a></li>
+<li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#simple-c"><i class="fa fa-check"></i><b>7.5.2</b> A simple C++ function</a></li>
+<li class="chapter" data-level="7.5.3" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.5.3</b> The cppFunction command</a></li>
+<li class="chapter" data-level="7.5.4" data-path="performance.html"><a href="performance.html#c-types"><i class="fa fa-check"></i><b>7.5.4</b> C++ data types</a></li>
+<li class="chapter" data-level="7.5.5" data-path="performance.html"><a href="performance.html#sourcecpp"><i class="fa fa-check"></i><b>7.5.5</b> The <code>sourceCpp</code> function</a></li>
+<li class="chapter" data-level="7.5.6" data-path="performance.html"><a href="performance.html#vectors-and-loops"><i class="fa fa-check"></i><b>7.5.6</b> Vectors and loops</a></li>
+<li class="chapter" data-level="7.5.7" data-path="performance.html"><a href="performance.html#sugar"><i class="fa fa-check"></i><b>7.5.7</b> C++ with sugar on top</a></li>
+<li class="chapter" data-level="7.5.8" data-path="performance.html"><a href="performance.html#rcpp-resources"><i class="fa fa-check"></i><b>7.5.8</b> Rcpp resources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
+<li class="chapter" data-level="8.1" data-path="hardware.html"><a href="hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
+<li class="chapter" data-level="8.2" data-path="hardware.html"><a href="hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
+<li class="chapter" data-level="8.3" data-path="hardware.html"><a href="hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
+<li class="chapter" data-level="8.4" data-path="hardware.html"><a href="hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>8.4</b> Hard drives: HDD vs SSD</a></li>
+<li class="chapter" data-level="8.5" data-path="hardware.html"><a href="hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>8.5</b> Operating systems: 32-bit or 64-bit</a></li>
+<li class="chapter" data-level="8.6" data-path="hardware.html"><a href="hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>8.6</b> Central processing unit (CPU)</a></li>
+<li class="chapter" data-level="8.7" data-path="hardware.html"><a href="hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.7</b> Cloud computing</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="hardware.html"><a href="hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>8.7.1</b> Amazon EC2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
+<li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
+<li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
+<li class="chapter" data-level="9.2.2" data-path="collaboration.html"><a href="collaboration.html#file-names"><i class="fa fa-check"></i><b>9.2.2</b> File names</a></li>
+<li class="chapter" data-level="9.2.3" data-path="collaboration.html"><a href="collaboration.html#loading-packages"><i class="fa fa-check"></i><b>9.2.3</b> Loading packages</a></li>
+<li class="chapter" data-level="9.2.4" data-path="collaboration.html"><a href="collaboration.html#commenting"><i class="fa fa-check"></i><b>9.2.4</b> Commenting</a></li>
+<li class="chapter" data-level="9.2.5" data-path="collaboration.html"><a href="collaboration.html#object-names"><i class="fa fa-check"></i><b>9.2.5</b> Object names</a></li>
+<li class="chapter" data-level="9.2.6" data-path="collaboration.html"><a href="collaboration.html#example-package"><i class="fa fa-check"></i><b>9.2.6</b> Example package</a></li>
+<li class="chapter" data-level="9.2.7" data-path="collaboration.html"><a href="collaboration.html#assignment"><i class="fa fa-check"></i><b>9.2.7</b> Assignment</a></li>
+<li class="chapter" data-level="9.2.8" data-path="collaboration.html"><a href="collaboration.html#spacing"><i class="fa fa-check"></i><b>9.2.8</b> Spacing</a></li>
+<li class="chapter" data-level="9.2.9" data-path="collaboration.html"><a href="collaboration.html#indentation"><i class="fa fa-check"></i><b>9.2.9</b> Indentation</a></li>
+<li class="chapter" data-level="9.2.10" data-path="collaboration.html"><a href="collaboration.html#curly-braces"><i class="fa fa-check"></i><b>9.2.10</b> Curly braces</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="collaboration.html"><a href="collaboration.html#version-control"><i class="fa fa-check"></i><b>9.3</b> Version control</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="collaboration.html"><a href="collaboration.html#commits"><i class="fa fa-check"></i><b>9.3.1</b> Commits</a></li>
+<li class="chapter" data-level="9.3.2" data-path="collaboration.html"><a href="collaboration.html#git-integration-in-rstudio"><i class="fa fa-check"></i><b>9.3.2</b> Git integration in RStudio</a></li>
+<li class="chapter" data-level="9.3.3" data-path="collaboration.html"><a href="collaboration.html#github"><i class="fa fa-check"></i><b>9.3.3</b> GitHub</a></li>
+<li class="chapter" data-level="9.3.4" data-path="collaboration.html"><a href="collaboration.html#branches-forks-pulls-and-clones"><i class="fa fa-check"></i><b>9.3.4</b> Branches, forks, pulls and clones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="collaboration.html"><a href="collaboration.html#refactoring"><i class="fa fa-check"></i><b>9.4</b> Refactoring code</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
+<li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
+<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-r-help"><i class="fa fa-check"></i><b>10.2</b> Using R help</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.1</b> Reading R source code</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
+<li class="chapter" data-level="10.3.2" data-path="learning.html"><a href="learning.html#mailing-lists-and-groups."><i class="fa fa-check"></i><b>10.3.2</b> Mailing lists and groups.</a></li>
+<li class="chapter" data-level="10.3.3" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.3.3</b> Asking a question</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Efficient R programming</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-carpentry" class="section level1">
+<h1><span class="header-section-number">6</span> Efficient data carpentry</h1>
+<p>There are many words for data processing. You can <strong>clean</strong>, <strong>hack</strong>, <strong>manipulate</strong>, <strong>munge</strong>, <strong>refine</strong> and <strong>tidy</strong> your dataset, ready for the next stage, typically modelling and visualisation. Each word says something about perceptions towards the process: data processing is often seen as <em>dirty work</em>, an unpleasant necessity that must be endured before the <em>real</em>, <em>fun</em> and <em>important</em> work begins. This perception is wrong. Getting your data ‘ship shape’ is a respectable and in some cases vital skill. For this reason we use the more admirable term <em>data carpentry</em>.</p>
+<p>The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way <em>data carpentry</em> is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and <em>tidy</em> data. Learning the skill of data carpentry early will yield benefits for years to come. “Give me six hours to chop down a tree and I will spend the first four sharpening the axe” as Abraham Lincoln put it, continuing the metaphor.</p>
+<p>Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that <em>technical debt</em>, discussed in the previous Chapter, can cripple your workflow, working with messy data can lead to project management hell.</p>
+<p>Fortunately, done efficiently, at the outset of your project (rather than half way through, when it may be too late) and using appropriate tools this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of book. In it we cover the following topics:</p>
+<ul>
+<li>Tidying data with <strong>tidyr</strong></li>
+<li>Processing data with <strong>dplyr</strong></li>
+<li>Working with databases</li>
+<li>Data processing with <strong>data.table</strong></li>
+</ul>
+<div id="top-5-tips-for-efficient-data-carpentry" class="section level2">
+<h2><span class="header-section-number">6.1</span> Top 5 tips for efficient data carpentry</h2>
+<ul>
+<li><p>Give data processing the proper time and attention it needs as it could save hours of frustration in the long run.</p></li>
+<li><p>Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by <strong>tidyr</strong>.</p></li>
+<li><p>Use the <code>tbl</code> class defined by the <strong>tibble</strong> package and the default object type of <strong>dplyr</strong>, to make data frames efficient to print and easier to work with.</p></li>
+<li><p>Don’t rely on base R for data processing. We recommend <strong>dplyr</strong> for most applications, although <strong>data.table</strong> may be optimal in contexts where speed is critical.</p></li>
+<li><p>Using the <code>%&gt;%</code> ‘pipe’ operator in combination with <strong>dplyr</strong>’s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.</p></li>
+</ul>
+</div>
+<div id="efficient-data-frames-with-tibble" class="section level2">
+<h2><span class="header-section-number">6.2</span> Efficient data frames with tibble</h2>
+<strong>tibble</strong> is a package that defines a new data frame class for R, the <code>tbl_df</code>. These ‘tibble diffs’ (as their inventor <a href="https://github.com/hadley/tibble">suggests</a> they should be pronounced) are like the base class <code>data.frame</code>, but with more user friendly printing, subsetting, and factor handling.
+<div class="rmdnote">
+<p>
+A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <code>tbl</code>, and <code>data.frame</code>. Since the object has the <code>data.frame</code> tag, this means that if a <code>tbl_df</code> or <code>tbl</code> method isn’t available, the object will be passed on to the appropriate <code>data.frame</code> function.
+</p>
+</div>
+<p>To create a tibble data frame, we use <code>tibble</code> function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
+<span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt;       x     y</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span>
+<span class="co">#&gt; 1     1     A</span>
+<span class="co">#&gt; 2     2     B</span>
+<span class="co">#&gt; 3     3     C</span></code></pre></div>
+<p>The example above illustrates the main differences between the <strong>tibble</strong> and base R approach to data frames:</p>
+<ul>
+<li>When printed, the tibble diff reports the class of each variable. <code>data.frame</code> objects do not.</li>
+<li>Character vectors are not coerced into factors when they are incorporated into a <code>tbl_df</code>, as can be seen by the <code>&lt;chr&gt;</code> heading between the variable name and the second column. By contrast, <code>data.frame()</code> coerces characters into factors which can cause problems further down the line.</li>
+<li>When printing a tibble diff to screen, only the first ten rows are displayed. The number columns printed depends on the window size.</li>
+</ul>
+<p>Other differences can be found in the associated help page - <code>help(&quot;tibble&quot;)</code>.</p>
+<div class="rmdnote">
+<p>
+You can create a tibble data frame row-by-row using the <code>frame_data</code> function.
+</p>
+</div>
+<div id="exericse" class="section level4 unnumbered">
+<h4>Exericse</h4>
+<p>Create the following data frame</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_base =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colA =</span> <span class="st">&quot;A&quot;</span>)</code></pre></div>
+<p>Try and guess the output of the following commands</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(df_base)
+df_base$colA
+df_base$col
+df_base$colB</code></pre></div>
+<p>Now create a tibble data frame and repeat the above commands.</p>
+</div>
+</div>
+<div id="tidying-data-with-tidyr" class="section level2">
+<h2><span class="header-section-number">6.3</span> Tidying data with tidyr</h2>
+<p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>, so getting it into a suitable form early could save hours in the future. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.</p>
+<p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling. The process of reshaping is illustrated by Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a>, provided by <span class="citation">H. Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>.</p>
+<p>These tables may look different, but they contain precisely the same information. Column names in the ‘wide’ form in Table <a href="data-carpentry.html#tab:tpew">6.1</a> became a new variable in the ‘long’ form in Table <a href="data-carpentry.html#tab:tpewt">6.2</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. For tabular presentation the wide form may be better. Wide data can also be less memory consuming because it requires fewer cells.</p>
+<p>Tidy data has the following characteristics <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li>Each variable forms a column.</li>
+<li>Each observation forms a row.</li>
+<li>Each type of observational unit forms a table.</li>
+</ol>
+<p>Because there is only one observational unit in the example (religions), it can be described in a single table. Large and complex datasets are usually represented by multiple tables, with unique identifiers or ‘keys’ to join them together <span class="citation">(Codd <a href="#ref-Codd1979">1979</a>)</span>.</p>
+<p>Two common operations facilitated by <strong>tidyr</strong> are <em>gathering</em> and <em>splitting</em> columns.</p>
+<ul>
+<li>Gathering: this means making ‘wide’ tables ‘long’ by converting column names to a new variable. This is done is done with the function <code>gather</code> (the inverse of which is <code>spread</code>) , as illustrated in Table <a href="data-carpentry.html#tab:tpew">6.1</a> and Table <a href="data-carpentry.html#tab:tpewt">6.2</a> and in the code block below:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
+raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
+<span class="kw">dim</span>(raw)
+<span class="co">#&gt; [1] 18 10</span>
+rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
+<span class="kw">dim</span>(rawt)
+<span class="co">#&gt; [1] 162   3</span>
+rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
+<span class="co">#&gt; # A tibble: 3 x 3</span>
+<span class="co">#&gt;   religion Income Count</span>
+<span class="co">#&gt;      &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1 Agnostic  &lt;$10k    27</span>
+<span class="co">#&gt; 2  Atheist  &lt;$10k    12</span>
+<span class="co">#&gt; 3 Buddhist  &lt;$10k    27</span></code></pre></div>
+<div class="rmdtip">
+<p>
+Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>readr</strong> creates <code>tbl</code> objects from the <strong>tibble</strong> package.
+</p>
+</div>
+<table>
+<caption><span id="tab:tpew">Table 6.1: </span>First 6 rows of the aggregated ‘pew’ dataset from Wickham (2014a) in an ‘untidy’ form.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="right">&lt;$10k</th>
+<th align="right">$10–20k</th>
+<th align="right">$20–30k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="right">27</td>
+<td align="right">34</td>
+<td align="right">60</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="right">12</td>
+<td align="right">27</td>
+<td align="right">37</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="right">27</td>
+<td align="right">21</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:tpewt">Table 6.2: </span>Long form of the Pew dataset represented above.</caption>
+<thead>
+<tr class="header">
+<th align="left">religion</th>
+<th align="left">Income</th>
+<th align="right">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="left">&lt;$10k</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="left">&lt;$10k</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="left">&lt;$10k</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">Agnostic</td>
+<td align="left">$10–20k</td>
+<td align="right">34</td>
+</tr>
+<tr class="odd">
+<td align="left">Atheist</td>
+<td align="left">$10–20k</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">Buddhist</td>
+<td align="left">$10–20k</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">Agnostic</td>
+<td align="left">$20–30k</td>
+<td align="right">60</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
+<td align="left">$20–30k</td>
+<td align="right">37</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="left">$20–30k</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-15</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with <code>separate</code>, as illustrated in Table <a href="data-carpentry.html#tab:to-separate">6.3</a> and <a href="data-carpentry.html#tab:separated">6.4</a>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
+n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
+agesex_df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n) <span class="co"># create a data frame</span>
+<span class="kw">separate</span>(agesex_df, agesex, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)
+<span class="co">#&gt;   sex  age n</span>
+<span class="co">#&gt; 1   m 0-10 3</span>
+<span class="co">#&gt; 2   f 0-10 5</span></code></pre></div>
+<table>
+<caption><span id="tab:to-separate">Table 6.3: </span>Joined age and sex variables in one column</caption>
+<thead>
+<tr class="header">
+<th align="left">agesex</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:separated">Table 6.4: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
+<thead>
+<tr class="header">
+<th align="left">sex</th>
+<th align="left">age</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m</td>
+<td align="left">0-10</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">f</td>
+<td align="left">0-10</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). The wider issue of manipulation is a large topic with major potential implications for efficiency <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span> and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the <strong>broom</strong> package provides a standard output format for model results, easing interpretation (see <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html">the broom vignette</a>).</p>
+<div class="rmdnote">
+<p>
+Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation.
+</p>
+</div>
+<p>Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix <code>_</code> can be added to <strong>dplyr</strong> and <strong>tidyr</strong> function names to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(agesex_df, agesex, c(&quot;sex&quot;, &quot;age&quot;), 1)</code> is <code>separate_(agesex_df, &quot;agesex&quot;, c(&quot;sex&quot;, &quot;age&quot;), 1)</code>.</p>
+</div>
+<div id="dplyr" class="section level2">
+<h2><span class="header-section-number">6.4</span> Efficient data processing with dplyr</h2>
+<p>After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.</p>
+<p>Following the advice in Section <a href="workflow.html#package-selection">4.4</a>, we have carefully selected an appropriate package for these tasks: <strong>dplyr</strong>, which roughly means ‘data pliers’. <strong>dplyr</strong> has a number of advantages over base R and <strong>data.table</strong> approaches to data processing:</p>
+<ul>
+<li><strong>dplyr</strong> is fast to run (due to its C++ backend) and intuitive to type</li>
+<li><strong>dplyr</strong> works well with tidy data, as described above</li>
+<li><strong>dplyr</strong> works well with databases, providing efficiency gains on large datasets</li>
+</ul>
+<p>Furthermore, <strong>dplyr</strong> is efficient to <em>learn</em> (see Chapter <a href="learning.html#learning">10</a>. It has small number of intuitively named functions, or ‘verbs’. These can be used in combination with each other, and the grouping function <code>group_by()</code>, to solve a wide range of data processing challenges (see Table <a href="data-carpentry.html#tab:verbs">6.5</a>).</p>
+<table>
+<caption><span id="tab:verbs">Table 6.5: </span>dplyr verb functions.</caption>
+<thead>
+<tr class="header">
+<th align="left">dplyr function(s)</th>
+<th align="left">Description</th>
+<th align="left">Base R functions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">filter(), slice()</td>
+<td align="left">Subset rows by attribute (filter) or position (slice)</td>
+<td align="left">subset(), []</td>
+</tr>
+<tr class="even">
+<td align="left">arrange()</td>
+<td align="left">Return data ordered by variable(s)</td>
+<td align="left">sort()</td>
+</tr>
+<tr class="odd">
+<td align="left">select()</td>
+<td align="left">Subset columns</td>
+<td align="left">subset()</td>
+</tr>
+<tr class="even">
+<td align="left">rename()</td>
+<td align="left">Rename columns</td>
+<td align="left">names()</td>
+</tr>
+<tr class="odd">
+<td align="left">distinct()</td>
+<td align="left">Return unique rows</td>
+<td align="left">unique()</td>
+</tr>
+<tr class="even">
+<td align="left">mutate()</td>
+<td align="left">Create new variables (transmute drops existing variables)</td>
+<td align="left">[[]]</td>
+</tr>
+<tr class="odd">
+<td align="left">summarise()</td>
+<td align="left">Collapse data into a single row</td>
+<td align="left">aggregate()</td>
+</tr>
+<tr class="even">
+<td align="left">sample_n()</td>
+<td align="left">Return a sample of the data</td>
+<td align="left">sample()</td>
+</tr>
+</tbody>
+</table>
+<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greehouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+top_table =
+<span class="st">  </span>ghg_ems %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Country) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Mean =</span> <span class="kw">mean</span>(Transportation),
+            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) %&gt;%
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Growth) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(Growth))</code></pre></div>
+<p>The results, illustrated in table <a href="data-carpentry.html#tab:speed">6.6</a>, show that the USA has the highest growth and average emissions from the transport sector, followed closely by China. The aim of this code chunk, which you are not expected to completely understand, is to provide a taster of <strong>dplyr</strong>’s unique syntax.</p>
+<table>
+<caption><span id="tab:speed">Table 6.6: </span>The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).</caption>
+<thead>
+<tr class="header">
+<th align="left">Country</th>
+<th align="right">Mean</th>
+<th align="right">Growth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">United States</td>
+<td align="right">1462</td>
+<td align="right">709</td>
+</tr>
+<tr class="even">
+<td align="left">China</td>
+<td align="right">214</td>
+<td align="right">656</td>
+</tr>
+<tr class="odd">
+<td align="left">India</td>
+<td align="right">85</td>
+<td align="right">170</td>
+</tr>
+</tbody>
+</table>
+<p>Building on the ‘learning by doing’ ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+idata =<span class="st"> </span><span class="kw">read_csv</span>(fname)
+idata <span class="co"># print the dataset </span>
+<span class="co">#&gt; # A tibble: 6,925 x 9</span>
+<span class="co">#&gt;   Country Name Country Code  Year Year Code</span>
+<span class="co">#&gt;          &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;     &lt;chr&gt;</span>
+<span class="co">#&gt; 1  Afghanistan          AFG  1974    YR1974</span>
+<span class="co">#&gt; 2  Afghanistan          AFG  1975    YR1975</span>
+<span class="co">#&gt; 3  Afghanistan          AFG  1976    YR1976</span>
+<span class="co">#&gt; 4  Afghanistan          AFG  1977    YR1977</span>
+<span class="co">#&gt; # ... with 6,921 more rows, and 5 more variables: Income share held by</span>
+<span class="co">#&gt; #   highest 10% [SI.DST.10TH.10] &lt;chr&gt;, Income share held by lowest 10%</span>
+<span class="co">#&gt; #   [SI.DST.FRST.10] &lt;chr&gt;, GINI index [SI.POV.GINI] &lt;chr&gt;, Survey mean</span>
+<span class="co">#&gt; #   consumption or income per capita, bottom 40% (2005 PPP $ per day)</span>
+<span class="co">#&gt; #   [SI.SPR.PC40] &lt;chr&gt;, Survey mean consumption or income per capita,</span>
+<span class="co">#&gt; #   total population (2005 PPP $ per day) [SI.SPR.PCAP] &lt;chr&gt;</span></code></pre></div>
+<p>You should not be expecting to master <strong>dplyr</strong>‘s functionality in one sitting: the package is large and can be seen as a language in its own right. Following the ’walk before you run’ principle, we’ll start simple, by filtering and aggregating rows.</p>
+<div id="renaming-columns" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Renaming columns</h3>
+<p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.</p>
+<p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the data frame as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
+<!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
+<p>To rename multiple columns the variable names are simply separated by commas. The base R and <strong>dplyr</strong> way of doing this is illustrated for clarity.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The dplyr way (rename two variables)</span>
+idata =<span class="st"> </span><span class="kw">rename</span>(idata,
+ <span class="dt">top10 =</span> <span class="st">`</span><span class="dt">Income share held by highest 10% [SI.DST.10TH.10]</span><span class="st">`</span>,
+ <span class="dt">bot10 =</span> <span class="st">`</span><span class="dt">Income share held by lowest 10% [SI.DST.FRST.10]</span><span class="st">`</span>)
+<span class="co"># The base R way (rename five variables)</span>
+<span class="kw">names</span>(idata)[<span class="dv">5</span>:<span class="dv">9</span>] =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;top10&quot;</span>, <span class="st">&quot;bot10&quot;</span>, <span class="st">&quot;gini&quot;</span>, <span class="st">&quot;b40_cons&quot;</span>, <span class="st">&quot;gdp_percap&quot;</span>)</code></pre></div>
+</div>
+<div id="changing-column-classes" class="section level3">
+<h3><span class="header-section-number">6.4.2</span> Changing column classes</h3>
+<!-- __XXX__ The bit below is a bit odd. The data frame is a tibble. The class is printed in a column. I 
+also think that your vapply command is **much** nicer, with `str` being more appropriate for the footnote.-->
+<p>The <em>class</em> of R objects is critical to performance. If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a <code>data.frame</code> can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object), as illustrated below, with the inequality data loaded previously.<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(idata)
+<span class="co">#&gt; Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    6925 obs. of  9 variables:</span>
+<span class="co">#&gt;  $ Country     : chr  &quot;Afghanistan&quot; &quot;Afghanistan&quot; &quot;Afghanistan&quot; &quot;Afghanistan&quot; ...</span>
+<span class="co">#&gt;  $ Country Code: chr  &quot;AFG&quot; &quot;AFG&quot; &quot;AFG&quot; &quot;AFG&quot; ...</span>
+<span class="co">#&gt;  $ Year        : int  1974 1975 1976 1977 1978 1979 1980 1981 1982 1983 ...</span>
+<span class="co">#&gt;  $ Year Code   : chr  &quot;YR1974&quot; &quot;YR1975&quot; &quot;YR1976&quot; &quot;YR1977&quot; ...</span>
+<span class="co">#&gt;  $ top10       : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
+<span class="co">#&gt;  $ bot10       : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
+<span class="co">#&gt;  $ gini        : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
+<span class="co">#&gt;  $ b40_cons    : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
+<span class="co">#&gt;  $ gdp_percap  : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span></code></pre></div>
+<p>This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: <code>mean(idata$gini)</code> fails.</p>
+<p>Visual inspection of the data (e.g. via <code>View(idata)</code>) clearly shows that all columns except for 1 to 4 (<code>Country</code>, <code>Country Code</code>, <code>Year</code> and <code>Year Code</code>) should be numeric. We can re-assign the classes of the numeric variables one-by one:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)
+<span class="co">#&gt; Warning: NAs introduced by coercion</span>
+<span class="kw">mean</span>(idata$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span>
+<span class="co">#&gt; [1] 40.5</span></code></pre></div>
+<p>However the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts the data frame to a numeric <code>matrix</code>:</p>
+<!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id =<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
+idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id])
+<span class="kw">vapply</span>(idata, class, <span class="kw">character</span>(<span class="dv">1</span>))
+<span class="co">#&gt;      Country Country Code         Year    Year Code        top10 </span>
+<span class="co">#&gt;  &quot;character&quot;  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;    &quot;numeric&quot; </span>
+<span class="co">#&gt;        bot10         gini     b40_cons   gdp_percap </span>
+<span class="co">#&gt;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;</span></code></pre></div>
+<p>As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using <code>unlist()</code> which converts list objects into vectors:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata[id] =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(idata[id]))</code></pre></div>
+<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
+<p><em>Another</em> one-liner to achieve the same result uses <strong>dplyr</strong>’s <code>mutate_each</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata_mutate =<span class="st"> </span><span class="kw">mutate_each</span>(idata, <span class="st">&quot;as.numeric&quot;</span>, id)</code></pre></div>
+<p>As with other operations there are other ways of achieving the same result in R, including the use of loops via <code>apply()</code> and <code>for()</code>. These are shown in the chapter’s <a href="https://github.com/csgillespie/efficientR">source code</a>.</p>
+</div>
+<div id="filtering-rows" class="section level3">
+<h3><span class="header-section-number">6.4.3</span> Filtering rows</h3>
+<p><strong>dplyr</strong> offers an alternative and more flexible way of filtering data, using <code>filter()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Base R: idata[idata$Country == &quot;Australia&quot;,]</span>
+aus2 =<span class="st"> </span><span class="kw">filter</span>(idata, Country ==<span class="st"> &quot;Australia&quot;</span>)</code></pre></div>
+<p>In addition to being more flexible (see <code>?filter</code>), <code>filter</code> is slightly faster than base R’s notation.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a> Note that <strong>dplyr</strong> does not use the <code>$</code> symbol: it knows that that <code>Country</code> is a variable of <code>idata</code>: the first argument of <strong>dplyr</strong> functions usually a <code>data.frame</code>, and subsequent in this context variable names can be treated as vector objects.<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a></p>
+<p>There are <strong>dplyr</strong> equivalents of many base R functions but these usually work slightly differently. The <strong>dplyr</strong> equivalent of <code>aggregate</code>, for example is to use the grouping function <code>group_by</code> in combination with the general purpose function <code>summarise</code> (not to be confused with <code>summary</code> in base R), as we shall see in Section <a href="data-carpentry.html#data-aggregation">6.4.5</a>. For consistency, however, we next look at filtering columns.</p>
+</div>
+<div id="filtering-columns" class="section level3">
+<h3><span class="header-section-number">6.4.4</span> Filtering columns</h3>
+<p>Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.</p>
+<p>Imagine that we have a text file called <code>miniaa</code> which is large enough to consume most of your computer’s RAM. We can load it with the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(miniaa, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>) <span class="co"># load imaginary large data</span>
+<span class="kw">dim</span>(miniaa)
+<span class="co">#&gt; [1]   9 329</span></code></pre></div>
+<p>Note that the data frame has 329 columns, and imagine it has millions of rows, instead of $9. That’s a lot of variables. Do we need them all? It’s worth taking a glimpse at this dataset to find out:</p>
+<!-- __XXX__ I didn't find this helpful for a large data set -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(miniaa)
+<span class="co">#&gt; Observations: 9</span>
+<span class="co">#&gt; Variables: 329</span>
+<span class="co">#&gt; $ NPI          </span>
+<span class="co">#&gt;     &lt;int&gt; ...</span>
+<span class="co">#&gt; ...</span></code></pre></div>
+<p>The majority of variables in this dataset only contain <code>NA</code>. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.</p>
+<!-- __XXX__ This isn't correct (I know I suggested it). `anyNA` detects if there are any NA's. According to your comment it -->
+<!-- should be `!sum(!is.na(x))` - but there are no columns that are all NA's -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify the variable which are all NA</span>
+all_na =<span class="st"> </span><span class="kw">vapply</span>(miniaa, function(x) <span class="kw">anyNA</span>(x), <span class="kw">logical</span>(<span class="dv">1</span>))
+<span class="kw">summary</span>(all_na) <span class="co"># summary of the results</span>
+<span class="co">#&gt;    Mode   FALSE    TRUE    NA&#39;s </span>
+<span class="co">#&gt; logical     321       8       0</span>
+miniaa1 =<span class="st"> </span>miniaa[!all_na] <span class="co"># subset the dataframe</span></code></pre></div>
+<p>The new <code>miniaa</code> object has fewer than a third of the original columns.</p>
+</div>
+<div id="data-aggregation" class="section level3">
+<h3><span class="header-section-number">6.4.5</span> Data aggregation</h3>
+<p>Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the <code>ghg_ems</code> dataset stored in the <strong>efficient</strong> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># data available online, from github.com/csgillespie/efficient_pkg</span>
+<span class="kw">data</span>(ghg_ems, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
+<span class="kw">names</span>(ghg_ems)
+<span class="co">#&gt; [1] &quot;Country&quot;        &quot;Year&quot;           &quot;Electricity&quot;    &quot;Manufacturing&quot; </span>
+<span class="co">#&gt; [5] &quot;Transportation&quot; &quot;Other&quot;          &quot;Fugitive&quot;</span>
+<span class="kw">nrow</span>(ghg_ems)
+<span class="co">#&gt; [1] 7896</span>
+<span class="kw">length</span>(<span class="kw">unique</span>(ghg_ems$Country))
+<span class="co">#&gt; [1] 188</span></code></pre></div>
+<p>Note that while there are almost <span class="math inline">\(8000\)</span> rows, there are fewer than 200 countries.</p>
+<div class="rmdnote">
+<p>
+Note that the <code>ghg_ems</code> column names were cleaned using the command <code>word(names(ghg_ems), sep = &quot; |/“)</code> from the <strong>stringr</strong> package before it was saved as a dataset within the <strong>efficient</strong> package. <code>” |/“</code> in this context means”any space or forward slash is a word break“. See the Pattern matching section in <code>vignette(”stringr“)</code> for more on this. For details about the <code>ghg_ems</code> dataset, see the documentation in <code>?efficient::ghg_ems</code>.
+</p>
+</div>
+<!-- Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries). -->
+<!-- Another way to specify the `by` argument is with the tilde (`~`). -->
+<!-- Thus `ghg_ems$Electricity, list(ghg_ems$Country)` can usefully be replaced by `Electricity ~ Country`, which is more concise. Note that the `data` argument must be specified for this to work, however. -->
+<!-- The resulting data frame now has the same number of rows as there are countries: -->
+<!-- the aggregation has successfully reduced the number of rows we need to deal with. -->
+<!-- Now it is easier to find out per-country statistics, such as the three lowest emitters from electricity production: -->
+<!-- ```{r} -->
+<!-- head(e_ems[order(e_ems$x),], 3) -->
+<!-- ``` -->
+<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+<span class="kw">group_by</span>(ghg_ems, Country) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
+<span class="co">#&gt; # A tibble: 188 x 2</span>
+<span class="co">#&gt;       Country mean_eco2</span>
+<span class="co">#&gt;         &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Afghanistan       NaN</span>
+<span class="co">#&gt; 2     Albania     0.641</span>
+<span class="co">#&gt; 3     Algeria    23.015</span>
+<span class="co">#&gt; 4      Angola     0.791</span>
+<span class="co">#&gt; # ... with 184 more rows</span></code></pre></div>
+<div class="rmdnote">
+<p>
+The example above relates to a philosophical question in programming: how much work should one function do? The <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should “do one thing well”. And shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual <code>group_by</code> and <code>summarise</code> stages.
+</p>
+</div>
+<p>To reinforce the point, this operation is also performed below on the <code>idata</code> dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(idata_mutate, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+countries =<span class="st"> </span><span class="kw">group_by</span>(idata_mutate, Country)
+<span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
+<span class="co">#&gt; # A tibble: 176 x 2</span>
+<span class="co">#&gt;       Country  gini</span>
+<span class="co">#&gt;         &lt;chr&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Afghanistan   NaN</span>
+<span class="co">#&gt; 2     Albania  30.4</span>
+<span class="co">#&gt; 3     Algeria  37.8</span>
+<span class="co">#&gt; 4      Angola  50.6</span>
+<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
+<p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
+  <span class="co"># number of rows per country</span>
+  <span class="dt">obs =</span> <span class="kw">n</span>(), 
+  <span class="dt">med_t10 =</span> <span class="kw">median</span>(top10, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
+  <span class="co"># standard deviation</span>
+  <span class="dt">sdev =</span> <span class="kw">sd</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
+  <span class="co"># number with gini &gt; 30</span>
+  <span class="dt">n30 =</span> <span class="kw">sum</span>(gini &gt;<span class="st"> </span><span class="dv">30</span>, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
+  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini &gt;<span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
+  <span class="co"># range</span>
+  <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) -<span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
+  )
+<span class="co">#&gt; # A tibble: 176 x 7</span>
+<span class="co">#&gt;       Country   obs med_t10  sdev   n30  sdn30   dif</span>
+<span class="co">#&gt;         &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Afghanistan    40      NA   NaN     0     NA    NA</span>
+<span class="co">#&gt; 2     Albania    40    24.4  1.25     3  0.364  2.78</span>
+<span class="co">#&gt; 3     Algeria    40    29.8  3.44     2  3.437  4.86</span>
+<span class="co">#&gt; 4      Angola    40    38.6 11.30     2 11.300 15.98</span>
+<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
+<p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
+<ul>
+<li>the number of rows in each country group</li>
+<li>standard deviation of gini indices</li>
+<li>median proportion of income earned by the top 10%</li>
+<li>the number of years in which the gini index was greater than 30</li>
+<li>the standard deviation of gini index values over 30</li>
+<li>the range of gini index values reported for each country.</li>
+</ul>
+<div id="exercises-12" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li><p>Refer back to the greenhouse gas emissions example at the outset of section <a href="data-carpentry.html#dplyr">6.4</a>, in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?</p></li>
+<li><p>Referring back to Section <a href="data-carpentry.html#renaming-columns">6.4.1</a>, rename the variables 4 to 8 using the <strong>dplyr</strong> function <code>rename</code>. Follow the pattern <code>ECO2</code>, <code>MCO2</code> etc.</p></li>
+<li><p>Explore <strong>dplyr</strong>’s documentation, starting with the introductory vignette, accessed by entering <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html"><code>vignette(&quot;introduction&quot;)</code></a>.</p></li>
+<li><p>Test additional <strong>dplyr</strong> ‘verbs’ on the <code>idata</code> dataset. (More vignette names can be discovered by typing <code>vignette(package = &quot;dplyr&quot;)</code>.)</p></li>
+</ol>
+</div>
+</div>
+<div id="chaining-operations" class="section level3">
+<h3><span class="header-section-number">6.4.6</span> Chaining operations</h3>
+<p>Another interesting feature of <strong>dplyr</strong> is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end end-up with very long commands with many functions nested inside each other to answer relatively simple questions.</p>
+<blockquote>
+<p>What were, on average, the 5 most unequal years for countries containing the letter g?</p>
+</blockquote>
+<p>Here’s how chains work to organise the analysis in a logical step-by-step manner:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata_mutate %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(Year) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) %&gt;%
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) %&gt;%
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)
+<span class="co">#&gt; Selecting by gini</span>
+<span class="co">#&gt; # A tibble: 5 x 2</span>
+<span class="co">#&gt;    Year  gini</span>
+<span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  1980  46.9</span>
+<span class="co">#&gt; 2  1993  46.0</span>
+<span class="co">#&gt; 3  2013  44.5</span>
+<span class="co">#&gt; 4  1981  43.6</span>
+<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
+<ol style="list-style-type: decimal">
+<li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
+<li>Group the output by year.</li>
+<li>Summarise, for each year, the mean gini index.</li>
+<li>Arrange the results by average gini index</li>
+<li>Select only the top 5 most unequal years.</li>
+</ol>
+<p>To see why this method is preferable to the nested function approach, take a look at the latter. Even after indenting properly it looks terrible and is almost impossible to understand!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(
+  <span class="kw">arrange</span>(
+    <span class="kw">summarise</span>(
+      <span class="kw">group_by</span>(
+        <span class="kw">filter</span>(idata, <span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)),
+        Year),
+      <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)),
+    <span class="kw">desc</span>(gini)),
+  <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham, n.d.)</span>.</p>
+</div>
+</div>
+<div id="combining-datasets" class="section level2">
+<h2><span class="header-section-number">6.5</span> Combining datasets</h2>
+<p>The usefulness of a dataset can sometimes be greatly enhanced by combining it with other data. If we could merge the global <code>ghg_ems</code> dataset with geographic data, for example, we could visualise the spatial distribution of climate pollution. For the purposes of this section we join <code>ghg_ems</code> to the <code>world</code> data provided by <strong>ggmap</strong> to illustrate the concepts and methods of data <em>joining</em> (also referred to as merging).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;ggmap&quot;</span>)
+world =<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;world&quot;</span>)
+<span class="kw">names</span>(world)
+<span class="co">#&gt; [1] &quot;long&quot;      &quot;lat&quot;       &quot;group&quot;     &quot;order&quot;     &quot;region&quot;    &quot;subregion&quot;</span></code></pre></div>
+<p>Visually compare this new dataset of the <code>world</code> with <code>ghg_ems</code> (e.g. via <code>View(world); View(ghg_ems)</code>). It is clear that the column <code>region</code> in the former contains the same information as <code>Country</code> in the latter. This will be the <em>joining variable</em>; renaming it in <code>world</code> will make the join more efficient.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world =<span class="st"> </span><span class="kw">rename</span>(world, <span class="dt">Country =</span> region)
+ghg_ems$All =<span class="st"> </span><span class="kw">rowSums</span>(ghg_ems[<span class="dv">3</span>:<span class="dv">7</span>])</code></pre></div>
+<div class="rmdtip">
+<p>
+Ensure that both joining variables have the same class (combining <code>character</code> and <code>factor</code> columns can cause havoc).
+</p>
+</div>
+<p>How large is the overlap between <code>ghg_ems$Country</code> and <code>world$Country</code>? We can find out using the <code>%in%</code> operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many <em>unique</em> country names from <code>ghg_ems</code> are present in the <code>world</code> dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save the result as &#39;m&#39;, for match</span>
+c_u =<span class="st"> </span><span class="kw">unique</span>(ghg_ems$Country)
+w_u =<span class="st"> </span><span class="kw">unique</span>(world$Country)
+<span class="kw">summary</span>({m =<span class="st"> </span>c_u %in%<span class="st"> </span>w_u})
+<span class="co">#&gt;    Mode   FALSE    TRUE    NA&#39;s </span>
+<span class="co">#&gt; logical      20     168       0</span></code></pre></div>
+<p>This comparison exercise has been fruitful: most of the countries in the <code>co2</code> dataset exist in the <code>world</code> dataset. But what about the 20 country names that do not match? We can identify these as follows:</p>
+<!-- __XXX__ This doesn't look very dplyr like -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">n =</span> c_u[!m]) <span class="co"># non-matching country names in world data</span>
+<span class="co">#&gt;  [1] &quot;Antigua &amp; Barbuda&quot;          &quot;Bahamas, The&quot;              </span>
+<span class="co">#&gt;  [3] &quot;Bosnia &amp; Herzegovina&quot;       &quot;Congo, Dem. Rep.&quot;          </span>
+<span class="co">#&gt;  [5] &quot;Congo, Rep.&quot;                &quot;Cote d&#39;Ivoire&quot;             </span>
+<span class="co">#&gt;  [7] &quot;European Union (15)&quot;        &quot;European Union (28)&quot;       </span>
+<span class="co">#&gt;  [9] &quot;Gambia, The&quot;                &quot;Korea, Dem. Rep. (North)&quot;  </span>
+<span class="co">#&gt; [11] &quot;Korea, Rep. (South)&quot;        &quot;Macedonia, FYR&quot;            </span>
+<span class="co">#&gt; [13] &quot;Russian Federation&quot;         &quot;Saint Kitts &amp; Nevis&quot;       </span>
+<span class="co">#&gt; [15] &quot;Saint Vincent &amp; Grenadines&quot; &quot;Sao Tome &amp; Principe&quot;       </span>
+<span class="co">#&gt; [17] &quot;Trinidad &amp; Tobago&quot;          &quot;United Kingdom&quot;            </span>
+<span class="co">#&gt; [19] &quot;United States&quot;              &quot;World&quot;</span></code></pre></div>
+<p>It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as ‘Gambia, The’ and the United States clearly should have matches. <em>Fuzzy matching</em> can help to rectify this, as illustrated the first non-matching country below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(n[<span class="dv">1</span>], w_u) <span class="co"># no match</span>
+<span class="co">#&gt; integer(0)</span>
+(<span class="dt">fm =</span> <span class="kw">agrep</span>(n[<span class="dv">1</span>], w_u, <span class="dt">max.distance =</span> <span class="dv">10</span>))
+<span class="co">#&gt; [1] 15 16</span>
+(<span class="dt">w_u1 =</span> w_u[fm])
+<span class="co">#&gt; [1] &quot;Antigua&quot; &quot;Barbuda&quot;</span></code></pre></div>
+<p>What just happened? We verified that first unmatching country in the <code>ghg_ems</code> dataset was not in the <code>world</code> country names with a <code>grep</code>. So we used the more powerful <code>agrep</code> to search for fuzzy matches (with the <code>max.distance</code> argument set to <code>10</code> after trial and error). The results show that the country <code>Antigua &amp; Barbuda</code> from the <code>ghg_ems</code> data is matched <em>two</em> countries in the <code>world</code> dataset. We can update the names in the dataset we are joining to accordingly:</p>
+<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world$Country[world$Country %in%<span class="st"> </span>w_u1] =<span class="st"> </span>n[<span class="dv">1</span>]</code></pre></div>
+<p>Fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that <code>United States</code> is represented as <code>USA</code> in the <code>world</code> dataset, without risking false matches via <code>agrep</code>. This can be fixed manually:</p>
+<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world$Country[world$Country ==<span class="st"> &quot;USA&quot;</span>] =<span class="st"> &quot;United States&quot;</span></code></pre></div>
+<!-- __XXX__ Point people to a vignette in the package -->
+<p>To fix the remaining issues, we simply continued with the same method, using a <code>for</code> loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book’s <a href="https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd">GitHub page</a>.</p>
+<p>There is one more stage that is needed before global CO<sup>2</sup> emissions can be mapped for any year: the data must be <em>joined</em>. The base function <code>merge</code> can do this but we strongly recommend using one of the <code>join</code> functions from <strong>dplyr</strong>, such as <code>left_join</code> (which keeps all rows in the original dataset) and <code>inner_join</code> (which keeps only rows with matches in both datasets), as illustrated below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>({world_co2 =<span class="st"> </span><span class="kw">left_join</span>(world, ghg_ems)})
+<span class="co">#&gt; Joining, by = &quot;Country&quot;</span>
+<span class="co">#&gt; [1] 3330794</span>
+<span class="kw">nrow</span>(<span class="kw">inner_join</span>(world, ghg_ems))
+<span class="co">#&gt; Joining, by = &quot;Country&quot;</span>
+<span class="co">#&gt; [1] 3310272</span></code></pre></div>
+<p>Note that <code>inner_join</code> removes rows from the <code>world</code> dataset which have no match in <code>ghg_ems</code>: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the <code>ghg_ems</code> dataset would be absent. Figure <a href="data-carpentry.html#fig:6-1">6.1</a> shows the results of this data carpentry, produced using a modified version of the <strong>ggplot2</strong> code below, were worth the effort.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world_co2_2012 =<span class="st"> </span><span class="kw">filter</span>(world_co2, Year ==<span class="st"> </span><span class="dv">2012</span> |<span class="st"> </span><span class="kw">is.na</span>(Year))
+<span class="kw">ggplot</span>(world_co2_2012, <span class="kw">aes</span>(long, lat)) +
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> All, <span class="dt">group =</span> group))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:6-1"></span>
+<img src="figures/f6_1_world_co2.png" alt="The geographical distribution of carbon dioxide emissions in 2012." width="100%" />
+<p class="caption">
+Figure 6.1: The geographical distribution of carbon dioxide emissions in 2012.
+</p>
+</div>
+</div>
+<div id="working-with-databases" class="section level2">
+<h2><span class="header-section-number">6.6</span> Working with databases</h2>
+<p>Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first. R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R’s interfaces to databases can be found in README of the <a href="https://cran.r-project.org/web/packages/DBI/README.html"><strong>DBI</strong> package</a>, which provides a common interface and set of classes for driver packages (such as <strong>RSQLite</strong>).</p>
+<p><strong>RODBC</strong> is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of <strong>RODBC</strong> is described in the package’s vignette (see <code>vignette(&quot;RODBC&quot;)</code>). <strong>RODBC</strong> connects to ‘traditional’ databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the <strong>DBI</strong> package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on <strong>DBI</strong> can be seen as a replacement of <strong>RODBC</strong> (<strong>RMySQL</strong>, <strong>RPostgreSQL</strong>, and <strong>RSQLite</strong>) (see <code>vignette(&quot;backend&quot;)</code> for more on how <strong>DBI</strong> drivers work). Because the <strong>DBI</strong> syntax applies to a wide range of database types we use it here with a worked example.</p>
+<p>Imagine you have access to a database that contains the <code>ghg_ems</code> data set.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Connect to a database driver</span>
+<span class="kw">library</span>(<span class="st">&quot;RSQLite&quot;</span>)
+con =<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), <span class="dt">dbname =</span> ghg_db) <span class="co"># Also username &amp; password arguments</span>
+<span class="kw">dbListTables</span>(con)
+rs =<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM `ghg_ems` WHERE (`Country` != &#39;World&#39;)&quot;</span>)
+df_head =<span class="st"> </span><span class="kw">dbFetch</span>(rs, <span class="dt">n =</span> <span class="dv">6</span>) <span class="co"># extract first 6 row</span></code></pre></div>
+<p>The above code chunk shows how the function <code>dbConnect</code> connects to an external database, in this case a MySQL database. The <code>username</code> and <code>password</code> arguments are used to establish the connection. Next we query which tables are available with <code>dbListTables</code>, query the database (without yet extracting the results to R) with <code>dbSendQuery</code> and, finally, load the results into R with <code>dbFetch</code>.</p>
+<div class="rmdtip">
+<p>
+Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in <code>.Renviron</code>, described in Chapter 2. Assuming you had saved your password as the environment variable <code>PSWRD</code>, you could enter <code>pwd = Sys.getenv(“PSWRD”)</code> to minimise the risk of exposing your password through accidentally releasing the code or your session history.
+</p>
+</div>
+<p>Recently there has been a shift to the ‘noSQL’ approach for storing large datasets. This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages <a href="https://cran.r-project.org/web/packages/mongolite/index.html">mongolite</a> and <a href="https://cran.r-project.org/web/packages/RJDBC/index.html">RJDBC</a>, which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.</p>
+<p>MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets <span class="citation">(Kersten et al. <a href="#ref-kersten2011researcher">2011</a>)</span>. A tutorial on the <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">MonetDB website</a> provides an excellent introduction to handling databases from within R.</p>
+<p>There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:</p>
+<ul>
+<li><a href="http://db-engines.com/en/">db-engines.com/en/</a>: a website comparing the relative merits of different databases.</li>
+<li>The <code>databases</code> vignette from the <strong>dplyr</strong> package.</li>
+<li><a href="https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html">Getting started with MongoDB in R</a>, an introductory vignette on non-relational databases and map reduce from the <strong>mongolite</strong> package.</li>
+</ul>
+<div id="databases-and-dplyr" class="section level3">
+<h3><span class="header-section-number">6.6.1</span> Databases and <strong>dplyr</strong></h3>
+<p>To access a database in R via <strong>dplyr</strong>, one must use one of the <code>src_</code> functions to create a source. Continuing with the SQLite example above, one would create a <code>tbl</code> object, that can be queried by <strong>dplyr</strong> as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+ghg_db =<span class="st"> </span><span class="kw">src_sqlite</span>(ghg_db)
+ghg_tbl =<span class="st"> </span><span class="kw">tbl</span>(ghg_db, <span class="st">&quot;ghg_ems&quot;</span>)</code></pre></div>
+<p>The <code>ghg_tbl</code> object can then be queried in a similar way as a standard data frame. For example, suppose we wished to filter by <code>Country</code>. Then we use the <code>filter</code> function as before</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rm_world =<span class="st"> </span>ghg_tbl %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(Country !=<span class="st"> &quot;World&quot;</span>)</code></pre></div>
+<p>In the above code, <strong>dplyr</strong> has actually generated the necessary SQL command, which can be examined using <code>explain(rm_world)</code>. When working with databases, <strong>dplyr</strong> use lazy evaluation. The SQL command associated with <code>rm_world</code> hasn’t yet been executed, this is why <code>tail(rm_world)</code> doesn’t work. By using lazy evaluation, <strong>dplyr</strong> is more efficient at handling large data structures since it avoids unnecessary copying. When you want your SQL command to be executed, use <code>collect(rm_world)</code>.</p>
+<div id="exercises-13" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database. The first stage is to read-in the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for detials</span>
+<span class="kw">data</span>(land_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</code></pre></div>
+<p>The next stage is to create an SQLite database to hold the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;RSQLite&quot;) # Requires RSQLite package</span>
+my_db =<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;land.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, land_df, <span class="dt">indexes =</span> <span class="kw">list</span>(<span class="st">&quot;trnsctnuni&quot;</span>, <span class="st">&quot;dtoftrnsfr&quot;</span>))
+<span class="kw">class</span>(land_sqlite)
+<span class="co">#&gt; [1] &quot;tbl_sqlite&quot; &quot;tbl_sql&quot;    &quot;tbl_lazy&quot;   &quot;tbl&quot;</span></code></pre></div>
+<p>From the above code we can see that we have created a <code>tbl</code>. This can be accessed using <strong>dplyr</strong> in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard <strong>dplyr</strong> verbs on the table.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Method 1: using sql</span>
+<span class="kw">tbl</span>(my_db, <span class="kw">sql</span>(<span class="st">&#39;SELECT &quot;price&quot;, &quot;dtoftrnsfr&quot;, &quot;postcode&quot;  FROM land_df&#39;</span>))
+<span class="co">#&gt; Source:   query [?? x 3]</span>
+<span class="co">#&gt; Database: sqlite 3.8.6 [land.sqlite3]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;    price dtoftrnsfr postcode</span>
+<span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;    &lt;chr&gt;</span>
+<span class="co">#&gt; 1  84000   1.15e+09  CW9 5EU</span>
+<span class="co">#&gt; 2 123500   1.14e+09 TR13 8JH</span>
+<span class="co">#&gt; 3 217950   1.17e+09 PL33 9DL</span>
+<span class="co">#&gt; 4 147000   1.16e+09 EX39 5XT</span>
+<span class="co">#&gt; # ... with more rows</span>
+
+<span class="co"># Method 2: using dplyr</span>
+<span class="kw">select</span>(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
+<span class="co">#&gt; Source:   query [?? x 4]</span>
+<span class="co">#&gt; Database: sqlite 3.8.6 [land.sqlite3]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;    price dtoftrnsfr postcode proprtytyp</span>
+<span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;    &lt;chr&gt;      &lt;chr&gt;</span>
+<span class="co">#&gt; 1  84000   1.15e+09  CW9 5EU          F</span>
+<span class="co">#&gt; 2 123500   1.14e+09 TR13 8JH          T</span>
+<span class="co">#&gt; 3 217950   1.17e+09 PL33 9DL          D</span>
+<span class="co">#&gt; 4 147000   1.16e+09 EX39 5XT          T</span>
+<span class="co">#&gt; # ... with more rows</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="data-processing-with-data.table" class="section level2">
+<h2><span class="header-section-number">6.7</span> Data processing with data.table</h2>
+<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dply</strong> provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend <strong>dplyr</strong>. However, <strong>data.table</strong> has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.</p>
+<p>This section provides a few examples to illustrate how <strong>data.table</strong> differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it’s a matter of preference.</p>
+<p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="data-carpentry.html#filtering-columns">6.4.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>
+<!-- __XXX__ Anything read from data/* isn't reproducible for the reader. MOve to the package?-->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
+idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
+idata_dt =<span class="st"> </span><span class="kw">data.table</span>(idata) <span class="co"># convert to data.table class</span>
+aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Australia&quot;</span>]</code></pre></div>
+<p>To boost performance, one can set ‘keys’. These are ‘<a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">supercharged rownames</a>’ which order the table based on one or more variables. This allows a <em>binary search</em> algorithm to subset the rows of interest, which is much, much faster than the <em>vector scan</em> approach used in base R (see <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html"><code>vignette(&quot;datatable-keys-fast-subset&quot;)</code></a>). <strong>data.table</strong> uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise <code>.()</code> syntax below).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setkey</span>(idata_dt, Country)
+aus3b =<span class="st"> </span>idata_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
+<p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="data-carpentry.html#fig:6-2">6.2</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>idata</code> dataset.</p>
+<div class="figure" style="text-align: center"><span id="fig:6-2"></span>
+<img src="_main_files/figure-html/6-2-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="70%" />
+<p class="caption">
+Figure 6.2: Benchmark illustrating the performance gains to be expected for different dataset sizes.
+</p>
+</div>
+<p>Figure <a href="data-carpentry.html#fig:6-2">6.2</a> demonstrates that <strong>data.table</strong> is <em>much faster</em> than base R and <strong>dplyr</strong> at subsetting. As with using external packages to read in data (see Section <a href="input-outpu.html#fread">5.8</a>), the relative benefits of <strong>data.table</strong> improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on <strong>dplyr</strong> as the dataset size reaches half a Gigabyte. Interestingly, even the ‘non key’ implementation of <strong>data.table</strong> subset method is faster than the alternatives: this is because <strong>data.table</strong> creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.</p>
+<p>In summary, this section has introduced <strong>data.table</strong> as a complimentary approach to base and <strong>dplyr</strong> methods for data processing. It offers performance gains due to its implementation in C and use of <em>keys</em> for subsetting tables. <strong>data.table</strong> offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with <code>left_join</code> in <strong>dplyr</strong>); and grouping. For further information on <strong>data.table</strong>, we recommend reading the package’s <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf"><code>datatable-intro</code></a>, <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html"><code>datatable-reshape</code></a> and <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html"><code>datatable-reference-semantics</code></a> vignettes.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Wickham_2014">
+<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
+</div>
+<div id="ref-Codd1979">
+<p>Codd, E. F. 1979. “Extending the database relational model to capture more meaning.” <em>ACM Transactions on Database Systems</em> 4 (4): 397–434. doi:<a href="https://doi.org/10.1145/320107.320109">10.1145/320107.320109</a>.</p>
+</div>
+<div id="ref-Spector_2008">
+<p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div id="ref-kersten2011researcher">
+<p>Kersten, Martin L, Stratos Idreos, Stefan Manegold, Erietta Liarou, and others. 2011. “The Researcher’s Guide to the Data Deluge: Querying a Scientific Database in Just a Few Seconds.” <em>PVLDB Challenges and Visions</em> 3.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="14">
+<li id="fn14"><p><code>vapply(idata, class, character(1))</code> is an alternative way to query the class of columns in a dataset.<a href="data-carpentry.html#fnref14">↩</a></p></li>
+<li id="fn15"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="data-carpentry.html#fnref15">↩</a></p></li>
+<li id="fn16"><p>Note that this syntax is a defining feature of <strong>dplyr</strong> and many of its functions work in the same way. Later we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.<a href="data-carpentry.html#fnref16">↩</a></p></li>
+<li id="fn17"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="data-carpentry.html#fnref17">↩</a></p></li>
+<li id="fn18"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the stackoverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="data-carpentry.html#fnref18">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="input-outpu.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="performance.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/csgillespie/efficientR/edit/master/06-data-carpentry.Rmd",
+"text": "Edit"
+},
+"download": ["_main.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

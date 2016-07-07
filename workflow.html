@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Efficient R programming</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
+  <meta name="generator" content="bookdown 0.0.75 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Efficient R programming" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://csgillespie.github.io/efficientR/" />
+  <meta property="og:image" content="https://csgillespie.github.io/efficientR/figures/f0_full.png" />
+  <meta property="og:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="github-repo" content="csgillespie/efficientR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Efficient R programming" />
+  <meta name="twitter:site" content="@csgillespie" />
+  <meta name="twitter:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="twitter:image" content="https://csgillespie.github.io/efficientR/figures/f0_full.png" />
+
+<meta name="author" content="Colin Gillespie">
+<meta name="author" content="Robin Lovelace">
+
+<meta name="date" content="2016-07-07">
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="programming.html">
+<link rel="next" href="input-outpu.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Efficient R programming</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to Efficient R Programming</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#authors"><i class="fa fa-check"></i>Authors</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who this book is for</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-is-efficiency"><i class="fa fa-check"></i><b>1.2</b> What is efficiency?</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#why-efficiency"><i class="fa fa-check"></i><b>1.3</b> Why efficiency?</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#what-is-efficient-r-programming"><i class="fa fa-check"></i><b>1.4</b> What is efficient R programming?</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#touch-typing"><i class="fa fa-check"></i><b>1.5</b> Touch typing</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#benchmarking"><i class="fa fa-check"></i><b>1.6</b> Benchmarking</a><ul>
+<li class="chapter" data-level="1.6.1" data-path="introduction.html"><a href="introduction.html#benchmarking-example"><i class="fa fa-check"></i><b>1.6.1</b> Benchmarking example</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#profiling"><i class="fa fa-check"></i><b>1.7</b> Profiling</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="set-up.html"><a href="set-up.html"><i class="fa fa-check"></i><b>2</b> Efficient set-up</a><ul>
+<li class="chapter" data-level="2.1" data-path="set-up.html"><a href="set-up.html#top-5-tips-for-an-efficient-r-set-up"><i class="fa fa-check"></i><b>2.1</b> Top 5 tips for an efficient R set-up</a></li>
+<li class="chapter" data-level="2.2" data-path="set-up.html"><a href="set-up.html#operating-system"><i class="fa fa-check"></i><b>2.2</b> Operating system</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="set-up.html"><a href="set-up.html#operating-system-and-resource-monitoring"><i class="fa fa-check"></i><b>2.2.1</b> Operating system and resource monitoring</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="set-up.html"><a href="set-up.html#r-version"><i class="fa fa-check"></i><b>2.3</b> R version</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="set-up.html"><a href="set-up.html#installing-r"><i class="fa fa-check"></i><b>2.3.1</b> Installing R</a></li>
+<li class="chapter" data-level="2.3.2" data-path="set-up.html"><a href="set-up.html#updating-r"><i class="fa fa-check"></i><b>2.3.2</b> Updating R</a></li>
+<li class="chapter" data-level="2.3.3" data-path="set-up.html"><a href="set-up.html#installing-r-packages"><i class="fa fa-check"></i><b>2.3.3</b> Installing R packages</a></li>
+<li class="chapter" data-level="2.3.4" data-path="set-up.html"><a href="set-up.html#deps"><i class="fa fa-check"></i><b>2.3.4</b> Installing R packages with dependencies</a></li>
+<li class="chapter" data-level="2.3.5" data-path="set-up.html"><a href="set-up.html#updating-r-packages"><i class="fa fa-check"></i><b>2.3.5</b> Updating R packages</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="set-up.html"><a href="set-up.html#r-startup"><i class="fa fa-check"></i><b>2.4</b> R startup</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="set-up.html"><a href="set-up.html#r-startup-arguments"><i class="fa fa-check"></i><b>2.4.1</b> R startup arguments</a></li>
+<li class="chapter" data-level="2.4.2" data-path="set-up.html"><a href="set-up.html#an-overview-of-rs-startup-files"><i class="fa fa-check"></i><b>2.4.2</b> An overview of R’s startup files</a></li>
+<li class="chapter" data-level="2.4.3" data-path="set-up.html"><a href="set-up.html#the-location-of-startup-files"><i class="fa fa-check"></i><b>2.4.3</b> The location of startup files</a></li>
+<li class="chapter" data-level="2.4.4" data-path="set-up.html"><a href="set-up.html#rprofile"><i class="fa fa-check"></i><b>2.4.4</b> The <code>.Rprofile</code> file</a></li>
+<li class="chapter" data-level="2.4.5" data-path="set-up.html"><a href="set-up.html#an-example-.rprofile-file"><i class="fa fa-check"></i><b>2.4.5</b> An example <code>.Rprofile</code> file</a></li>
+<li class="chapter" data-level="2.4.6" data-path="set-up.html"><a href="set-up.html#renviron"><i class="fa fa-check"></i><b>2.4.6</b> The <code>.Renviron</code> file</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="set-up.html"><a href="set-up.html#rstudio"><i class="fa fa-check"></i><b>2.5</b> RStudio</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="set-up.html"><a href="set-up.html#install-rstudio"><i class="fa fa-check"></i><b>2.5.1</b> Installing and updating RStudio</a></li>
+<li class="chapter" data-level="2.5.2" data-path="set-up.html"><a href="set-up.html#window-pane-layout"><i class="fa fa-check"></i><b>2.5.2</b> Window pane layout</a></li>
+<li class="chapter" data-level="2.5.3" data-path="set-up.html"><a href="set-up.html#rstudio-options"><i class="fa fa-check"></i><b>2.5.3</b> RStudio options</a></li>
+<li class="chapter" data-level="2.5.4" data-path="set-up.html"><a href="set-up.html#autocompletion"><i class="fa fa-check"></i><b>2.5.4</b> Autocompletion</a></li>
+<li class="chapter" data-level="2.5.5" data-path="set-up.html"><a href="set-up.html#keyboard-shortcuts"><i class="fa fa-check"></i><b>2.5.5</b> Keyboard shortcuts</a></li>
+<li class="chapter" data-level="2.5.6" data-path="set-up.html"><a href="set-up.html#object-display-and-output-table"><i class="fa fa-check"></i><b>2.5.6</b> Object display and output table</a></li>
+<li class="chapter" data-level="2.5.7" data-path="set-up.html"><a href="set-up.html#project-management"><i class="fa fa-check"></i><b>2.5.7</b> Project management</a></li>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-4"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="set-up.html"><a href="set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="set-up.html"><a href="set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
+<li class="chapter" data-level="2.6.2" data-path="set-up.html"><a href="set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.2</b> Other interpreters</a></li>
+<li class="chapter" data-level="2.6.3" data-path="set-up.html"><a href="set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.3</b> Useful BLAS/benchmarking resources</a></li>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-5"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
+<li class="chapter" data-level="3.1" data-path="programming.html"><a href="programming.html#top-5-tips-for-efficient-programming"><i class="fa fa-check"></i><b>3.1</b> Top 5 tips for efficient programming</a></li>
+<li class="chapter" data-level="3.2" data-path="programming.html"><a href="programming.html#general-advice"><i class="fa fa-check"></i><b>3.2</b> General advice</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>3.2.2</b> Vectorised code</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
+<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning</code></a></li>
+<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message</code> and <code class="unnumbered">cat</code></a></li>
+<li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#example-retrieving-a-web-resource"><i class="fa fa-check"></i><b>3.3.4</b> Example: Retrieving a web resource</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-7"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="3.3.5" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.5</b> Invisible returns</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#example-months-of-the-year"><i class="fa fa-check"></i><b>3.4.1</b> Example: Months of the year</a></li>
+<li class="chapter" data-level="3.4.2" data-path="programming.html"><a href="programming.html#example-graphics"><i class="fa fa-check"></i><b>3.4.2</b> Example: Graphics</a></li>
+<li class="chapter" data-level="3.4.3" data-path="programming.html"><a href="programming.html#example-analysis-of-variance"><i class="fa fa-check"></i><b>3.4.3</b> Example: Analysis of variance</a></li>
+<li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
+<li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
+<li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.7</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.7.1</b> Function closures</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.8</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.8.1</b> Example: the mean function</a></li>
+<li class="chapter" data-level="3.8.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.8.2</b> Compiling code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
+<li class="chapter" data-level="4.1" data-path="workflow.html"><a href="workflow.html#top-5-tips-for-efficient-workflow"><i class="fa fa-check"></i><b>4.1</b> Top 5 tips for efficient workflow</a></li>
+<li class="chapter" data-level="4.2" data-path="workflow.html"><a href="workflow.html#a-project-planning-typology"><i class="fa fa-check"></i><b>4.2</b> A project planning typology</a></li>
+<li class="chapter" data-level="4.3" data-path="workflow.html"><a href="workflow.html#project-planning-and-management"><i class="fa fa-check"></i><b>4.3</b> Project planning and management</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="workflow.html"><a href="workflow.html#chunking-your-work"><i class="fa fa-check"></i><b>4.3.1</b> ‘Chunking’ your work</a></li>
+<li class="chapter" data-level="4.3.2" data-path="workflow.html"><a href="workflow.html#smart"><i class="fa fa-check"></i><b>4.3.2</b> Making your workflow SMART</a></li>
+<li class="chapter" data-level="4.3.3" data-path="workflow.html"><a href="workflow.html#visualising-plans-with-r"><i class="fa fa-check"></i><b>4.3.3</b> Visualising plans with R</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="workflow.html"><a href="workflow.html#package-selection"><i class="fa fa-check"></i><b>4.4</b> Package selection</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="workflow.html"><a href="workflow.html#searching-for-r-packages"><i class="fa fa-check"></i><b>4.4.1</b> Searching for R packages</a></li>
+<li class="chapter" data-level="4.4.2" data-path="workflow.html"><a href="workflow.html#how-to-select-a-package"><i class="fa fa-check"></i><b>4.4.2</b> How to select a package</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="workflow.html"><a href="workflow.html#publication"><i class="fa fa-check"></i><b>4.5</b> Publication</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="workflow.html"><a href="workflow.html#dynamic-documents-with-knitr"><i class="fa fa-check"></i><b>4.5.1</b> Dynamic documents with knitr</a></li>
+<li class="chapter" data-level="4.5.2" data-path="workflow.html"><a href="workflow.html#r-packages"><i class="fa fa-check"></i><b>4.5.2</b> R packages</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="input-outpu.html"><a href="input-outpu.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a><ul>
+<li class="chapter" data-level="5.1" data-path="input-outpu.html"><a href="input-outpu.html#top-5-tips-for-efficient-data-io"><i class="fa fa-check"></i><b>5.1</b> Top 5 tips for efficient data I/O</a></li>
+<li class="chapter" data-level="5.2" data-path="input-outpu.html"><a href="input-outpu.html#getting-data-from-the-internet"><i class="fa fa-check"></i><b>5.2</b> Getting data from the internet</a></li>
+<li class="chapter" data-level="5.3" data-path="input-outpu.html"><a href="input-outpu.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.3</b> Versatile data import with rio</a><ul>
+<li class="chapter" data-level="" data-path="input-outpu.html"><a href="input-outpu.html#exercises-11"><i class="fa fa-check"></i>Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="input-outpu.html"><a href="input-outpu.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.4</b> Accessing data stored in packages</a></li>
+<li class="chapter" data-level="5.5" data-path="input-outpu.html"><a href="input-outpu.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.5</b> The feather file format</a></li>
+<li class="chapter" data-level="5.6" data-path="input-outpu.html"><a href="input-outpu.html#efficient-data-export-.rdata-or-.rds"><i class="fa fa-check"></i><b>5.6</b> Efficient data export: .Rdata or .Rds?</a></li>
+<li class="chapter" data-level="5.7" data-path="input-outpu.html"><a href="input-outpu.html#a-benchmark-of-methods-for-file-import-and-export"><i class="fa fa-check"></i><b>5.7</b> A benchmark of methods for file import and export</a></li>
+<li class="chapter" data-level="5.8" data-path="input-outpu.html"><a href="input-outpu.html#fread"><i class="fa fa-check"></i><b>5.8</b> Fast import of plain text formats</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="input-outpu.html"><a href="input-outpu.html#preprocessing-outside-r"><i class="fa fa-check"></i><b>5.8.1</b> Preprocessing outside R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
+<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
+<li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
+<li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr</a></li>
+<li class="chapter" data-level="6.4" data-path="data-carpentry.html"><a href="data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="data-carpentry.html"><a href="data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
+<li class="chapter" data-level="6.4.2" data-path="data-carpentry.html"><a href="data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
+<li class="chapter" data-level="6.4.3" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>6.4.3</b> Filtering rows</a></li>
+<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-columns"><i class="fa fa-check"></i><b>6.4.4</b> Filtering columns</a></li>
+<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.5</b> Data aggregation</a></li>
+<li class="chapter" data-level="6.4.6" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.6</b> Chaining operations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="data-carpentry.html"><a href="data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
+<li class="chapter" data-level="6.6" data-path="data-carpentry.html"><a href="data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#databases-and-dplyr"><i class="fa fa-check"></i><b>6.6.1</b> Databases and <strong>dplyr</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="data-carpentry.html"><a href="data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient performance</a><ul>
+<li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
+<li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.2</b> Efficient base R</a><ul>
+<li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if</code> vs <code>ifelse</code> functions</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sorting-and-ordering"><i class="fa fa-check"></i>Sorting and ordering</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
+<li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#string-concatenation"><i class="fa fa-check"></i>String concatenation</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
+<li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#matrices"><i class="fa fa-check"></i>Matrices</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.3</b> Code profiling</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.3.1</b> Getting started with <strong>profvis</strong></a></li>
+<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#example-monopoly-simulation"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#parallel-computing"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.4.1</b> Parallel versions of apply functions</a></li>
+<li class="chapter" data-level="7.4.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.4.2</b> Example: Snakes and Ladders</a></li>
+<li class="chapter" data-level="7.4.3" data-path="performance.html"><a href="performance.html#exit-functions-with-care"><i class="fa fa-check"></i><b>7.4.3</b> Exit functions with care</a></li>
+<li class="chapter" data-level="7.4.4" data-path="performance.html"><a href="performance.html#process-forking"><i class="fa fa-check"></i><b>7.4.4</b> Process forking</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#rcpp"><i class="fa fa-check"></i><b>7.5</b> Rcpp</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#pre-requisites"><i class="fa fa-check"></i><b>7.5.1</b> Pre-requisites</a></li>
+<li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#simple-c"><i class="fa fa-check"></i><b>7.5.2</b> A simple C++ function</a></li>
+<li class="chapter" data-level="7.5.3" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.5.3</b> The cppFunction command</a></li>
+<li class="chapter" data-level="7.5.4" data-path="performance.html"><a href="performance.html#c-types"><i class="fa fa-check"></i><b>7.5.4</b> C++ data types</a></li>
+<li class="chapter" data-level="7.5.5" data-path="performance.html"><a href="performance.html#sourcecpp"><i class="fa fa-check"></i><b>7.5.5</b> The <code>sourceCpp</code> function</a></li>
+<li class="chapter" data-level="7.5.6" data-path="performance.html"><a href="performance.html#vectors-and-loops"><i class="fa fa-check"></i><b>7.5.6</b> Vectors and loops</a></li>
+<li class="chapter" data-level="7.5.7" data-path="performance.html"><a href="performance.html#sugar"><i class="fa fa-check"></i><b>7.5.7</b> C++ with sugar on top</a></li>
+<li class="chapter" data-level="7.5.8" data-path="performance.html"><a href="performance.html#rcpp-resources"><i class="fa fa-check"></i><b>7.5.8</b> Rcpp resources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
+<li class="chapter" data-level="8.1" data-path="hardware.html"><a href="hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
+<li class="chapter" data-level="8.2" data-path="hardware.html"><a href="hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
+<li class="chapter" data-level="8.3" data-path="hardware.html"><a href="hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
+<li class="chapter" data-level="8.4" data-path="hardware.html"><a href="hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>8.4</b> Hard drives: HDD vs SSD</a></li>
+<li class="chapter" data-level="8.5" data-path="hardware.html"><a href="hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>8.5</b> Operating systems: 32-bit or 64-bit</a></li>
+<li class="chapter" data-level="8.6" data-path="hardware.html"><a href="hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>8.6</b> Central processing unit (CPU)</a></li>
+<li class="chapter" data-level="8.7" data-path="hardware.html"><a href="hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.7</b> Cloud computing</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="hardware.html"><a href="hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>8.7.1</b> Amazon EC2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
+<li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
+<li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
+<li class="chapter" data-level="9.2.2" data-path="collaboration.html"><a href="collaboration.html#file-names"><i class="fa fa-check"></i><b>9.2.2</b> File names</a></li>
+<li class="chapter" data-level="9.2.3" data-path="collaboration.html"><a href="collaboration.html#loading-packages"><i class="fa fa-check"></i><b>9.2.3</b> Loading packages</a></li>
+<li class="chapter" data-level="9.2.4" data-path="collaboration.html"><a href="collaboration.html#commenting"><i class="fa fa-check"></i><b>9.2.4</b> Commenting</a></li>
+<li class="chapter" data-level="9.2.5" data-path="collaboration.html"><a href="collaboration.html#object-names"><i class="fa fa-check"></i><b>9.2.5</b> Object names</a></li>
+<li class="chapter" data-level="9.2.6" data-path="collaboration.html"><a href="collaboration.html#example-package"><i class="fa fa-check"></i><b>9.2.6</b> Example package</a></li>
+<li class="chapter" data-level="9.2.7" data-path="collaboration.html"><a href="collaboration.html#assignment"><i class="fa fa-check"></i><b>9.2.7</b> Assignment</a></li>
+<li class="chapter" data-level="9.2.8" data-path="collaboration.html"><a href="collaboration.html#spacing"><i class="fa fa-check"></i><b>9.2.8</b> Spacing</a></li>
+<li class="chapter" data-level="9.2.9" data-path="collaboration.html"><a href="collaboration.html#indentation"><i class="fa fa-check"></i><b>9.2.9</b> Indentation</a></li>
+<li class="chapter" data-level="9.2.10" data-path="collaboration.html"><a href="collaboration.html#curly-braces"><i class="fa fa-check"></i><b>9.2.10</b> Curly braces</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="collaboration.html"><a href="collaboration.html#version-control"><i class="fa fa-check"></i><b>9.3</b> Version control</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="collaboration.html"><a href="collaboration.html#commits"><i class="fa fa-check"></i><b>9.3.1</b> Commits</a></li>
+<li class="chapter" data-level="9.3.2" data-path="collaboration.html"><a href="collaboration.html#git-integration-in-rstudio"><i class="fa fa-check"></i><b>9.3.2</b> Git integration in RStudio</a></li>
+<li class="chapter" data-level="9.3.3" data-path="collaboration.html"><a href="collaboration.html#github"><i class="fa fa-check"></i><b>9.3.3</b> GitHub</a></li>
+<li class="chapter" data-level="9.3.4" data-path="collaboration.html"><a href="collaboration.html#branches-forks-pulls-and-clones"><i class="fa fa-check"></i><b>9.3.4</b> Branches, forks, pulls and clones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="collaboration.html"><a href="collaboration.html#refactoring"><i class="fa fa-check"></i><b>9.4</b> Refactoring code</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
+<li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
+<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-r-help"><i class="fa fa-check"></i><b>10.2</b> Using R help</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.1</b> Reading R source code</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
+<li class="chapter" data-level="10.3.2" data-path="learning.html"><a href="learning.html#mailing-lists-and-groups."><i class="fa fa-check"></i><b>10.3.2</b> Mailing lists and groups.</a></li>
+<li class="chapter" data-level="10.3.3" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.3.3</b> Asking a question</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Efficient R programming</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="workflow" class="section level1">
+<h1><span class="header-section-number">4</span> Efficient workflow</h1>
+<p>Efficient programming is an important and skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful outcomes for projects involving R programming. Unless your project is to write generic R code (i.e. unless you are on the R Core Team), the project will probably transcend the confines of the R world: it must engage with a whole range of other factors. In this context we define ‘workflow’ as the sum of practices, habits and systems that enable productivity.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> To some extent workflow is about personal preferences. Everyone’s mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project: it’s a big topic but can usefully be condensed in 5 top tips.</p>
+<div id="top-5-tips-for-efficient-workflow" class="section level2">
+<h2><span class="header-section-number">4.1</span> Top 5 tips for efficient workflow</h2>
+<ul>
+<li><p>Start without writing code but with a clear mind and perhaps a pen and paper. This will ensure you keep your objectives at the forefront of your mind, without getting lost in the technology.</p></li>
+<li><p>Make a plan. The size and nature will depend on the project but time-lines, resources and ‘chunking’ the work will make you more effective when you start.</p></li>
+<li><p>Select the packages you will use for implementing the plan early. Minutes spent researching and selecting from the available options could save hours in the future.</p></li>
+<li><p>Document your work at every stage: work can only be effective if it’s communicated clearly and code can only be efficiently understood if it’s commented.</p></li>
+<li><p>Make your entire workflow as reproducible as possible. <strong>knitr</strong> can help with this in the phase of documentation.</p></li>
+</ul>
+</div>
+<div id="a-project-planning-typology" class="section level2">
+<h2><span class="header-section-number">4.2</span> A project planning typology</h2>
+<p>Appropriate project management structures and workflow depend on the <em>type</em> of project you are undertaking. The typology below demonstrate the links between project type and project management requirements.<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
+<ul>
+<li><em>Data analysis</em>. Here you are trying to explore datasets to discover something interesting/answer some questions. The emphasis is on speed of manipulating your data to generate interest results. Formality is less important in this type of project. Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project’s success as how they interact with each other.</li>
+<li><em>Package creation</em>. Here you want to create code that can be reused across projects, possibly by people whose use case you don’t know (if you make it publicly available). The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important. Robustness and testing are important in this type of project too.</li>
+<li><em>Reporting and publishing</em>. Here you are writing a report or journal paper or book. The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.</li>
+<li><em>Software applications</em>. This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software. Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.</li>
+</ul>
+<p>Based on these observations we recommend thinking about the type of workflow, file structure and project management system suits your projects best. Sometimes it’s best not to be prescriptive so we recommend trying different working practices to discover which works best, time permitting.<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></p>
+<p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
+<ul>
+<li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy. Project management is the art of making project plans happen.</p></li>
+<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages. <code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>, as we’ll see in <a href="data-carpentry.html#data-carpentry">6</a>. It is therefore more important than ever to consider the range of options at the outset.</p></li>
+<li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="workflow.html#publication">4.5</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
+</ul>
+</div>
+<div id="project-planning-and-management" class="section level2">
+<h2><span class="header-section-number">4.3</span> Project planning and management</h2>
+<p>Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: “smart preparation minimizes work” <span class="citation">(Berkun <a href="#ref-berkun2005art">2005</a>)</span>. Although search engines are useful for identifying the appropriate strategy, trail-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly <em>inefficient</em>.</p>
+<p>Strategic thinking especially important during a project’s inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project’s entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: <em>technical debt</em>. This has been defined as “not quite right code which we postpone making it right” <span class="citation">(Kruchten, Nord, and Ozkaya <a href="#ref-kruchten2012technical">2012</a>)</span>. Dozens of academic papers have been written on the subject but, from the perspective of <em>beginning</em> a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring (we return to the topic of refactoring in Chapter <a href="collaboration.html#collaboration">9</a>).</p>
+<p>To minimise technical debt at the outset, the best place to start may be with a pen and paper and an open mind. Sketching out your ideas and deciding precisely what you want to do, free from the constraints of a particular piece of technology, can be rewarding exercise before you begin. Project planning and ‘visioning’ can be a creative process not always well-suited to the linear logic of computing, despite recent advances in project management software, some of which are outlined in the bullet points below.</p>
+<p>Scale can loosely be defined as the number of people working on a project. It should be considered at the outset because the importance of project management increases exponentially with the number of people involved. Project management may be trivial for a small project but if you expect it to grow, implementing a structured workflow early could avoid problems later. On small projects consisting of a ‘one off’ script, project management may be a distracting waste of time. Large projects involving dozens of people, on the other hand, require much effort dedicated to project management: regular meetings, division of labour and a scalable project management system to track progress, issues and priorities will inevitably consume a large proportion of the project’s time. Fortunately a multitude of dedicated project management systems have been developed to cater for projects across a range of scales. These include, in rough ascending order of scale and complexity:</p>
+<ul>
+<li><p>the interactive code sharing site <a href="https://github.com/">GitHub</a>, which is described in more detail in Chapter <a href="collaboration.html#collaboration">9</a>)</p></li>
+<li><p><a href="https://www.zenhub.io/">ZenHub</a>, a browser plugin that is “the first and only project management suite that works natively within GitHub”</p></li>
+<li><p>web-based and easy-to-use tools such as <a href="https://trello.com/">Trello</a></p></li>
+<li><p>Dedicated desktop project management software such as <a href="http://sourceforge.net/projects/projectlibre/">ProjectLibre</a> and <a href="http://sourceforge.net/projects/projectlibre/">GanttProject</a></p></li>
+<li><p>fully featured, enterprise scale open source project management systems such as <a href="https://www.openproject.org/">OpenProject</a> and <a href="http://www.redmine.org/">redmine</a>.</p></li>
+</ul>
+<p>Regardless of the software (or lack thereof) used for project management, it involves considering the project’s aims in the context of available resources (e.g. computational and programmer resources), project scope, time-scales and suitable software. And these things should be considered together. To take one example, is it worth the investment of time needed to learn a particular R package which is not essential to completing the project but which will make the code run faster? Does it make more sense to hire another programmer or invest in more computational resources to complete an urgent deadline?</p>
+<p>Minutes spent thinking through such issues before writing a single line can save hours in the future. This is emphasised in books such as <span class="citation">Berkun (<a href="#ref-berkun2005art">2005</a>)</span> and <span class="citation">PMBoK (<a href="#ref-PMBoK2000">2000</a>)</span> and useful online resources such those by <a href="http://teamgantt.com/guide-to-project-management/">teamgantt.com</a> and <a href="http://www.lasa.org.uk/uploads/publications/ictpublications/computanews_guides/lcgpm.pdf">lasa.org.uk</a>, which focus exclusively on project planning. This section condenses some of the most important lessons from this literature in the context of typical R projects (i.e. which involve data analysis, modelling and visualisation).</p>
+<div id="chunking-your-work" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> ‘Chunking’ your work</h3>
+<p>Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up. The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next. Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track. Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">PMBoK (<a href="#ref-PMBoK2000">2000</a>)</span>. ‘Chunking’ the work will also make collaboration easier, as we shall see in Chapter 5.</p>
+<div class="figure" style="text-align: center"><span id="fig:4-1"></span>
+<img src="_main_files/figure-html/4-1-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK2000." width="70%" />
+<p class="caption">
+Figure 4.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="#ref-PMBoK2000">2000</a>)</span>.
+</p>
+</div>
+<p>The tasks that a project should be split into will depend the nature of the work and the phases illustrated in Figure <a href="workflow.html#fig:4-1">4.1</a> represent a rough starting point, not a template and the ‘programming’ phase will usually need to be split into at least ‘data tidying’, ‘processing’, and ‘visualisation’.</p>
+</div>
+<div id="smart" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> Making your workflow SMART</h3>
+<p>A more rigorous (but potentially onerous) way to project plan is to divide the work into a series of objectives and tracking their progress throughout the project’s duration. One way to check if an objective is appropriate for action and review is by using the SMART criteria.</p>
+<ul>
+<li>Specific: is the objective clearly defined and self-contained?</li>
+<li>Measurable: is there a clear indication of its completion?</li>
+<li>Attainable: can the target be achieved?</li>
+<li>Realistic: have sufficient resources been allocated to the task?</li>
+<li>Time-bound: is there an associated completion date or milestone?</li>
+</ul>
+<p>If the answer to each of these questions is ‘yes’, the task is likely to be suitable to include in the project’s plan. Note that this does not mean all project plans need to be uniform. A project plan can take many forms, including a short document, a Gantt chart (see Figure <a href="workflow.html#fig:4-2">4.2</a> or simply a clear vision of the project’s steps in mind.</p>
+<div class="figure" style="text-align: center"><span id="fig:4-2"></span>
+<img src="figures/f4_2_DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development." width="80%" />
+<p class="caption">
+Figure 4.2: A Gantt chart created using <strong>DiagrammeR</strong> illustrating the steps needed to complete this book at an early stage of its development.
+</p>
+</div>
+</div>
+<div id="visualising-plans-with-r" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> Visualising plans with R</h3>
+<p>Various R packages can help visualise the project plan. While these are useful, they cannot compete with the dedicated project management software outlined at the outset of this section. However, if you are working on relatively simple project, it is useful to know that R can help represent and keep track of your work. Packages for plotting project progress include:<a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a></p>
+<ul>
+<li><p>the <a href="https://cran.r-project.org/web/packages/plan/"><strong>plan</strong></a> package, which provides basic tools to create burndown charts (which concisely show whether a project is on-time or not) and Gantt charts.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/plotrix/index.html"><strong>plotrix</strong></a>, a general purpose plotting package, provides basic Gantt chart plotting functionality. Enter <code>example(gantt.chart)</code> for details.</p></li>
+<li><p><a href="http://rich-iannone.github.io/DiagrammeR/"><strong>DiagrammeR</strong></a>, a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as <a href="https://github.com/knsv/mermaid">mermaid</a> and <a href="https://github.com/ellson/graphviz">GraphViz</a>.</p></li>
+</ul>
+<p>The small example below (which provides the basis for creating charts like Figure <a href="workflow.html#fig:4-2">4.2</a> illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts. Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. {#DiagrammeR}</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)
+<span class="co"># Define the Gantt chart and plot the result (not shown)</span>
+<span class="kw">mermaid</span>(<span class="st">&quot;gantt</span>
+<span class="st">        Section Initiation</span>
+<span class="st">        Planning           :a1, 2016-01-01, 10d</span>
+<span class="st">        Data processing    :after a1  , 30d&quot;</span>)</code></pre></div>
+<p>In the above code <code>gantt</code> defines the subsequent data layout. <code>Section</code> refers to the project’s section (useful for large projects, with milestones) and each new line refers to a discrete task. <code>Planning</code>, for example, has the code <code>a</code>, begins on the first day of 2016 and lasts for 10 days. See <a href="http://knsv.github.io/mermaid/gantt.html">knsv.github.io/mermaid/gantt.html</a> for more detailed documentation.</p>
+<div id="exercises-10" class="section level4 unnumbered">
+<h4>Exercises</h4>
+<ol style="list-style-type: decimal">
+<li><p>What are the three most important work ‘chunks’ of your current R project?</p></li>
+<li><p>What is the meaning of ‘SMART’ objectives (see <a href="workflow.html#smart">Making your workflow SMART</a>).</p></li>
+<li><p>Run the <a href="#DiagrammeR">code chunk</a> at the end of this section to see the output.</p></li>
+<li><p>Bonus exercise: modify this code to create a basic Gantt chart of an R project you are working on.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="package-selection" class="section level2">
+<h2><span class="header-section-number">4.4</span> Package selection</h2>
+<p>A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection. An inefficient, poorly supported or simply outdated package can waste hours. When a more appropriate alternative is available this waste can be prevented by prior planning. There are many poor packages on CRAN and much duplication so it’s easy to go wrong. Just because a certain package <em>can</em> solve a particular problem, doesn’t mean that it <em>should</em>.</p>
+<p>Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don’t have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively that the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is <em>packaged</em> in functions behind the scenes.</p>
+<p>Let’s take an example. Imagine for a project you would like to find the distance between sets of points (origins, <code>o</code> and destinations, <code>d</code>) on the Earth’s surface. Background reading shows that a good approximation of ‘great circle’ distance, which accounts for the curvature of the Earth, can be made by using the Haversine formula, which you duly implement, involving much trial and error:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function to convert degrees to radians</span>
+deg2rad =<span class="st"> </span>function(deg) <span class="kw">return</span>(deg*pi/<span class="dv">180</span>)
+
+<span class="co"># Create origins and destinations</span>
+o =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> -<span class="fl">1.55</span>, <span class="dt">lat =</span> <span class="fl">53.80</span>)
+d =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> -<span class="fl">1.61</span>, <span class="dt">lat =</span> <span class="fl">54.98</span>)
+
+<span class="co"># Convert to radians</span>
+o_rad =<span class="st"> </span><span class="kw">deg2rad</span>(o)
+d_rad =<span class="st"> </span><span class="kw">deg2rad</span>(d)
+
+<span class="co"># Find difference in degrees</span>
+delta_lon =<span class="st"> </span>(o_rad[<span class="dv">1</span>] -<span class="st"> </span>d_rad[<span class="dv">1</span>])
+delta_lat =<span class="st"> </span>(o_rad[<span class="dv">2</span>] -<span class="st"> </span>d_rad[<span class="dv">2</span>])
+
+<span class="co"># Calculate distance with Haversine formula</span>
+a =<span class="st"> </span><span class="kw">sin</span>(delta_lat /<span class="st"> </span><span class="dv">2</span>)^<span class="dv">2</span> +<span class="st"> </span><span class="kw">cos</span>(o_rad[<span class="dv">2</span>]) *<span class="st"> </span><span class="kw">cos</span>(d_rad[<span class="dv">2</span>]) *<span class="st"> </span><span class="kw">sin</span>(delta_lon /<span class="st"> </span><span class="dv">2</span>)^<span class="dv">2</span>
+c =<span class="st"> </span><span class="dv">2</span> *<span class="st"> </span><span class="kw">asin</span>(<span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">sqrt</span>(a)))
+(<span class="dt">d_hav1 =</span> <span class="dv">6371</span> *<span class="st"> </span>c) <span class="co"># multiply by Earth&#39;s diameter</span>
+<span class="co">#&gt; [1] 131</span></code></pre></div>
+<p>This method works but it takes time to write, test and debug. Much better to package it up into a function. Or even better, use a function that someone else has written and put in a package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Find great circle distance with geosphere</span>
+(<span class="dt">d_hav2 =</span> geosphere::<span class="kw">distHaversine</span>(o, d))
+<span class="co">#&gt; [1] 131415</span></code></pre></div>
+<p>The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subetting stages and small, similar functions (e.g. <code>sin</code> and <code>asin</code>) which are easy to confuse. The other is one line of simple code. The package method using <strong>geosphere</strong> took perhaps 100<sup>th</sup> of the time <em>and</em> gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?</p>
+<div id="searching-for-r-packages" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Searching for R packages</h3>
+<p>Building on the example above, how can on find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, <code>haversine formula R</code>, returned a link to the <strong>geosphere</strong> package in the second result (a <a href="http://www.r-bloggers.com/great-circle-distance-calculations-in-r/">hardcoded implementation</a> was first).</p>
+<p>Beyond Google, there are also several sites for searching for packages and functions. <a href="http://www.rdocumentation.org/">rdocumentation.org</a> provides a multi-field search environmnet to pinpoint the function or package you need. Amazingly, the search for <code>haversine</code> in the Description field yielded 10 results from 8 packages: R has at least <em>8</em> implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with <code>RSiteSearch()</code>, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Search CRAN for mentions of haversine</span>
+<span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</code></pre></div>
+</div>
+<div id="how-to-select-a-package" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> How to select a package</h3>
+<p>Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the ‘R ecosystem’ has occurred in recent years in the packages. The increased ease of package development <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span> and interfacing with other languages <span class="citation">(e.g. Eddelbuettel et al. <a href="#ref-Eddelbuettel_2011">2011</a>)</span> has accelerated their number, quality and efficiency. An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as <a href="https://ropensci.org/">ROpenSci</a> for peer reviewing code.</p>
+<p>Performance, stability and ease of use should be high on the priority list when choosing which package to use. Another more subtle factor is that some packages work better together than others. The ‘R package ecosystem’ is composed of interrelated package. Knowing something of these inter-dependencies can help select a ‘package suite’ when the project demands a number of diverse yet interrelated programming tasks. The ‘hadleyverse’, for example, contains many interrelated packages that work well together, such as <strong>readr</strong>, <strong>tidyr</strong>, and <strong>dplyr</strong>.<a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> These may be used together to read-in, tidy and then process the data, as outlined in the subsequent sections.</p>
+<p>There is no ‘hard and fast’ rule about which package you should use and new packages are emerging all the time. The ultimate test will be empirical evidence: does it get the job done on your data? However, the following criteria should provide a good indication of whether a package is worth an investment of your precious time, or even installing on your computer:</p>
+<ul>
+<li><p><strong>Is it mature?</strong> The more time a package is available, the more time it will have for obvious bugs to be ironed out. The age of a package on CRAN can be seen from its Archive page on CRAN. We can see from <a href="https://cran.r-project.org/src/contrib/Archive/ggplot2/">cran.r-project.org/src/contrib/Archive/ggplot2/</a>, for example, that <strong>ggplot2</strong> was first released on the 10<sup>th</sup> June 2007 and that it has had 28 releases. The most recent of these at the time of writing was <strong>ggplot2</strong> 2.0.0: reaching 1 or 2 in the first digit of package versions is usually an indication from the package author that the package has reached a high level of stability.</p></li>
+<li><p><strong>Is it actively developed?</strong> It is a good sign if packages are frequently updated. A frequently updated package will have its latest version ‘published’ recently on CRAN. The CRAN package page for <strong>ggplot2</strong>, for example, said <code>Published: 2015-12-18</code>, less than a month old at the time of writing.</p></li>
+<li><p><strong>Is it well documented?</strong> This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. <code>?ggplot</code>), try the examples (e.g. <code>example(ggplot)</code>) and search for package vignettes (e.g. <code>vignette(package = &quot;ggplot2&quot;)</code>).</p></li>
+<li><p><strong>Is it well used?</strong> This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google’s. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely visible GitHub. At the time of writing a search for <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=ggplot2"><strong>ggplot2</strong></a> on GitHub yielded over 400 repositories and almost 200,000 matches in committed code! Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, <strong>ggplot2</strong> scores extremely well in this measure, with over 5000 hits).</p></li>
+</ul>
+<p>An article in <a href="http://simplystatistics.org/2015/11/06/how-i-decide-when-to-trust-an-r-package/">simplystats</a> discusses this issue with reference to the proliferation of GitHub packages (those that are not available on CRAN). In this context well-regarded and experienced package creators and ‘indirect data’ such as amount of GitHub activity are also highlighted as reasons to trust a package.</p>
+<p>The websites of <a href="https://mran.revolutionanalytics.com/packages">MRAN</a> and <a href="http://www.r-pkg.org">METACRAN</a> can help the package selection process by providing further information on each package uploaded to CRAN. <a href="http://www.r-pkg.org">METACRAN</a>, for example, provides metadata about R packages via a simple API and the provision of ‘badges’ to show how many downloads a particular package has per month. Returning to the Haversine example above, we could find out how many times two packages that implement the formula are downloaded each month with the following urls:</p>
+<ul>
+<li><code>http://cranlogs.r-pkg.org/badges/last-month/geosphere</code>, downloads of <strong>geosphere</strong>:</li>
+</ul>
+<p><img src="figures/f4_3_geosphere-badge.png" width="25%" style="display: block; margin: auto;" /></p>
+<ul>
+<li><code>http://cranlogs.r-pkg.org/badges/last-month/geoPlot</code>, downloads of <strong>geoPlot</strong>:</li>
+</ul>
+<p><img src="figures/f4_4_geoPlot-badge.png" width="25%" style="display: block; margin: auto;" /></p>
+<p>It is clear from the results reported above that <strong>geosphere</strong> is by far the more popular package, so is a sensible and mature choice for dealing with distances on the Earth’s surface.</p>
+</div>
+</div>
+<div id="publication" class="section level2">
+<h2><span class="header-section-number">4.5</span> Publication</h2>
+<!-- Thought: this should be more about 'getting your work out there' than packages-->
+<p>The final stage in a typical project workflow is publication. Although it’s the final stage to be worked on, that does not mean you should only document <em>after</em> the other stages are complete: making documentation integral to your overall workflow will make this stage much easier and more efficient.</p>
+<p>Whether the final output is a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow, starting it early is a good plan. In every case the programming principles of reproducibility, modularity and DRY (don’t repeat yourself) discussed in Chapter <a href="programming.html#programming">3</a> will make your publications faster to write, easier to maintain and more useful to others.</p>
+<p>Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.</p>
+<div id="dynamic-documents-with-knitr" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Dynamic documents with knitr</h3>
+<p>When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.</p>
+<p>To overcome this inefficiency in the documentation of R outputs the <strong>knitr</strong> package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) <strong>knitr</strong> allows for documents to be generated automatically. Furthermore, <em>nothing</em> is efficient unless you can quickly redo it. Documenting your code inside dynamic documents in this ways ensures that this is the case.</p>
+<div class="rmdnote">
+<p>
+This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. RMarkdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. RMarkdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in RMarkdown.
+</p>
+</div>
+<p>Results are generated <em>on the fly</em> by including ‘code chunks’ such as that illustrated below:</p>
+<pre><code>```r
+(1:5)^2
+#&gt; [1]  1  4  9 16 25
+```</code></pre>
+<p>This code, will result in the following output when the RMarkdown document is compiled:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dv">1</span>:<span class="dv">5</span>)^<span class="dv">2</span>
+<span class="co">#&gt; [1]  1  4  9 16 25</span></code></pre></div>
+<p>The resulting output is evaluated each time the document is compiled. To tell <strong>knitr</strong> that <code>(1:5)^2</code> is R code that needs to be evaluated, it must by preceded by <code>```{r}</code> on the line before the R code, and <code>```</code> at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a .Rmd file, for example, simply enter <code>Ctrl+Alt+I</code> on Windows or Linux or select the option from the Code dropdown menu.</p>
+<p>Once your document has compiled it should appear on your screen into the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly. This is done using the <a href="https://rpubs.com">rpubs</a> website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications). Assuming you have an RStudio account, clicking the ‘Publish’ button at the top of the html output window will instantly publish your work online, with a minimum of effort, enabling fast and efficient communication with many collaborators and the public.</p>
+<p>An important advantage of dynamically documenting work this way is that when the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs. Also, if your client wants pages and pages of documented output, <strong>knitr</strong> can provide them with a minimum of typing, e.g. by creating slightly different versions of the same plot over and over again. From a delivery of content perspective, that is certainly an efficiency gain compared with hours of copying and pasting figures!</p>
+<p>If your RMarkdown documents include time-consuming processing stages, a speed boost can be attained after the first build by setting <code>opts_chunk$set(cache = TRUE)</code> in the first chunk of the document. This setting was used to reduce the build times of this book, as can be seen on <a href="https://github.com/csgillespie/efficientR/blob/master/code/before_script.R">GitHub</a>.</p>
+<p>Furthermore dynamic documents written in RMarkdown can compile into a range of output formats including html, pdf and Microsoft’s docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio’s excellent website on RMarkdown hosted at <a href="http://rmarkdown.rstudio.com/">rmarkdown.rstudio.com/</a> and, for a more detailed account of dynamic documents with R, <span class="citation">(Xie <a href="#ref-xie2015dynamic">2015</a>)</span>.</p>
+</div>
+<div id="r-packages" class="section level3">
+<h3><span class="header-section-number">4.5.2</span> R packages</h3>
+<p>A strict approach to project management and workflow is treating your projects as R packages. This approach has advantages and limitations. The major risk with treating a project as a package is that the package is quite a strict way of organising work. Packages are suited for code intensive projects where code documentation is important. An intermediate approach is to use a ‘dummy package’ that includes a DESCRIPTION file in the root directory telling users of the project which packages must be installed for the code to work. This book is based on a dummy package so that we can easily keep the dependencies up-to-date (see the book’s <a href="https://github.com/csgillespie/efficientR/blob/master/DESCRIPTION">DESCRIPTION</a> file online for an insight into how this works).</p>
+<p>Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the <strong>devools</strong> package, which is highly recommended for anyone attempting to write an R package.</p>
+<p>The number of essential elements of R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.</p>
+<ul>
+<li><p>The <a href="http://r-pkgs.had.co.nz/description.html"><code>DESCRIPTION</code></a> file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using <code>Imports:</code>. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.</p></li>
+<li><p>The <code>R/</code> folder contains all the R code that defines your package’s functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through <a href="http://r-pkgs.had.co.nz/man.html#man-workflow">Roxygen tags</a> such as <code>#' This function does this...</code> makes it easy for others to use your work. This form of efficient documentation is facilitated by the <strong>roxygen2</strong> package.</p></li>
+<li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data('data_set_name')</code>.</p></li>
+</ul>
+<p>The package <strong>testthat</strong> makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with ‘continuous integration’ services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in <span class="citation">(Cotton <a href="#ref-cotton_testing_2016">2016</a><a href="#ref-cotton_testing_2016">b</a>)</span>.</p>
+<p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>: the online version provides all you need to know about writing R packages for free (see <a href="http://r-pkgs.had.co.nz/">r-pkgs.had.co.nz/</a>).</p>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-berkun2005art">
+<p>Berkun, Scott. 2005. <em>The Art of Project Management</em>. O’Reilly Media.</p>
+</div>
+<div id="ref-kruchten2012technical">
+<p>Kruchten, Philippe, Robert L Nord, and Ipek Ozkaya. 2012. “Technical Debt: From Metaphor to Theory and Practice.” <em>IEEE Software</em>, no. 6. IEEE: 18–21.</p>
+</div>
+<div id="ref-PMBoK2000">
+<p>PMBoK, A. 2000. “Guide to the Project Management Body of Knowledge.” <em>Project Management Institute, Pennsylvania USA</em>.</p>
+</div>
+<div id="ref-Wickham_2015">
+<p>Wickham, Hadley. 2015c. <em>R Packages</em>. O’Reilly Media.</p>
+</div>
+<div id="ref-Eddelbuettel_2011">
+<p>Eddelbuettel, Dirk, Romain François, J. Allaire, John Chambers, Douglas Bates, and Kevin Ushey. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
+</div>
+<div id="ref-xie2015dynamic">
+<p>Xie, Yihui. 2015. <em>Dynamic Documents with R and Knitr</em>. Vol. 29. CRC Press.</p>
+</div>
+<div id="ref-cotton_testing_2016">
+<p>Cotton, Richard. 2016b. <em>Testing R Code</em>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="8">
+<li id="fn8"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.”<a href="workflow.html#fnref8">↩</a></p></li>
+<li id="fn9"><p>Thanks to Richard Cotton for suggesting this typology.<a href="workflow.html#fnref9">↩</a></p></li>
+<li id="fn10"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="workflow.html#fnref10">↩</a></p></li>
+<li id="fn11"><p>For a more comprehensive discussion of Gantt charts in R, please refer to <a href="http://stackoverflow.com/questions/3550341/gantt-charts-with-r">stackoverflow.com/questions/3550341</a>.<a href="workflow.html#fnref11">↩</a></p></li>
+<li id="fn12"><p>An excellent overview of the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="workflow.html#fnref12">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="programming.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="input-outpu.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/csgillespie/efficientR/edit/master/04-workflow.Rmd",
+"text": "Edit"
+},
+"download": ["_main.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

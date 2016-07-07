@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="index.html">
-<link rel="next" href="introduction.html">
+<link rel="prev" href="collaboration.html">
+<link rel="next" href="package-dependencies.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -351,32 +351,103 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p><em>Efficient R Programming</em> is about increasing the amount of work you can do with R in a given amount of time. It’s about both <em>computational</em> and <em>programmer</em> efficiency. There are many excellent R resources about topic areas such as visualisation <span class="citation">(e.g. Chang <a href="#ref-chang2012r">2012</a>)</span>, data science <span class="citation">(e.g. Grolemund and Wickham, n.d.)</span> and package development <span class="citation">(e.g. H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>. There are even more resources on how to use R in particular domains, including Bayesian Statistics, Machine Learning and Geographic Information Systems. However, there are very few unified resources on how to simply make R work effectively. Hints, tips and decades of community knowledge on the subject are scattered across hundreds of internet pages, email threads and discussion forums, making it challenging for R users to understand how to write efficient code.</p>
-<p>In our teaching we have found that this issue applies to beginners and experienced users alike. Whether it’s a question of understanding how to use R’s vector objects to avoid for loops, knowing how to set-up your <code>.Rprofile</code> and <code>.Renviron</code> files or the ability to harness R’s excellent C++ interface to do the ‘heavy lifting’, the concept of efficiency is key. The book aims to distill tips, warnings and ‘tricks of the trade’ down into a single, cohesive whole that will provide a useful resource to R programmers of all stripes for years to come.</p>
-<p>The content of the book reflects the questions that our students, from a range of disciplines, skill levels and industries, have asked over the years to make their R work faster. How to set-up my system optimally for R programming work? How can one apply general principles from Computer Science (such as do not repeat yourself, DRY) to the specifics of an R script? How can R code be incorporated into an efficient workflow, including project inception, collaboration and write-up? And how can one learn quickly how to use new packages and functions?</p>
-<p>The book answers each of these questions, and more, in 10 self-contained chapters. Each chapter starts simple and gets progressively more advanced, so there is something for everyone in each. While the more advanced topics such as parallel programming and C++ may not be immediately relevant to R beginners, the book helps to navigate R’s famously steep learning curve with a commitment to starting slow and building on strong foundations. Thus even experienced R users are likely to find previously hidden gems of advice in the early parts of the chapters. “Why did no one tell me that before?” is a common exclamation we have heard while teaching this material.</p>
-<p>Efficient programming should not be seen as an optional extra and the importance of efficiency grows with the size of projects and datasets. In fact, this book was devised while we were teaching a course on ‘R for Big Data’: it quickly became apparent that if you want to work with large datasets, your code must work efficiently. Even if you work with small datasets, efficient code, that is both fast to write <em>and</em> run is a vital component of successful R projects. We found that the concept of efficient programming is important to all branches of the R community. Whether you are a sporadic user of R (e.g. for its unbeatable range of statistical packages), looking to develop a package, or working on a large collaborative project in which efficiency is mission-critical, code efficiency will have a major impact on your productivity.</p>
-<p>Ultimately efficiency is about getting more output for less work input. To take the analogy of a car, would you rather drive 1000 km on a single tank (or a single charge of your batteries) or refuel a heavy, clunky and ugly car every 50 km? In the same way, efficient R code is better than inefficient R code in almost every way: it is easier to read, write, run, share and maintain. This book cannot provide all the answers about how to produce such code but it certainly can provide ideas, example code and tips to make a start in the right direction of travel.</p>
+<div id="learning" class="section level1">
+<h1><span class="header-section-number">10</span> Efficient learning</h1>
+<p>As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never ‘finish’ learning R. On the other hand it can make R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore <em>learning how to learn</em> is one of the most important skills to have if you want to learn R <em>in depth</em>. We emphasise <em>depth</em> of learning because it is more efficient to learn something properly than to Google it repeatedly every time we forget how it works.</p>
+<p>This chapter equips you with concepts and tips that will accelerate the transition from an R <em>hacker</em> to an R <em>programmer</em>. This inevitably involves effective use of R’s help, reading R source code and use of online material.</p>
+<div id="top-5-tips-for-efficient-learning" class="section level2">
+<h2><span class="header-section-number">10.1</span> Top 5 tips for efficient learning</h2>
+<ul>
+<li>Monitor the <a href="stackoverflow.com/questions/tagged/r">R tag</a> at stackoverflow for new questions.</li>
+<li>Read about the latest developments in the R Journal.</li>
+<li>Regularly browse R-bloggers to get an overview of the R eco-system.</li>
+<li>If asking a question, simplify your code and data as much as possible; the question should be reproducible.</li>
+<li>Subscribe (but not necessarily post) to the <code>R-devel</code> mailing list to gain a deeper insight into the R language.</li>
+</ul>
+</div>
+<div id="using-r-help" class="section level2">
+<h2><span class="header-section-number">10.2</span> Using R help</h2>
+<p>The R-project website contains seven detailed manuals about the <a href="https://cran.r-project.org/doc/manuals/r-release/R-lang.html">R language</a>, development, installation and data import. While the manuals are long, they do contain all necessary information. In particular if you are developing a package and want to submit that package to CRAN, you must confirm that you have read the <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html">extension</a> documentation.</p>
+<p>All functions have help files. For example to see the help file for <code>plot</code>, just type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or help(&quot;plot&quot;)</span>
+?plot</code></pre></div>
+<p>The resulting help page is divided into a number of sections. The most <em>helpful</em> section (I find) is the examples (at the bottom of the help page) showing precisely how the function works. You can either copy and paste the code, or actually run the example code using the <code>example</code> command:.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(plot)</code></pre></div>
+<div class="rmdnote">
+<p>
+When a package is added to CRAN, the example part of the documentation is run on all major platforms. This helps ensure that a package works on multiple systems.
+</p>
+</div>
+<p>Another useful section in the help file is <code>See Also:</code>. In the <code>plot</code> help file, it gives pointers to 3d plotting.</p>
+<p>To look for help about a certain <em>topic</em> rather than a specific <em>function</em> use <code>??topic</code>, which is analogous to <code>?function</code>. To search for information about regression in all installed packages, for example, use the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or help.search(&quot;regression&quot;)</span>
+??regression</code></pre></div>
+<p>To search more specifically for objects the <code>appropos</code> function can be useful. To search for all objects and functions in the current workspace containing the text string <code>lm</code>, for example, one would enter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Showing the first six results</span>
+<span class="co">#&gt; [1] &quot;.__C__anova.glm&quot;      &quot;.__C__anova.glm.null&quot; &quot;.__C__diagonalMatrix&quot;</span>
+<span class="co">#&gt; [4] &quot;.__C__generalMatrix&quot;  &quot;.__C__glm&quot;            &quot;.__C__glm.null&quot;</span></code></pre></div>
+<p>Sometimes a package contains vignettes. To browse any vignettes associated with a particular package, we can use the handy function</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;benchmarkme&quot;</span>)</code></pre></div>
+<div id="reading-r-source-code" class="section level3">
+<h3><span class="header-section-number">10.2.1</span> Reading R source code</h3>
+<p>R is open source. This means that we view the underlying source code and examine any function. Of course the code is complex, and diving straight into the source code won’t help that much. However, watching to the github R source code <a href="https://github.com/wch/r-source/">mirror</a> will allow you to monitor small changes that occur. This gives a nice entry point into a complex code base. Likewise examining the source of small functions, such as <code>NCOL</code> is informative, e.g. <code>getFunction(&quot;NCOL&quot;)</code></p>
+<div class="rmdtip">
+<p>
+Subscribing to the R NEWS <a href="https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/">blog</a> is an easy way of keeping track of future changes.
+</p>
+</div>
+<p>Many R packages are developed in the open on github or r-forge. Select a few well known packages and examine their source. A good package to start with is <strong><a href="https://github.com/eddelbuettel/drat">drat</a></strong>. This is a relatively simple package developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It gives you an excellent pointer into software development by one of the key R package writers.</p>
+</div>
+</div>
+<div id="online-resources" class="section level2">
+<h2><span class="header-section-number">10.3</span> Online resources</h2>
+<p>There is plenty of online help available. <a href="http://www.r-bloggers.com/">R-bloggers</a> is a blog aggregator of content contributed by bloggers who write about R (in English). It is a great way to get exposed to new and different packages. Similarly monitoring the <em><a href="https://twitter.com/search?q=%23rstats">#rstats</a></em> twitter tag keeps you up-to-date with the latest news.</p>
+<p>The <a href="https://journal.r-project.org/">R-journal</a> regularly publishes articles describing new R packages, as well as general programming hints. Similarly, the articles in the <a href="https://www.jstatsoft.org/">Journal of Statistical Software</a> have a strong R bias.</p>
+<p>There are also mailing lists, Google groups and the Stack Exchange Q &amp; A sites. Before requesting help, read a few other questions to learn the format of the site. Make sure you search previous questions so you are not duplicating work. Perhaps the most important point is that people aren’t under <strong>any</strong> obligation to answer your question. One of the fantastic things about the open-source community is that you can ask questions and one of core developers may answer your question free; but remember, everyone is busy!</p>
+<div id="stackoverflow" class="section level3">
+<h3><span class="header-section-number">10.3.1</span> Stackoverflow</h3>
+<p>The number one place on the internet for getting help on programming is <a href="http://www.stackoverflow.com">Stackoverflow</a>. This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps the content remain relevant.</p>
+<p>Questions are tagged. The R questions can be found under the <a href="http://stackoverflow.com/questions/tagged/r">R tag</a>. The <a href="https://stackoverflow.com/tags/r/info">R page</a> contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using <code>r-faq</code>, a few question that often crop up.</p>
+</div>
+<div id="mailing-lists-and-groups." class="section level3">
+<h3><span class="header-section-number">10.3.2</span> Mailing lists and groups.</h3>
+<p>There are a large number of mailing lists and Google groups focused on R and particular packages. The main list for getting help is <code>R-help</code>. This is a high volume mailing list, with around a dozen messages per day. A more technical mailing list is <code>R-devel</code>. This list is intended for questions and discussion about code development in R. The discussion on this list is very technical. However it’s a good place to be introduced to new ideas - but it’s not the place to ask about these ideas! There are many other special interest mailing <a href="https://www.r-project.org/mail.html">lists</a> covering topics such as high performance computing to ecology. Many popular packages also have their own mailing list or Google group, e.g. <strong>ggplot2</strong> and <strong>shiny</strong>. The key piece of advice is before mailing a list, read the relevant mailing archive and check that your message is appropriate.</p>
+</div>
+<div id="asking-a-question" class="section level3">
+<h3><span class="header-section-number">10.3.3</span> Asking a question</h3>
+<p>Asking questions on stackoverflow and R-help is hard. Your question should contain just enough information that you problem is clear and can be reproducible, while at the same time avoid unnecessary details. Fortunately there is a SO question - <a href="http://stackoverflow.com/q/5963269/203420">How to make a great R reproducible example?</a> - that provides excellent guidance!</p>
+<div id="minimal-data-set" class="section level4 unnumbered">
+<h4>Minimal data set</h4>
+<p>What is the smallest data set you can construct that will reproduce your issue? Your actual data set may contain <span class="math inline">\(10^5\)</span> rows and <span class="math inline">\(10^4\)</span> columns, but to get your idea across you might only need <span class="math inline">\(4\)</span> rows and <span class="math inline">\(3\)</span> columns. Making small example data sets is easy. For example, to create a data frame with two numeric columns and a column of characters just use</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+example_df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>), <span class="dt">z =</span> <span class="kw">sample</span>(LETTERS, <span class="dv">4</span>))</code></pre></div>
+<p>Note the call to <code>set.seed</code> ensures anyone who runs the code will get the same random number stream. Alternatively, you use one of the many data sets that come with R - <code>library(help=&quot;datasets&quot;)</code>.</p>
+<p>If creating an example data set isn’t possible, then use <code>dput</code> on your actual data set. This will create an ASCII text representation of the object that will enable anyone to recreate the object</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dput</span>(example_df)
+<span class="co">#&gt; structure(list(</span>
+<span class="co">#&gt;  x = c(-0.626453810742332, 0.183643324222082, -0.835628612410047, 1.59528080213779), </span>
+<span class="co">#&gt;  y = c(0.329507771815361, -0.820468384118015, 0.487429052428485, 0.738324705129217), </span>
+<span class="co">#&gt;  z = structure(c(3L, 4L, 1L, 2L), .Label = c(&quot;J&quot;, &quot;R&quot;, &quot;S&quot;, &quot;Y&quot;), class = &quot;factor&quot;)), </span>
+<span class="co">#&gt;  .Names = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;), row.names = c(NA, -4L), class = &quot;data.frame&quot;)</span></code></pre></div>
+</div>
+<div id="minimal-example" class="section level4 unnumbered">
+<h4>Minimal example</h4>
+<p>What you should not do, is simply copy and paste your entire function into your question. It’s unlikely that your entire function doesn’t work, so just simplify it the bare minimum. The aim is to target your actual issue. Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem. Before asking your question, can you run you code in a clean R environment and reproduce your error?</p>
 
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-chang2012r">
-<p>Chang, Winston. 2012. <em>R Graphics Cookbook</em>. O’Reilly Media.</p>
-</div>
-<div id="ref-Wickham_2015">
-<p>Wickham, Hadley. 2015c. <em>R Packages</em>. O’Reilly Media.</p>
 </div>
 </div>
+</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="introduction.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="collaboration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="package-dependencies.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -403,7 +474,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/csgillespie/efficientR/edit/master/index.Rmd",
+"link": "https://github.com/csgillespie/efficientR/edit/master/10-learning.Rmd",
 "text": "Edit"
 },
 "download": ["_main.pdf"],
