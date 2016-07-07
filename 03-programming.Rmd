@@ -187,7 +187,7 @@ suppose we wish to estimate the integral
 \int_0^1 x^2 dx
 \]
 using a Monte-Carlo method. Essentially, we throw darts at the curve and count
-the number of darts that fall below the curve (as in \@ref(fig:6-2)).
+the number of darts that fall below the curve (as in \@ref(fig:3-1)).
 
 _Monte Carlo Integration_
 
@@ -228,7 +228,7 @@ The `monte_carlo_vec` function contains (at least) four aspects of vectorisation
   * Using `sum` is quicker than an equivalent for loop.
 
 The function `monte_carlo_vec` is around $30$ times faster than `monte_carlo`.
-```{r 6-2, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=6, fig.height=4, fig.align="center", out.width="70%"}
+```{r 3-1, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=6, fig.height=4, fig.align="center", out.width="70%"}
 local(source("code/03-programming_f1.R", local=TRUE))
 ```
 
@@ -579,9 +579,9 @@ indeed a list.
 ## The apply family
 
 The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
-each element of an object. For example, you can apply a function to row or column of a matrix, or each element of a list. 
+each element of an object. For example, you can apply a function to each row or column of a matrix.
 A list of available functions is given in \@ref(tab:apply-family), with a short description. In
-general, the apply functions have similar properties:
+general, the all apply functions have similar properties:
 
   * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
   * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is
@@ -593,10 +593,10 @@ most R textbooks, we just give a brief introduction to the topic and provide poi
 at the end of this section.
 
 ```{block, type="rmdnote"}
-Most people rarely use the other apply functions. For example, I have only found `eapply` 
-useful once. Students in my class uploaded R scipts. Using `source`, I was able to read
+Most people rarely use the other apply functions. For example, I have only used `eapply` 
+once. Students in my class uploaded R scipts. Using `source`, I was able to read
 in the scripts to a separate environment. I then applied a marking scheme to each
-environment using `eapply`. Using separate environments, avoided name classes.
+environment using `eapply`. Using separate environments, avoided object name clashes.
 ```
 
 ```{r apply-family, echo=FALSE}
@@ -612,21 +612,22 @@ dd = tibble::frame_data(
 knitr::kable(dd, caption="The apply family of functions from base R", row.names = FALSE)
 ```
 
-The `apply` function is used to apply a function to the rows or columns of a matrix. In many data science
-problems, this is a common task. For example,
-to calculate the standard deviation of the row
+The `apply` function is used to apply a function to the each row or column of a matrix. In many data science
+problems, this is a common task. For example, to calculate the standard deviation of the row we have
 ```{r, results="hide"}
 data("ex_mat", package="efficient")
-# 1 is the maring and corresponds to rows
+# MARGIN=1: corresponds to rows
 row_sd = apply(ex_mat, 1, sd)
 ```
-The second argument is the `MARGIN`. This is a vector giving the subscripts which the function (the third argument)
+The first argument of `apply` is the object of interest. The second argument is the `MARGIN`. 
+This is a vector giving the subscripts which the function (the third argument)
 will be applied over. When the object is a matrix, a margin of `1` indicates rows and `2` indicates columns. 
 So to calculate the column standard deviations, the second argument is changed to `2` 
 ```{r, results="hide"}
 col_med = apply(ex_mat, 2, sd)
 ```
-Additional arguments can be passed to the function that is to be applied to the data, e.g.
+Additional arguments can be passed to the function that is to be applied to the data. For  example, 
+to pass the `na.rm` argument to the `sd` function, we have
 ```{r}
 row_sd = apply(ex_mat, 1, sd, na.rm=TRUE)
 ```
@@ -634,32 +635,39 @@ The `apply` function also works on higher dimensional arrays; a one dimensional 
 a two dimensional array is a matrix.
 
 The `lapply` function is similar to `apply`; the main differences are the input types are vectors or lists and the return type is
-a list. Essentially, we apply a function to each element of a list or vector. Similarly, `sapply` and `vapply`, but the return type is not necessary 
-a list.
+a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply` and `vapply` are similar
+to `lapply`, but the return type is not necessary a list.
 
 ### Example: the movies data set
 
-The internet movie [database](http://imdb.com/), is a website that collects movie data supplied 
+The internet movie [database](http://imdb.com/) is a website that collects movie data supplied 
 by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon.
-The `ggplot2movies` package contains about sixty thousand movies. Each movies 
-
+The `ggplot2movies` package contains about sixty thousand movies stored as a data frame
 
 ```{r}
 data(movies, package="ggplot2movies")
-ratings = movies[,7:16]
-means = apply(ratings, 2, mean)
-rating = 1:10
-plot(rating, means, type="l")
-sds = apply(ratings, 2, sd)
-sds
-segments(rating, means - 2*sds,  y1 = means + 2*sds)
-
 ```
-
+Movies are rated between $1$ and $10$ by fans. Columns $7$ to $16$ of the `movies` data set 
+gives the percentage of voters for a particular rating. 
 ```{r}
-rating_by_len = tapply(movies$length, movies$rating, mean)
-plot(names(rating_by_len), rating_by_len)
+ratings = movies[, 7:16]
 ```
+For example, 4.5% of voters, rated the first movie a rating of $1$
+```{r}
+ratings[1, ]
+```
+We can use the `apply` function to investigate voting patterns. The function `nnet::which.is.max` 
+finds the maximum position in a vector, but breaks ties at random; `which.max` just returns the first value.
+Using `apply`, we can easily determine the most popular rating for each movie and plot the results
+```{r, 3-2, fig.keep="last", echo=1:2, fig.height=4, fig.width=6, fig.cap="Movie voting preferences.", fig.align="center", out.width="70%"}
+popular = apply(ratings, 1, nnet::which.is.max)
+plot(table(popular))
+local(source("code/03-programming_f2.R", local=TRUE))
+```
+Figure \@{fig:3-2} highlights that voting patterns are clearly not uniform between $1$ and $10$. The
+most popular vote is the highest rating, $10$. Clearly if you went to the trouble
+of voting for a movie, it was either very good, or very bad (there is also a peak at $1$). 
+Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings.)
 
 ### Type consistency
 
@@ -948,10 +956,10 @@ microbenchmark(times=10, unit="ms", # milliseconds
 ```
 The compiled function is around seven times faster than the uncompiled function. Of
 course the native `mean` function is faster, but compiling does make a significant
-difference (figure \@ref(fig:6-4)).
+difference (figure \@ref(fig:3-3)).
 
-```{r 6-4, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparsion of mean functions.", eval=TRUE, fig.align="center", out.width="70%"}
-local(source("code/03-programming_f2.R", local=TRUE))
+```{r 3-3, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparsion of mean functions.", eval=TRUE, fig.align="center", out.width="70%"}
+local(source("code/03-programming_f3.R", local=TRUE))
 ```
 
 ### Compiling code
