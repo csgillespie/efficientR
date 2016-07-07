@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-06">
+<meta name="date" content="2016-07-07">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -608,8 +608,60 @@ Note that the above code used non standard evaluation, which means not surroundi
 <li><strong>dplyr</strong> works well with tidy data, as described above</li>
 <li><strong>dplyr</strong> works well with databases, providing efficiency gains on large datasets</li>
 </ul>
-<p>Furthermore, <strong>dplyr</strong> is efficient to <em>learn</em> (see Chapter <a href="efficient-learning.html#efficient-learning">11</a>. It has small number of intuitively named functions, or ‘verbs’. These can be used in combination with each other, and the grouping function <code>group_by()</code>, to solve a wide range of data processing challenges (see Table <a href="#tab:verbs"><strong>??</strong></a>).</p>
-<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of <strong>dplyr</strong>’s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table <a href="efficient-data-carpentry.html#tab:speed">6.5</a>.</p>
+<p>Furthermore, <strong>dplyr</strong> is efficient to <em>learn</em> (see Chapter <a href="efficient-learning.html#efficient-learning">11</a>. It has small number of intuitively named functions, or ‘verbs’. These can be used in combination with each other, and the grouping function <code>group_by()</code>, to solve a wide range of data processing challenges (see Table <a href="efficient-data-carpentry.html#tab:verbs">6.5</a>).</p>
+<table>
+<caption><span id="tab:verbs">Table 6.5: </span>dplyr verb functions.</caption>
+<thead>
+<tr class="header">
+<th align="left">dplyr function(s)</th>
+<th align="left">Description</th>
+<th align="left">Base R functions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">filter(), slice()</td>
+<td align="left">Subset rows by attribute (filter) or position (slice)</td>
+<td align="left">subset(), []</td>
+</tr>
+<tr class="even">
+<td align="left">arrange()</td>
+<td align="left">Return data ordered by variable(s)</td>
+<td align="left">sort()</td>
+</tr>
+<tr class="odd">
+<td align="left">select()</td>
+<td align="left">Subset columns</td>
+<td align="left">subset()</td>
+</tr>
+<tr class="even">
+<td align="left">rename()</td>
+<td align="left">Rename columns</td>
+<td align="left">names()</td>
+</tr>
+<tr class="odd">
+<td align="left">distinct()</td>
+<td align="left">Return unique rows</td>
+<td align="left">unique()</td>
+</tr>
+<tr class="even">
+<td align="left">mutate()</td>
+<td align="left">Create new variables (transmute drops existing variables)</td>
+<td align="left">[[]]</td>
+</tr>
+<tr class="odd">
+<td align="left">summarise()</td>
+<td align="left">Collapse data into a single row</td>
+<td align="left">aggregate()</td>
+</tr>
+<tr class="even">
+<td align="left">sample_n()</td>
+<td align="left">Return a sample of the data</td>
+<td align="left">sample()</td>
+</tr>
+</tbody>
+</table>
+<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated below, to provide a taster of <strong>dplyr</strong>’s unique syntax. By the end of this section you should be able to know exactly what is going on in each line of this code, the results of which are illustrated in table <a href="efficient-data-carpentry.html#tab:speed">6.6</a>.</p>
 <!-- __XXX__ This bit of code just appears out of nowhere. What's ghg_ems? It doesn't actually follow from the paragraph above (the final 
 sentence finishes with a full stop) -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
@@ -622,7 +674,7 @@ top_table =
             <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Mean)</code></pre></div>
 <table>
-<caption><span id="tab:speed">Table 6.5: </span>The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).</caption>
+<caption><span id="tab:speed">Table 6.6: </span>The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).</caption>
 <thead>
 <tr class="header">
 <th align="left">Country</th>
