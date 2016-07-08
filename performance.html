@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-07">
+<meta name="date" content="2016-07-08">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -267,7 +267,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.3.1</b> Getting started with <strong>profvis</strong></a></li>
 <li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#example-monopoly-simulation"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#parallel-computing"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.4.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.4.1</b> Parallel versions of apply functions</a></li>
 <li class="chapter" data-level="7.4.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.4.2</b> Example: Snakes and Ladders</a></li>
 <li class="chapter" data-level="7.4.3" data-path="performance.html"><a href="performance.html#exit-functions-with-care"><i class="fa fa-check"></i><b>7.4.3</b> Exit functions with care</a></li>
@@ -437,9 +437,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00266 0.00339 0.0513 0.00541 0.0064 4.63   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.74372 0.80371 1.0585 0.85740 1.1091 7.26   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00252 0.00334 0.0526 0.00575 0.00648 4.75   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.71915 0.80108 1.0488 0.83562 1.13962 7.28   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -598,7 +598,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 </div>
 </div>
 </div>
-<div id="parallel-computing" class="section level2">
+<div id="performance-parallel" class="section level2">
 <h2><span class="header-section-number">7.4</span> Parallel computing</h2>
 <p>This chapter provides a brief foray into the word of parallel computing and only looks at shared memory systems. The idea is to give a flavour of what is possible, instead of covering all possible varities. For a fuller account, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011">2011</a>)</span>.</p>
 <p>In recent R versions (since R 2.14.0) the <strong>parallel</strong> package comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
@@ -714,7 +714,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b35a39c58a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8ad95418a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
