@@ -166,10 +166,10 @@ identical(r1, r2)
 
 ## R version
 
-It is important to be aware that R is an evolving software project, whose behaviour changes over time. 
-This applies to an even greater extent to packages, which occasionally change substantially from one release to the next.
+It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general 
+base R is very conservative about making changes that breaks backwards compatitability. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
 For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code.
-In some circumstances (e.g. on a production server) you may alternatively want to use specific versions which have been tested,
+In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested,
 to ensure stability.
 Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich.
 This section explains how.
@@ -177,7 +177,6 @@ This section explains how.
 ```{block, packrat, type='rmdtip'}
 Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at [cran.r-project.org/bin/](https://cran.r-project.org/bin/). To download binary versions for Ubuntu 'Wily', for example, see [cran.r-project.org/bin/linux/ubuntu/wily/](https://cran.r-project.org/bin/linux/ubuntu/wily/). To 'pin' specific versions of R packages you can use the **packrat** package. For more on pinning R versions and R packages see articles on RStudio's website [Using-Different-Versions-of-R](https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R) and [rstudio.github.io/packrat/](https://rstudio.github.io/packrat/).
 ```
-
 
 ### Installing R
 
@@ -218,7 +217,6 @@ After this operation, 2,132 kB of additional disk space will be used.
 Do you want to continue? [Y/n] 
 
 ```
-
 
 R also works on FreeBSD and other Unix-based systems.^[See
 [jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
@@ -403,7 +401,7 @@ file.edit(".Rprofile") # edit project specific .Rprofile
 ```
 
 ```{block, file.path, type="rmdwarning"}
-Warning: file paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path` and `normalizePath`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
+File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path` and `normalizePath`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
 ```
 
 Editing the `.Renviron` file in the same locations will have the same effect.
