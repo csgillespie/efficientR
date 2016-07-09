@@ -249,30 +249,12 @@ A more efficient, robust and scalable way to work with large datasets is via dat
 
 Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarking to show how they compare with the plain text format `.csv` covered in the previous section.
 
-## The feather file format
+### Efficient data export: .Rdata or .Rds?
 
-Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
+Once you have read-in and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in an appropriate binary format, because this will decrease read/write times and file sizes, making your data more
+portable.^[Geographical data provides an example of the importance of saving data in native R formats. A large `.shp` or `.geojson` file, for example, can take more than ten times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
-```{r, eval=FALSE}
-library("feather")
-write_feather(df_co2, "data/co2.feather")
-df_co2_feather = read_feather("data/co2.feather")
-```
-
-```{r, engine='python', eval=FALSE}
-import feather
-import feather
-path = 'data/co2.feather'
-df_co2_feather = feather.read_dataframe(path)
-```
-
-<!-- __XXX__ Colin write something about feather in relation to Apache arrow here. -->
-
-## Efficient data export: .Rdata or .Rds?
-
-Once you have tidied you data (described in the next Section), it will hopefully be suitably ship shape to save. Beyond the raw data, which should also be saved, saving it after tidying is recommended to reduce the chance of having to run all the data cleaning code again. However, it may also make sense to save your data in a new format early on, not least because read and write speeds of proprietary formats can be very slow. A large `.shp` file, for example, can take more than ten times longer to load than a `.Rds` or `.Rdata` file.
-
-`.Rds` and `.RData` are R's native file format. This is a binary file format optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between these two (but surprisingly little known and used) file formats:
+`.Rds` and `.RData` are R's native binary file formats. These formats are optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between them:
 
 ```{r}
 save(df_co2, file = "data/co2.RData")
@@ -329,7 +311,28 @@ knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (M
 
 The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. It is striking to note that R's native formats can be **over 100 times** more space efficient than plain text (.csv) and other binary (`.feather`) formats. But how does each method compare from a computational efficiency perceptive?
 
-## A benchmark of methods for file import and export
+### The feather file format
+
+Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
+
+```{r, eval=FALSE}
+library("feather")
+write_feather(df_co2, "data/co2.feather")
+df_co2_feather = read_feather("data/co2.feather")
+```
+
+```{r, engine='python', eval=FALSE}
+import feather
+import feather
+path = 'data/co2.feather'
+df_co2_feather = feather.read_dataframe(path)
+```
+
+<!-- __XXX__ Colin write something about feather in relation to Apache arrow here. -->
+
+
+
+### A benchmark of methods for file import and export
 
 The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
 
