@@ -25,13 +25,15 @@ Before reading in a single line of data, however, it is worth considering a gene
 
 ## Efficient plain text I/O {#fread}
 
-'Plain text' data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is `.csv`, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example below, in which `textConnection()` is used as a substitute for a file name:
+'Plain text' data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is `.csv`, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example
+below:^[Note
+that `textConnection()` is used here to demonstrate the contents of a `.csv` file. Usually a file name such as `"nationalities.csv"` would be used instead.]
 
 ```{r}
 csv_file = textConnection("Person, Nationality
                            Robin, English
                            Colin, Scottish")
-df = read.csv(csv_file)
+nationalities = read.csv(csv_file)
 ```
 
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
