@@ -23,7 +23,7 @@ Before reading in a single line of data, however, it is worth considering a gene
 
 - Use `file.size()` and `object.size()` to keep track of the size of files and R objects and take action if they get too big.
 
-## Efficient plain text I/O {#fread}
+## Plain text formats {#fread}
 
 'Plain text' data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is `.csv`, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example
 below:^[Note
@@ -200,51 +200,10 @@ Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
 A more efficient, robust and scalable way to work with large datasets is via databases, covered in Section \@ref(working-with-databases) in the next chapter.
 
-## Getting data from the internet
 
-The code chunk below shows how the functions
-`download.file`^[Since
-R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
-]
-and `unzip` can be used to download and unzip a dataset from the internet.
-R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data's *provenance*, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the **efficient** package. Using R for basic file management can help create a reproducible workflow, as illustrated below.
+## Binary file formats
 
-```{r, eval=FALSE}
-url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
-download.file(url, "voc_tsvs.zip") # download file
-unzip("voc_tsvs.zip", exdir = "data") # unzip files
-file.remove("voc_tsvs.zip") # tidy up by removing the zip file
-```
-
-This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO^2^. Note that this dataset is also available from the **datasets** package.
-
-```{r, eval=FALSE}
-url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
-download.file(url, "data/co2.csv")
-df_co2 = read.csv("data/co2.csv")
-```
-```{r, echo=FALSE}
-df_co2 = read.csv("data/co2.csv")
-```
-
-There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
-The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:
-
-```{r, eval=FALSE}
-library("WDI") # load the WDI library (must be installed)
-WDIsearch("CO2") # search for data on a topic
-co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
-```
-
-There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
-
-```{r, eval=FALSE, echo=FALSE}
-# Not shown as a distraction (RL)
-# download data from nasa, as described here:
-# http://disc.sci.gsfc.nasa.gov/recipes/?q=recipes/How-to-Read-Data-in-netCDF-Format-with-R
-library("raster") # requires the ncdf4 package to be installed
-r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
-```
+Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarking to show how they compare with the plain text format `.csv covered in the previous section.
 
 ## Versatile data import with rio
 
@@ -270,30 +229,6 @@ The final line in the code chunk above shows a neat feature of **rio** and some 
 
 ```{r, results="hide", warning=FALSE}
 file.remove("output.xlsx")
-```
-
-## Accessing data stored in packages
-
-Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command `data(package = "package_name")` will show the datasets in a package. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr")`.
-
-Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all of the external files within the **readr** package, for example, one could use the following command:
-
-```{r}
-list.files(system.file("extdata", package = "readr"))
-```
-
-Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
-
-```{r, eval=FALSE}
-system.file(package = "readr")
-#> [1] "/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr"
-"/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/"
-```
-
-Hitting `Tab` after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure \@ref(fig:5-1).
-
-```{r 5-1, echo=FALSE, fig.cap="Discovering files in R packages using RStudio's 'intellisense'.", out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/f5_1_rstudio-package-filepath-intellisense.png")
 ```
 
 ## The feather file format
@@ -435,3 +370,74 @@ knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and rela
 ```
 
 The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
+
+## Getting data from the internet
+
+The code chunk below shows how the functions
+`download.file`^[Since
+R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
+]
+and `unzip` can be used to download and unzip a dataset from the internet.
+R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data's *provenance*, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the **efficient** package. Using R for basic file management can help create a reproducible workflow, as illustrated below.
+
+```{r, eval=FALSE}
+url = "https://www.monetdb.org/sites/default/files/voc_tsvs.zip"
+download.file(url, "voc_tsvs.zip") # download file
+unzip("voc_tsvs.zip", exdir = "data") # unzip files
+file.remove("voc_tsvs.zip") # tidy up by removing the zip file
+```
+
+This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO^2^. Note that this dataset is also available from the **datasets** package.
+
+```{r, eval=FALSE}
+url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
+download.file(url, "data/co2.csv")
+df_co2 = read.csv("data/co2.csv")
+```
+```{r, echo=FALSE}
+df_co2 = read.csv("data/co2.csv")
+```
+
+There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
+The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:
+
+```{r, eval=FALSE}
+library("WDI") # load the WDI library (must be installed)
+WDIsearch("CO2") # search for data on a topic
+co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
+```
+
+There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
+
+```{r, eval=FALSE, echo=FALSE}
+# Not shown as a distraction (RL)
+# download data from nasa, as described here:
+# http://disc.sci.gsfc.nasa.gov/recipes/?q=recipes/How-to-Read-Data-in-netCDF-Format-with-R
+library("raster") # requires the ncdf4 package to be installed
+r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
+```
+
+
+## Accessing data stored in packages
+
+Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command `data(package = "package_name")` will show the datasets in a package. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr")`.
+
+Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all of the external files within the **readr** package, for example, one could use the following command:
+
+```{r}
+list.files(system.file("extdata", package = "readr"))
+```
+
+Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
+
+```{r, eval=FALSE}
+system.file(package = "readr")
+#> [1] "/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr"
+"/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/"
+```
+
+Hitting `Tab` after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure \@ref(fig:5-1).
+
+```{r 5-1, echo=FALSE, fig.cap="Discovering files in R packages using RStudio's 'intellisense'.", out.width="50%", fig.align='center'}
+knitr::include_graphics("figures/f5_1_rstudio-package-filepath-intellisense.png")
+```
