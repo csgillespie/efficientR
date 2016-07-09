@@ -6,9 +6,10 @@ knit: "bookdown::preview_chapter"
 
 Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. Yet the majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it much easier for your R projects to interact with the outside world. This chapter explains how to efficiently read a wide range of datasets into R.
 
-With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue. Downloading and importing data from the web is therefore covered first. Next we briefly outline two developments for efficient data import: the **rio** package and the `.feather` data format. Benchmarks throughout the chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. The chapter finishes with an exploration of how functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages can improve load speeds when working with these files.
+The first section explains how a 'meta package',  **rio**, can be used to efficiently read and write data in a range of file formats using two simple functions. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
+With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue, making the next section on downloading and importing data from the web of great importance. Benchmarks throughout the chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. 
 
-Before reading in a single line of data, however, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
+Before reading in a single line of data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
 
 ## Top 5 tips for efficient data I/O
@@ -22,6 +23,32 @@ Before reading in a single line of data, however, it is worth considering a gene
 - Use **readr** or **data.table** versions of `read.table()` to efficiently import large text files.
 
 - Use `file.size()` and `object.size()` to keep track of the size of files and R objects and take action if they get too big.
+
+## Versatile data import with rio
+
+**rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate three of **rio**'s key functions.
+
+```{r, eval=FALSE}
+library("rio")
+# Specify a file
+fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
+# Import the file (uses the fread function from data.table)
+voyages = import(fname)
+# Export the file as an Excel spreadsheet
+export(voyages, "output.xlsx")
+```
+
+```{block, json, type='rmdtip'}
+The ability to import and use `.json` data is becoming increasingly common as it a standard output format for many APIs and the **jsonlite** and **geojsonio** packages have been developed to make this as easy as possible.
+```
+
+### Exercises {-}
+
+The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the `output.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient and non-secure file format from your system to preserve precious disk space:
+
+```{r, results="hide", warning=FALSE}
+file.remove("output.xlsx")
+```
 
 ## Plain text formats {#fread}
 
@@ -211,32 +238,6 @@ A more efficient, robust and scalable way to work with large datasets is via dat
 
 Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarking to show how they compare with the plain text format `.csv` covered in the previous section.
 
-## Versatile data import with rio
-
-**rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate three of **rio**'s key functions.
-
-```{r, eval=FALSE}
-library("rio")
-# Specify a file
-fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
-# Import the file (uses the fread function from data.table)
-voyages = import(fname)
-# Export the file as an Excel spreadsheet
-export(voyages, "output.xlsx")
-```
-
-```{block, json, type='rmdtip'}
-The ability to import and use `.json` data is becoming increasingly common as it a standard output format for many APIs and the **jsonlite** and **geojsonio** packages have been developed to make this as easy as possible.
-```
-
-### Exercises {-}
-
-The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the `output.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient and non-secure file format from your system to preserve precious disk space:
-
-```{r, results="hide", warning=FALSE}
-file.remove("output.xlsx")
-```
-
 ## The feather file format
 
 Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
@@ -419,7 +420,6 @@ There will be situations where you cannot download the data directly or when the
 library("raster") # requires the ncdf4 package to be installed
 r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
-
 
 ## Accessing data stored in packages
 
