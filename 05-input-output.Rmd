@@ -36,7 +36,15 @@ csv_file = textConnection("Person, Nationality
 nationalities = read.csv(csv_file)
 ```
 
-There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`.
+There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
+
+```{r}
+library("readr") # for read_ functions
+library("data.table") # for fread function
+df_co2 = read.csv("data/co2.csv")
+df_co2_dt = read_csv("data/co2.csv")
+df_co2_readr = fread("data/co2.csv")
+```
 
 ```{block, read-table-csv, type='rmdnote'}
 Note that a function 'derived from' another in this context means that it calls another function. The functions such as `read.csv` and `read.delim` in fact are *wrappers* for the more generic function `read.table`. This can be seen in the source code of `read.csv`, for example, which shows that the function is roughly the equivalent of `read.table(file, header = TRUE, sep = ",")`.
@@ -91,8 +99,6 @@ In some cases with R programming there is a trade-off between speed and robustne
 
 ```{r, eval=FALSE}
 library("microbenchmark")
-library("readr")
-library("data.table")
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 res_v = microbenchmark(times = 10,
   base_read = voyages_base <- read.delim(fname),
@@ -392,10 +398,7 @@ This workflow equally applies to downloading and loading single files. Note that
 ```{r, eval=FALSE}
 url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
 download.file(url, "data/co2.csv")
-df_co2 = read.csv("data/co2.csv")
-```
-```{r, echo=FALSE}
-df_co2 = read.csv("data/co2.csv")
+df_co2 = read_csv("data/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
