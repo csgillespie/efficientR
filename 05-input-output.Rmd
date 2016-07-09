@@ -26,7 +26,9 @@ Before reading in a single line of data, it is worth considering a general princ
 
 ## Versatile data import with rio
 
-**rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate three of **rio**'s key functions.
+**rio** is is a 'A Swiss-Army Knife for Data I/O', providing easy-to-use and highly performant wrapper functions for importing a range of file formats. As stated in the package's [vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html), **rio** aims to "simplify the process of importing data into R and exporting data from R." The vignette goes on to to explain how many of the functions for data I/O described in R's [Data Import/Export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) are out of date and difficult to learn.
+
+This is why **rio** is covered at the outset of this chapter: if you just want to get data into R, with a minimum of time learning new functions, there is a fair chance that **rio** can help, for many common file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate the key **rio** functions of `import()` and `export()`:
 
 ```{r, eval=FALSE}
 library("rio")
@@ -35,8 +37,17 @@ fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 # Import the file (uses the fread function from data.table)
 voyages = import(fname)
 # Export the file as an Excel spreadsheet
-export(voyages, "output.xlsx")
+export(voyages, "voc_voyages.xlsx")
 ```
+
+There was no need to specify the optional `format` argument for data import and export functions because this is inferred by the *suffix*, in the above example `.tsv` and `.xlsx` respectively. You can override the inferred file format for both functions with the `format` argument. You could, for example, create a comma-delimited file called `output.xlsx` with `export(voyages, "voc_voyages.xlsx", format = "csv")`. However, this would **not** be a good idea: it is important to ensure that a file's suffix matches it's format.
+
+To provide another example, the code chunk below downloads and imports as a data frame information about the countries of the world stored in `.json` (downloading data from the internet is covered in more detail in Section \@ref(download)):
+
+```{r, eval=FALSE}
+capitals = import("https://github.com/mledoze/countries/raw/master/countries.json")
+```
+
 
 ```{block, json, type='rmdtip'}
 The ability to import and use `.json` data is becoming increasingly common as it a standard output format for many APIs and the **jsonlite** and **geojsonio** packages have been developed to make this as easy as possible.
@@ -44,7 +55,7 @@ The ability to import and use `.json` data is becoming increasingly common as it
 
 ### Exercises {-}
 
-The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the `output.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient and non-secure file format from your system to preserve precious disk space:
+The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the `output.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient file format from your system:
 
 ```{r, results="hide", warning=FALSE}
 file.remove("output.xlsx")
@@ -378,7 +389,7 @@ knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and rela
 
 The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
-## Getting data from the internet
+## Getting data from the internet {#download}
 
 The code chunk below shows how the functions
 `download.file`^[Since
