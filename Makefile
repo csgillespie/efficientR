@@ -8,6 +8,9 @@ pdf:
 
 md:
 	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book",clean=FALSE)'
+	
+install:
+	Rscript -e 'devtools::install_github("csgillespie/efficientR")'
 
 ## For Colin, who keeps forgetting how to deploy.
 deploy:
