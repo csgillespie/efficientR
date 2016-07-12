@@ -70,11 +70,19 @@ Another useful trick is to partially order the results. For example, if you only
 to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`.
 
 ```{r, eval=FALSE, echo=FALSE}
-# Run when R is updated.
 x = matrix(rnorm(1e7), ncol=100)
 system.time({
   for(i in 1:100)
     sort(x[,i], method="radix")
+})
+
+system.time({
+  for(i in 1:100)
+    sort(x[,i], method="shell")
+})
+system.time({
+  for(i in 1:100)
+    sort(x[,i], method="quick")
 })
 system.time({
   for(i in 1:100)
