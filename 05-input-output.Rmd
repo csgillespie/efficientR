@@ -165,48 +165,68 @@ The second method is slightly less used but we recommend it. Apart from being sl
 
 Using `saveRDS` is good practice because it forces you to specify object names. If you use `save` without care, you could forget the names of the objects you saved and accidentally overwrite objects that already existed.
 
-How space efficient are these file export methods? We can explore this question using the functions `list.files` and `file.size`, as illustrated below. The results, which also show how the *relative* space saving of native R formats increase with dataset size, are shown in Table \@ref(tab:sizes).
+## Benchmarking methods for file import and export
 
-```{r}
+We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on the replicating the `co2` dataset used in the previous section, are designed to help understand *how much* more efficient they are. First we look at file size savings. Figure \@ref(fig:sizes) shows that the *relative* space saving of native R formats increase with dataset size. It is striking to note that binary `.Rds` files can be more than 100 times more space efficient than plain text `.csv` files: a 30 MB `.csv` containing replicated data from the `.co2` dataset contains the same information as  0.1 MB `.Rds` file!
+
+```{r, echo=FALSE, eval=FALSE}
 files_co2 = list.files(path = "data", pattern = "co2.", full.names = TRUE)
+files_co2 = files_co2[!grepl("RData", files_co2)] # remove RData
 filesize_co2 = data.frame(
-  Format = gsub(pattern = "data/", replacement = "", files_co2),
-  Size = file.size(files_co2) / 1000
+  Format = gsub(pattern = "data/co2.", replacement = "", files_co2),
+  size = file.size(files_co2) / 1000000,
+  size_csv = max(file.size(files_co2) / 1000000),
+  rel_size = (file.size(files_co2) / 1000000) /
+    min(file.size(files_co2) / 1000000),
+  n_row = nrow(df),
+  n_row_rel = nrow(df) / nrow(df_co2)
   )
 ```
 
 ```{r spacebench, echo=FALSE, eval=FALSE}
-filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
-filesize_co2$Size_10
+library("feather") # load feather package
+# filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
+# filesize_co2$Size_10
 
-for(i in 10^(1:3)){
+for(i in seq(500, 2000, 500)){
   size_name = paste0("Size (", i, "x)")
   relsize_name = paste0("Rel (", i, "x)")
   df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
   write.csv(df, file.path(tempdir(), "co2.csv"))
   write_feather(df, file.path(tempdir(), "co2.feather"))
-  save(df, file = file.path(tempdir(), "co2.RData"))
+  # save(df, file = file.path(tempdir(), "co2.RData"))
   saveRDS(df, file.path(tempdir(), "co2.Rds"))
-  sizes = c(
-    file.size( file.path(tempdir(), "co2.csv")),
-    file.size( file.path(tempdir(), "co2.feather")),
-    file.size( file.path(tempdir(), "co2.RData")),
-    file.size( file.path(tempdir(), "co2.Rds"))
+  files_co2 = list.files(path = tempdir(), pattern = "co2.", full.names = TRUE)
+  
+  filesize_co2_tmp = data.frame(
+  Format = gsub(pattern = paste0(tempdir(), "/co2."), replacement = "", files_co2),
+  size = file.size(files_co2) / 1000000,
+  size_csv = max(file.size(files_co2) / 1000000),
+  rel_size = (file.size(files_co2) / 1000000) /
+    min(file.size(files_co2) / 1000000),
+  n_row = nrow(df),
+  n_row_rel = nrow(df) / nrow(df_co2)
   )
-  filesize_co2[[size_name]] = sizes / 1000
-  filesize_co2[[relsize_name]] = sizes / min(sizes)
+  
+  
+  filesize_co2 = rbind(filesize_co2, filesize_co2_tmp)
+
 }
+
 saveRDS(filesize_co2, "data/filesizes.Rds")
 ```
 
-```{r sizes, echo=FALSE}
+```{r sizes, echo=FALSE, fig.cap="Absolute (MB) and relative (compared with the Rds file format) file sizes of the replicated `co2` dataset saved in various file formats. Different compression ratios can be expected for more complex datasets."}
 filesize_co2 = readRDS("data/filesizes.Rds")
-knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+# knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
+library("ggplot2")
+ggplot(filesize_co2, aes(size_csv, rel_size)) +
+  geom_line(aes(color = Format)) +
+  xlab("Size of csv file (MB)") +
+  ylab("Size relative to Rds")
 ```
 
-The results of this simple disk usage benchmark show the advantages of saving data in a compressed binary format can be great, from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. It is striking to note that R's native formats can be **over 100 times** more space efficient than plain text (.csv) and other binary (`.feather`) formats. But how does each method compare from a computational efficiency perceptive?
-
-## A benchmark of methods for file import and export
+The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive?
 
 The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
 
