@@ -4,7 +4,14 @@
 
 The book depends on the following packages:
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r is_travis, echo=FALSE}
+## Don't generate bib file on travis
+is_travis = Sys.getenv("TRAVIS")
+is_travis = (is_travis == "true")
+```
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, eval=(!is_travis)}
 desc = read.dcf("DESCRIPTION")
 headings = dimnames(desc)[[2]]
 fields = which(headings %in% c("Depends", "Imports", "Suggests"))
