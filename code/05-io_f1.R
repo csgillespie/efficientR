@@ -34,7 +34,7 @@ library("microbenchmark")
 #   message(i)
 # }
 #save(res, file="data/04-f3.RData")
-load("data/04-f3.RData")
+load("data/05-f1.RData")
 res = aggregate(time ~ cols+rows+ exp, mean, data=res)
 res$MB = res$cols*res$rows*18/1000000 ## Approximate
 res$cells = paste(res$rows, res$cols)
@@ -49,7 +49,7 @@ library("ggplot2")
 res$facet_cols = paste("No of columns:", res$cols)
 res = res[res$MB >= 0.1,]
 g = ggplot(res, aes(MB, Time)) + 
-  geom_line(aes(colour = type), size=1) + 
+  geom_line(aes(colour = type, linetype=type), size=1) + 
   facet_grid(~ facet_cols) +
   scale_x_continuous(limits=c(min(res$MB),36), expand = c(0, 0), trans="log10") + 
   theme(panel.grid.major.y = element_line(colour = "gray90"), 
@@ -66,15 +66,21 @@ g = ggplot(res, aes(MB, Time)) +
         legend.key = element_rect(fill = NA)) +
   ylab("Relative time") +  xlab("File size (MB)") + 
   scale_colour_manual(values=c(get_col(2), get_col(3), get_col(4))) + 
-  scale_y_continuous(limits=c(0,15), expand = c(0, 0)) +labs(colour = NULL)
+  scale_y_continuous(limits=c(0,15), expand = c(0, 0)) 
 g1 = g + theme(strip.background = element_rect(fill = "white"), 
           strip.text = element_text( hjust = 0.95, face="bold")) + 
-  guides(colour = guide_legend(override.aes = list(size=1)))
-print(g1)
+  guides(colour = FALSE, linetype=FALSE)
 
 
+labels = tibble::frame_data(
+  ~MB, ~Time, ~type, ~facet_cols,
+  6, 7, "base", paste("No of columns:", 2),
+  0.18, 1.5, "fread", paste("No of columns:", 2),
+  0.21, 13, "readr", paste("No of columns:", 2)
+)
 
-
+g2 = g1 + geom_text(data=labels, aes(color=type, label=type))
+print(g2)
 
 
 
