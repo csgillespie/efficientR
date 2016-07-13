@@ -2,11 +2,11 @@
 knit: "bookdown::preview_chapter"
 ---
 
-# Efficient input/output {#input-outpu}
+# Efficient input/output {#input-output}
 
-Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. Yet the majority of R resources and documentation start with the assumption that your data has already been loaded. But importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. If the process is tricky, slow or ultimately unsuccessful, this can represent a major inefficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it much easier for your R projects to interact with the outside world. This chapter explains how to efficiently read a wide range of datasets into R.
+Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. However, the majority of R resources and documentation start with the optimistic assumption that your data has already been loaded, ignoring the fact that importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. Tricky, slow or ultimately unsuccessful data I/O can cripple efficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it your R projects more likely to succeed in the outside world. With these motivations in mind, this chapter explains how to efficiently read and write data in R.
 
-The first section explains how a 'meta package',  **rio**, can be used to efficiently read and write data in a range of file formats using two simple functions. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
+The first section introduce **rio**, a 'meta package' for efficiently reading and writing data in a range of file formats, using two simple functions. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
 
 With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue, making the next section on downloading and importing data from the web of great importance. Benchmarks throughout the chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. 
 
@@ -76,8 +76,8 @@ Colin, British, Scotland
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv`; the **data.table** approach, which uses the function `fread`; and the newer **readr** package which provides `read_csv` and other `read_` functions such as `read_tsv`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
 
 ```{block, type="rmdwarning"}
-In general, you should never "hand-write" a CSV file. Instead you should use `write.csv` or an
-equivilent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt)
+In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv` or an
+equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt)
 that facilites sharing CSV files between tools and operating systems.
 ```
 
@@ -276,7 +276,7 @@ df_co2_rds = readRDS("data/co2.Rds")
 identical(df_co2, df_co2_rds)
 ```
 
-The first method is the most widely used. It uses uses the `save` function which takes any number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
+The first method is the most widely used. It uses the `save` function which takes any number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
 
 The second method is slightly less used but we recommend it. Apart from being slightly more concise for saving single R objects, the `readRDS` function is more flexible: as shown in the subsequent line, the resulting object can be assigned to any name. In this case we called it `df_co2_rds` (which we show to be identical to `df_co2`, loaded with the `load` command) but we could have called it anything or simply printed it to the console.
 
@@ -362,7 +362,7 @@ ggplot(filesize_co2, aes(size_csv, rel_size)) +
   ylab("Size relative to Rds")
 ```
 
-The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive?
+The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive?
 
 The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
 
@@ -469,7 +469,7 @@ r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 
 Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command `data(package = "package_name")` will show the datasets in a package. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr")`.
 
-Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all of the external files within the **readr** package, for example, one could use the following command:
+Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file` outputs file paths associated with specific packages. To see all the external files within the **readr** package, for example, one could use the following command:
 
 ```{r}
 list.files(system.file("extdata", package = "readr"))
