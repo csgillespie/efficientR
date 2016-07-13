@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.0.80 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-12">
+<meta name="date" content="2016-07-13">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -398,17 +398,12 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 </div>
 <div id="fread" class="section level2">
 <h2><span class="header-section-number">5.3</span> Plain text formats</h2>
-<p>‘Plain text’ data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is <code>.csv</code>, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example below:<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></p>
-<!-- __XXX__ I think I would skip the textConnection & read.csv here. Just -->
-<!-- give the three lines showing a csv file -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">csv_file =<span class="st"> </span><span class="kw">textConnection</span>(<span class="st">&quot;Person, Nationality</span>
-<span class="st">                           Robin, English</span>
-<span class="st">                           Colin, Scottish&quot;</span>)
-nationalities =<span class="st"> </span><span class="kw">read.csv</span>(csv_file)</code></pre></div>
+<p>‘Plain text’ data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is <code>.csv</code>, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example below:</p>
+<p>Person, Nationality, Country of Birth Robin, British, England Colin, British, Scotland</p>
 <p>There is often more than one way to read data into R and <code>.csv</code> files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R’s plain text reading functions such as <code>read.csv</code>; the <strong>data.table</strong> approach, which uses the function <code>fread</code>; and the newer <strong>readr</strong> package which provides <code>read_csv</code> and other <code>read_</code> functions such as <code>read_tsv</code>. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO<sup>2</sup> in the atmosphere over time:</p>
 <div class="rmdwarning">
 <p>
-In general, you should never “hand-write” a CSV file. Instead you should use <code>write.csv</code> or equivilent. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilites sharing CSV files between tools and operating systems.
+In general, you should never “hand-write” a CSV file. Instead you should use <code>write.csv</code> or an equivilent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilites sharing CSV files between tools and operating systems.
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)
@@ -416,22 +411,22 @@ df_co2_dt =<span class="st"> </span>readr::<span class="kw">read_csv</span>(<spa
 df_co2_readr =<span class="st"> </span>data.table::<span class="kw">fread</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
 <div class="rmdnote">
 <p>
-Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv</code> and <code>read.delim</code> in fact are <em>wrappers</em> for the more generic function <code>read.table</code>. This can be seen in the source code of <code>read.csv</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = “,”)</code>.
+Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv</code> and <code>read.delim</code> in fact are <em>wrappers</em> around <code>read.table</code>. This can be seen in the source code of <code>read.csv</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = “,”)</code>.
 </p>
 </div>
 <p>Although this section is focussed on reading text files, it demonstrate the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantages of addition package dependency (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that <em>require</em> a certain package to load in R: the <strong>readstata13</strong> package, for example, was developed solely to read in <code>.dta</code> files generated by versions of Stata 13 and above.</p>
-<p>Figure <a href="input-outpu.html#fig:readr-vs-base">5.1</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around <span class="math inline">\(1\)</span> MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
+<p>Figure <a href="input-outpu.html#fig:5-1">5.1</a> demonstrates that the relative performance gains of the <strong>data.table</strong> and <strong>readr</strong> approaches increase with data size, especially so for data with many rows. Below around <span class="math inline">\(1\)</span> MB <code>read.delim</code> is actually <em>faster</em> than <code>read_csv</code> while <code>fread</code> is much faster than both, although these savings are likely to be inconsequential for such small datasets.</p>
 <p>For files beyond <span class="math inline">\(100\)</span> MB in size <code>fread</code> and <code>read_csv</code> can be expected to be around <em>5 times faster</em> than <code>read.delim</code>. This efficiency gain may be inconsequential for a one-off file of <span class="math inline">\(100\)</span> MB running on a fast computer (which still takes less than a minute with <code>read.csv</code>), but could represent an important speed-up if you frequently load large text files.</p>
-<div class="figure" style="text-align: center"><span id="fig:readr-vs-base"></span>
-<img src="_main_files/figure-html/readr-vs-base-1.png" alt="Benchmarks of `base`, `data.table` and `readr` functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file." width="70%" />
+<div class="figure" style="text-align: center"><span id="fig:5-1"></span>
+<img src="_main_files/figure-html/5-1-1.png" alt="Benchmarks of **base**, **data.table** and **readr** functions for reading csv files. The facets ranging from $2$ to $200$ represent the number of columns in the csv file." width="90%" />
 <p class="caption">
-Figure 5.1: Benchmarks of <code>base</code>, <code>data.table</code> and <code>readr</code> functions for reading csv files. The facets ranging from 2 to 200 represent the number of columns in the csv file.
+Figure 5.1: Benchmarks of <strong>base</strong>, <strong>data.table</strong> and <strong>readr</strong> functions for reading csv files. The facets ranging from <span class="math inline">\(2\)</span> to <span class="math inline">\(200\)</span> represent the number of columns in the csv file.
 </p>
 </div>
-<p>When tested on a large (<span class="math inline">\(4\)</span> GB) .csv file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around 5 times longer. This consumed more than 10 GB of RAM, making it unsuitable to run on many computers (see Section <a href="hardware.html#ram">8.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in <code>?read.table</code>.</p>
+<p>When tested on a large (<span class="math inline">\(4\)</span>GB) <code>.csv</code> file it was found that <code>fread</code> and <code>read_csv</code> were almost identical in load times and that <code>read.csv</code> took around <span class="math inline">\(5\)</span> times longer. This consumed more than <span class="math inline">\(10\)</span>GB of RAM, making it unsuitable to run on many computers (see Section <a href="hardware.html#ram">8.3</a> for more on memory). Note that both <strong>readr</strong> and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in <code>?read.table</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.csv</span>(file_name, <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>))</code></pre></div>
 <!-- Idea: test the functions on text data -->
-<p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="input-outpu.html#tab:voyages">5.1</a> shows that <code>read_tsv</code> is around <span class="math inline">\(3\)</span> times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="input-outpu.html#fig:readr-vs-base">5.1</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
+<p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Table <a href="input-outpu.html#tab:voyages">5.1</a> shows that <code>read_tsv</code> is around <span class="math inline">\(3\)</span> times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure <a href="input-outpu.html#fig:5-1">5.1</a>). This is a small (1 MB) dataset: the relative difference between <code>fread</code> and <code>read_</code> functions will tend to decrease as dataset size increases.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
@@ -495,9 +490,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 10.4 10.4 10.5   10.4 10.6 10.7     5</span>
-<span class="co">#&gt;  without_select 18.9 18.9 19.1   19.1 19.2 19.5     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.96 10.7 10.8   11.0 11.1 11.4     5</span>
+<span class="co">#&gt;  without_select 18.11 18.6 18.9   18.9 19.3 19.6     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-outpu.html#tab:colclasses">5.2</a>.</p>
 <div class="rmdnote">
 <p>
@@ -558,7 +553,7 @@ The file <code>voc_voyages</code> was taken from a dataset on Dutch naval expedi
 </div>
 <div id="binary-file-formats" class="section level2">
 <h2><span class="header-section-number">5.4</span> Binary file formats</h2>
-<p>Once you have read-in (e.g. from a plain text file) and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more portable.<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a></p>
+<p>Once you have read-in (e.g. from a plain text file) and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more portable.<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></p>
 <p>Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R’s native file format, <code>.Rds</code>, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarks to show how they compare with the plain text format <code>.csv</code> covered in the previous section.</p>
 <div id="native-binary-formats-rdata-or-rds" class="section level3">
 <h3><span class="header-section-number">5.4.1</span> Native binary formats: Rdata or Rds?</h3>
@@ -725,7 +720,7 @@ Figure 5.2: Absolute (MB) and relative (compared with the Rds file format) file 
 </div>
 <div id="download" class="section level2">
 <h2><span class="header-section-number">5.6</span> Getting data from the internet</h2>
-<p>The code chunk below shows how the functions <code>download.file</code><a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a> and <code>unzip</code> can be used to download and unzip a dataset from the internet. R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the <code>data</code> directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data’s <em>provenance</em>, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the <strong>efficient</strong> package. Using R for basic file management can help create a reproducible workflow, as illustrated below.</p>
+<p>The code chunk below shows how the functions <code>download.file</code><a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> and <code>unzip</code> can be used to download and unzip a dataset from the internet. R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the <code>data</code> directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data’s <em>provenance</em>, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the <strong>efficient</strong> package. Using R for basic file management can help create a reproducible workflow, as illustrated below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://www.monetdb.org/sites/default/files/voc_tsvs.zip&quot;</span>
 <span class="kw">download.file</span>(url, <span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># download file</span>
 <span class="kw">unzip</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>, <span class="dt">exdir =</span> <span class="st">&quot;data&quot;</span>) <span class="co"># unzip files</span>
@@ -752,8 +747,8 @@ co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class=
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
 <span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span>
 <span class="st">&quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/&quot;</span></code></pre></div>
-<p>Hitting <code>Tab</code> after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure <a href="input-outpu.html#fig:5-1">5.3</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:5-1"></span>
+<p>Hitting <code>Tab</code> after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure <a href="input-outpu.html#fig:5-3">5.3</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:5-3"></span>
 <img src="figures/f5_1_rstudio-package-filepath-intellisense.png" alt="Discovering files in R packages using RStudio's 'intellisense'." width="50%" />
 <p class="caption">
 Figure 5.3: Discovering files in R packages using RStudio’s ‘intellisense’.
@@ -767,9 +762,8 @@ Figure 5.3: Discovering files in R packages using RStudio’s ‘intellisense’
 <div class="footnotes">
 <hr />
 <ol start="13">
-<li id="fn13"><p>Note that <code>textConnection()</code> is used here to demonstrate the contents of a <code>.csv</code> file. Usually a file name such as <code>&quot;nationalities.csv&quot;</code> would be used instead.<a href="input-outpu.html#fnref13">↩</a></p></li>
-<li id="fn14"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than 100 times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-outpu.html#fnref14">↩</a></p></li>
-<li id="fn15"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="input-outpu.html#fnref15">↩</a></p></li>
+<li id="fn13"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than 100 times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-outpu.html#fnref13">↩</a></p></li>
+<li id="fn14"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="input-outpu.html#fnref14">↩</a></p></li>
 </ol>
 </div>
             </section>
