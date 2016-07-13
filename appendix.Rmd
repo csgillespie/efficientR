@@ -13,6 +13,8 @@ pkgs = gsub("\n", " ", pkgs)
 pkgs = strsplit(pkgs, ",")[[1]]
 pkgs = gsub(" ", "", pkgs)
 pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
+pkgs = c(pkgs, "rio") # issues insalling rio on travis
+pkgs = unique(pkgs)
 
 pkgs = pkgs[order(pkgs)]
 pkgs_df = data.frame(Name = pkgs, Title = NA, cite=NA)
