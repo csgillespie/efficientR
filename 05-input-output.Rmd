@@ -99,7 +99,7 @@ Figure \@ref(fig:5-1) demonstrates that the relative performance gains of the **
 
 For files beyond $100$ MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.delim`. This efficiency gain may be inconsequential for a one-off file of $100$ MB running on a fast computer (which still takes less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
-```{r 5-1, fig.cap="Benchmarks of **base**, **data.table** and **readr** functions for reading csv files. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.", echo=FALSE, fig.height=4, fig.width=6,warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
+```{r 5-1, fig.cap="Benchmarks of **base**, **data.table** and **readr** functions for reading csv files. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
 local(source("code/05-io_f1.R", local=TRUE))
 ```
 
@@ -304,7 +304,7 @@ df_co2_feather = feather.read_dataframe(path)
 
 We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on a large data frame containing numbers with $20$ columns, are designed to help understand *how much* more efficient they are. First we look at file size savings. Figure \@ref(fig:5-2) shows that the *relative* space saving of native R formats increase with dataset size. It is striking to note that binary `.Rds` files can be more than $100$ times more space efficient than plain text `.csv` files: a $30$MB `.csv` file contains the same information as $0.1$MB `.Rds` file!
 
-```{r 5-2, echo=FALSE, fig.cap="Comparison of binary formats using a 20 column CSV file."}
+```{r 5-2, echo=FALSE, fig.cap="Comparison of binary formats using a 20 column CSV file.", out.width="90%", fig.align="center", message=FALSE}
 local(source("code/05-io_f2.R", local=TRUE))
 ```
 
@@ -367,10 +367,9 @@ list.files(system.file("extdata", package = "readr"))
 
 Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
 
-```{r, eval=FALSE}
+```{r, results="hide"}
 system.file(package = "readr")
 #> [1] "/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr"
-"/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/"
 ```
 
 Hitting `Tab` after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure \@ref(fig:5-3).
