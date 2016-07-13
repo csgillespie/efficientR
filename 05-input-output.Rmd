@@ -256,11 +256,10 @@ Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
 A more efficient, robust and scalable way to work with large datasets is via databases, covered in Section \@ref(working-with-databases) in the next chapter.
 
-
 ## Binary file formats
 
 Once you have read-in (e.g. from a plain text file) and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
-portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than 100 times longer to load than an equivalent `.Rds` or `.Rdata` file.]
+portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
 Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
 
@@ -276,7 +275,7 @@ df_co2_rds = readRDS("data/co2.Rds")
 identical(df_co2, df_co2_rds)
 ```
 
-The first method is the most widely used. It uses uses the `save` function which takes any number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
+The first method is the most widely used. It uses uses the `save` function which takes **any** number of R objects and writes them to a file, which must be specified by the `file =` argument. `save` is like `save.image`, which saves *all* the objects currently loaded in R.
 
 The second method is slightly less used but we recommend it. Apart from being slightly more concise for saving single R objects, the `readRDS` function is more flexible: as shown in the subsequent line, the resulting object can be assigned to any name. In this case we called it `df_co2_rds` (which we show to be identical to `df_co2`, loaded with the `load` command) but we could have called it anything or simply printed it to the console.
 
@@ -303,124 +302,15 @@ df_co2_feather = feather.read_dataframe(path)
 
 ### Benchmarking binary file formats
 
-We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on the replicating the `co2` dataset used in the previous section, are designed to help understand *how much* more efficient they are. First we look at file size savings. Figure \@ref(fig:sizes) shows that the *relative* space saving of native R formats increase with dataset size. It is striking to note that binary `.Rds` files can be more than 100 times more space efficient than plain text `.csv` files: a 30 MB `.csv` containing replicated data from the `.co2` dataset contains the same information as  0.1 MB `.Rds` file!
+We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on a large data frame containing numbers with $20$ columns, are designed to help understand *how much* more efficient they are. First we look at file size savings. Figure \@ref(fig:5-2) shows that the *relative* space saving of native R formats increase with dataset size. It is striking to note that binary `.Rds` files can be more than $100$ times more space efficient than plain text `.csv` files: a $30$MB `.csv` file contains the same information as $0.1$MB `.Rds` file!
 
-```{r, echo=FALSE, eval=FALSE}
-files_co2 = list.files(path = "data", pattern = "co2.", full.names = TRUE)
-files_co2 = files_co2[!grepl("RData", files_co2)] # remove RData
-filesize_co2 = data.frame(
-  Format = gsub(pattern = "data/co2.", replacement = "", files_co2),
-  size = file.size(files_co2) / 1000000,
-  size_csv = max(file.size(files_co2) / 1000000),
-  rel_size = (file.size(files_co2) / 1000000) /
-    min(file.size(files_co2) / 1000000),
-  n_row = nrow(df),
-  n_row_rel = nrow(df) / nrow(df_co2)
-  )
+```{r 5-2, echo=FALSE, fig.cap="Comparison of binary formats using a 20 column CSV file."}
+local(source("code/05-io_f2.R", local=TRUE))
 ```
 
-```{r spacebench, echo=FALSE, eval=FALSE}
-library("feather") # load feather package
-# filesize_co2$`Rel` = filesize_co2$Size / min(filesize_co2$Size)
-# filesize_co2$Size_10
+The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure \@ref(fig:5-2).
 
-for(i in seq(500, 2000, 500)){
-  size_name = paste0("Size (", i, "x)")
-  relsize_name = paste0("Rel (", i, "x)")
-  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
-  write.csv(df, file.path(tempdir(), "co2.csv"))
-  write_feather(df, file.path(tempdir(), "co2.feather"))
-  # save(df, file = file.path(tempdir(), "co2.RData"))
-  saveRDS(df, file.path(tempdir(), "co2.Rds"))
-  files_co2 = list.files(path = tempdir(), pattern = "co2.", full.names = TRUE)
-  
-  filesize_co2_tmp = data.frame(
-  Format = gsub(pattern = paste0(tempdir(), "/co2."), replacement = "", files_co2),
-  size = file.size(files_co2) / 1000000,
-  size_csv = max(file.size(files_co2) / 1000000),
-  rel_size = (file.size(files_co2) / 1000000) /
-    min(file.size(files_co2) / 1000000),
-  n_row = nrow(df),
-  n_row_rel = nrow(df) / nrow(df_co2)
-  )
-  
-  
-  filesize_co2 = rbind(filesize_co2, filesize_co2_tmp)
-
-}
-
-saveRDS(filesize_co2, "data/filesizes.Rds")
-```
-
-```{r sizes, echo=FALSE, fig.cap="Absolute (MB) and relative (compared with the Rds file format) file sizes of the replicated `co2` dataset saved in various file formats. Different compression ratios can be expected for more complex datasets."}
-filesize_co2 = readRDS("data/filesizes.Rds")
-# knitr::kable(filesize_co2, digits = 1, row.names = FALSE, caption = "Absolute (MB) and relative (compared with the smallest size for each column) disk usage for the 3 column, 468 row 'co2' dataset, saved in different formats. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
-library("ggplot2")
-ggplot(filesize_co2, aes(size_csv, rel_size)) +
-  geom_line(aes(color = Format)) +
-  xlab("Size of csv file (MB)") +
-  ylab("Size relative to Rds")
-```
-
-The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive?
-
-The read and write times for the functions showcased above are presented in Table \@ref(tab:rtimes) and Table \@ref(tab:wtimes) respectively.
-
-```{r, echo=FALSE, eval=FALSE}
-# Create data frame for reporting read/write times
-wtimes = data.frame(
-  Function = c("write.csv", "save_feather", "save", "saveRDS"))
-rtimes = rtimes = data.frame(
-  Function = c("read.csv", "read_feather", "load", "readRDS"))
-
-# Benchmark read/write times
-library("microbenchmark")
-
-for(i in 10^(0:3)){
-  time_name = paste0("Time (", i, "x)")
-  reltime_name = paste0("Rel (", i, "x)")
-  df = do.call("rbind", replicate(i, df_co2, simplify = FALSE))
-  times_w = c(
-  summary(microbenchmark(write.csv(df, file.path(tempdir(), "co2.csv")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(write_feather(df, file.path(tempdir(), "co2.feather")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(save(df, file = file.path(tempdir(), "co2.RData")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(saveRDS(df, file.path(tempdir(), "co2.Rds")),
-                         unit = "ms", times = 10))$mean
-  )
-  times_r = c(
-  summary(microbenchmark(read.csv(file.path(tempdir(), "co2.csv")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(read_feather(file.path(tempdir(), "co2.feather")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(load(file.path(tempdir(), "co2.RData")),
-                         unit = "ms", times = 10))$mean,
-  summary(microbenchmark(readRDS(file.path(tempdir(), "co2.Rds")),
-                         unit = "ms", times = 10))$mean
-)
-  wtimes[[time_name]] = times_w 
-  wtimes[[reltime_name]] = times_w / min(times_w)
-  rtimes[[time_name]] = times_r 
-  rtimes[[reltime_name]] = times_r / min(times_r)
-}
-names(rtimes) = names(wtimes) = gsub(" \\(1x\\)", "", names(wtimes))
-saveRDS(rtimes, "data/rtimes.Rds")
-saveRDS(wtimes, "data/wtimes.Rds")
-```
-
-```{r rtimes, echo=FALSE}
-rtimes = readRDS("data/rtimes.Rds")
-knitr::kable(rtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
-```
-
-```{r wtimes, echo=FALSE}
-wtimes = readRDS("data/wtimes.Rds")
-knitr::kable(wtimes, digits = 1, row.names = FALSE, caption = "Absolute and relative (compared with the smallest size for each column) write times for the 3 column, 468 row 'co2' dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.")
-```
-
-The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native functions for saving `.Rds` and `.RData` formats, for the datasets used in the benchmark. `write_feather` is also faster than `save` and `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
+The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native `.Rds`  format, for the datasets used in the benchmark. `write_feather` is also faster than `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
 
 ## Getting data from the internet {#download}
 
