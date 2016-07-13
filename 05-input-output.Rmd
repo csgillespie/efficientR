@@ -114,81 +114,55 @@ made significantly faster by pre-specifying the column types at the outset (see 
 read.csv(file_name, colClasses = c("numeric", "numeric"))
 ```
 
-In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around $3$ times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:5-1)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
+In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Figure \@ref(fig:5-1) highlights 
+that as the dataset size increases, the benefit of switching to `fread` and (eventually) to `read_csv` . For a small ($1$MB) dataset: 
+`fread` is around $5$ times faster than base R.
 
-```{r, eval=FALSE}
-library("microbenchmark")
-library("readr")
-library("data.table")
-fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
-res_v = microbenchmark(times = 10,
-  base_read = voyages_base <- read.delim(fname),
-  readr_read = voyages_readr <- read_tsv(fname),
-  dt_fread = voyages_dt <- fread(fname))
-```
+### Differences between `fread` and `read_csv`
 
-```{r, echo=FALSE}
-# saveRDS(res_v, "data/res_v.Rds") # re-save if updated
-res_v = readRDS("data/res_v.Rds")
-```
+The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is dscribed more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
 
-```{r voyages-pre, echo=FALSE, results='hide', warning=FALSE}
-# Running results here (not in benchmark) for fast build
-library("microbenchmark")
-library("readr")
-library("data.table")
+```{r, cache=TRUE}
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 voyages_base = read.delim(fname)
-voyages_readr = read_tsv(fname)
-voyages_dt = fread(fname)
-df = print(res_v)
-df = dplyr::select(df, Function = expr, min, mean, max)
-df[2:ncol(df)] = df[2:ncol(df)] / df$mean[3]
 ```
 
-<!-- __XXX__ I would drop the table below and just quote the numbers in the text as needed. -->
-<!-- The numbers are in the figure anyway. -->
-```{r voyages, echo=FALSE}
-knitr::kable(df, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset relative to the mean execution time of `fread`, around 0.02 seconds on a modern computer.", digits = 1)
+When we run the equilivent operation using **readr**, 
+```{r, cache=TRUE}
+voyages_readr = readr::read_tsv(fname)
 ```
-
-The benchmark above produces warning messages (not shown) for the `read_tsv` and `fread` functions but not the slowest base function `read.delim`. An exploration of these functions can shed light on the speed/robustness trade-off.
-
-- The **readr** function `read_csv` generates a warning for row 2841 in the `built` variable.
-This is because `read_*()` decides what class each variable is based on the first 1000 rows, rather than all rows, as base `read.*` functions do.
-
-As illustrated by printing the result for the row which generated a warning, the `read_tsv` output is more sensible than the `read.delim` output: `read.delim` coerced the date field into a factor based on a single entry which is a text. `read_tsv` coerced the variable into a numeric vector, as illustrated below. 
+a warning is raised regarding  row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*` functions do. Printing the offending element
 
 ```{r}
-class(voyages_base$built) # coerced to a factor
-class(voyages_readr$built) # numeric based on first 1000 rows
-voyages_base$built[2841] # contains the text responsible for coercion
+voyages_base$built[2841] # a factor.
 voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 ```
 
-- The **data.table** function `fread` generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread` automatically converts any columns it thought of as numeric into characters. An additional feature of `fread` is that it can read-in a selection of the columns, either by their index or name, using the `select` argument. This is illustrated below by reading in only half (the first 11) columns from the voyages dataset and comparing the result with `fread`'ing all the columns in.
+Reading the file using **data.table** 
+```{r, warning=FALSE}
+# Verbose warnings not shown
+voyages_dt = data.table::fread(fname)
+```
+
+generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread` automatically converts any columns it thought of as numeric into characters. An additional feature of `fread` is that it can read-in a selection of the columns, either by their index or name, using the `select` argument. This is illustrated below by reading in only half (the first 11) columns from the voyages dataset and comparing the result with `fread`'ing all the columns in.
 
 ```{r, warning=FALSE}
 microbenchmark(times = 5,
-  with_select = fread(fname, select = 1:11),
-  without_select = fread(fname)
-  )
+  with_select = data.table::fread(fname, select = 1:11),
+  without_select = data.table::fread(fname)
+)
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv` and `fread` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
-
-```{block, dutch-data, type='rmdnote'}
-The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is dscribed more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
-```
 
 ```{r colclasses, echo=FALSE}
 vcols = as.data.frame(rbind(
   sapply(voyages_base, class),
   sapply(voyages_readr, class),
   sapply(voyages_dt, class)))
-vcols = cbind(df[1], vcols)
-vcols = dplyr::select(vcols, Function, number, boatname, built, departure_date)
-knitr::kable(vcols, caption = "Execution time of base, **readr** and **data.table** functions for reading in a 1 MB dataset")
+vcols = dplyr::select(vcols, number, boatname, built, departure_date)
+vcols$Function = c("base", "readr", "data.table")
+knitr::kable(vcols, caption = "Comparison of base, **readr** and **data.table** reading in the voyages data set.")
 ```
 
 Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
