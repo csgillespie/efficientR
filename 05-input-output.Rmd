@@ -114,32 +114,6 @@ made significantly faster by pre-specifying the column types at the outset (see 
 read.csv(file_name, colClasses = c("numeric", "numeric"))
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-# This script illustrates the download and processing of a massive (~4 Gb) csv file
-# Aim is to test read times on large datasets
-url = "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
-
-# download a large dataset - don't run
-download.file(url, "data/largefile.zip")
-# unzip the compressed file, measure time
-system.time( 
-  unzip("data/largefile.zip", exdir = "data")
-  )
-##    user  system elapsed 
-##  34.380  22.428 193.145
-
-bigfile = "data/npidata_20050523-20150809.csv"
-file.info(bigfile) # file info (not all shown)
-##       size: 5647444347
-
-system.time(df1 = read.csv(bigfile))
-system.time(df2 = fread(bigfile))
-system.time(df3 = read_csv(bigfile))
-## Error (from 32 bit machine): cannot allocate vector of 32.0 Mb
-```
-
-<!-- Idea: test the functions on text data -->
-
 In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Table \@ref(tab:voyages) shows that `read_tsv` is around $3$ times faster, re-enforcing the point that the benefits of efficient functions increase with dataset size (made with Figure \@ref(fig:5-1)). This is a small (1 MB) dataset: the relative difference between `fread` and `read_` functions will tend to decrease as dataset size increases.
 
 ```{r, eval=FALSE}
