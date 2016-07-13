@@ -495,9 +495,9 @@ voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text
   <span class="dt">without_select =</span> <span class="kw">fread</span>(fname)
   )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
-<span class="co">#&gt;     with_select  9.36  9.49  9.61   9.59  9.63  9.97     5</span>
-<span class="co">#&gt;  without_select 16.48 16.77 16.99  16.82 17.42 17.45     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select 10.5 10.6 10.7   10.7 10.8 10.8     5</span>
+<span class="co">#&gt;  without_select 19.0 19.3 19.7   19.4 20.4 20.4     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.2</a>.</p>
 <div class="rmdnote">
 <p>
@@ -587,140 +587,15 @@ df_co2_feather <span class="op">=</span> feather.read_dataframe(path)</code></pr
 <!-- __XXX__ Colin write something about feather in relation to Apache arrow here. -->
 <div id="benchmarking-binary-file-formats" class="section level3">
 <h3><span class="header-section-number">5.5.1</span> Benchmarking binary file formats</h3>
-<p>We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on the replicating the <code>co2</code> dataset used in the previous section, are designed to help understand <em>how much</em> more efficient they are. First we look at file size savings. Figure <a href="input-output.html#fig:sizes">5.2</a> shows that the <em>relative</em> space saving of native R formats increase with dataset size. It is striking to note that binary <code>.Rds</code> files can be more than 100 times more space efficient than plain text <code>.csv</code> files: a 30 MB <code>.csv</code> containing replicated data from the <code>.co2</code> dataset contains the same information as 0.1 MB <code>.Rds</code> file!</p>
-<div class="figure" style="text-align: center"><span id="fig:sizes"></span>
-<img src="_main_files/figure-html/sizes-1.png" alt="Absolute (MB) and relative (compared with the Rds file format) file sizes of the replicated `co2` dataset saved in various file formats. Different compression ratios can be expected for more complex datasets." width="672" />
+<p>We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on a large data frame containing numbers with <span class="math inline">\(20\)</span> columns, are designed to help understand <em>how much</em> more efficient they are. First we look at file size savings. Figure <a href="input-output.html#fig:5-2">5.2</a> shows that the <em>relative</em> space saving of native R formats increase with dataset size. It is striking to note that binary <code>.Rds</code> files can be more than <span class="math inline">\(100\)</span> times more space efficient than plain text <code>.csv</code> files: a <span class="math inline">\(30\)</span>MB <code>.csv</code> file contains the same information as <span class="math inline">\(0.1\)</span>MB <code>.Rds</code> file!</p>
+<div class="figure" style="text-align: center"><span id="fig:5-2"></span>
+<img src="_main_files/figure-html/5-2-1.png" alt="Comparison of binary formats using a 20 column CSV file." width="90%" />
 <p class="caption">
-Figure 5.2: Absolute (MB) and relative (compared with the Rds file format) file sizes of the replicated <code>co2</code> dataset saved in various file formats. Different compression ratios can be expected for more complex datasets.
+Figure 5.2: Comparison of binary formats using a 20 column CSV file.
 </p>
 </div>
-<p>The results of this simple disk usage benchmark show that saving data in a compressed binary format can improve efficiency from hard-disk and, if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive?</p>
-<p>The read and write times for the functions showcased above are presented in Table <a href="input-output.html#tab:rtimes">5.3</a> and Table <a href="input-output.html#tab:wtimes">5.4</a> respectively.</p>
-<table>
-<caption><span id="tab:rtimes">Table 5.3: </span>Absolute and relative (compared with the smallest size for each column) read times for the 3 column, 468 row ‘co2’ dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
-<thead>
-<tr class="header">
-<th align="left">Function</th>
-<th align="right">Time</th>
-<th align="right">Rel</th>
-<th align="right">Time (10x)</th>
-<th align="right">Rel (10x)</th>
-<th align="right">Time (100x)</th>
-<th align="right">Rel (100x)</th>
-<th align="right">Time (1000x)</th>
-<th align="right">Rel (1000x)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">read.csv</td>
-<td align="right">1.8</td>
-<td align="right">15.1</td>
-<td align="right">13.1</td>
-<td align="right">110.8</td>
-<td align="right">141.5</td>
-<td align="right">250.7</td>
-<td align="right">1639.3</td>
-<td align="right">450.0</td>
-</tr>
-<tr class="even">
-<td align="left">read_feather</td>
-<td align="right">0.1</td>
-<td align="right">1.0</td>
-<td align="right">0.1</td>
-<td align="right">1.0</td>
-<td align="right">0.6</td>
-<td align="right">1.0</td>
-<td align="right">3.6</td>
-<td align="right">1.0</td>
-</tr>
-<tr class="odd">
-<td align="left">load</td>
-<td align="right">0.2</td>
-<td align="right">1.4</td>
-<td align="right">0.4</td>
-<td align="right">3.3</td>
-<td align="right">2.6</td>
-<td align="right">4.6</td>
-<td align="right">28.1</td>
-<td align="right">7.7</td>
-</tr>
-<tr class="even">
-<td align="left">readRDS</td>
-<td align="right">0.1</td>
-<td align="right">1.1</td>
-<td align="right">0.4</td>
-<td align="right">3.0</td>
-<td align="right">2.5</td>
-<td align="right">4.5</td>
-<td align="right">27.7</td>
-<td align="right">7.6</td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><span id="tab:wtimes">Table 5.4: </span>Absolute and relative (compared with the smallest size for each column) write times for the 3 column, 468 row ‘co2’ dataset, saved with different functions. Columns headed 10x, 100x and 1000x show the results for disk usage after increasing the number of rows by 10, 100 and 1000 fold respectively.</caption>
-<thead>
-<tr class="header">
-<th align="left">Function</th>
-<th align="right">Time</th>
-<th align="right">Rel</th>
-<th align="right">Time (10x)</th>
-<th align="right">Rel (10x)</th>
-<th align="right">Time (100x)</th>
-<th align="right">Rel (100x)</th>
-<th align="right">Time (1000x)</th>
-<th align="right">Rel (1000x)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">write.csv</td>
-<td align="right">2.8</td>
-<td align="right">6.9</td>
-<td align="right">21.1</td>
-<td align="right">33.0</td>
-<td align="right">197.3</td>
-<td align="right">27.5</td>
-<td align="right">2312.4</td>
-<td align="right">27.6</td>
-</tr>
-<tr class="even">
-<td align="left">save_feather</td>
-<td align="right">0.4</td>
-<td align="right">1.0</td>
-<td align="right">0.6</td>
-<td align="right">1.0</td>
-<td align="right">7.2</td>
-<td align="right">1.0</td>
-<td align="right">142.8</td>
-<td align="right">1.7</td>
-</tr>
-<tr class="odd">
-<td align="left">save</td>
-<td align="right">1.7</td>
-<td align="right">4.2</td>
-<td align="right">1.6</td>
-<td align="right">2.5</td>
-<td align="right">10.5</td>
-<td align="right">1.5</td>
-<td align="right">95.3</td>
-<td align="right">1.1</td>
-</tr>
-<tr class="even">
-<td align="left">saveRDS</td>
-<td align="right">1.7</td>
-<td align="right">4.2</td>
-<td align="right">1.5</td>
-<td align="right">2.3</td>
-<td align="right">9.5</td>
-<td align="right">1.3</td>
-<td align="right">83.9</td>
-<td align="right">1.0</td>
-</tr>
-</tbody>
-</table>
-<p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native functions for saving <code>.Rds</code> and <code>.RData</code> formats, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>save</code> and <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
+<p>The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure <a href="input-output.html#fig:5-2">5.2</a>.</p>
+<p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native <code>.Rds</code> format, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
 </div>
 </div>
 <div id="download" class="section level2">
@@ -750,8 +625,7 @@ co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class=
 <span class="co">#&gt; [7] &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
 <p>Further, to ‘look around’ to see what files are stored in a particular package, one could type the following, taking advantage of RStudio’s intellisense file completion capabilities (using copy and paste to enter the file path):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
-<span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span>
-<span class="st">&quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr/&quot;</span></code></pre></div>
+<span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span></code></pre></div>
 <p>Hitting <code>Tab</code> after the second command should trigger RStudio to create a miniature pop-up box listing the files within the folder, as illustrated in figure <a href="input-output.html#fig:5-3">5.3</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:5-3"></span>
 <img src="figures/f5_1_rstudio-package-filepath-intellisense.png" alt="Discovering files in R packages using RStudio's 'intellisense'." width="50%" />
@@ -767,7 +641,7 @@ Figure 5.3: Discovering files in R packages using RStudio’s ‘intellisense’
 <div class="footnotes">
 <hr />
 <ol start="13">
-<li id="fn13"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than 100 times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-output.html#fnref13">↩</a></p></li>
+<li id="fn13"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than <span class="math inline">\(100\)</span> times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-output.html#fnref13">↩</a></p></li>
 <li id="fn14"><p>Since R 3.2.3 the base function <code>download.file()</code> can be used to download from secure (<code>https://</code>) connections on any operating system.<a href="input-output.html#fnref14">↩</a></p></li>
 </ol>
 </div>
