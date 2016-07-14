@@ -210,8 +210,7 @@ A more efficient, robust and scalable way to work with large datasets is via dat
 
 ## Binary file formats
 
-There are limitations to plain text files. Even the trusty CSV format is "restricted to tabular data, lacks type-safety, and has limited precision for numeric values" [@JSSv071i02]. The [paper](https://www.jstatsoft.org/article/view/v071i02) provides an excellent overview of the issues associated with different file formats, and the various solutions that have been proposed.
-
+There are limitations to plain text files. Even the trusty CSV format is "restricted to tabular data, lacks type-safety, and has limited precision for numeric values" [@JSSv071i02]. 
 Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
 portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
@@ -263,6 +262,10 @@ local(source("code/05-io_f2.R", local=TRUE))
 The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure \@ref(fig:5-2).
 
 The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native `.Rds`  format, for the datasets used in the benchmark. `write_feather` is also faster than `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
+
+### Protocol Buffers
+
+Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/) offers a portable, efficient and scalable solution to binary data storage. A recent package, **RProtoBuf**, provides an R interface. This approach is not covered in this book, as it is new, advanced and not (at the time of writing) widely used in the R community. The approach is discussed in detail in a [paper](https://www.jstatsoft.org/article/view/v071i02) on the subject, which also provides an excellent overview of the issues associated with different file formats [@JSSv071i02].
 
 ## Getting data from the internet {#download}
 
