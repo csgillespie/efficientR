@@ -103,7 +103,11 @@ To determine which index of a vector or array are `TRUE`, we would typically use
 i.e. `which(x == min(x))` then use the more efficient `which.min`/`which.max`
 variants.
 
+<!-- __XXX__Colin__ Are we talking about programmer of computational efficiency, or both? Can it really be that much faster? Tell us how much so.  -->
+
 ###  Converting factors to numerics {-}
+
+<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
 
 A factor is just a vector of integers with associated levels. Occasionally we want to
 convert a factor into its numerical equivalent. The most efficient way of doing this
@@ -114,22 +118,28 @@ f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
 
+<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
+
 where `f` is the factor.
 
 ### String concatenation {-}
 
 To concatenate strings use the `paste` function
+
 ```{r, results="hide"}
 paste("A", "B")
 ```
+
 The separation character is specified via the `sep` argument. The function
 `paste0(..., collapse)` is equivalent to `paste(..., sep = "", collapse)`, but is
 slightly more efficient.
 
+<!-- __XXX__Colin__ Again, info on how much so would be enlightening  -->
+
 ### Logical AND and OR {-}
 
 The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
-typically used whenever we perform subsetting operations. For example
+typically used during multi-criteria subsetting operations. The code below, for example, returns `TRUE` for all elements of `x` greater than $0.4$ but less than $0.6$:
 
 ```{r, echo=-1}
 x = c(0.2, 0.5, 0.7)
