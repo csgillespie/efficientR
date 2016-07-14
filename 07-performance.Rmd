@@ -5,7 +5,7 @@ knit: "bookdown::preview_chapter"
 # Efficient code optimization {#performance}
 
 [Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a famous American
-computer scientist who developed a number of the key alogorithms that we use today.
+computer scientist who developed a number of the key algorithms that we use today.
 On the subject of optimisation he give this advice.
 
 > The real problem is that programmers have spent far too much time worrying about
@@ -20,8 +20,8 @@ Code optimisation, by contrast, is an advanced topic that should only be tackled
 
 The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
 Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section.
-Section \@ref(performance-parallel) discusses how paralell code can overcome efficiency bottlenecks for some problems.
-The final section explains how `Rcpp` can be used to efficiently incorparting C++ code into an R analysis.
+Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems.
+The final section explains how `Rcpp` can be used to efficiently incorporating C++ code into an R analysis.
 
 ## Top 5 tips for efficient performance
 
@@ -164,7 +164,7 @@ There are optimised functions for calculating row and columns sums/means, `rowSu
 
 ### `is.na` and `anyNA` \ {-}
 
-To test whether a vector (or other obeject) contains missing
+To test whether a vector (or other object) contains missing
 values we use the `is.na` function. Often we are interested in whether a vector
 contains _any_ missing values. In this case, `anyNA(x)` is usually more efficient than
 `any(is.na(x))`.
@@ -259,7 +259,7 @@ techniques/methods used to store sparse matrices. Methods for creating sparse ma
 can be found in the **Matrix** package^[Technically this isn't in base R, it's a recommend
 package.]. 
 
-As an example, suppose we have a large matrix where the diagonial elements are non-zero
+As an example, suppose we have a large matrix where the diagonal elements are non-zero
 
 ```{r, message=FALSE}
 library("Matrix")
@@ -284,7 +284,7 @@ pryr::object_size(m)
     * `tail.matrix`
     * `lm`. 
 
-  1. Contruct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the 
+  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the 
   objects.
   
   1. How does the function `seq.int`, which was used in the `tail.matrix` function, 
@@ -460,7 +460,7 @@ are needed. Implement and time this solution.
 
 This chapter provides a brief foray into the word of parallel computing and only looks
 at shared memory systems. The idea is to give a flavour of what is possible, instead
-of covering all possible varities. For a fuller account, see @mccallum2011.
+of covering all possible varieties. For a fuller account, see @mccallum2011.
 
 In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
 with base R. The **parallel** package must still be loaded before use however, and
@@ -529,7 +529,7 @@ On my computer I get a four-fold speed-up.
 
 We should always call `stopCluster` to free resources when we are finished with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is ommitted.
+function ends as the results of an error and so `stopCluster` is omitted.
 
 The `on.exit` function handles this problem with the minimum of fuss; regardless how
 the function ends, `on.exit` is always called. In the context of parallel programming
