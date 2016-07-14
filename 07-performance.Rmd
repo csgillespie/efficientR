@@ -523,8 +523,8 @@ N = 2
 sapply(1:N, snakes_ladders)
 ```
 
-Rewriting this code to make use of the **parallel** package is straightforward. We
-begin by making a cluster object
+Rewriting this code to make use of the **parallel** package is straightforward. 
+Begin by making a cluster object:
 
 ```{r, eval=FALSE, echo=2:3}
 library("efficient")
@@ -532,22 +532,23 @@ library("parallel")
 cl = makeCluster(4)
 ```
 
-Then swap `sapply` for `parSapply` 
+Then simply swap `sapply` for `parSapply`:
+
 ```{r eval=FALSE}
 parSapply(cl, 1:N, snakes_ladders)
 ```
 
-before stopping the cluster
+It is important to stop the created clusters, as this can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] as illustrated below:
 
 ```{r eval=FALSE}
 stopCluster(cl)
 ```
 
-On my computer I get a four-fold speed-up.
+On a multi-processor computer, this can lead to a four-fold speed-up.
 
 ### Exit functions with care
 
-We should always call `stopCluster` to free resources when we are finished with the
+Always call `stopCluster` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
 function ends as the results of an error and so `stopCluster` is omitted.
 
@@ -585,6 +586,8 @@ These functions use forking, that is creating a new copy of a process running on
 CPU. However Windows does not support this low-level functionality in the way that
 Linux does. If I'm writing code that I don't intend to share, I use `mclapply` since it 
 is more efficient.
+
+<!-- __Colin__XXX I don't think the use of the person 'I' fits with the rest of the book - suggest changing to 'you' or just using the passive voice. -->
 
 ## Rcpp
 
