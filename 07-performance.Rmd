@@ -2,29 +2,26 @@
 knit: "bookdown::preview_chapter"
 ---
 
-# Efficient performance {#performance}
+# Efficient optimization {#performance}
 
 [Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a famous American
-computer scientist who developed a number of the key alogorithms that we use today.
+computer scientist who developed a number of the key algorithms that we use today.
 On the subject of optimisation he give this advice.
 
 > The real problem is that programmers have spent far too much time worrying about
 efficiency in the wrong places and at the wrong times; premature optimization is the
 root of all evil (or at least most of it) in programming.
 
-That's why in the previous chapters we've focused on tools and your working
-environment to increase efficiency. These are (relatively) easy ways of saving time,
-that once implemented, work for future projects. In this chapter we are going to
-consider code optimisation. Simply stated, making your program run faster.
+Knuth's point is that it is easy to undertake code optimisation inefficiently.
+For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions
+to increase efficiency. These are (relatively) easy ways of saving time
+that, once implemented, will work for future projects.
+Code optimisation, by contrast, is an advanced topic that should only be tackled once 'low hanging fruit' for efficiency gains have been taken.
 
-In many scernios, code is running slowly due to a couple of key bottlenecks. By
-specifically targetting these key areas, we may be able to speed up the entire
-program.
-
-In this chapter we will consider a variety of code tweaks that can eke out an extra
-speed boost. We'll begin with general hints and tips about using base R. Then look at 
-code profiling to determine where our efforts should be focused. We conclude by looking 
-at `Rcpp`, an efficient way of incorparting C++ code into an R analysis.
+The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
+Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section.
+Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems.
+The final section explains how `Rcpp` can be used to efficiently incorporating C++ code into an R analysis.
 
 ## Top 5 tips for efficient performance
 
@@ -54,6 +51,8 @@ determined by whether the element of `test` is `TRUE` or `FALSE`.
 If the length of `test` is equal to $1$, i.e. `length(test) == 1`, 
 then the standard `if(test) yes else no` is more efficient.
 
+<!-- __XXX__Colin__ Suggest a worked example is needed here -->
+
 ### Sorting and ordering {-}
 
 Sorting a vector a single vector is relatively quick; sorting a vector of length
@@ -65,6 +64,7 @@ operation.
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
 be specified in the `sort` function; with `radix` being a new addition to R 3.3.
 Typically the `radix` (the non-default option) is optimal for most situations.
+<!-- __XXX__Colin__ by how much? -->
 
 Another useful trick is to partially order the results. For example, if you only want
 to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`.
@@ -88,7 +88,6 @@ system.time({
   for(i in 1:100)
     sort(x[,i], partial=1:2)
 })
-
 ```
 
 ### Reversing elements {-}
@@ -104,7 +103,11 @@ To determine which index of a vector or array are `TRUE`, we would typically use
 i.e. `which(x == min(x))` then use the more efficient `which.min`/`which.max`
 variants.
 
+<!-- __XXX__Colin__ Are we talking about programmer of computational efficiency, or both? Can it really be that much faster? Tell us how much so.  -->
+
 ###  Converting factors to numerics {-}
+
+<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
 
 A factor is just a vector of integers with associated levels. Occasionally we want to
 convert a factor into its numerical equivalent. The most efficient way of doing this
@@ -115,22 +118,28 @@ f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
 
+<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
+
 where `f` is the factor.
 
 ### String concatenation {-}
 
 To concatenate strings use the `paste` function
+
 ```{r, results="hide"}
 paste("A", "B")
 ```
+
 The separation character is specified via the `sep` argument. The function
 `paste0(..., collapse)` is equivalent to `paste(..., sep = "", collapse)`, but is
 slightly more efficient.
 
+<!-- __XXX__Colin__ Again, info on how much so would be enlightening  -->
+
 ### Logical AND and OR {-}
 
 The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
-typically used whenever we perform subsetting operations. For example
+typically used during multi-criteria subsetting operations. The code below, for example, returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
 
 ```{r, echo=-1}
 x = c(0.2, 0.5, 0.7)
@@ -147,8 +156,13 @@ neater code, e.g.
 file.exists("data.csv") && read.csv("data.csv")
 ```
 
-However care must be taken not to use `&&` or `||` on vectors since it will give the
-incorrect answer
+<!-- __XXX__Colin__ Is this really good code? Why not use if? Could say "This is equivalent to the more commonly used
+if(file.exists("data.csv"))
+  read.csv("data.csv") " -->
+
+However care must be taken not to use `&&` or `||` on vectors since it only evaluates the first element of the vector, giving the
+incorrect answer. This is illustrated below:
+
 ```{r}
 x < 0.4 || x > 0.6
 ```
@@ -167,24 +181,25 @@ There are optimised functions for calculating row and columns sums/means, `rowSu
 
 ### `is.na` and `anyNA` \ {-}
 
-To test whether a vector (or other obeject) contains missing
+To test whether a vector (or other object) contains missing
 values we use the `is.na` function. Often we are interested in whether a vector
-contains _any_ missing values. In this case, `anyNA(x)` is usually more efficient than
+contains _any_ missing values. In this case, `anyNA(x)` is more efficient than
 `any(is.na(x))`.
 
 ### Matrices {-}
 
 A matrix is similar to a data frame: it is a two dimensional object and sub-setting
-and other functions work in the expected way. However all matrix elements must have
-the same type. Matrices tend to be used during statistical calculations. Calculating
-the line of best fit using the `lm()` function, internally converts the data to a
+and other functions work in the same way. However all matrix elements must have
+the same type. Matrices tend to be used during statistical calculations.
+The `lm()` function, for example, internally converts the data to a
 matrix before calculating the results; any characters are thus recoded as numeric
 dummy variables.
 
 Matrices are generally faster than data frames. For example, the datasets `ex_mat` and `ex_df` from
 the **efficient** package each have $1000$ rows and $100$ columns and contain the
-same random numbers. However selecting rows from a data frame is around $150$ times
-slower than a matrix.
+same random numbers. However selecting rows from the data frame is around $150$ times
+slower than a matrix, as illustrated below:
+
 ```{r mat_vs_df, cache=TRUE}
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
@@ -197,19 +212,19 @@ Use the `data.matrix` function to efficiently convert a data frame into a matrix
 ### The integer data type {-}
 
 Numbers in R are usually stored in [double-precision floating-point
-format](https://goo.gl/ZA5R8a) - see @Braun2007 and @Goldberg1991. The term 'double'
+format](https://goo.gl/ZA5R8a), which is described in detail in @Braun2007 and @Goldberg1991. The term 'double'
 refers to the fact that on $32$ bit systems (for which the format was developed) two
 memory locations are used to store a single number. Each double-precision number is
 accurate to around $17$ decimal places.
 
 ```{block type="rmdnote"}
-When comparing floating point numbers we should be particularly careful, since `y = sqrt(2)*sqrt(2)` 
+When comparing floating point numbers we should be particularly careful, since `y = sqrt(2) * sqrt(2)` 
 is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.17f", y)` will
 give you the true value of `y` (to 17 decimal places).
 ```
 
-There is also another data type, called an integer. Integers primarily exist to be
-passed to C or Fortran code. Typically we don't worry about creating integers, however
+Integers are another numeric data type. Integers primarily exist to be
+passed to C or Fortran code. You do will not need to create integers for most applications. However,
 they are occasionally used to optimise sub-setting operations. When we subset a data
 frame or matrix, we are interacting with C code. For example, if we look at the
 arguments for the `head` function
@@ -222,11 +237,10 @@ args(head.matrix)
 Using the `:` operator automatically creates a vector of integers.
 ```
 
-The default argument for `n` is `6L` (the `L` is short for Literal and is used to create an
-integer). Since this function is being called by almost everyone that uses R, this low
-level optimisation is useful. To illustrate the speed increase, suppose we are
-selecting the first $100$ rows from a data frame (`clock_speed`, from the
-**efficient** package). The speed increase is illustrated below, using the
+Note that default argument for `n` is `6L` rather than simply `6` (the `L` is short for Literal and is used to create an
+integer). Since this function is ubiquitous, this low
+level optimisation is useful. To illustrate the speed increase, the code below selects the first $100$ rows from a data frame (`clock_speed`, from the
+**efficient** package) using integer and double indices, and benchmarks the results using the
 **microbenchmark** package:
 
 ```{r, matrix_timing, eval=FALSE}
@@ -238,23 +252,26 @@ microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000
 #> clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
 ```
 
-The above result shows that using integers is slightly faster, but probably not worth
-worrying about.
+The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth
+worrying about for most applications.
 
-Integers are more space efficient. If we compare size of a integer vector to a standard numeric vector
+Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:
+
 ```{r}
 pryr::object_size(1:10000)
 pryr::object_size(y = seq(1, 10000, by=1.0))
 ```
-The integer version is (approximately) half the size. However most mathematical operations will convert
-the integer vector into a standard numerical vector, e.g. 
+
+The results show that integer version is roughly half the size. However, most mathematical operations will convert
+the integer vector into a standard numerical vector, as illustrated below: 
+
 ```{r}
 is.integer(1L + 1)
 ```
 
 ### Sparse matrices {-}
 
-Another efficient data structure is a sparse matrix. This is simply a matrix where most of the elements are
+Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are
 zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements
 is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our
 data isn't sparse but the resulting data structures we create may be sparse. There are a number of
@@ -262,7 +279,7 @@ techniques/methods used to store sparse matrices. Methods for creating sparse ma
 can be found in the **Matrix** package^[Technically this isn't in base R, it's a recommend
 package.]. 
 
-As an example, suppose we have a large matrix where the diagonial elements are non-zero
+As an example, suppose we have a large matrix where the diagonal elements are non-zero:
 
 ```{r, message=FALSE}
 library("Matrix")
@@ -273,7 +290,8 @@ m = diag(1, N, N)
 
 Both objects contain the same information, but the data is stored differently. The matrix object
 stores each individual element, while the sparse matrix object only stores the location of the non-zero
-elements. This is much more memory efficient
+elements. This is much more memory efficient, as illustrated below:
+
 ```{r}
 pryr::object_size(sp)
 pryr::object_size(m)
@@ -287,7 +305,7 @@ pryr::object_size(m)
     * `tail.matrix`
     * `lm`. 
 
-  1. Contruct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the 
+  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the 
   objects.
   
   1. How does the function `seq.int`, which was used in the `tail.matrix` function, 
@@ -301,34 +319,29 @@ with vectors from the **bit** package which take up just over 16th of the space
 
 ## Code profiling {#performance-profvis}
 
-A circumstance that happens all too often, is that we simply want our code to run
-faster. In some cases it's obvious where the bottle neck lies. Other times we have to
-rely on our intuition. One major drawback of relying on our intuition is that we could
-be wrong and we end up pointlessly optimising the wrong piece of code. To make slow
-code run faster, we first need to determine where the slow code lives.
+Often you will have working code, but simply want it to run
+faster. In some cases it's obvious where the bottle neck lies. Sometimes you will will instead guess, relying intuition. A drawback of this is that you could
+be wrong, and waste time optimising the wrong piece of code. To make slow
+code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.
 
-The `Rprof` function is built-in tool for profiling the execution of R expressions. At
+The `Rprof()` function is built-in tool for profiling the execution of R expressions. At
 regular time intervals, the profiler stops the R interpreter, records the current
 function call stack, and saves the information to a file. The results from `Rprof` are
 stochastic. Each time we run a function R, the conditions have changed. Hence, each
 time you profile your code, the result will be slightly different.
 
-Unfortunately `Rprof` is not user friendly. The **profvis** package provides an
-interactive graphical interface for visualising data data from `Rprof`.
+Unfortunately `Rprof` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
+**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof`.
 
 ### Getting started with **profvis**
 
-The **profvis** package can be installed in the usual way
-```{r eval=FALSE}
-install.packages("profvis")
-```
-
-As a simple example, we will use the `movies` data set, which contain information on
-around 60,000 movies from the IMDB. First, we'll select movies that are classed as
+After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used to profile any R script of piece of R code.
+As a simple example, we will use the `movies` data set, which contains information on
+around 60,000 movies. First, we'll select movies that are classed as
 comedies, then plot year vs movies rating, and draw a local polynomial regression line
-to pick out the trend. The main function from the **profvis** package, is `profvis`
-which profiles the code and creates an interactive HTML page. The first argument of
-`profvis` is the R expression of interest.
+to pick out the trend. The main function from the **profvis** package is `profvis()`,
+which profiles the code and creates an interactive HTML page of the results. The first argument of
+`profvis()` is the R expression of interest. This can be many lines long:
 
 ```{r, eval=FALSE}
 library("profvis")
@@ -345,10 +358,12 @@ profvis({
 The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the
 left side is the code and on the right is a flame graph (horizontal direction is time
 in milliseconds and the vertical direction is the call stack).
+
 ```{r 7-1, echo=FALSE, fig.cap="Output from profvis", out.width="100%"}
 knitr::include_graphics("figures/f7_1_profvis.png")
 ```
-The left hand panel gives the amount of time spent on each line of code. We see that
+
+The left hand panel gives the amount of time spent on each line of code. It shows that
 majority of time is spent calculating the `loess` smoothing line. The bottom line of
 the right panel also highlights that most of the execution time is spent on the
 `loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
@@ -377,7 +392,7 @@ print(x, viewer=TRUE, width="1300px", height="300px")
 ### Example: Monopoly Simulation
 
 Monopoly is a board game that originated in the United States over $100$ years ago. The
-object of the game is to go round the board and purchase squares (properties). If
+objective of the game is to go round the board and purchase squares (properties). If
 other players land on your properties they have to pay a tax. The player with the most
 money at the end of the game, wins. To make things more interesting, there are Chance
 and Community Chest squares. If you land on one of these squares, you draw card, which
@@ -395,13 +410,12 @@ code, the **efficient** package needs to be installed from source
 devtools::install_github("csgillespie/efficient_pkg", args="--with-keep.source")
 ```
 
-The function can then be profiled via
+The function can then be profiled via the following code, which results in figure \@ref(fig:7-2). 
+
 ```{r eval=FALSE}
 library("efficient")
 profvis(SimulateMonopoly(10000))
 ```
-
-to get \@ref(fig:7-2)
 
 ```{r 7-2, echo=FALSE, out.width="100%", fig.cap="Code profiling for simulating the game of Monopoly."}
 knitr::include_graphics("figures/f7_2_profvis_monopoly.png")
@@ -427,7 +441,7 @@ by incorporating the following improvements^[Solutions are available in the
   * Switch from `apply` to `rowSums`;
   * Use `&&` in the `if` condition.
 
-Implementing this features, results in the following code.
+The refactored code, after implementing these optimisations, is shown below:
 
 ```{r}
 move = function(current) {
@@ -449,7 +463,9 @@ move = function(current) {
 }
 ```
 
-which gives a 25-fold speed improvement.
+Impressively, this refactored code runs 25 times faster than the original code.
+
+<!-- __Colin__XXX Can I steal this example for the refactoring section? -->
 
 #### Exercise {-}
 
@@ -461,19 +477,18 @@ are needed. Implement and time this solution.
 
 ## Parallel computing {#performance-parallel}
 
-This chapter provides a brief foray into the word of parallel computing and only looks
-at shared memory systems. The idea is to give a flavour of what is possible, instead
-of covering all possible varities. For a fuller account, see @mccallum2011.
+This section provides a brief foray into the word of parallel computing.
+It only looks
+at methods for parallel computing on 'shared memory systems'. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides flavour of what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
 
-In recent R versions (since R 2.14.0) the **parallel** package comes pre-installed
-with base R. The **parallel** package must still be loaded before use however, and
-you must determine the number of available cores manually, as illustrated below.
+The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed
+with base R. The **parallel** package must still be loaded before use, however, and
+you must determine the number of available cores manually, as illustrated below:
 
 ```{r echo=1:2}
 library("parallel")
 no_of_cores = detectCores()
 ```
-
 
 ### Parallel versions of apply functions
 
@@ -488,7 +503,7 @@ parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
 ```
 
 The key point is that there is very little difference in arguments between `parLapply`
-and `apply`, so the barrier to using (this form) of parallel computing is low. Each
+and `apply`, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each
 function above has an argument `cl`, which is created by a `makeCluster` call. This
 function, amongst other things, specifies the number of processors to use.
 
@@ -500,15 +515,16 @@ simulates a realisation from model. At the end, we gather up the results. In the
 Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
 after a particularly long and dull game of Snakes and Ladders with his son.]
 
-If we wanted to simulate `N` games we could use `sapply`
+The following code illustrates how to simulate `N` games using `sapply`:
+
 ```{r eval=FALSE, echo=c(1, 3)}
 N = 10^4
 N = 2
 sapply(1:N, snakes_ladders)
 ```
 
-Rewriting this code to make use of the **parallel** package is straightforward. We
-begin by making a cluster object
+Rewriting this code to make use of the **parallel** package is straightforward. 
+Begin by making a cluster object:
 
 ```{r, eval=FALSE, echo=2:3}
 library("efficient")
@@ -516,24 +532,25 @@ library("parallel")
 cl = makeCluster(4)
 ```
 
-Then swap `sapply` for `parSapply` 
+Then simply swap `sapply` for `parSapply`:
+
 ```{r eval=FALSE}
 parSapply(cl, 1:N, snakes_ladders)
 ```
 
-before stopping the cluster
+It is important to stop the created clusters, as this can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] as illustrated below:
 
 ```{r eval=FALSE}
 stopCluster(cl)
 ```
 
-On my computer I get a four-fold speed-up.
+On a multi-processor computer, this can lead to a four-fold speed-up.
 
 ### Exit functions with care
 
-We should always call `stopCluster` to free resources when we are finished with the
+Always call `stopCluster` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is ommitted.
+function ends as the results of an error and so `stopCluster` is omitted.
 
 The `on.exit` function handles this problem with the minimum of fuss; regardless how
 the function ends, `on.exit` is always called. In the context of parallel programming
@@ -569,6 +586,8 @@ These functions use forking, that is creating a new copy of a process running on
 CPU. However Windows does not support this low-level functionality in the way that
 Linux does. If I'm writing code that I don't intend to share, I use `mclapply` since it 
 is more efficient.
+
+<!-- __Colin__XXX I don't think the use of the person 'I' fits with the rest of the book - suggest changing to 'you' or just using the passive voice. -->
 
 ## Rcpp
 
