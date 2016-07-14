@@ -279,7 +279,7 @@ techniques/methods used to store sparse matrices. Methods for creating sparse ma
 can be found in the **Matrix** package^[Technically this isn't in base R, it's a recommend
 package.]. 
 
-As an example, suppose we have a large matrix where the diagonal elements are non-zero
+As an example, suppose we have a large matrix where the diagonal elements are non-zero:
 
 ```{r, message=FALSE}
 library("Matrix")
@@ -290,7 +290,8 @@ m = diag(1, N, N)
 
 Both objects contain the same information, but the data is stored differently. The matrix object
 stores each individual element, while the sparse matrix object only stores the location of the non-zero
-elements. This is much more memory efficient
+elements. This is much more memory efficient, as illustrated below:
+
 ```{r}
 pryr::object_size(sp)
 pryr::object_size(m)
@@ -318,34 +319,29 @@ with vectors from the **bit** package which take up just over 16th of the space
 
 ## Code profiling {#performance-profvis}
 
-A circumstance that happens all too often, is that we simply want our code to run
-faster. In some cases it's obvious where the bottle neck lies. Other times we have to
-rely on our intuition. One major drawback of relying on our intuition is that we could
-be wrong and we end up pointlessly optimising the wrong piece of code. To make slow
-code run faster, we first need to determine where the slow code lives.
+Often you will have working code, but simply want it to run
+faster. In some cases it's obvious where the bottle neck lies. Sometimes you will will instead guess, relying intuition. A drawback of this is that you could
+be wrong, and waste time optimising the wrong piece of code. To make slow
+code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.
 
-The `Rprof` function is built-in tool for profiling the execution of R expressions. At
+The `Rprof()` function is built-in tool for profiling the execution of R expressions. At
 regular time intervals, the profiler stops the R interpreter, records the current
 function call stack, and saves the information to a file. The results from `Rprof` are
 stochastic. Each time we run a function R, the conditions have changed. Hence, each
 time you profile your code, the result will be slightly different.
 
-Unfortunately `Rprof` is not user friendly. The **profvis** package provides an
-interactive graphical interface for visualising data data from `Rprof`.
+Unfortunately `Rprof` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
+**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof`.
 
 ### Getting started with **profvis**
 
-The **profvis** package can be installed in the usual way
-```{r eval=FALSE}
-install.packages("profvis")
-```
-
-As a simple example, we will use the `movies` data set, which contain information on
-around 60,000 movies from the IMDB. First, we'll select movies that are classed as
+After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used to profile any R script of piece of R code.
+As a simple example, we will use the `movies` data set, which contains information on
+around 60,000 movies. First, we'll select movies that are classed as
 comedies, then plot year vs movies rating, and draw a local polynomial regression line
-to pick out the trend. The main function from the **profvis** package, is `profvis`
-which profiles the code and creates an interactive HTML page. The first argument of
-`profvis` is the R expression of interest.
+to pick out the trend. The main function from the **profvis** package is `profvis()`,
+which profiles the code and creates an interactive HTML page of the results. The first argument of
+`profvis()` is the R expression of interest. This can be many lines long:
 
 ```{r, eval=FALSE}
 library("profvis")
@@ -362,10 +358,12 @@ profvis({
 The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the
 left side is the code and on the right is a flame graph (horizontal direction is time
 in milliseconds and the vertical direction is the call stack).
+
 ```{r 7-1, echo=FALSE, fig.cap="Output from profvis", out.width="100%"}
 knitr::include_graphics("figures/f7_1_profvis.png")
 ```
-The left hand panel gives the amount of time spent on each line of code. We see that
+
+The left hand panel gives the amount of time spent on each line of code. It shows that
 majority of time is spent calculating the `loess` smoothing line. The bottom line of
 the right panel also highlights that most of the execution time is spent on the
 `loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
@@ -394,7 +392,7 @@ print(x, viewer=TRUE, width="1300px", height="300px")
 ### Example: Monopoly Simulation
 
 Monopoly is a board game that originated in the United States over $100$ years ago. The
-object of the game is to go round the board and purchase squares (properties). If
+objective of the game is to go round the board and purchase squares (properties). If
 other players land on your properties they have to pay a tax. The player with the most
 money at the end of the game, wins. To make things more interesting, there are Chance
 and Community Chest squares. If you land on one of these squares, you draw card, which
@@ -412,13 +410,12 @@ code, the **efficient** package needs to be installed from source
 devtools::install_github("csgillespie/efficient_pkg", args="--with-keep.source")
 ```
 
-The function can then be profiled via
+The function can then be profiled via the following code, which results in figure \@ref(fig:7-2). 
+
 ```{r eval=FALSE}
 library("efficient")
 profvis(SimulateMonopoly(10000))
 ```
-
-to get \@ref(fig:7-2)
 
 ```{r 7-2, echo=FALSE, out.width="100%", fig.cap="Code profiling for simulating the game of Monopoly."}
 knitr::include_graphics("figures/f7_2_profvis_monopoly.png")
@@ -444,7 +441,7 @@ by incorporating the following improvements^[Solutions are available in the
   * Switch from `apply` to `rowSums`;
   * Use `&&` in the `if` condition.
 
-Implementing this features, results in the following code.
+The refactored code, after implementing these optimisations, is shown below:
 
 ```{r}
 move = function(current) {
@@ -466,7 +463,9 @@ move = function(current) {
 }
 ```
 
-which gives a 25-fold speed improvement.
+Impressively, this refactored code runs 25 times faster than the original code.
+
+<!-- __Colin__XXX Can I steal this example for the refactoring section? -->
 
 #### Exercise {-}
 
