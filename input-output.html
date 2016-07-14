@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-13">
+<meta name="date" content="2016-07-14">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -228,6 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.4.1" data-path="input-output.html"><a href="input-output.html#native-binary-formats-rdata-or-rds"><i class="fa fa-check"></i><b>5.4.1</b> Native binary formats: Rdata or Rds?</a></li>
 <li class="chapter" data-level="5.4.2" data-path="input-output.html"><a href="input-output.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.4.2</b> The feather file format</a></li>
 <li class="chapter" data-level="5.4.3" data-path="input-output.html"><a href="input-output.html#benchmarking-binary-file-formats"><i class="fa fa-check"></i><b>5.4.3</b> Benchmarking binary file formats</a></li>
+<li class="chapter" data-level="5.4.4" data-path="input-output.html"><a href="input-output.html#protocol-buffers"><i class="fa fa-check"></i><b>5.4.4</b> Protocol Buffers</a></li>
 </ul></li>
 <li class="chapter" data-level="5.5" data-path="input-output.html"><a href="input-output.html#download"><i class="fa fa-check"></i><b>5.5</b> Getting data from the internet</a></li>
 <li class="chapter" data-level="5.6" data-path="input-output.html"><a href="input-output.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.6</b> Accessing data stored in packages</a></li>
@@ -250,7 +251,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6.7" data-path="data-carpentry.html"><a href="data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient performance</a><ul>
+<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient optimization</a><ul>
 <li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
 <li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.2</b> Efficient base R</a><ul>
 <li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if</code> vs <code>ifelse</code> functions</a></li>
@@ -456,9 +457,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median    uq  max neval</span>
-<span class="co">#&gt;     with_select  9.65  9.84  9.87   9.91  9.93 10.0     5</span>
-<span class="co">#&gt;  without_select 17.21 17.98 17.96  18.01 18.18 18.4     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select 10.4 10.6 10.7   10.7 11.0 11.0     5</span>
+<span class="co">#&gt;  without_select 18.5 18.6 20.4   18.8 19.9 26.2     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -515,7 +516,7 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
 </div>
 <div id="binary-file-formats" class="section level2">
 <h2><span class="header-section-number">5.4</span> Binary file formats</h2>
-<p>Once you have read-in (e.g. from a plain text file) and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more portable.<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></p>
+<p>There are limitations to plain text files. Even the trusty CSV format is “restricted to tabular data, lacks type-safety, and has limited precision for numeric values” <span class="citation">(Eddelbuettel, Stokely, and Ooms <a href="#ref-JSSv071i02">2016</a>)</span>. Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more portable.<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></p>
 <p>Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R’s native file format, <code>.Rds</code>, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarks to show how they compare with the plain text format <code>.csv</code> covered in the previous section.</p>
 <div id="native-binary-formats-rdata-or-rds" class="section level3">
 <h3><span class="header-section-number">5.4.1</span> Native binary formats: Rdata or Rds?</h3>
@@ -552,6 +553,10 @@ Figure 5.2: Comparison of binary formats using a 20 column CSV file.
 </div>
 <p>The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure <a href="input-output.html#fig:5-2">5.2</a>.</p>
 <p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native <code>.Rds</code> format, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
+</div>
+<div id="protocol-buffers" class="section level3">
+<h3><span class="header-section-number">5.4.4</span> Protocol Buffers</h3>
+<p>Google’s <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> offers a portable, efficient and scalable solution to binary data storage. A recent package, <strong>RProtoBuf</strong>, provides an R interface. This approach is not covered in this book, as it is new, advanced and not (at the time of writing) widely used in the R community. The approach is discussed in detail in a <a href="https://www.jstatsoft.org/article/view/v071i02">paper</a> on the subject, which also provides an excellent overview of the issues associated with different file formats <span class="citation">(Eddelbuettel, Stokely, and Ooms <a href="#ref-JSSv071i02">2016</a>)</span>.</p>
 </div>
 </div>
 <div id="download" class="section level2">
@@ -592,6 +597,12 @@ Figure 5.3: Discovering files in R packages using RStudio’s ‘intellisense’
 
 <!-- To do: -->
 <!-- Talk about merge vs *_join -->
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-JSSv071i02">
+<p>Eddelbuettel, Dirk, Murray Stokely, and Jeroen Ooms. 2016. “RProtoBuf: Efficient Cross-Language Data Serialization in R.” <em>Journal of Statistical Software</em> 71 (1): 1–24. doi:<a href="https://doi.org/10.18637/jss.v071.i02">10.18637/jss.v071.i02</a>.</p>
 </div>
 </div>
 <div class="footnotes">

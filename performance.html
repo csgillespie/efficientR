@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-13">
+<meta name="date" content="2016-07-14">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -228,6 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.4.1" data-path="input-output.html"><a href="input-output.html#native-binary-formats-rdata-or-rds"><i class="fa fa-check"></i><b>5.4.1</b> Native binary formats: Rdata or Rds?</a></li>
 <li class="chapter" data-level="5.4.2" data-path="input-output.html"><a href="input-output.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.4.2</b> The feather file format</a></li>
 <li class="chapter" data-level="5.4.3" data-path="input-output.html"><a href="input-output.html#benchmarking-binary-file-formats"><i class="fa fa-check"></i><b>5.4.3</b> Benchmarking binary file formats</a></li>
+<li class="chapter" data-level="5.4.4" data-path="input-output.html"><a href="input-output.html#protocol-buffers"><i class="fa fa-check"></i><b>5.4.4</b> Protocol Buffers</a></li>
 </ul></li>
 <li class="chapter" data-level="5.5" data-path="input-output.html"><a href="input-output.html#download"><i class="fa fa-check"></i><b>5.5</b> Getting data from the internet</a></li>
 <li class="chapter" data-level="5.6" data-path="input-output.html"><a href="input-output.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.6</b> Accessing data stored in packages</a></li>
@@ -250,7 +251,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6.7" data-path="data-carpentry.html"><a href="data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient performance</a><ul>
+<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient optimization</a><ul>
 <li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
 <li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.2</b> Efficient base R</a><ul>
 <li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if</code> vs <code>ifelse</code> functions</a></li>
@@ -355,14 +356,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="performance" class="section level1">
-<h1><span class="header-section-number">7</span> Efficient performance</h1>
-<p><a href="https://en.wikiquote.org/wiki/Donald_Knuth">Donald Knuth</a> is a famous American computer scientist who developed a number of the key alogorithms that we use today. On the subject of optimisation he give this advice.</p>
+<h1><span class="header-section-number">7</span> Efficient optimization</h1>
+<p><a href="https://en.wikiquote.org/wiki/Donald_Knuth">Donald Knuth</a> is a famous American computer scientist who developed a number of the key algorithms that we use today. On the subject of optimisation he give this advice.</p>
 <blockquote>
 <p>The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.</p>
 </blockquote>
-<p>That’s why in the previous chapters we’ve focused on tools and your working environment to increase efficiency. These are (relatively) easy ways of saving time, that once implemented, work for future projects. In this chapter we are going to consider code optimisation. Simply stated, making your program run faster.</p>
-<p>In many scernios, code is running slowly due to a couple of key bottlenecks. By specifically targetting these key areas, we may be able to speed up the entire program.</p>
-<p>In this chapter we will consider a variety of code tweaks that can eke out an extra speed boost. We’ll begin with general hints and tips about using base R. Then look at code profiling to determine where our efforts should be focused. We conclude by looking at <code>Rcpp</code>, an efficient way of incorparting C++ code into an R analysis.</p>
+<p>Knuth’s point is that it is easy to undertake code optimisation inefficiently. For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions to increase efficiency. These are (relatively) easy ways of saving time that, once implemented, will work for future projects. Code optimisation, by contrast, is an advanced topic that should only be tackled once ‘low hanging fruit’ for efficiency gains have been taken.</p>
+<p>The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section. Section <a href="performance.html#performance-parallel">7.4</a> discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how <code>Rcpp</code> can be used to efficiently incorporating C++ code into an R analysis.</p>
 <div id="top-5-tips-for-efficient-performance" class="section level2">
 <h2><span class="header-section-number">7.1</span> Top 5 tips for efficient performance</h2>
 <ul>
@@ -382,11 +382,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ifelse</span>(test, yes, no)</code></pre></div>
 <p>is a vectorised version of the standard control-flow <code>if</code> function. The return value of <code>ifelse</code> is filled with elements from the <code>yes</code> and <code>no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>.</p>
 <p>If the length of <code>test</code> is equal to <span class="math inline">\(1\)</span>, i.e. <code>length(test) == 1</code>, then the standard <code>if(test) yes else no</code> is more efficient.</p>
+<!-- __XXX__Colin__ Suggest a worked example is needed here -->
 </div>
 <div id="sorting-and-ordering" class="section level3 unnumbered">
 <h3>Sorting and ordering</h3>
 <p>Sorting a vector a single vector is relatively quick; sorting a vector of length <span class="math inline">\(10^7\)</span> takes around <span class="math inline">\(0.01\)</span> seconds. If you only sort a vector once at the top of a script, then don’t worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.</p>
-<p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is optimal for most situations.</p>
+<p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is optimal for most situations. <!-- __XXX__Colin__ by how much? --></p>
 <p>Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the <code>partial</code> argument, i.e. <code>sort(x, partial=1:10)</code>.</p>
 </div>
 <div id="reversing-elements" class="section level3 unnumbered">
@@ -396,11 +397,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="which-indices-are-true" class="section level3 unnumbered">
 <h3>Which indices are <code>TRUE</code>  </h3>
 <p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then use the more efficient <code>which.min</code>/<code>which.max</code> variants.</p>
+<!-- __XXX__Colin__ Are we talking about programmer of computational efficiency, or both? Can it really be that much faster? Tell us how much so.  -->
 </div>
 <div id="converting-factors-to-numerics" class="section level3 unnumbered">
 <h3>Converting factors to numerics</h3>
+<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
 <p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</code></pre></div>
+<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
 <p>where <code>f</code> is the factor.</p>
 </div>
 <div id="string-concatenation" class="section level3 unnumbered">
@@ -408,17 +412,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>To concatenate strings use the <code>paste</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)</code></pre></div>
 <p>The separation character is specified via the <code>sep</code> argument. The function <code>paste0(..., collapse)</code> is equivalent to <code>paste(..., sep = &quot;&quot;, collapse)</code>, but is slightly more efficient.</p>
+<!-- __XXX__Colin__ Again, info on how much so would be enlightening  -->
 </div>
 <div id="logical-and-and-or" class="section level3 unnumbered">
 <h3>Logical AND and OR</h3>
-<p>The logical AND (<code>&amp;</code>) and OR (<code>|</code>) operators are vectorised functions and are typically used whenever we perform subsetting operations. For example</p>
+<p>The logical AND (<code>&amp;</code>) and OR (<code>|</code>) operators are vectorised functions and are typically used during multi-criteria subsetting operations. The code below, for example, returns <code>TRUE</code> for all elements of <code>x</code> greater than <span class="math inline">\(0.4\)</span> or less than <span class="math inline">\(0.6\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> |<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
 <span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></code></pre></div>
 <p>When R executes the above comparison, it will <strong>always</strong> calculate <code>x &gt; 0.6</code> regardless of the value of <code>x &lt; 0.4</code>. In contrast, the non-vectorised version, <code>&amp;&amp;</code>, only executes the second component if needed. This is efficient and leads to more neater code, e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read.csv is only executed if the file exists</span>
 <span class="kw">file.exists</span>(<span class="st">&quot;data.csv&quot;</span>) &amp;&amp;<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data.csv&quot;</span>)
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
-<p>However care must be taken not to use <code>&amp;&amp;</code> or <code>||</code> on vectors since it will give the incorrect answer</p>
+<!-- __XXX__Colin__ Is this really good code? Why not use if? Could say "This is equivalent to the more commonly used
+if(file.exists("data.csv"))
+  read.csv("data.csv") " -->
+<p>However care must be taken not to use <code>&amp;&amp;</code> or <code>||</code> on vectors since it only evaluates the first element of the vector, giving the incorrect answer. This is illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> ||<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -431,18 +439,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="is.na-and-anyna" class="section level3 unnumbered">
 <h3><code>is.na</code> and <code>anyNA</code>  </h3>
-<p>To test whether a vector (or other obeject) contains missing values we use the <code>is.na</code> function. Often we are interested in whether a vector contains <em>any</em> missing values. In this case, <code>anyNA(x)</code> is usually more efficient than <code>any(is.na(x))</code>.</p>
+<p>To test whether a vector (or other object) contains missing values we use the <code>is.na</code> function. Often we are interested in whether a vector contains <em>any</em> missing values. In this case, <code>anyNA(x)</code> is more efficient than <code>any(is.na(x))</code>.</p>
 </div>
 <div id="matrices" class="section level3 unnumbered">
 <h3>Matrices</h3>
-<p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the expected way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. Calculating the line of best fit using the <code>lm()</code> function, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
-<p>Matrices are generally faster than data frames. For example, the datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns and contain the same random numbers. However selecting rows from a data frame is around <span class="math inline">\(150\)</span> times slower than a matrix.</p>
+<p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. The <code>lm()</code> function, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
+<p>Matrices are generally faster than data frames. For example, the datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns and contain the same random numbers. However selecting rows from the data frame is around <span class="math inline">\(150\)</span> times slower than a matrix, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq  mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00233 0.00366 0.051 0.00529 0.00633 4.56   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73115 0.80328 1.172 0.85418 1.19337 7.29   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00255 0.00355 0.0537 0.00608 0.00656 4.79   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.74089 0.81782 1.0794 0.85608 1.16930 7.28   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -451,13 +459,13 @@ Use the <code>data.matrix</code> function to efficiently convert a data frame in
 </div>
 <div id="the-integer-data-type" class="section level3 unnumbered">
 <h3>The integer data type</h3>
-<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a> - see <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
+<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a>, which is described in detail in <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
 <div class="rmdnote">
 <p>
-When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2)*sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
+When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
-<p>There is also another data type, called an integer. Integers primarily exist to be passed to C or Fortran code. Typically we don’t worry about creating integers, however they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p>
+<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
 <span class="co">#&gt; function (x, n = 6L, ...) </span>
 <span class="co">#&gt; NULL</span></code></pre></div>
@@ -466,32 +474,32 @@ When comparing floating point numbers we should be particularly careful, since <
 Using the <code>:</code> operator automatically creates a vector of integers.
 </p>
 </div>
-<p>The default argument for <code>n</code> is <code>6L</code> (the <code>L</code> is short for Literal and is used to create an integer). Since this function is being called by almost everyone that uses R, this low level optimisation is useful. To illustrate the speed increase, suppose we are selecting the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package). The speed increase is illustrated below, using the <strong>microbenchmark</strong> package:</p>
+<p>Note that default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an integer). Since this function is ubiquitous, this low level optimisation is useful. To illustrate the speed increase, the code below selects the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package) using integer and double indices, and benchmarks the results using the <strong>microbenchmark</strong> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s_int =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span>; s_double =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="fl">1.0</span>)
 <span class="kw">microbenchmark</span>(clock_speed[s_int, 2L], clock_speed[s_double, <span class="fl">2.0</span>], <span class="dt">times=</span><span class="dv">1000000</span>)
 <span class="co">#&gt; Unit: microseconds</span>
 <span class="co">#&gt; expr   min    lq  mean median    uq   max neval cld</span>
 <span class="co">#&gt; clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a </span>
 <span class="co">#&gt; clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b</span></code></pre></div>
-<p>The above result shows that using integers is slightly faster, but probably not worth worrying about.</p>
-<p>Integers are more space efficient. If we compare size of a integer vector to a standard numeric vector</p>
+<p>The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth worrying about for most applications.</p>
+<p>Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(<span class="dv">1</span>:<span class="dv">10000</span>)
 <span class="co">#&gt; 40 kB</span>
 pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))
 <span class="co">#&gt; 80 kB</span></code></pre></div>
-<p>The integer version is (approximately) half the size. However most mathematical operations will convert the integer vector into a standard numerical vector, e.g.</p>
+<p>The results show that integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.integer</span>(1L +<span class="st"> </span><span class="dv">1</span>)
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
 <div id="sparse-matrices" class="section level3 unnumbered">
 <h3>Sparse matrices</h3>
-<p>Another efficient data structure is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>.</p>
-<p>As an example, suppose we have a large matrix where the diagonial elements are non-zero</p>
+<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>.</p>
+<p>As an example, suppose we have a large matrix where the diagonal elements are non-zero:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)
 N =<span class="st"> </span><span class="dv">10000</span>
 sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span>:N, <span class="dv">1</span>:N, <span class="dt">x =</span> <span class="dv">1</span>)
 m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</code></pre></div>
-<p>Both objects contain the same information, but the data is stored differently. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient</p>
+<p>Both objects contain the same information, but the data is stored differently. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(sp)
 <span class="co">#&gt; 161 kB</span>
 pryr::<span class="kw">object_size</span>(m)
@@ -505,7 +513,7 @@ pryr::<span class="kw">object_size</span>(m)
 <li><code>tail.matrix</code></li>
 <li><code>lm</code>.</li>
 </ul></li>
-<li><p>Contruct a matrix of integers and a matrix of numerics. Using <code>pryr::object_size</code>, compare the objects.</p></li>
+<li><p>Construct a matrix of integers and a matrix of numerics. Using <code>pryr::object_size</code>, compare the objects.</p></li>
 <li><p>How does the function <code>seq.int</code>, which was used in the <code>tail.matrix</code> function, differ to the standard <code>seq</code> function?</p></li>
 </ol>
 <div class="rmdnote">
@@ -518,14 +526,12 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 <div id="performance-profvis" class="section level2">
 <h2><span class="header-section-number">7.3</span> Code profiling</h2>
-<p>A circumstance that happens all too often, is that we simply want our code to run faster. In some cases it’s obvious where the bottle neck lies. Other times we have to rely on our intuition. One major drawback of relying on our intuition is that we could be wrong and we end up pointlessly optimising the wrong piece of code. To make slow code run faster, we first need to determine where the slow code lives.</p>
-<p>The <code>Rprof</code> function is built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
-<p>Unfortunately <code>Rprof</code> is not user friendly. The <strong>profvis</strong> package provides an interactive graphical interface for visualising data data from <code>Rprof</code>.</p>
+<p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottle neck lies. Sometimes you will will instead guess, relying intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
+<p>The <code>Rprof()</code> function is built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
+<p>Unfortunately <code>Rprof</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof</code>.</p>
 <div id="getting-started-with-profvis" class="section level3">
 <h3><span class="header-section-number">7.3.1</span> Getting started with <strong>profvis</strong></h3>
-<p>The <strong>profvis</strong> package can be installed in the usual way</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;profvis&quot;</span>)</code></pre></div>
-<p>As a simple example, we will use the <code>movies</code> data set, which contain information on around 60,000 movies from the IMDB. First, we’ll select movies that are classed as comedies, then plot year vs movies rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package, is <code>profvis</code> which profiles the code and creates an interactive HTML page. The first argument of <code>profvis</code> is the R expression of interest.</p>
+<p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile any R script of piece of R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year vs movies rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
 <span class="kw">profvis</span>({
   <span class="kw">data</span>(movies, <span class="dt">package=</span><span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span>
@@ -535,27 +541,26 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
   j =<span class="st"> </span><span class="kw">order</span>(movies$year)
   <span class="kw">lines</span>(movies$year[j], model$fitted[j]) <span class="co"># Add line to the plot</span>
 })</code></pre></div>
-The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).
+<p>The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-1"></span>
 <img src="figures/f7_1_profvis.png" alt="Output from profvis" width="100%" />
 <p class="caption">
 Figure 7.1: Output from profvis
 </p>
 </div>
-<p>The left hand panel gives the amount of time spent on each line of code. We see that majority of time is spent calculating the <code>loess</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess</code> function. Travelling up the function, we see that <code>loess</code> calls <code>simpleLoess</code> which in turn calls <code>.C</code> function.</p>
+<p>The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the <code>loess</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess</code> function. Travelling up the function, we see that <code>loess</code> calls <code>simpleLoess</code> which in turn calls <code>.C</code> function.</p>
 <p>The conclusion from this graph is that if optimisation were required, it would make sense to focus on the <code>loess</code> and possibly the <code>order</code> function calls.</p>
 <!-- http://rpubs.com/wch/123888 -->
 </div>
 <div id="example-monopoly-simulation" class="section level3">
 <h3><span class="header-section-number">7.3.2</span> Example: Monopoly Simulation</h3>
-<p>Monopoly is a board game that originated in the United States over <span class="math inline">\(100\)</span> years ago. The object of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
+<p>Monopoly is a board game that originated in the United States over <span class="math inline">\(100\)</span> years ago. The objective of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
 <p>The <strong>efficient</strong> package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for <code>profvis</code> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># args is also a valid argument for install.packages</span>
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient_pkg&quot;</span>, <span class="dt">args=</span><span class="st">&quot;--with-keep.source&quot;</span>)</code></pre></div>
-<p>The function can then be profiled via</p>
+<p>The function can then be profiled via the following code, which results in figure <a href="performance.html#fig:7-2">7.2</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
 <span class="kw">profvis</span>(<span class="kw">SimulateMonopoly</span>(<span class="dv">10000</span>))</code></pre></div>
-<p>to get <a href="performance.html#fig:7-2">7.2</a></p>
 <div class="figure" style="text-align: center"><span id="fig:7-2"></span>
 <img src="figures/f7_2_profvis_monopoly.png" alt="Code profiling for simulating the game of Monopoly." width="100%" />
 <p class="caption">
@@ -576,7 +581,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <li>Switch from <code>apply</code> to <code>rowSums</code>;</li>
 <li>Use <code>&amp;&amp;</code> in the <code>if</code> condition.</li>
 </ul>
-<p>Implementing this features, results in the following code.</p>
+<p>The refactored code, after implementing these optimisations, is shown below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">move =<span class="st"> </span>function(current) {
   <span class="co"># data.frame -&gt; matrix</span>
   rolls =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>), <span class="dt">ncol=</span><span class="dv">2</span>)
@@ -594,7 +599,8 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
   }
   current
 }</code></pre></div>
-<p>which gives a 25-fold speed improvement.</p>
+<p>Impressively, this refactored code runs 25 times faster than the original code.</p>
+<!-- __Colin__XXX Can I steal this example for the refactoring section? -->
 <div id="exercise-5" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>The <code>move</code> function above uses a vectorised solution. Whenever we move, we always roll six dice, then examine the outcome and determine the number of doubles. However, this is potentially wasteful, since the probability of getting one double is <span class="math inline">\(1/6\)</span> and two doubles is <span class="math inline">\(1/36\)</span>. Another method is too only roll additional dice if and when they are needed. Implement and time this solution.</p>
@@ -603,8 +609,8 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 </div>
 <div id="performance-parallel" class="section level2">
 <h2><span class="header-section-number">7.4</span> Parallel computing</h2>
-<p>This chapter provides a brief foray into the word of parallel computing and only looks at shared memory systems. The idea is to give a flavour of what is possible, instead of covering all possible varities. For a fuller account, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011">2011</a>)</span>.</p>
-<p>In recent R versions (since R 2.14.0) the <strong>parallel</strong> package comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use however, and you must determine the number of available cores manually, as illustrated below.</p>
+<p>This section provides a brief foray into the word of parallel computing. It only looks at methods for parallel computing on ‘shared memory systems’. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides flavour of what is possible; for a fuller account of parallel processing in R, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011">2011</a>)</span>.</p>
+<p>The foundational package for parallel computing in R is <strong>parallel</strong>. In recent R versions (since R 2.14.0) this comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use, however, and you must determine the number of available cores manually, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
 no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
 <div id="parallel-versions-of-apply-functions" class="section level3">
@@ -613,26 +619,26 @@ no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</cod
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
 <span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
 <span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
-<p>The key point is that there is very little difference in arguments between <code>parLapply</code> and <code>apply</code>, so the barrier to using (this form) of parallel computing is low. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster</code> call. This function, amongst other things, specifies the number of processors to use.</p>
+<p>The key point is that there is very little difference in arguments between <code>parLapply</code> and <code>apply</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster</code> call. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
 <div id="example-snakes-and-ladders" class="section level3">
 <h3><span class="header-section-number">7.4.2</span> Example: Snakes and Ladders</h3>
 <p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a></p>
-<p>If we wanted to simulate <code>N</code> games we could use <code>sapply</code></p>
+<p>The following code illustrates how to simulate <code>N</code> games using <code>sapply</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10</span>^<span class="dv">4</span>
 <span class="kw">sapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward. We begin by making a cluster object</p>
+<p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward. Begin by making a cluster object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
 cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</code></pre></div>
-<p>Then swap <code>sapply</code> for <code>parSapply</code></p>
+<p>Then simply swap <code>sapply</code> for <code>parSapply</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>before stopping the cluster</p>
+<p>It is important to stop the created clusters, as this can lead to memory leaks,<a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
-<p>On my computer I get a four-fold speed-up.</p>
+<p>On a multi-processor computer, this can lead to a four-fold speed-up.</p>
 </div>
 <div id="exit-functions-with-care" class="section level3">
 <h3><span class="header-section-number">7.4.3</span> Exit functions with care</h3>
-<p>We should always call <code>stopCluster</code> to free resources when we are finished with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster</code> is ommitted.</p>
+<p>Always call <code>stopCluster</code> to free resources when you finish with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster</code> is omitted.</p>
 <p>The <code>on.exit</code> function handles this problem with the minimum of fuss; regardless how the function ends, <code>on.exit</code> is always called. In the context of parallel programming we will have something similar to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simulate =<span class="st"> </span>function(cores) {
   cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)
@@ -651,6 +657,7 @@ Another common use of <code>on.exit</code> is with the <code>par</code> function
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This will run on Windows, but will only use 1 core</span>
 <span class="kw">mclapply</span>(<span class="dv">1</span>:<span class="dv">2</span>, snakes_ladders)</code></pre></div>
 <p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. If I’m writing code that I don’t intend to share, I use <code>mclapply</code> since it is more efficient.</p>
+<!-- __Colin__XXX I don't think the use of the person 'I' fits with the rest of the book - suggest changing to 'you' or just using the passive voice. -->
 </div>
 </div>
 <div id="rcpp" class="section level2">
@@ -717,7 +724,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ba1f393e8a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b89adef98a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -935,6 +942,7 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 <li id="fn20"><p>Technically this isn’t in base R, it’s a recommend package.<a href="performance.html#fnref20">↩</a></p></li>
 <li id="fn21"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref21">↩</a></p></li>
 <li id="fn22"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref22">↩</a></p></li>
+<li id="fn23"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref23">↩</a></p></li>
 </ol>
 </div>
             </section>
