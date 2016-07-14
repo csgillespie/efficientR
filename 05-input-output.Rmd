@@ -210,7 +210,9 @@ A more efficient, robust and scalable way to work with large datasets is via dat
 
 ## Binary file formats
 
-Once you have read-in (e.g. from a plain text file) and tidied your data (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
+There are limitations to plain text files. Even the trusty CSV format is "restricted to tabular data, lacks type-safety, and has limited precision for numeric values" [@JSSv071i02]. The [paper](https://www.jstatsoft.org/article/view/v071i02) provides an excellent overview of the issues associated with different file formats, and the various solutions that have been proposed.
+
+Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
 portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
 Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
