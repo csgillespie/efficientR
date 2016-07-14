@@ -255,13 +255,16 @@ microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000
 The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth
 worrying about for most applications.
 
-Integers are more space efficient. If we compare size of a integer vector to a standard numeric vector
+Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:
+
 ```{r}
 pryr::object_size(1:10000)
 pryr::object_size(y = seq(1, 10000, by=1.0))
 ```
-The integer version is (approximately) half the size. However most mathematical operations will convert
-the integer vector into a standard numerical vector, e.g. 
+
+The results show that integer version is roughly half the size. However, most mathematical operations will convert
+the integer vector into a standard numerical vector, as illustrated below: 
+
 ```{r}
 is.integer(1L + 1)
 ```
