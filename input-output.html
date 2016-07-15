@@ -459,9 +459,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 10.7 10.7 10.8   10.9 10.9 10.9     5</span>
-<span class="co">#&gt;  without_select 19.1 19.1 19.2   19.2 19.3 19.5     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.67  9.71  9.86   9.73 10.1 10.1     5</span>
+<span class="co">#&gt;  without_select 16.91 17.45 17.55  17.53 17.7 18.2     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -546,15 +546,21 @@ df_co2_feather <span class="op">=</span> feather.read_dataframe(path)</code></pr
 </div>
 <div id="benchmarking-binary-file-formats" class="section level3">
 <h3><span class="header-section-number">5.4.3</span> Benchmarking binary file formats</h3>
-<p>We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on a large data frame containing numbers with <span class="math inline">\(20\)</span> columns, are designed to help understand <em>how much</em> more efficient they are. First we look at file size savings. Figure <a href="input-output.html#fig:5-2">5.2</a> shows that the <em>relative</em> space saving of native R formats increase with dataset size. It is striking to note that binary <code>.Rds</code> files can be more than <span class="math inline">\(100\)</span> times more space efficient than plain text <code>.csv</code> files: a <span class="math inline">\(30\)</span>MB <code>.csv</code> file contains the same information as <span class="math inline">\(0.1\)</span>MB <code>.Rds</code> file!</p>
+<p>We know that binary formats are advantageous from space and read/write time perspectives, but how much so? The benchmarks in this section, based large matrices containing random numbers, are designed to help answer this question. Figure <a href="input-output.html#fig:5-2">5.2</a> shows that the <em>relative</em> efficiency gains of feather and Rds formats, compared with base CSV. From left to right, figure <a href="input-output.html#fig:5-2">5.2</a> shows benefits in terms of file size, read times, and write times.</p>
+<p>In terms of write times, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.</p>
 <div class="figure" style="text-align: center"><span id="fig:5-2"></span>
 <img src="_main_files/figure-html/5-2-1.png" alt="Comparison of binary formats using a 20 column CSV file." width="90%" />
 <p class="caption">
 Figure 5.2: Comparison of binary formats using a 20 column CSV file.
 </p>
 </div>
-<p>The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure <a href="input-output.html#fig:5-2">5.2</a>.</p>
-<p>The results show that the relative <em>size</em> of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary <code>.feather</code> format did not perform well in terms of read and write times, the function <code>read_feather</code> is <em>faster</em> than R’s native <code>.Rds</code> format, for the datasets used in the benchmark. <code>write_feather</code> is also faster than <code>saveRDS</code> for all but the largest dataset. In all cases, <code>read.csv</code> and <code>write.csv</code> is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.</p>
+<p>The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for each file format are illustrated in the middle and right hand panels of <a href="input-output.html#fig:5-2">5.2</a>.</p>
+<p>The results show that file size is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although feather files occupied more disc space, they were roughly equivalent in terms of read times: the functions <code>read_feather()</code> and <code>readRDS()</code> were consistently around 10 times faster than <code>read.csv</code>. In terms of write times, feather excels: <code>write_feather()</code> was around 10 times faster than <code>write.csv()</code>, whereas <code>saveRDS()</code> was only around 1.2 times faster.</p>
+<div class="rmdnote">
+<p>
+Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The <code>voyages</code> dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was <em>larger</em> than the orginal when saved as a feather file!
+</p>
+</div>
 </div>
 <div id="protocol-buffers" class="section level3">
 <h3><span class="header-section-number">5.4.4</span> Protocol Buffers</h3>

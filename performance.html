@@ -456,9 +456,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median     uq   max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00279 0.00595 0.0814 0.00794 0.0118  7.14   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.77811 1.16684 1.7888 1.74863 2.0999 10.35   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00294 0.00357 0.0533 0.00593 0.00782 4.71   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.72483 0.82584 1.1368 0.90326 1.18806 7.82   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -677,7 +677,7 @@ Another common use of <code>on.exit</code> is with the <code>par</code> function
 Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.
 </p>
 </div>
-<p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easily.</p>
+<p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easy.</p>
 <p>Although C/Fortran routines can be used using the <code>.Call</code> function this is not recommended: using <code>.Call</code> can be a painful experience. <strong>Rcpp</strong> provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R’s tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.</p>
 <p>C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and provide a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong> in Section <a href="performance.html#pre-requisites">7.5.1</a>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="performance.html#simple-c">7.5.2</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="performance.html#cppfunction">7.5.3</a>. The remainder of the chapter explains C++ data types (Section <a href="performance.html#c-types">7.5.4</a>), illustrates how to source C++ code directly (Section <a href="performance.html#sourcecpp">7.5.5</a>) and explains vectors (Section <a href="performance.html#vectors-and-loops">7.5.6</a>) <strong>Rcpp</strong> sugar (Section <a href="performance.html#sugar">7.5.7</a>) and finally provides guidance on further resources on the subject (Section <a href="performance.html#rcpp-resources">7.5.8</a>).</p>
 <div id="pre-requisites" class="section level3">
@@ -732,7 +732,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b28c526a8a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2aece57ab8a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>

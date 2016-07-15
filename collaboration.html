@@ -361,7 +361,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">9</span> Efficient collaboration</h1>
 <p>Large projects inevitably involve many people. This poses risks but also opportunities for improving computational efficiency and productivity, especially if project collaborators are reading and committing code. This chapter provides guidance on how to minimise the risks and maximise the benefits of collaborative R programming.</p>
 <p>Collaborative working has a number of benefits. A team with a diverse skill set is usually stronger than a team with a very narrow focus. It makes sense to specialize: clearly defining roles such as statistician, front-end developer, system administrator and project manager will make your team stronger. Even if you are working alone, dividing the work into discrete branches in this way can be useful, as discussed in Chapter <a href="workflow.html#workflow">4</a>.</p>
-<p>Collaborative programming provides an opportunity for people to review each other’s code. This can be encouraged by using a uniform style with many comments as described in Section <a href="collaboration.html#coding-style">9.2</a>. Like using a clear style in human language, following a style guide has the additional advantage of making your code more understandable to others.</p>
+<p>Collaborative programming provides an opportunity for people to review each other’s code. This can be encouraged by using a uniform style with many comments, as described in Section <a href="collaboration.html#coding-style">9.2</a>. Like using a clear style in human language, following a style guide has the additional advantage of making your code more understandable to others.</p>
 <p>When working on complex programming projects with multiple inter-dependencies version control is essential. Even on small projects tracking the progress of your project’s code-base has many advantages and makes collaboration much easier. Fortunately it is now easier than ever before to integrate version control into your project, using RStudio’s interface to the version control software <code>git</code> and online code sharing websites such as GitHub. This is the subject of Section <a href="collaboration.html#version-control">9.3</a>.</p>
 <p>The final section, <a href="collaboration.html#refactoring">9.4</a>, addresses the question of how to respond when you find inefficient code. Refactoring is the process of re-writing poorly written or scripts so they are faster, more comprehensible, more portable and easier to maintain.</p>
 <div id="top-5-tips-for-efficient-collaboration" class="section level2">
@@ -376,7 +376,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="coding-style" class="section level2">
 <h2><span class="header-section-number">9.2</span> Coding style</h2>
-<p>To be a successful programmer you need to use a consistent programming style. There is no single ‘correct’ style. To some extent good style is subjective and down to personal taste. There are, however, general principles that most programmers agree on, such as:</p>
+<p>To be a successful programmer you need to use a consistent programming style. There is no single ‘correct’ style, but using multiple styles in the same project is wrong <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span>. To some extent good style is subjective and down to personal taste. There are, however, general principles that most programmers agree on, such as:</p>
 <ul>
 <li>Use modular code;</li>
 <li>Comment your code;</li>
@@ -428,22 +428,27 @@ if(!<span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)) {
 <span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)
 <span class="co"># Bad</span>
 <span class="kw">library</span>(ggplot2)</code></pre></div>
-<p>Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading a large number of packages, consider putting all packages in a file called <code>packages.R</code> and using <code>source</code> appropriately.</p>
+<p>Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading many packages, consider putting all packages in a file called <code>packages.R</code> and using <code>source</code> appropriately.</p>
 </div>
 <div id="commenting" class="section level3">
 <h3><span class="header-section-number">9.2.4</span> Commenting</h3>
-<p>Avoid using plain English to explain standard R code</p>
+<p>Comments can greatly improve the efficiency of collaborative projects by helping everyone to understand what each line of code is doing. However comments should be used carefully: plastering your script with comments does not necessarily make it more efficient, and too many comments can be inefficient. Updating heavily commented code can be a pain, for example: not only will you have to change all the R code, you’ll also have to rewrite or delete all the comments!</p>
+<p>Ensure that your comments are meaningful. Avoid using verbose English to explain standard R code. The comment below, for example, adds no useful information because it is obvious by reading the code that <code>i</code> is being set to 1:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setting x equal to 1</span>
 x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
-<p>Instead comments should explain at a higher level of abstraction the programmer’s intention <span class="citation">(McConnell <a href="#ref-Mcconnell2004">2004</a>)</span>. Each comment line should begin with a single hash (<code>#</code>), followed by a space. Comments can be toggled (turned on and off) in this way with <code>Ctl+Shift+C</code> in RStudio. The double hash (<code>##</code>) can be reserved for R output. If you follow your comment with four dashes (<code># ----</code>) RStudio will enable code folding until the next instance of this.</p>
+<p>Instead, comments should provide context. Imagine <code>x</code> was being used as a counter (in which case it should probably have a more meaningful name, like <code>counter</code>, but we’ll continue to use <code>x</code> for illustrative purposes). In that case the comment could explain your intention for its future use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Initialize counter</span>
+x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<p>The example above illustrates that comments are more useful if they provide context and explain the programmer’s intention <span class="citation">(McConnell <a href="#ref-Mcconnell2004">2004</a>)</span>. Each comment line should begin with a single hash (<code>#</code>), followed by a space. Comments can be toggled (turned on and off) in this way with <code>Ctl+Shift+C</code> in RStudio. The double hash (<code>##</code>) can be reserved for R output. If you follow your comment with four dashes (<code># ----</code>) RStudio will enable code folding until the next instance of this.</p>
 </div>
 <div id="object-names" class="section level3">
 <h3><span class="header-section-number">9.2.5</span> Object names</h3>
-<p>Function and variable names should be lower case, with an underscore <code>(_)</code> separating words. Unless you are creating an S3 object, avoid using a <code>.</code> in the name. Create names that are concise, but still have meaning.</p>
-<p>In functions the required arguments should always be first, followed by optional arguments, with the special <code>...</code> argument coming last. If your argument has a boolean value, use <code>TRUE</code>/<code>FALSE</code> instead of <code>T</code>/<code>F</code> for clarity.</p>
+<p>It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called <code>x</code>, <code>xx</code>, <code>xxx</code> etc. The code would run fine. However, it would be hard for other people, and a future you, to figure our what was going on, especially when you got to the object <code>xxxxxxxxxx</code>!</p>
+<p>For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where <code>x</code> could be acceptable). Following discussion in <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span> and elsewhere, suggest an <code>underscore_separated</code> style for function and object names. Unless you are creating an S3 object, avoid using a <code>.</code> in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful.</p>
+<p>In functions the required arguments should always be first, followed by optional arguments. The special <code>...</code> argument should last. If your argument has a boolean value, use <code>TRUE</code>/<code>FALSE</code> instead of <code>T</code>/<code>F</code> for clarity.</p>
 <div class="rmdwarning">
 <p>
-It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidently redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>
+It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>
 </p>
 </div>
 <p>While it’s possible to write arguments that depend on other arguments, try to avoid using this idiom as it makes understanding the default behaviour harder to understand. Typically it’s easier to set an argument to have a default value of <code>NULL</code> and check its value using <code>is.null</code> than by using <code>missing</code>. Avoid using names of existing functions. Do not, for example, use <code>data</code> as a variable name.</p>
@@ -592,6 +597,9 @@ Note that the number of lines of code is not a good measure of code efficiency. 
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-ba_aa_ath_state_2012">
+<p>Bååth, Rasmus. 2012. “The State of Naming Conventions in R.” <em>The R Journal</em> 4 (2): 74–75. <a href="https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf" class="uri">https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf</a>.</p>
+</div>
 <div id="ref-Mcconnell2004">
 <p>McConnell, Steve. 2004. <em>Code Complete</em>. Pearson Education.</p>
 </div>
