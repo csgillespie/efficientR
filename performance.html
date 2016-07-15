@@ -271,7 +271,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.3</b> Code profiling</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.3.1</b> Getting started with <strong>profvis</strong></a></li>
-<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#example-monopoly-simulation"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
+<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#monopoloy"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.4.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.4.1</b> Parallel versions of apply functions</a></li>
@@ -456,9 +456,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min     lq  mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00277 0.0037 0.058 0.00597 0.00693 5.21   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73608 0.8266 1.180 0.89082 1.34773 7.67   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00267 0.00361 0.0535 0.00602 0.0066 4.79   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.75291 0.81315 1.0488 0.84731 1.1179 7.31   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -560,7 +560,7 @@ Figure 7.1: Output from profvis
 <p>The conclusion from this graph is that if optimisation were required, it would make sense to focus on the <code>loess</code> and possibly the <code>order</code> function calls.</p>
 <!-- http://rpubs.com/wch/123888 -->
 </div>
-<div id="example-monopoly-simulation" class="section level3">
+<div id="monopoloy" class="section level3">
 <h3><span class="header-section-number">7.3.2</span> Example: Monopoly Simulation</h3>
 <p>Monopoly is a board game that originated in the United States over <span class="math inline">\(100\)</span> years ago. The objective of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
 <p>The <strong>efficient</strong> package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for <code>profvis</code> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
@@ -589,26 +589,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <li>Switch from <code>apply</code> to <code>rowSums</code>;</li>
 <li>Use <code>&amp;&amp;</code> in the <code>if</code> condition.</li>
 </ul>
-<p>The refactored code, after implementing these optimisations, is shown below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">move =<span class="st"> </span>function(current) {
-  <span class="co"># data.frame -&gt; matrix</span>
-  rolls =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>), <span class="dt">ncol=</span><span class="dv">2</span>)
-  Total =<span class="st"> </span><span class="kw">rowSums</span>(rolls)    <span class="co"># apply -&gt; rowSums  </span>
-  IsDouble =<span class="st"> </span>rolls[,<span class="dv">1</span>] ==<span class="st"> </span>rolls[,<span class="dv">2</span>]
-  <span class="co"># &amp; -&gt; &amp;&amp;</span>
-  if(IsDouble[<span class="dv">1</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">2</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">3</span>]) {
-    current =<span class="st"> </span><span class="dv">11</span><span class="co">#Go To Jail</span>
-  } else if(IsDouble[<span class="dv">1</span>] &amp;&amp;<span class="st"> </span>IsDouble[<span class="dv">2</span>]) {
-    current =<span class="st"> </span>current +<span class="st"> </span><span class="kw">sum</span>(Total[<span class="dv">1</span>:<span class="dv">3</span>])
-  } else if(IsDouble[<span class="dv">1</span>]) {
-    current =<span class="st"> </span>current +<span class="st"> </span>Total[<span class="dv">1</span>:<span class="dv">2</span>]
-  } else {
-    current =<span class="st"> </span>Total[<span class="dv">1</span>]
-  }
-  current
-}</code></pre></div>
-<p>Impressively, this refactored code runs 25 times faster than the original code.</p>
-<!-- __Colin__XXX Can I steal this example for the refactoring section? -->
+<p>Impressively, the refactored code runs 25 times faster than the original code.</p>
 <div id="exercise-5" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>The <code>move</code> function above uses a vectorised solution. Whenever we move, we always roll six dice, then examine the outcome and determine the number of doubles. However, this is potentially wasteful, since the probability of getting one double is <span class="math inline">\(1/6\)</span> and two doubles is <span class="math inline">\(1/36\)</span>. Another method is too only roll additional dice if and when they are needed. Implement and time this solution.</p>
@@ -732,7 +713,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8c9238a8a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8205fad8a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>

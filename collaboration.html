@@ -271,7 +271,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.3</b> Code profiling</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.3.1</b> Getting started with <strong>profvis</strong></a></li>
-<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#example-monopoly-simulation"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
+<li class="chapter" data-level="7.3.2" data-path="performance.html"><a href="performance.html#monopoloy"><i class="fa fa-check"></i><b>7.3.2</b> Example: Monopoly Simulation</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.4</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.4.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.4.1</b> Parallel versions of apply functions</a></li>
@@ -581,7 +581,9 @@ Note that the number of lines of code is not a good measure of code efficiency. 
 </div>
 <div id="exercise-7" class="section level4 unnumbered">
 <h4>Exercise</h4>
-<p>Refactor the following code chunk to make it more efficient:</p>
+<ol style="list-style-type: decimal">
+<li>Refactor the following code chunk to make it more efficient:</li>
+</ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">letters =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;c&quot;</span>),
   <span class="dt">numbers =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)
@@ -591,6 +593,28 @@ Note that the number of lines of code is not a good measure of code efficiency. 
 <span class="co">#&gt; 1       a  3</span>
 <span class="co">#&gt; 2       b  7</span>
 <span class="co">#&gt; 3       c 11</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Refector the code in the move function below, to make it faster, more stylish, and more concise. This is from <a href="https://github.com/csgillespie/efficient/blob/master/R/monopoly.R">monopoly.R</a> file in the efficient package (see section <a href="performance.html#monopoloy">7.3.2</a> in the previous chapter for guidance).</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">move =<span class="st"> </span>function(current) {
+  
+  df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">d1 =</span> <span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">3</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>), 
+                  <span class="dt">d2 =</span> <span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">3</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>))
+  
+  df$Total =<span class="st"> </span><span class="kw">apply</span>(df, <span class="dv">1</span>, sum)
+  df$IsDouble =<span class="st"> </span>df$d1 ==<span class="st"> </span>df$d2
+  
+  if(df$IsDouble[<span class="dv">1</span>] &amp;<span class="st"> </span>df$IsDouble[<span class="dv">2</span>] &amp;<span class="st"> </span>df$IsDouble[<span class="dv">3</span>]) {
+    current =<span class="st"> </span><span class="dv">11</span><span class="co">#Go To Jail</span>
+  } else if(df$IsDouble[<span class="dv">1</span>] &amp;<span class="st"> </span>df$IsDouble[<span class="dv">2</span>]) {
+    current =<span class="st"> </span>current +<span class="st"> </span><span class="kw">sum</span>(df$Total[<span class="dv">1</span>:<span class="dv">3</span>])
+  } else if(df$IsDouble[<span class="dv">1</span>]) {
+    current =<span class="st"> </span>current +<span class="st"> </span><span class="kw">sum</span>(df$Total[<span class="dv">1</span>:<span class="dv">2</span>])
+  } else {
+    current =<span class="st"> </span>current +<span class="st"> </span>df$Total[<span class="dv">1</span>]
+  }
+  <span class="kw">return</span>(current)
+}</code></pre></div>
 
 </div>
 </div>
