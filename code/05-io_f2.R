@@ -1,49 +1,66 @@
 source("code/initialise.R")
 library(microbenchmark)
-cols = 20
-# Start corresponds to 0.1 MB
-# rows = 10^(seq(1,6, length.out = 10))
-
-# res = NULL
-# i = 3
-# for(i in seq_along(rows)) {
-#   j = 1
-#   no_of_rows = floor(rows[i]/(10^(j-1)))
-#   for(k in 1:10) {
-#     m = matrix(runif(no_of_rows * cols[j]), nrow = no_of_rows, ncol = cols[j])
-#     m = as.data.frame(m)
-#     fname = replicate(3, tempfile())
-#     
-#     mb_write = microbenchmark(times = 5,
-#                               base = write.csv(m, file = fname[1], row.names = FALSE),
-#                               feather = write_feather(m, fname[2]),
-#                               rds = saveRDS(m, fname[3]), unit="s")
-#     mb_write
-#     mb_read = microbenchmark(times = 5,
-#                              base = read.csv(fname[1]),
-#                              feather = read_feather(fname[2]),
-#                              rds = readRDS(fname[3]), unit="s")
-#     
-#     
-#     sizes = file.size(fname)  
-#     
-#     
-#     tab_read = tapply(mb_read$time/1000, mb_read$expr, mean)
-#     tab_write = tapply(mb_write$time/1000, mb_write$expr, mean)
-#     res_tmp = data.frame(exp = names(tab_read),
-#                          read_time = as.vector(tab_read),
-#                          write_time = as.vector(tab_write),  
-#                          rows = no_of_rows,
-#                          size=sizes, rel=sizes/sizes[1])
-#     
-#     unlink(fname)
-#   }
-#   res = rbind(res, res_tmp)
-#   message(i)
-# }
-#save(res, file="data/05-f2.RData")
-load("data/05-f2.RData")
+library(feather)
 library(dplyr)
+library(ggplot2)
+# Start corresponds to 0.1 MB
+io_data = function(start=1,
+                   end=6, length.out=10, times = 5, reps=10){
+  cols = 20
+  #start = 1;end=2;length.out=5;times=5
+  rows = 10^(seq(start,end, length.out = length.out))
+  res = NULL
+  i = 3
+  for(i in seq_along(rows)) {
+    no_of_rows = floor(rows[i]/(10^(j-1)))
+    for(k in 1:reps) {
+      m = matrix(runif(no_of_rows * 20), nrow = no_of_rows, ncol = 20)
+      m = as.data.frame(m)
+      fname = replicate(3, tempfile())
+      
+      (mb_write = microbenchmark(times = times,
+                                base = write.csv(m, file = fname[1], row.names = FALSE),
+                                feather = write_feather(m, fname[2]),
+                                rds = saveRDS(m, fname[3]), unit="s"))
+      
+      (mb_read = microbenchmark(times = times,
+                               base = read.csv(fname[1]),
+                               feather = read_feather(fname[2]),
+                               rds = readRDS(fname[3]), unit="s"))
+      
+      
+      sizes = file.size(fname)
+      
+      
+      tab_read = tapply(mb_read$time/1000, mb_read$expr, mean)
+      tab_write = tapply(mb_write$time/1000, mb_write$expr, mean)
+      res_tmp = data.frame(exp = names(tab_read),
+                           read_time = as.vector(tab_read),
+                           write_time = as.vector(tab_write),
+                           rows = no_of_rows,
+                           size=sizes, rel=sizes/sizes[1])
+      
+      unlink(fname)
+      gc()
+    }
+    
+    res = rbind(res, res_tmp)
+    message(i)
+  }
+
+  res
+}
+
+resa = io_data(1, 2, 10, times=5000, reps=100)
+resa = io_data(2, 3, 10, times=1000, reps=50)
+resa = io_data(3, 4, 10, times=10, reps=50)
+resa = io_data(4, 5, 10, times=5, reps=10)
+resa = io_data(5, 6, 10, times=5, reps=10)
+
+
+saveRDS(res, file="data/05-f2.RData")
+res = readRDS("data/05-f2.RData")
+
 res1 = group_by(res, rows, exp)
 res2 = summarise(res1, 
                  "read_time" = mean(read_time),
@@ -52,7 +69,8 @@ res2 = summarise(res1,
                  "size"=mean(size), "rel"=mean(rel))
 
 
-res2$MB = cols*res2$rows*18/10^6
+res2$MB = 20*res2$rows*18/10^6
+
 res2$Read_Time = NA
 res2$Write_Time = NA
 i = 10
