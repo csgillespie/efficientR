@@ -1,11 +1,11 @@
 source("code/initialise.R")
 library(microbenchmark)
-library(feather)
 library(dplyr)
 library(ggplot2)
 # Start corresponds to 0.1 MB
 io_data = function(start=1,
                    end=6, length.out=10, times = 5, reps=10){
+  library(feather)# avoid travis issues
   cols = 20
   #start = 1;end=2;length.out=5;times=5
   rows = 10^(seq(start,end, length.out = length.out))
