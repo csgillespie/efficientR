@@ -12,7 +12,7 @@ This book is for anyone who wants to make their R code faster to type, faster to
 
 ## What is efficiency?
 
-In everyday life efficiency roughly means 'working well'. An efficient vehicle goes far without guzzling gas. An efficient worker gets the job done fast without stress. And an efficient light shines bright with a minimum of energy consumption. In this final sense, efficiency ($\eta$) has a formal definition as the ratio of work done ($W$ e.g. light output) over effort ($Q$ energy consumption):
+In everyday life efficiency roughly means 'working well'. An efficient vehicle goes far without guzzling gas. An efficient worker gets the job done fast without stress. And an efficient light shines bright with a minimum of energy consumption. In this final sense, efficiency ($\eta$) has a formal definition as the ratio of work done ($W$ e.g. light output) per unit effort ($Q$, energy consumption in this case):
 
 $$
 \eta = \frac{W}{Q}
@@ -24,15 +24,16 @@ In the context of computer programming efficiency can be defined narrowly or bro
 
 The issue of having a 'great variety' of ways to solve a problem has not gone away with the invention of advanced computer languages: R is notorious for allowing users to solve problems in many ways, and this notoriety has only grown with the proliferation of community contributed package. In this book we want to focus on the *best* way of solving problems, from an efficiency perspective.
 
-The second, broader definition of efficient computing is productivity. This is the amount of *useful* work a *person* (not a computer) can do per unit time. It may be possible to rewrite your code base in C to make it $100$ times faster. But if this takes $100$ human hours it may not be worth it. Computers can chug away day and night. People cannot. Human productivity is the subject of Chapter \@ref(workflow).
+The second, broader definition of efficient computing is *programmer productivity*. This is the amount of *useful* work a *person* (not a computer) can do per unit time. It may be possible to rewrite your code base in C to make it $100$ times faster. But if this takes $100$ human hours it may not be worth it. Computers can chug away day and night. People cannot. Human productivity is the subject of Chapter \@ref(workflow).
 
 By the end of this book you should know how to write R code that is efficient from both *algorithmic* and *productivity* perspectives. Efficient code is also concise, elegant and easy to maintain, vital when working on large projects.
 
 ## Why efficiency?
 
-Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: in an age of Big Data and stagnating computer clock speeds (see Chapter \@ref(hardware)), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can "solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research" [@visser_speeding_2015].
+Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: no. In an age of Big Data and stagnating computer clock speeds (see Chapter \@ref(hardware)), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can "solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research" [@visser_speeding_2015].
 
-A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK's Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. To help his workflow he developed a function, `line2route()` in the **stplanr** to batch process calls to the ([cyclestreets.net](http://www.cyclestreets.net/)) API. But after a few thousand routes the code slowed to a standstill. Yet hundreds of thousands were needed. This endangered the contract. After eliminating internet connection issues, it was found that the slowdown was due to a bug in `line2route()`: it suffered from the 'vector growing problem', discussed in Section \@ref(memory-allocation).
+A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK's Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. For this work he developed the function, `line2route()` in the **stplanr** package, to generate routes via the ([cyclestreets.net](http://www.cyclestreets.net/)) API.
+Hundreds of thousands of routes were needed but, to his dismay, code slowed to a standstill after only a few thousand routes. This endangered the contract. After eliminating other issues and via code profiling (covered in section \@ref(performance-profvis)), it was found that the slowdown was due to a bug in `line2route()`: it suffered from the 'vector growing problem', discussed in Section \@ref(memory-allocation).
 
 The solution was simple. A [single commit](https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47) made `line2route()` more than *ten times faster* and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be *essential*.
 <!-- Add references to the above anecdote if appropriate -->
@@ -60,7 +61,7 @@ knitr::include_graphics("figures/f1_1_800px-QWERTY-home-keys-position.png")
 Benchmarking is the process of testing the performance of specific operations
 repeatedly. Modifying things from one benchmark to the next and recording the results
 after changing things allows experimentation to see which bits of code are fastest.
-Benchmarking is important in the efficient programmer's toolkit: you may *think* that
+Benchmarking is important in the efficient programmer's tool-kit: you may *think* that
 your code is faster than mine but benchmarking allows you to *prove* it. The easiest
 way to benchmark a function is to use `system.time()`. The **microbenchmark** package
 is more flexible and runs a test many times (by default $1000$), enabling the user to
@@ -136,22 +137,6 @@ devtools::install_github("csgillespie/efficientR")
 ## Online version
 
 We are grateful to O'Reilly for allowing us to develop this book [online](https://csgillespie.github.io/efficientR/).
-The onlineversion will continue to evolve in between reprints of the physical book. 
+The online version will continue to evolve in between reprints of the physical book. 
 The book was written using markdown and translated into the book form using the **bookdown** package.
 The source of the book is available at [https://github.com/csgillespie/efficientR](https://github.com/csgillespie/efficientR). 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
