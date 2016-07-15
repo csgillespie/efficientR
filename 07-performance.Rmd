@@ -449,32 +449,6 @@ by incorporating the following improvements^[Solutions are available in the
   * Switch from `apply` to `rowSums`;
   * Use `&&` in the `if` condition.
 
-The refactored code, after implementing these optimisations, is shown below:
-
-```{r}
-move = function(current) {
-  # data.frame -> matrix
-  rolls = matrix(sample(1:6, 6, replace=TRUE), ncol=2)
-  Total = rowSums(rolls)	# apply -> rowSums	
-  IsDouble = rolls[,1] == rolls[,2]
-  # & -> &&
-  if(IsDouble[1] && IsDouble[2] && IsDouble[3]) {
-    current = 11#Go To Jail
-  } else if(IsDouble[1] && IsDouble[2]) {
-    current = current + sum(Total[1:3])
-  } else if(IsDouble[1]) {
-    current = current + Total[1:2]
-  } else {
-    current = Total[1]
-  }
-  current
-}
-```
-
-Impressively, this refactored code runs 25 times faster than the original code.
-
-<!-- __Colin__XXX Can I steal this example for the refactoring section? -->
-
 #### Exercise {-}
 
 The `move` function above uses a vectorised solution. Whenever we move, we always roll six
