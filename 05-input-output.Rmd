@@ -253,15 +253,31 @@ df_co2_feather = feather.read_dataframe(path)
 
 ### Benchmarking binary file formats
 
-We know that binary formats are advantageous from space and read/write time perspectives. The benchmarks in this section, based on a large data frame containing numbers with $20$ columns, are designed to help understand *how much* more efficient they are. First we look at file size savings. Figure \@ref(fig:5-2) shows that the *relative* space saving of native R formats increase with dataset size. It is striking to note that binary `.Rds` files can be more than $100$ times more space efficient than plain text `.csv` files: a $30$MB `.csv` file contains the same information as $0.1$MB `.Rds` file!
+We know that binary formats are advantageous from space and read/write time perspectives, but how much so? The benchmarks in this section, based large matrices containing random numbers, are designed to help answer this question. Figure \@ref(fig:5-2) shows that the *relative* efficiency gains of feather and Rds formats, compared with base CSV. From left to right, figure \@ref(fig:5-2) shows benefits in terms of file size, read times, and write times.
+
+In terms of write times, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.
 
 ```{r 5-2, echo=FALSE, fig.cap="Comparison of binary formats using a 20 column CSV file.", out.width="90%", fig.align="center", message=FALSE}
 local(source("code/05-io_f2.R", local=TRUE))
 ```
 
-The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for the functions showcased above are presented figure \@ref(fig:5-2).
+The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for each file format are illustrated in the middle and right hand panels of \@ref(fig:5-2).
 
-The results show that the relative *size* of different formats is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although the binary `.feather` format did not perform well in terms of read and write times, the function `read_feather` is *faster*  than R's native `.Rds`  format, for the datasets used in the benchmark. `write_feather` is also faster than `saveRDS` for all but the largest dataset. In all cases, `read.csv` and `write.csv` is several times slower than the binary formats and this relative slowness worsens with increasing dataset size. In the next section we explore the performance of alternatives to these base R functions for reading and writing plain text data files.
+The results show that file size is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although feather files occupied more disc space, they were roughly equivalent in terms of read times: the functions `read_feather()` and `readRDS()` were consistently around 10 times faster than `read.csv`. In terms of write times, feather excels: `write_feather()` was around 10 times faster than `write.csv()`, whereas `saveRDS()` was only around 1.2 times faster. 
+
+```{block, content-dependent-performance, type='rmdnote'}
+Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The `voyages` dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was *larger* than the orginal when saved as a feather file!
+```
+
+```{r size-voyages, eval=FALSE, echo=FALSE}
+saveRDS(voyages_readr, "voyages.Rds")
+feather::write_feather(voyages_readr, "voyages.feather")
+size_csv = file.size("data/voc_voyages.tsv")
+file.size("voyages.Rds") / size_csv
+file.size("voyages.feather") / size_csv
+vfiles = list.files(pattern = "voyages")
+file.remove(vfiles)
+```
 
 ### Protocol Buffers
 
