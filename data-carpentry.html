@@ -705,22 +705,9 @@ top_table =
 </tbody>
 </table>
 <p>Building on the ‘learning by doing’ ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
-idata =<span class="st"> </span><span class="kw">read_csv</span>(fname)
-idata <span class="co"># print the dataset </span>
-<span class="co">#&gt; # A tibble: 6,925 x 9</span>
-<span class="co">#&gt;   Country Name Country Code  Year Year Code</span>
-<span class="co">#&gt;          &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;     &lt;chr&gt;</span>
-<span class="co">#&gt; 1  Afghanistan          AFG  1974    YR1974</span>
-<span class="co">#&gt; 2  Afghanistan          AFG  1975    YR1975</span>
-<span class="co">#&gt; 3  Afghanistan          AFG  1976    YR1976</span>
-<span class="co">#&gt; 4  Afghanistan          AFG  1977    YR1977</span>
-<span class="co">#&gt; # ... with 6,921 more rows, and 5 more variables: Income share held by</span>
-<span class="co">#&gt; #   highest 10% [SI.DST.10TH.10] &lt;chr&gt;, Income share held by lowest 10%</span>
-<span class="co">#&gt; #   [SI.DST.FRST.10] &lt;chr&gt;, GINI index [SI.POV.GINI] &lt;chr&gt;, Survey mean</span>
-<span class="co">#&gt; #   consumption or income per capita, bottom 40% (2005 PPP $ per day)</span>
-<span class="co">#&gt; #   [SI.SPR.PC40] &lt;chr&gt;, Survey mean consumption or income per capita,</span>
-<span class="co">#&gt; #   total population (2005 PPP $ per day) [SI.SPR.PCAP] &lt;chr&gt;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load global inequality data</span>
+fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/world-bank-ineq.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>) 
+idata =<span class="st"> </span><span class="kw">read_csv</span>(fname)</code></pre></div>
 <p>You should not be expecting to master <strong>dplyr</strong>‘s functionality in one sitting: the package is large and can be seen as a language in its own right. Following the ’walk before you run’ principle, we’ll start simple, by filtering and aggregating rows.</p>
 <div id="renaming-columns" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Renaming columns</h3>
@@ -772,7 +759,7 @@ idata[id] =<span class="st"> </span><span class="kw">data.matrix</span>(idata[id
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata[id] =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(idata[id]))</code></pre></div>
 <!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
 <p><em>Another</em> one-liner to achieve the same result uses <strong>dplyr</strong>’s <code>mutate_each</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata_mutate =<span class="st"> </span><span class="kw">mutate_each</span>(idata, <span class="st">&quot;as.numeric&quot;</span>, id)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata =<span class="st"> </span><span class="kw">mutate_each</span>(idata, <span class="st">&quot;as.numeric&quot;</span>, id)</code></pre></div>
 <p>As with other operations there are other ways of achieving the same result in R, including the use of loops via <code>apply()</code> and <code>for()</code>. These are shown in the chapter’s <a href="https://github.com/csgillespie/efficientR">source code</a>.</p>
 </div>
 <div id="filtering-rows" class="section level3">
@@ -854,10 +841,8 @@ The example above relates to a philosophical question in programming: how much w
 </p>
 </div>
 <p>To reinforce the point, this operation is also performed below on the <code>idata</code> dataset:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(idata_mutate, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
-<span class="co">#&gt; Warning in data(idata_mutate, package = &quot;efficient&quot;): data set</span>
-<span class="co">#&gt; &#39;idata_mutate&#39; not found</span>
-countries =<span class="st"> </span><span class="kw">group_by</span>(idata_mutate, Country)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(idata, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
+countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
 <span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
 <span class="co">#&gt; # A tibble: 176 x 2</span>
 <span class="co">#&gt;       Country  gini</span>
@@ -914,7 +899,7 @@ countries =<span class="st"> </span><span class="kw">group_by</span>(idata_mutat
 <p>What were, on average, the 5 most unequal years for countries containing the letter g?</p>
 </blockquote>
 <p>Here’s how chains work to organise the analysis in a logical step-by-step manner:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata_mutate %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) %&gt;%
 <span class="st">  </span><span class="kw">group_by</span>(Year) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) %&gt;%
