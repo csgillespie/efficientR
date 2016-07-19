@@ -220,9 +220,9 @@ knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of a
 Building on the 'learning by doing' ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
 
 ```{r, message=FALSE}
-fname = system.file("extdata/world-bank-ineq.csv", package = "efficient")
+# Load global inequality data
+fname = system.file("extdata/world-bank-ineq.csv", package = "efficient") 
 idata = read_csv(fname)
-idata # print the dataset 
 ```
 
 You should not be expecting to master **dplyr**'s functionality in one sitting:
@@ -299,8 +299,8 @@ idata[id] = as.numeric(unlist(idata[id]))
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE, echo=-2}
-idata_mutate = mutate_each(idata, "as.numeric", id)
-#save(idata_mutate, file="../efficient_pkg/data/idata_mutate.RData")
+idata = mutate_each(idata, "as.numeric", id)
+# This file is saved as idata in the efficient package
 ```
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
@@ -424,8 +424,8 @@ The example above relates to a philosophical question in programming: how much w
 To reinforce the point, this operation is also performed below on the `idata` dataset:
 
 ```{r}
-data(idata_mutate, package="efficient")
-countries = group_by(idata_mutate, Country)
+data(idata, package="efficient")
+countries = group_by(idata, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
@@ -493,7 +493,7 @@ Here's how chains work to organise the analysis in a
 logical step-by-step manner:
 
 ```{r tidy=FALSE}
-idata_mutate %>% 
+idata %>% 
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
