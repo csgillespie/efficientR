@@ -20,8 +20,15 @@ pkgs = gsub("\n", " ", pkgs)
 pkgs = strsplit(pkgs, ",")[[1]]
 pkgs = gsub(" ", "", pkgs)
 pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
-pkgs = c(pkgs, "rio", "feather") # issues installing rio on travis
+ext_pkgs = c("rio", "feather")  # issues installing on travis
+pkgs = c(pkgs, ext_pkgs)
 pkgs = unique(pkgs)
+
+if(!all(ext_pkgs %in% rownames(installed.packages()))) {
+  message("Installing rio and feather")
+  install.packages(ext_pkgs)
+}
+
 
 pkgs = pkgs[order(pkgs)]
 pkgs_df = data.frame(Name = pkgs, Title = NA, cite=NA)
