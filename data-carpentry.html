@@ -438,7 +438,7 @@ df_base$colB</code></pre></div>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
-raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
+raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;extdata/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
 <span class="kw">dim</span>(raw)
 <span class="co">#&gt; [1] 18 10</span>
 rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
@@ -1085,7 +1085,7 @@ land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, lan
 <p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code> presented in Section <a href="data-carpentry.html#filtering-columns">6.4.4</a>, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but you do not need to refer to the object name inside the brackets:</p>
 <!-- __XXX__ Anything read from data/* isn't reproducible for the reader. MOve to the package?-->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
-idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/idata-renamed.Rds&quot;</span>)
+idata =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;extdata/idata-renamed.Rds&quot;</span>)
 idata_dt =<span class="st"> </span><span class="kw">data.table</span>(idata) <span class="co"># convert to data.table class</span>
 aus3a =<span class="st"> </span>idata_dt[Country ==<span class="st"> &quot;Australia&quot;</span>]</code></pre></div>
 <p>To boost performance, one can set ‘keys’. These are ‘<a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">supercharged rownames</a>’ which order the table based on one or more variables. This allows a <em>binary search</em> algorithm to subset the rows of interest, which is much, much faster than the <em>vector scan</em> approach used in base R (see <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html"><code>vignette(&quot;datatable-keys-fast-subset&quot;)</code></a>). <strong>data.table</strong> uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise <code>.()</code> syntax below).</p>

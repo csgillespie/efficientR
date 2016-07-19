@@ -414,9 +414,9 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 In general, you should never “hand-write” a CSV file. Instead, you should use <code>write.csv</code> or an equivalent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilites sharing CSV files between tools and operating systems.
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)
-df_co2_dt =<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)
-df_co2_readr =<span class="st"> </span>data.table::<span class="kw">fread</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)
+df_co2_dt =<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)
+df_co2_readr =<span class="st"> </span>data.table::<span class="kw">fread</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)</code></pre></div>
 <div class="rmdnote">
 <p>
 Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv</code> and <code>read.delim</code> in fact are <em>wrappers</em> around <code>read.table</code>. This can be seen in the source code of <code>read.csv</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = “,”)</code>.
@@ -459,9 +459,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select  9.53  9.89  9.93   9.96 10.0 10.2     5</span>
-<span class="co">#&gt;  without_select 16.44 16.52 17.00  16.77 17.5 17.8     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select 10.3 10.5 10.8   10.9 11.0 11.2     5</span>
+<span class="co">#&gt;  without_select 18.9 19.4 19.9   19.7 20.5 21.0     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -523,10 +523,10 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
 <div id="native-binary-formats-rdata-or-rds" class="section level3">
 <h3><span class="header-section-number">5.4.1</span> Native binary formats: Rdata or Rds?</h3>
 <p><code>.Rds</code> and <code>.RData</code> are R’s native binary file formats. These formats are optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between them:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(df_co2, <span class="dt">file =</span> <span class="st">&quot;data/co2.RData&quot;</span>)
-<span class="kw">saveRDS</span>(df_co2, <span class="st">&quot;data/co2.Rds&quot;</span>)
-<span class="kw">load</span>(<span class="st">&quot;data/co2.RData&quot;</span>)
-df_co2_rds =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/co2.Rds&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(df_co2, <span class="dt">file =</span> <span class="st">&quot;extdata/co2.RData&quot;</span>)
+<span class="kw">saveRDS</span>(df_co2, <span class="st">&quot;extdata/co2.Rds&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;extdata/co2.RData&quot;</span>)
+df_co2_rds =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;extdata/co2.Rds&quot;</span>)
 <span class="kw">identical</span>(df_co2, df_co2_rds)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>The first method is the most widely used. It uses the <code>save</code> function which takes any number of R objects and writes them to a file, which must be specified by the <code>file =</code> argument. <code>save</code> is like <code>save.image</code>, which saves <em>all</em> the objects currently loaded in R.</p>
@@ -537,8 +537,8 @@ df_co2_rds =<span class="st"> </span><span class="kw">readRDS</span>(<span class
 <h3><span class="header-section-number">5.4.2</span> The feather file format</h3>
 <p>Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the <code>df_co2</code> dataset loaded previously in both R and Python:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;feather&quot;</span>)
-<span class="kw">write_feather</span>(df_co2, <span class="st">&quot;data/co2.feather&quot;</span>)
-df_co2_feather =<span class="st"> </span><span class="kw">read_feather</span>(<span class="st">&quot;data/co2.feather&quot;</span>)</code></pre></div>
+<span class="kw">write_feather</span>(df_co2, <span class="st">&quot;extdata/co2.feather&quot;</span>)
+df_co2_feather =<span class="st"> </span><span class="kw">read_feather</span>(<span class="st">&quot;extdata/co2.feather&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> feather
 <span class="im">import</span> feather
 path <span class="op">=</span> <span class="st">&#39;data/co2.feather&#39;</span>
@@ -576,8 +576,8 @@ Note that the performance of different file formats depends on the content of th
 <span class="kw">file.remove</span>(<span class="st">&quot;voc_tsvs.zip&quot;</span>) <span class="co"># tidy up by removing the zip file</span></code></pre></div>
 <p>This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with <code>df = read.csv(url)</code>. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don’t have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO<sup>2</sup>. Note that this dataset is also available from the <strong>datasets</strong> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv&quot;</span>
-<span class="kw">download.file</span>(url, <span class="st">&quot;data/co2.csv&quot;</span>)
-df_co2 =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/co2.csv&quot;</span>)</code></pre></div>
+<span class="kw">download.file</span>(url, <span class="st">&quot;extdata/co2.csv&quot;</span>)
+df_co2 =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)</code></pre></div>
 <p>There are now many R packages to assist with the download and import of data. The organisation <a href="https://ropensci.org/">ROpenSci</a> supports a number of these. The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>) <span class="co"># load the WDI library (must be installed)</span>
 <span class="kw">WDIsearch</span>(<span class="st">&quot;CO2&quot;</span>) <span class="co"># search for data on a topic</span>
