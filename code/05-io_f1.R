@@ -33,8 +33,8 @@ library("microbenchmark")
 #   }
 #   message(i)
 # }
-#save(res, file="data/04-f3.RData")
-load("data/05-f1.RData")
+#save(res, file="extdata/04-f3.RData")
+load("extdata/05-f1.RData")
 res = aggregate(time ~ cols+rows+ exp, mean, data=res)
 res$MB = res$cols*res$rows*18/1000000 ## Approximate
 res$cells = paste(res$rows, res$cols)

@@ -86,9 +86,9 @@ that facilites sharing CSV files between tools and operating systems.
 ```{r, echo=-1:-2}
 library("readr") # for read_ functions
 library("data.table") # for fread function
-df_co2 = read.csv("data/co2.csv")
-df_co2_dt = readr::read_csv("data/co2.csv")
-df_co2_readr = data.table::fread("data/co2.csv")
+df_co2 = read.csv("extdata/co2.csv")
+df_co2_dt = readr::read_csv("extdata/co2.csv")
+df_co2_readr = data.table::fread("extdata/co2.csv")
 ```
 
 ```{block, read-table-csv, type='rmdnote'}
@@ -221,10 +221,10 @@ Unlike plain text files data stored in binary formats cannot be read by humans. 
 `.Rds` and `.RData` are R's native binary file formats. These formats are optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between them:
 
 ```{r}
-save(df_co2, file = "data/co2.RData")
-saveRDS(df_co2, "data/co2.Rds")
-load("data/co2.RData")
-df_co2_rds = readRDS("data/co2.Rds")
+save(df_co2, file = "extdata/co2.RData")
+saveRDS(df_co2, "extdata/co2.Rds")
+load("extdata/co2.RData")
+df_co2_rds = readRDS("extdata/co2.Rds")
 identical(df_co2, df_co2_rds)
 ```
 
@@ -240,8 +240,8 @@ Feather was developed as collaboration between R and Python developers to create
 
 ```{r, eval=FALSE}
 library("feather")
-write_feather(df_co2, "data/co2.feather")
-df_co2_feather = read_feather("data/co2.feather")
+write_feather(df_co2, "extdata/co2.feather")
+df_co2_feather = read_feather("extdata/co2.feather")
 ```
 
 ```{r, engine='python', eval=FALSE}
@@ -272,7 +272,7 @@ Note that the performance of different file formats depends on the content of th
 ```{r size-voyages, eval=FALSE, echo=FALSE}
 saveRDS(voyages_readr, "voyages.Rds")
 feather::write_feather(voyages_readr, "voyages.feather")
-size_csv = file.size("data/voc_voyages.tsv")
+size_csv = file.size("extdata/voc_voyages.tsv")
 file.size("voyages.Rds") / size_csv
 file.size("voyages.feather") / size_csv
 vfiles = list.files(pattern = "voyages")
@@ -303,8 +303,8 @@ This workflow equally applies to downloading and loading single files. Note that
 
 ```{r, eval=FALSE}
 url = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv"
-download.file(url, "data/co2.csv")
-df_co2 = read_csv("data/co2.csv")
+download.file(url, "extdata/co2.csv")
+df_co2 = read_csv("extdata/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [ROpenSci](https://ropensci.org/) supports a number of these.
@@ -323,7 +323,7 @@ There will be situations where you cannot download the data directly or when the
 # download data from nasa, as described here:
 # http://disc.sci.gsfc.nasa.gov/recipes/?q=recipes/How-to-Read-Data-in-netCDF-Format-with-R
 library("raster") # requires the ncdf4 package to be installed
-r = raster("data/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
+r = raster("extdata/nc_3B42.20060101.03.7A.HDF.Z.ncml.nc")
 ```
 
 ## Accessing data stored in packages

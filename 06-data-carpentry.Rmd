@@ -87,11 +87,11 @@ The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:
 # Download data from its original source - an academic paper
 downloader::download("http://www.jstatsoft.org/v59/i10/supp/4", destfile = "v59i10-data.zip")
 # The source code associated with the paper
-downloader::download("http://www.jstatsoft.org/v59/i10/supp/3", destfile = "data/reshape/v59i10.R")
+downloader::download("http://www.jstatsoft.org/v59/i10/supp/3", destfile = "extdata/reshape/v59i10.R")
 # After running the R script...
-dir.create("data/reshape")
-unzip("v59i10-data.zip", exdir = "data/reshape/")
-# write.csv(raw, "data/reshape-pew.csv")
+dir.create("extdata/reshape")
+unzip("v59i10-data.zip", exdir = "extdata/reshape/")
+# write.csv(raw, "extdata/reshape-pew.csv")
 ```
 
 These tables may look different, but they contain precisely the same information.
@@ -118,7 +118,7 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 ```{r}
 library("tidyr")
 library("readr")
-raw = read_csv("data/pew.csv") # read in the 'wide' dataset
+raw = read_csv("extdata/pew.csv") # read in the 'wide' dataset
 dim(raw)
 rawt = gather(raw, Income, Count, -religion)
 dim(rawt)
@@ -135,11 +135,11 @@ This is because **readr** creates `tbl` objects from the **tibble** package.
 
 ```{r tpew, echo=FALSE}
 # generate pew dataset
-raw = read_csv("data/reshape-pew.csv")
+raw = read_csv("extdata/reshape-pew.csv")
 raw = raw[-c(1, ncol(raw))] # remove excess cols
 names(raw) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
                "$40--50k", "$50--75k", "$75--100k", "$100--150k", ">150k")
-# write_csv(raw, "data/pew.csv")
+# write_csv(raw, "extdata/pew.csv")
 knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
 ```
 
@@ -191,7 +191,7 @@ Following the advice in Section \@ref(package-selection), we have carefully sele
 Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning). It has small number of intuitively named functions, or 'verbs'. These can be used in combination with each other, and the grouping function `group_by()`, to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
 
 ```{r verbs, echo=FALSE}
-verbs = read_csv("data/dplyr-verbs.csv")
+verbs = read_csv("extdata/dplyr-verbs.csv")
 knitr::kable(verbs, caption = "dplyr verb functions.")
 ```
 
@@ -799,7 +799,7 @@ The foundational object class of **data.table** is the `data.table`. Like **dply
 
 ```{r}
 library("data.table")
-idata = readRDS("data/idata-renamed.Rds")
+idata = readRDS("extdata/idata-renamed.Rds")
 idata_dt = data.table(idata) # convert to data.table class
 aus3a = idata_dt[Country == "Australia"]
 ```
@@ -839,7 +839,7 @@ for(i in seq(10, 1000, length.out = 10)){
   res_tmp$Time = res_tmp$time / min(res_tmp$time)
   res = rbind(res, res_tmp)
 }
-saveRDS(res, "data/res-datatable.Rds")
+saveRDS(res, "extdata/res-datatable.Rds")
 ```
 
 ```{r 6-2, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}

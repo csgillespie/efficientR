@@ -10,9 +10,9 @@ source("code/initialise.R")
 #   FUN = function(x)
 #     zoo::rollmean(x, k = 30, na.pad = T)
 # )
-# saveRDS(dd, "data/cranlog.Rds")
+# saveRDS(dd, "extdata/cranlog.Rds")
 
-dd = readRDS("data/cranlog.Rds")
+dd = readRDS("extdata/cranlog.Rds")
 
 dd = dd[dd$count > 0, ]
 

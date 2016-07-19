@@ -1,5 +1,5 @@
-#save(z, file="data/07-rcpp_comparison.RData")
-load("data/07-rcpp_comparison.RData")
+#save(z, file="extdata/07-rcpp_comparison.RData")
+load("extdata/07-rcpp_comparison.RData")
 source("code/initialise.R")
 library(ggplot2)
 

@@ -10,13 +10,13 @@
 # dd$p = 10^dd$i
 # dir.create("data", showWarnings = FALSE)
 # mean_comparison = dd
-# save(mean_comparison, file="data/mean_comparison.RData")
+# save(mean_comparison, file="extdata/mean_comparison.RData")
 
 
 
 
 source("code/initialise.R")
-load(file="data/mean_comparison.RData")
+load(file="extdata/mean_comparison.RData")
 
 dd = mean_comparison
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
