@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-15">
+<meta name="date" content="2016-07-19">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -457,8 +457,8 @@ if(file.exists("data.csv"))
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00293 0.00362 0.0557 0.00714 0.00891 4.88   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.74929 0.84638 1.0910 0.87975 1.17214 7.50   100</span></code></pre></div>
+<span class="co">#&gt;  ex_mat[1, ] 0.00289 0.00355 0.0524 0.00616 0.00666 4.66   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.74144 0.82160 1.0670 0.84794 1.14071 7.98   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -642,6 +642,11 @@ Another common use of <code>on.exit</code> is with the <code>par</code> function
 </div>
 <div id="process-forking" class="section level3">
 <h3><span class="header-section-number">7.4.4</span> Process forking</h3>
+<pre><code>#&gt; 
+#&gt; Attaching package: &#39;efficient&#39;
+#&gt; The following object is masked _by_ &#39;.GlobalEnv&#39;:
+#&gt; 
+#&gt;     idata</code></pre>
 <p>Another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions, i.e.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This will run on Windows, but will only use 1 core</span>
 <span class="kw">mclapply</span>(<span class="dv">1</span>:<span class="dv">2</span>, snakes_ladders)</code></pre></div>
@@ -669,7 +674,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <li>Macs: Install <code>Xcode</code>.</li>
 <li>Windows: Install <a href="http://cran.r-project.org/bin/windows/">Rtools</a>. Make sure you select the version that corresponds to your version of R.</li>
 </ul>
-<p>The code in this chapter was generated using version 0.12.5 of <strong>Rcpp</strong>. The latest version can be installed from CRAN:</p>
+<p>The code in this chapter was generated using version 0.12.6 of <strong>Rcpp</strong>. The latest version can be installed from CRAN:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;Rcpp&quot;</span>)</code></pre></div>
 <p><strong>Rcpp</strong> is well documented, as illustrated by the number of vignettes on the package’s <a href="https://cran.r-project.org/web/packages/Rcpp/">CRAN</a> page. In addition to its popularity, many other packages depend on <strong>Rcpp</strong>, which can be seen by looking at the <code>Reverse Imports</code> section.</p>
 <p>To check that you have everything needed for this chapter, run the following piece of code from the course R package:</p>
@@ -713,7 +718,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ae1c44b48a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b3786f868a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
