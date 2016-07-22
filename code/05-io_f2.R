@@ -58,10 +58,10 @@ resd = io_data(4, 5, 10, times=5, reps=10)
 rese = io_data(5, 6, 10, times=5, reps=10)
 # 
 # 
-#saveRDS(res, file="data/05-f2.RData")
+
+#saveRDS(res, file="extdata/05-f2.RData")
 #res = rbind(resa, resb, resc, resd, rese)
 
-res = readRDS("data/05-f2.RData")
 
 res1 = group_by(res, rows, exp)
 res2 = summarise(res1, 

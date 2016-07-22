@@ -2,6 +2,10 @@
 knit: "bookdown::preview_chapter"
 ---
 
+```{r echo=FALSE, message=FALSE}
+library(dplyr)
+```
+
 # Efficient collaboration {#collaboration}
 
 Large projects inevitably involve many people. This poses risks but also opportunities for improving computational efficiency and productivity, especially if project collaborators are reading and committing code. This chapter provides guidance on how to minimise the risks and maximise the benefits of collaborative R programming. 
@@ -363,7 +367,7 @@ system.time({
 
 #### Exercise {-}
 
-Refactor the following code chunk to make it more efficient:
+1. Refactor the following code chunk to make it more efficient:
 
 ```{r}
 df = data.frame(
@@ -392,3 +396,49 @@ group_by(df, letters) %>%
   summarise(sum = sum(numbers))
 ```
 
+2. Refector the code in the move function below, to make it faster, more stylish, and more concise.
+This is from [monopoly.R](https://github.com/csgillespie/efficient/blob/master/R/monopoly.R) file in the efficient package (see section \@ref(monopoloy) in the previous chapter for guidance).
+
+```{r}
+move = function(current) {
+  
+  df = data.frame(d1 = sample(1:6, 3, replace=TRUE), 
+                  d2 = sample(1:6, 3, replace=TRUE))
+  
+  df$Total = apply(df, 1, sum)
+  df$IsDouble = df$d1 == df$d2
+  
+  if(df$IsDouble[1] & df$IsDouble[2] & df$IsDouble[3]) {
+    current = 11#Go To Jail
+  } else if(df$IsDouble[1] & df$IsDouble[2]) {
+    current = current + sum(df$Total[1:3])
+  } else if(df$IsDouble[1]) {
+    current = current + sum(df$Total[1:2])
+  } else {
+    current = current + df$Total[1]
+  }
+  return(current)
+}
+```
+
+```{r, eval=FALSE, echo=FALSE}
+# The refactored code, after implementing these optimisations, is shown below
+# It is around 25 times faster!
+move = function(current) {
+  # data.frame -> matrix
+  rolls = matrix(sample(1:6, 6, replace=TRUE), ncol=2)
+  Total = rowSums(rolls)	# apply -> rowSums	
+  IsDouble = rolls[,1] == rolls[,2]
+  # & -> &&
+  if(IsDouble[1] && IsDouble[2] && IsDouble[3]) {
+    current = 11#Go To Jail
+  } else if(IsDouble[1] && IsDouble[2]) {
+    current = current + sum(Total[1:3])
+  } else if(IsDouble[1]) {
+    current = current + Total[1:2]
+  } else {
+    current = Total[1]
+  }
+  current
+}
+```

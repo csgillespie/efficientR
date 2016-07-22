@@ -1,5 +1,5 @@
 source("code/initialise.R")
-res = readRDS("data/res-datatable.Rds")
+res = readRDS("extdata/res-datatable.Rds")
 
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
     cex.axis=0.9, las=1, xaxs='i',yaxs='i')
