@@ -12,21 +12,21 @@ io_data = function(start=1,
   res = NULL
   i = 3
   for(i in seq_along(rows)) {
-    no_of_rows = floor(rows[i]/(10^(j-1)))
+    no_of_rows = floor(rows[i])
     for(k in 1:reps) {
       m = matrix(runif(no_of_rows * 20), nrow = no_of_rows, ncol = 20)
       m = as.data.frame(m)
       fname = replicate(3, tempfile())
       
       (mb_write = microbenchmark(times = times,
-                                base = write.csv(m, file = fname[1], row.names = FALSE),
-                                feather = write_feather(m, fname[2]),
-                                rds = saveRDS(m, fname[3]), unit="s"))
+                                 base = write.csv(m, file = fname[1], row.names = FALSE),
+                                 feather = write_feather(m, fname[2]),
+                                 rds = saveRDS(m, fname[3]), unit="s"))
       
       (mb_read = microbenchmark(times = times,
-                               base = read.csv(fname[1]),
-                               feather = read_feather(fname[2]),
-                               rds = readRDS(fname[3]), unit="s"))
+                                base = read.csv(fname[1]),
+                                feather = read_feather(fname[2]),
+                                rds = readRDS(fname[3]), unit="s"))
       
       
       sizes = file.size(fname)
@@ -47,18 +47,20 @@ io_data = function(start=1,
     res = rbind(res, res_tmp)
     message(i)
   }
-
+  
   res
 }
 
-# resa = io_data(1, 2, 10, times=5000, reps=100)
-# resa = io_data(2, 3, 10, times=1000, reps=50)
-# resa = io_data(3, 4, 10, times=10, reps=50)
-# resa = io_data(4, 5, 10, times=5, reps=10)
-# resa = io_data(5, 6, 10, times=5, reps=10)
+resa = io_data(1, 2, 10, times=5000, reps=200)
+resb = io_data(2, 3, 10, times=1000, reps=100)
+resc = io_data(3, 4, 10, times=10, reps=50)
+resd = io_data(4, 5, 10, times=5, reps=10)
+rese = io_data(5, 6, 10, times=5, reps=10)
 # 
 # 
-# saveRDS(res, file="data/05-f2.RData")
+#saveRDS(res, file="data/05-f2.RData")
+#res = rbind(resa, resb, resc, resd, rese)
+
 res = readRDS("data/05-f2.RData")
 
 res1 = group_by(res, rows, exp)
