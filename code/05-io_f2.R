@@ -50,20 +50,20 @@ io_data = function(start=1,
   
   res
 }
-# 
-# resa = io_data(1, 2, 10, times=5000, reps=200)
-# resb = io_data(2, 3, 10, times=1000, reps=100)
-# resc = io_data(3, 4, 10, times=10, reps=50)
-# resd = io_data(4, 5, 10, times=5, reps=10)
-# rese = io_data(5, 6, 10, times=5, reps=10)
-# 
-# 
+
+resa = io_data(1, 2, 10, times=5000, reps=200)
+resb = io_data(2, 3, 10, times=1000, reps=100)
+resc = io_data(3, 4, 10, times=50, reps=100)
+resd = io_data(4, 5, 10, times=50, reps=50)
+rese = io_data(5, 6, 10, times=50, reps=50)
+res = rbind(resa, resb, resc, resd)#, rese)
+
 
 
 #saveRDS(res, file="extdata/05-f2.RData")
 res = readRDS(file="extdata/05-f2.RData")
-#readRDS(file="extdata/05-f2.RData")
-#res = rbind(resa, resb, resc, resd, rese)
+
+
 
 
 res1 = group_by(res, rows, exp)
