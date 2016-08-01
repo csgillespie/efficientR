@@ -8,8 +8,8 @@ The book depends on the following packages:
 ## Don't generate bib file on travis
 is_travis = Sys.getenv("TRAVIS")
 is_travis = (is_travis == "true")
+pkgs_df = read.csv("extdata/package_list.csv", header=TRUE)
 ```
-
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, eval=(!is_travis)}
 desc = read.dcf("DESCRIPTION")
@@ -43,9 +43,12 @@ for(i in seq_along(pkgs)){
 }
 pkgs_df[,2] = paste(pkgs_df[,2], pkgs_df[,3])
 pkgs_df = pkgs_df[,-3]
-knitr::kable(pkgs_df)
+write.csv(pkgs_df, "extdata/package_list.csv", row.names = FALSE)
 knitr::write_bib(pkgs, file="packages.bib")
 ```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(pkgs_df)
+```
 
 # References {-}
