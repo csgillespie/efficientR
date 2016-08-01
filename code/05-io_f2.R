@@ -51,12 +51,12 @@ io_data = function(start=1,
   res
 }
 
-resa = io_data(1, 2, 10, times=5000, reps=200)
-resb = io_data(2, 3, 10, times=1000, reps=100)
-resc = io_data(3, 4, 10, times=50, reps=100)
-resd = io_data(4, 5, 10, times=50, reps=50)
-rese = io_data(5, 6, 10, times=50, reps=50)
-res = rbind(resa, resb, resc, resd)#, rese)
+# resa = io_data(1, 2, 10, times=5000, reps=200)
+# resb = io_data(2, 3, 10, times=1000, reps=100)
+# resc = io_data(3, 4, 10, times=50, reps=100)
+# resd = io_data(4, 5, 10, times=50, reps=50)
+# rese = io_data(5, 6, 10, times=50, reps=50)
+# res = rbind(resa, resb, resc, resd)#, rese)
 
 
 
