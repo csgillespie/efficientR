@@ -482,9 +482,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select  9.46  9.58  9.76    9.7 10.0 10.1     5</span>
-<span class="co">#&gt;  without_select 16.67 16.71 17.08   16.9 17.4 17.8     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select 10.5 14.6 14.7   15.9 16.0 16.5     5</span>
+<span class="co">#&gt;  without_select 16.9 18.9 22.3   24.6 24.9 26.3     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -601,8 +601,8 @@ Note that the performance of different file formats depends on the content of th
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url =<span class="st"> &quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/co2.csv&quot;</span>
 <span class="kw">download.file</span>(url, <span class="st">&quot;extdata/co2.csv&quot;</span>)
 df_co2 =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)</code></pre></div>
-<p>There are now many R packages to assist with the download and import of data. The organisation <a href="https://ropensci.org/">ROpenSci</a> supports a number of these. The example below illustrates this using the WDI package (not supported by ROpenSci) to accesses World Bank data on CO2 emissions in the transport sector:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>) <span class="co"># load the WDI library (must be installed)</span>
+<p>There are now many R packages to assist with the download and import of data. The organisation <a href="https://ropensci.org/">rOpenSci</a> supports a number of these. The example below illustrates this using the WDI package (not supported by rOpenSci) to accesses World Bank data on CO2 emissions in the transport sector:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>)
 <span class="kw">WDIsearch</span>(<span class="st">&quot;CO2&quot;</span>) <span class="co"># search for data on a topic</span>
 co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class="dt">indicator =</span> <span class="st">&quot;EN.CO2.TRAN.ZS&quot;</span>) <span class="co"># import data</span></code></pre></div>
 <p>There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data’s origin (e.g. <code># Downloaded from http://example.com</code>) before referring to the dataset can greatly improve the utility of the code to yourself and others.</p>
