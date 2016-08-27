@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-19">
+<meta name="date" content="2016-08-27">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -187,7 +187,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#r-objects"><i class="fa fa-check"></i><b>3.5</b> R objects</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5.1</b> S3 objects</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
@@ -338,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
 
 </ul>
 
@@ -383,7 +385,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming. Learning them will, in the long-run, improve productivity and reproducibility. With these motivations in mind, the purpose of this chapter is simple: to highlight some key ingredients of an efficient R workflow. It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter 2, and is ordered chronologically throughout the stages involved in a typical project’s lifespan, from its inception to publication:</p>
 <ul>
 <li><p>Project planning. This should happen before any code has been written, to avoid time wasted using a mistaken analysis strategy. Project management is the art of making project plans happen.</p></li>
-<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages. <code>*_join</code> from <strong>dplyr</strong>, for example, is often more appropriate than <code>merge</code>, as we’ll see in <a href="data-carpentry.html#data-carpentry">6</a>. It is therefore more important than ever to consider the range of options at the outset.</p></li>
+<li><p>Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages it is more important than ever to consider the range of options at the outset. For example <code>*_join</code> from <strong>dplyr</strong> is often more appropriate than <code>merge</code>, as we’ll see in <a href="data-carpentry.html#data-carpentry">6</a>.</p></li>
 <li><p>Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section <a href="workflow.html#publication">4.5</a> touches on documentation using knitr and the much stricter approach to code publication of package development.</p></li>
 </ul>
 </div>
@@ -439,7 +441,7 @@ Figure 4.2: A Gantt chart created using <strong>DiagrammeR</strong> illustrating
 <li><p><a href="https://cran.r-project.org/web/packages/plotrix/index.html"><strong>plotrix</strong></a>, a general purpose plotting package, provides basic Gantt chart plotting functionality. Enter <code>example(gantt.chart)</code> for details.</p></li>
 <li><p><a href="http://rich-iannone.github.io/DiagrammeR/"><strong>DiagrammeR</strong></a>, a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as <a href="https://github.com/knsv/mermaid">mermaid</a> and <a href="https://github.com/ellson/graphviz">GraphViz</a>.</p></li>
 </ul>
-<p>The small example below (which provides the basis for creating charts like Figure <a href="workflow.html#fig:4-2">4.2</a> illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts. Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. {#DiagrammeR}</p>
+<p>The small example below (which provides the basis for creating charts like Figure <a href="workflow.html#fig:4-2">4.2</a> illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts. Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives. (#DiagrammeR)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)
 <span class="co"># Define the Gantt chart and plot the result (not shown)</span>
 <span class="kw">mermaid</span>(<span class="st">&quot;gantt</span>
@@ -497,7 +499,7 @@ c =<span class="st"> </span><span class="dv">2</span> *<span class="st"> </span>
 </div>
 <div id="how-to-select-a-package" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> How to select a package</h3>
-<p>Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the ‘R ecosystem’ has occurred in recent years in the packages. The increased ease of package development <span class="citation">(Wickham <a href="#ref-Wickham_2015">2015</a>)</span> and interfacing with other languages <span class="citation">(e.g. Eddelbuettel et al. <a href="#ref-Eddelbuettel_2011">2011</a>)</span> has accelerated their number, quality and efficiency. An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as <a href="https://ropensci.org/">ROpenSci</a> for peer reviewing code.</p>
+<p>Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the ‘R ecosystem’ has occurred in recent years in the packages. The increased ease of package development <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span> and interfacing with other languages <span class="citation">(e.g. Eddelbuettel et al. <a href="#ref-Eddelbuettel_2011">2011</a>)</span> has accelerated their number, quality and efficiency. An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as <a href="https://ropensci.org/">ROpenSci</a> for peer reviewing code.</p>
 <p>Performance, stability and ease of use should be high on the priority list when choosing which package to use. Another more subtle factor is that some packages work better together than others. The ‘R package ecosystem’ is composed of interrelated package. Knowing something of these inter-dependencies can help select a ‘package suite’ when the project demands a number of diverse yet interrelated programming tasks. The ‘tidyverse’, for example, contains many interrelated packages that work well together, such as <strong>readr</strong>, <strong>tidyr</strong>, and <strong>dplyr</strong>.<a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> These may be used together to read-in, tidy and then process the data, as outlined in the subsequent sections.</p>
 <p>There is no ‘hard and fast’ rule about which package you should use and new packages are emerging all the time. The ultimate test will be empirical evidence: does it get the job done on your data? However, the following criteria should provide a good indication of whether a package is worth an investment of your precious time, or even installing on your computer:</p>
 <ul>
@@ -531,7 +533,7 @@ c =<span class="st"> </span><span class="dv">2</span> *<span class="st"> </span>
 <p>To overcome this inefficiency in the documentation of R outputs the <strong>knitr</strong> package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) <strong>knitr</strong> allows for documents to be generated automatically. Furthermore, <em>nothing</em> is efficient unless you can quickly redo it. Documenting your code inside dynamic documents in this ways ensures that this is the case.</p>
 <div class="rmdnote">
 <p>
-This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. RMarkdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. RMarkdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in RMarkdown.
+This note briefly explains RMarkdown for the un-initiated. RMarkdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. RMarkdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. RMarkdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in RMarkdown.
 </p>
 </div>
 <p>Results are generated <em>on the fly</em> by including ‘code chunks’ such as that illustrated below:</p>
@@ -558,8 +560,8 @@ This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of
 <li><p>The <code>R/</code> folder contains all the R code that defines your package’s functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through <a href="http://r-pkgs.had.co.nz/man.html#man-workflow">Roxygen tags</a> such as <code>#' This function does this...</code> makes it easy for others to use your work. This form of efficient documentation is facilitated by the <strong>roxygen2</strong> package.</p></li>
 <li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data('data_set_name')</code>.</p></li>
 </ul>
-<p>The package <strong>testthat</strong> makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with ‘continuous integration’ services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in <span class="citation">(Cotton <a href="#ref-cotton_testing_2016">2016</a>)</span>.</p>
-<p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(Wickham <a href="#ref-Wickham_2015">2015</a>)</span>: the online version provides all you need to know about writing R packages for free (see <a href="http://r-pkgs.had.co.nz/">r-pkgs.had.co.nz/</a>).</p>
+<p>The package <strong>testthat</strong> makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with ‘continuous integration’ services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in <span class="citation">(Cotton <a href="#ref-cotton_testing_2016">2016</a><a href="#ref-cotton_testing_2016">b</a>)</span>.</p>
+<p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>: the online version provides all you need to know about writing R packages for free (see <a href="http://r-pkgs.had.co.nz/">r-pkgs.had.co.nz/</a>).</p>
 
 </div>
 </div>
@@ -576,7 +578,7 @@ This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of
 <p>PMBoK, A. 2000. “Guide to the Project Management Body of Knowledge.” <em>Project Management Institute, Pennsylvania USA</em>.</p>
 </div>
 <div id="ref-Wickham_2015">
-<p>Wickham, Hadley. 2015. <em>R Packages</em>. O’Reilly Media.</p>
+<p>Wickham, Hadley. 2015c. <em>R Packages</em>. O’Reilly Media.</p>
 </div>
 <div id="ref-Eddelbuettel_2011">
 <p>Eddelbuettel, Dirk, Romain François, J. Allaire, John Chambers, Douglas Bates, and Kevin Ushey. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
@@ -585,7 +587,7 @@ This not briefly explains RMarkdown for the un-initiated. RMarkdown is a form of
 <p>Xie, Yihui. 2015. <em>Dynamic Documents with R and Knitr</em>. Vol. 29. CRC Press.</p>
 </div>
 <div id="ref-cotton_testing_2016">
-<p>Cotton, Richard. 2016. <em>Testing R Code</em>.</p>
+<p>Cotton, Richard. 2016b. <em>Testing R Code</em>.</p>
 </div>
 </div>
 <div class="footnotes">

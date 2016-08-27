@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-19">
+<meta name="date" content="2016-08-27">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -187,7 +187,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#r-objects"><i class="fa fa-check"></i><b>3.5</b> R objects</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5.1</b> S3 objects</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
@@ -338,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
 
 </ul>
 
@@ -798,7 +800,7 @@ Figure 2.3: The data viewing tab in RStudio.
 <h3><span class="header-section-number">2.5.3</span> RStudio options</h3>
 <p>A range of <code>Project Options</code> and <code>Global Options</code> are available in RStudio from the <code>Tools</code> menu (accessible in Linux and Windows from the keyboard via <code>Alt+T</code>). Most of these are self-explanatory but it is worth mentioning a few that can boost your programming efficiency:</p>
 <ul>
-<li><p>GIT/SVN project settings allow RStudio to provide a graphical interface to your version control system, described in Chapter XX.</p></li>
+<li><p>GIT/SVN project settings allow RStudio to provide a graphical interface to your version control system, described in Chapter <a href="collaboration.html#collaboration">9</a>.</p></li>
 <li><p>R version settings allow RStudio to ‘point’ to different R versions/interpreters, which may be faster for some projects.</p></li>
 <li><p><code>Restore .RData</code>: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the change of getting bugs due to previously created objects.</p></li>
 <li><p>Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling <code>Vim mode</code> makes RStudio act as a (partial) Vim emulator.</p></li>
@@ -860,7 +862,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
   <span class="kw">-</span> graphics/
   <span class="kw">-</span> output/ <span class="co"># Results</span></code></pre></div>
 <p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
-<p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(Wickham <a href="#ref-Wickham_2015">2015</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
+<p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
 <p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
 </div>
 <div id="exercises-4" class="section level3 unnumbered">
@@ -896,7 +898,7 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <h3><span class="header-section-number">2.6.2</span> Other interpreters</h3>
 <p>The R <em>language</em> can be separated from the R <em>interpreter</em>. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.</p>
 <ul>
-<li><a href="http://www.revolutionanalytics.com/microsoft-r-open">Microsoft R Open</a>, formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that is uses multithreaded mathematics libraries, which can improve performance.</li>
+<li><a href="http://www.revolutionanalytics.com/microsoft-r-open">Microsoft R Open</a>, formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multithreaded mathematics libraries, which can improve performance.</li>
 <li><p><a href="https://github.com/rho-devel/rho">Rho</a> (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).</p></li>
 <li><p><a href="http://www.pqr-project.org/">pqrR</a> (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. <strong>pqR</strong> is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.</p></li>
 <li><p><a href="http://www.renjin.org/">Renjin</a> reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.</p></li>
@@ -928,7 +930,7 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <p>Cotton, Richard. 2013. <em>Learning R</em>. O’Reilly Media.</p>
 </div>
 <div id="ref-Wickham_2015">
-<p>Wickham, Hadley. 2015. <em>R Packages</em>. O’Reilly Media.</p>
+<p>Wickham, Hadley. 2015c. <em>R Packages</em>. O’Reilly Media.</p>
 </div>
 </div>
 <div class="footnotes">

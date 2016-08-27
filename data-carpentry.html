@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-19">
+<meta name="date" content="2016-08-27">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -187,7 +187,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#r-objects"><i class="fa fa-check"></i><b>3.5</b> R objects</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5.1</b> S3 objects</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
@@ -338,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
 
 </ul>
 
@@ -390,7 +392,7 @@ A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <co
 <p>To create a tibble data frame, we use <code>tibble</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
 <span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))
-<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt; # A tibble: 3 × 2</span>
 <span class="co">#&gt;       x     y</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1     1     A</span>
@@ -439,13 +441,26 @@ df_base$colB</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
 raw =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;extdata/pew.csv&quot;</span>) <span class="co"># read in the &#39;wide&#39; dataset</span>
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   religion = col_character(),</span>
+<span class="co">#&gt;   `&lt;$10k` = col_integer(),</span>
+<span class="co">#&gt;   `$10--20k` = col_integer(),</span>
+<span class="co">#&gt;   `$20--30k` = col_integer(),</span>
+<span class="co">#&gt;   `$30--40k` = col_integer(),</span>
+<span class="co">#&gt;   `$40--50k` = col_integer(),</span>
+<span class="co">#&gt;   `$50--75k` = col_integer(),</span>
+<span class="co">#&gt;   `$75--100k` = col_integer(),</span>
+<span class="co">#&gt;   `$100--150k` = col_integer(),</span>
+<span class="co">#&gt;   `&gt;150k` = col_integer()</span>
+<span class="co">#&gt; )</span>
 <span class="kw">dim</span>(raw)
 <span class="co">#&gt; [1] 18 10</span>
 rawt =<span class="st"> </span><span class="kw">gather</span>(raw, Income, Count, -religion)
 <span class="kw">dim</span>(rawt)
 <span class="co">#&gt; [1] 162   3</span>
 rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
-<span class="co">#&gt; # A tibble: 3 x 3</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
 <span class="co">#&gt;   religion Income Count</span>
 <span class="co">#&gt;      &lt;chr&gt;  &lt;chr&gt; &lt;int&gt;</span>
 <span class="co">#&gt; 1 Agnostic  &lt;$10k    27</span>
@@ -456,6 +471,22 @@ rawt[<span class="dv">1</span>:<span class="dv">3</span>,]
 Note that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns. Note that when we print the object <code>rawt[1:3,]</code>, the class of each variable is given (<code>chr</code>, <code>fctr</code>, <code>int</code> refer to character, factor and integer classes, respectively). This is because <strong>readr</strong> creates <code>tbl</code> objects from the <strong>tibble</strong> package.
 </p>
 </div>
+<pre><code>#&gt; Warning: Missing column names filled in: &#39;X1&#39; [1]
+#&gt; Parsed with column specification:
+#&gt; cols(
+#&gt;   X1 = col_integer(),
+#&gt;   religion = col_character(),
+#&gt;   `&lt;$10k` = col_integer(),
+#&gt;   `$10--20k` = col_integer(),
+#&gt;   `$20--30k` = col_integer(),
+#&gt;   `$30--40k` = col_integer(),
+#&gt;   `$40--50k` = col_integer(),
+#&gt;   `$50--75k` = col_integer(),
+#&gt;   `$75--100k` = col_integer(),
+#&gt;   `$100--150k` = col_integer(),
+#&gt;   `&gt;150k` = col_integer(),
+#&gt;   `Don&#39;t know/refused` = col_integer()
+#&gt; )</code></pre>
 <table>
 <caption><span id="tab:tpew">Table 6.1: </span>First 6 rows of the aggregated ‘pew’ dataset from Wickham (2014a) in an ‘untidy’ form.</caption>
 <thead>
@@ -574,7 +605,7 @@ agesex_df =<span class="st"> </span><span class="kw">data.frame</span>(agesex, n
 </tbody>
 </table>
 <table>
-<caption><span id="tab:separated">Table 6.4: </span>Age and sex variables separated by the funtion <code>separate</code>.</caption>
+<caption><span id="tab:separated">Table 6.4: </span>Age and sex variables separated by the function <code>separate</code>.</caption>
 <thead>
 <tr class="header">
 <th align="left">sex</th>
@@ -613,6 +644,12 @@ Note that the above code used non standard evaluation, which means not surroundi
 <li><strong>dplyr</strong> works well with databases, providing efficiency gains on large datasets</li>
 </ul>
 <p>Furthermore, <strong>dplyr</strong> is efficient to <em>learn</em> (see Chapter <a href="learning.html#learning">10</a>. It has small number of intuitively named functions, or ‘verbs’. These can be used in combination with each other, and the grouping function <code>group_by()</code>, to solve a wide range of data processing challenges (see Table <a href="data-carpentry.html#tab:verbs">6.5</a>).</p>
+<pre><code>#&gt; Parsed with column specification:
+#&gt; cols(
+#&gt;   `dplyr function(s)` = col_character(),
+#&gt;   Description = col_character(),
+#&gt;   `Base R functions` = col_character()
+#&gt; )</code></pre>
 <table>
 <caption><span id="tab:verbs">Table 6.5: </span>dplyr verb functions.</caption>
 <thead>
@@ -665,7 +702,7 @@ Note that the above code used non standard evaluation, which means not surroundi
 </tr>
 </tbody>
 </table>
-<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greehouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
+<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magrittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greenhouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 top_table =
@@ -712,7 +749,7 @@ idata =<span class="st"> </span><span class="kw">read_csv</span>(fname)</code></
 <div id="renaming-columns" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Renaming columns</h3>
 <p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.</p>
-<p>Note in this code block the variable name is surrounded by back-quotes (<code>). This allows R to refer to column names that are non-standard. Note also the syntax:</code>rename<code>takes the data frame as the first object and then creates new variables by specifying</code>new_variable_name = original_name`.</p>
+<p>Note in this code block the variable name is surrounded by back-quotes (`). This allows R to refer to column names that are non-standard. Note also the syntax: <code>rename</code> takes the data frame as the first object and then creates new variables by specifying <code>new_variable_name = original_name</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 idata =<span class="st"> </span><span class="kw">rename</span>(idata, <span class="dt">Country =</span> <span class="st">`</span><span class="dt">Country Name</span><span class="st">`</span>)</code></pre></div>
 <!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
@@ -739,7 +776,30 @@ also think that your vapply command is **much** nicer, with `str` being more app
 <span class="co">#&gt;  $ bot10       : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
 <span class="co">#&gt;  $ gini        : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
 <span class="co">#&gt;  $ b40_cons    : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
-<span class="co">#&gt;  $ gdp_percap  : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span></code></pre></div>
+<span class="co">#&gt;  $ gdp_percap  : chr  &quot;..&quot; &quot;..&quot; &quot;..&quot; &quot;..&quot; ...</span>
+<span class="co">#&gt;  - attr(*, &quot;spec&quot;)=List of 2</span>
+<span class="co">#&gt;   ..$ cols   :List of 9</span>
+<span class="co">#&gt;   .. ..$ Country Name                                                                                     : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Country Code                                                                                     : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Year                                                                                             : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Year Code                                                                                        : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Income share held by highest 10% [SI.DST.10TH.10]                                                : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Income share held by lowest 10% [SI.DST.FRST.10]                                                 : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ GINI index [SI.POV.GINI]                                                                         : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Survey mean consumption or income per capita, bottom 40% (2005 PPP $ per day) [SI.SPR.PC40]      : list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   .. ..$ Survey mean consumption or income per capita, total population (2005 PPP $ per day) [SI.SPR.PCAP]: list()</span>
+<span class="co">#&gt;   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   ..$ default: list()</span>
+<span class="co">#&gt;   .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_guess&quot; &quot;collector&quot;</span>
+<span class="co">#&gt;   ..- attr(*, &quot;class&quot;)= chr &quot;col_spec&quot;</span></code></pre></div>
 <p>This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: <code>mean(idata$gini)</code> fails.</p>
 <p>Visual inspection of the data (e.g. via <code>View(idata)</code>) clearly shows that all columns except for 1 to 4 (<code>Country</code>, <code>Country Code</code>, <code>Year</code> and <code>Year Code</code>) should be numeric. We can re-assign the classes of the numeric variables one-by one:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idata$gini =<span class="st"> </span><span class="kw">as.numeric</span>(idata$gini)
@@ -827,7 +887,7 @@ Note that the <code>ghg_ems</code> column names were cleaned using the command <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">group_by</span>(ghg_ems, Country) %&gt;%
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
-<span class="co">#&gt; # A tibble: 188 x 2</span>
+<span class="co">#&gt; # A tibble: 188 × 2</span>
 <span class="co">#&gt;       Country mean_eco2</span>
 <span class="co">#&gt;         &lt;chr&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Afghanistan       NaN</span>
@@ -844,7 +904,7 @@ The example above relates to a philosophical question in programming: how much w
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(idata, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Country)
 <span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
-<span class="co">#&gt; # A tibble: 176 x 2</span>
+<span class="co">#&gt; # A tibble: 176 × 2</span>
 <span class="co">#&gt;       Country  gini</span>
 <span class="co">#&gt;         &lt;chr&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Afghanistan   NaN</span>
@@ -865,7 +925,7 @@ countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Coun
   <span class="co"># range</span>
   <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) -<span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
   )
-<span class="co">#&gt; # A tibble: 176 x 7</span>
+<span class="co">#&gt; # A tibble: 176 × 7</span>
 <span class="co">#&gt;       Country   obs med_t10  sdev   n30  sdn30   dif</span>
 <span class="co">#&gt;         &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Afghanistan    40      NA   NaN     0     NA    NA</span>
@@ -906,7 +966,7 @@ countries =<span class="st"> </span><span class="kw">group_by</span>(idata, Coun
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) %&gt;%
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)
 <span class="co">#&gt; Selecting by gini</span>
-<span class="co">#&gt; # A tibble: 5 x 2</span>
+<span class="co">#&gt; # A tibble: 5 × 2</span>
 <span class="co">#&gt;    Year  gini</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1  1980  46.9</span>
@@ -1041,7 +1101,7 @@ ghg_tbl =<span class="st"> </span><span class="kw">tbl</span>(ghg_db, <span clas
 <div id="exercises-13" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database. The first stage is to read-in the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for detials</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for details</span>
 <span class="kw">data</span>(land_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</code></pre></div>
 <p>The next stage is to create an SQLite database to hold the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;RSQLite&quot;) # Requires RSQLite package</span>

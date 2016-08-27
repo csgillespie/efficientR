@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-19">
+<meta name="date" content="2016-08-27">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -187,7 +187,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#r-objects"><i class="fa fa-check"></i><b>3.5</b> R objects</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5.1</b> S3 objects</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
@@ -338,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
 
 </ul>
 
@@ -416,6 +418,13 @@ In general, you should never “hand-write” a CSV file. Instead, you should us
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)
 df_co2_dt =<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)
+<span class="co">#&gt; Warning: Missing column names filled in: &#39;X1&#39; [1]</span>
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   X1 = col_integer(),</span>
+<span class="co">#&gt;   time = col_double(),</span>
+<span class="co">#&gt;   co2 = col_double()</span>
+<span class="co">#&gt; )</span>
 df_co2_readr =<span class="st"> </span>data.table::<span class="kw">fread</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)</code></pre></div>
 <div class="rmdnote">
 <p>
@@ -441,15 +450,29 @@ Figure 5.1: Benchmarks of <strong>base</strong>, <strong>data.table</strong> and
 voyages_base =<span class="st"> </span><span class="kw">read.delim</span>(fname)</code></pre></div>
 <p>When we run the equilivent operation using <strong>readr</strong>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_readr =<span class="st"> </span>readr::<span class="kw">read_tsv</span>(fname)
-<span class="co">#&gt; Warning: 1 parsing failure.</span>
-<span class="co">#&gt;  row   col expected     actual</span>
-<span class="co">#&gt; 2841 built a number 1721-01-01</span></code></pre></div>
+<span class="co">#&gt; Parsed with column specification:</span>
+<span class="co">#&gt; cols(</span>
+<span class="co">#&gt;   .default = col_character(),</span>
+<span class="co">#&gt;   number = col_integer(),</span>
+<span class="co">#&gt;   trip = col_integer(),</span>
+<span class="co">#&gt;   tonnage = col_integer(),</span>
+<span class="co">#&gt;   departure_date = col_date(format = &quot;&quot;),</span>
+<span class="co">#&gt;   cape_arrival = col_date(format = &quot;&quot;),</span>
+<span class="co">#&gt;   cape_departure = col_date(format = &quot;&quot;),</span>
+<span class="co">#&gt;   arrival_date = col_date(format = &quot;&quot;),</span>
+<span class="co">#&gt;   next_voyage = col_integer()</span>
+<span class="co">#&gt; )</span>
+<span class="co">#&gt; See spec(...) for full column specifications.</span>
+<span class="co">#&gt; Warning: 2 parsing failures.</span>
+<span class="co">#&gt;  row            col   expected  actual</span>
+<span class="co">#&gt; 4403 cape_arrival   date like  2-01-01</span>
+<span class="co">#&gt; 4592 cape_departure date like  8-05-17</span></code></pre></div>
 <p>a warning is raised regarding row 2841 in the <code>built</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first <span class="math inline">\(1000\)</span> rows, rather than all rows, as base <code>read.*</code> functions do. Printing the offending element</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_base$built[<span class="dv">2841</span>] <span class="co"># a factor.</span>
 <span class="co">#&gt; [1] 1721-01-01</span>
 <span class="co">#&gt; 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672</span>
 voyages_readr$built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span>
-<span class="co">#&gt; [1] NA</span></code></pre></div>
+<span class="co">#&gt; [1] &quot;1721-01-01&quot;</span></code></pre></div>
 <p>Reading the file using <strong>data.table</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Verbose warnings not shown</span>
 voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(fname)</code></pre></div>
@@ -459,9 +482,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 10.3 10.5 10.8   10.9 11.0 11.2     5</span>
-<span class="co">#&gt;  without_select 18.9 19.4 19.9   19.7 20.5 21.0     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.46  9.58  9.76    9.7 10.0 10.1     5</span>
+<span class="co">#&gt;  without_select 16.67 16.71 17.08   16.9 17.4 17.8     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -485,7 +508,7 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
 <tr class="even">
 <td align="left">integer</td>
 <td align="left">character</td>
-<td align="left">numeric</td>
+<td align="left">character</td>
 <td align="left">Date</td>
 <td align="left">readr</td>
 </tr>
@@ -589,9 +612,9 @@ co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class=
 <p>Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command <code>data(package = &quot;package_name&quot;)</code> will show the datasets in a package. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;)</code>.</p>
 <p>Raw data (i.e. data which has not been converted into R’s native <code>.Rds</code> format) is usually located with the sub-folder <code>extdata</code> in R (which corresponds to <code>inst/extdata</code> when developing packages. The function <code>system.file</code> outputs file paths associated with specific packages. To see all the external files within the <strong>readr</strong> package, for example, one could use the following command:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>))
-<span class="co">#&gt; [1] &quot;compound.log&quot;      &quot;epa78.txt&quot;         &quot;example.log&quot;      </span>
-<span class="co">#&gt; [4] &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot; &quot;mtcars.csv&quot;       </span>
-<span class="co">#&gt; [7] &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
+<span class="co">#&gt; [1] &quot;challenge.csv&quot;     &quot;compound.log&quot;      &quot;epa78.txt&quot;        </span>
+<span class="co">#&gt; [4] &quot;example.log&quot;       &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot;</span>
+<span class="co">#&gt; [7] &quot;mtcars.csv&quot;        &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
 <p>Further, to ‘look around’ to see what files are stored in a particular package, one could type the following, taking advantage of RStudio’s intellisense file completion capabilities (using copy and paste to enter the file path):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
 <span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span></code></pre></div>

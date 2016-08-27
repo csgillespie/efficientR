@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-07-19">
+<meta name="date" content="2016-08-27">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -187,7 +187,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.4.4" data-path="programming.html"><a href="programming.html#example-data-input"><i class="fa fa-check"></i><b>3.4.4</b> Example: data input</a></li>
 <li class="chapter" data-level="3.4.5" data-path="programming.html"><a href="programming.html#example-factors-are-not-character-vectors"><i class="fa fa-check"></i><b>3.4.5</b> Example: Factors are not character vectors</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5</b> S3 objects</a></li>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#r-objects"><i class="fa fa-check"></i><b>3.5</b> R objects</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#S3"><i class="fa fa-check"></i><b>3.5.1</b> S3 objects</a></li>
+</ul></li>
 <li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.6</b> The apply family</a><ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.6.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.6.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.6.2</b> Type consistency</a></li>
@@ -338,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.mas.ncl.ac.uk/~ncsg3/">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
 
 </ul>
 
@@ -457,8 +459,8 @@ if(file.exists("data.csv"))
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00259 0.00355 0.0537 0.00602 0.00658 4.81   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.74216 0.81826 1.0815 0.85169 1.13890 7.51   100</span></code></pre></div>
+<span class="co">#&gt;  ex_mat[1, ] 0.00254 0.00343 0.0529 0.00578 0.00647 4.78   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.72820 0.79798 1.0345 0.83353 1.12772 7.05   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -534,8 +536,8 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 <div id="performance-profvis" class="section level2">
 <h2><span class="header-section-number">7.3</span> Code profiling</h2>
-<p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottle neck lies. Sometimes you will will instead guess, relying intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
-<p>The <code>Rprof()</code> function is built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
+<p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottle neck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
+<p>The <code>Rprof()</code> function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
 <p>Unfortunately <code>Rprof</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof</code>.</p>
 <div id="getting-started-with-profvis" class="section level3">
 <h3><span class="header-section-number">7.3.1</span> Getting started with <strong>profvis</strong></h3>
@@ -702,7 +704,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
   <span class="dt">double</span> value = x + y;
   <span class="kw">return</span> value;
 }</code></pre></div>
-<p>If we were writing a C++ programme we would also need another function called <code>main</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
+<p>If we were writing a C++ program we would also need another function called <code>main</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
 </div>
 <div id="cppfunction" class="section level3">
 <h3><span class="header-section-number">7.5.3</span> The cppFunction command</h3>
@@ -718,7 +720,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b822826f8a0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ae5968188a0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -850,7 +852,7 @@ Figure 7.4: Comparison of mean functions.
 <li>Save the function <code>test1</code> in a separate file. Make sure it works.</li>
 <li>Write a similar function in R and compare the speed of the C++ and R versions.</li>
 <li>Create a function called <code>test2</code> where the <code>double</code> variables have been replaced by <code>float</code>. Do you still get the correct answer?</li>
-<li>Change <code>b = b + a</code> to <code>b += a</code> to make you code more <code>C</code> like.</li>
+<li>Change <code>b = b + a</code> to <code>b += a</code> to make your code more C++ like.</li>
 <li>(Hard) What’s the difference between <code>i++</code> and <code>++i</code>?</li>
 </ol>
 </div>
@@ -933,7 +935,7 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 <div class="footnotes">
 <hr />
 <ol start="20">
-<li id="fn20"><p>Technically this isn’t in base R, it’s a recommend package.<a href="performance.html#fnref20">↩</a></p></li>
+<li id="fn20"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref20">↩</a></p></li>
 <li id="fn21"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref21">↩</a></p></li>
 <li id="fn22"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref22">↩</a></p></li>
 <li id="fn23"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref23">↩</a></p></li>
