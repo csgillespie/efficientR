@@ -60,7 +60,7 @@ x = x + 1
 ```
 involves a single function call to the `+` function. Whereas the `for` loop
 ```{r bad_loop}
-for(i in 1:n) 
+for(i in seq_len(n)) 
   x[i] = x[i] + 1 
 ```
 has
@@ -100,7 +100,7 @@ an empty vector and grows the object
 ```{r echo=TRUE, tidy=FALSE}
 method1 = function(n) {
   vec = NULL # Or vec = c()
-  for(i in 1:n)
+  for(i in seq_len(n))
     vec = c(vec, i)
   vec
 }
@@ -110,14 +110,14 @@ object by subscripting:
 ```{r echo=TRUE, tidy=FALSE}
 method2 = function(n) {
   vec = numeric(n)
-  for(i in 1:n)
+  for(i in seq_len(n))
     vec[i] = i
   vec
 }
 ```
 __Method 3__ directly creates the final object
 ```{r eval=TRUE, echo=TRUE}
-method3 = function(n) 1:n
+method3 = function(n) seq_len(n)
 ```
 To compare the three methods we use the `microbenchmark` function from the previous chapter
 ```{r tidy=FALSE,eval=FALSE}
@@ -199,7 +199,7 @@ Implementing this Monte-Carlo algorithm in R would typically lead to something l
 ```{r tidy=FALSE}
 monte_carlo = function(N){
   hits = 0
-  for(i in 1:N)  {
+  for(i in seq_len(N))  {
     u1 = runif(1); u2 = runif(1)
     if(u1^2 > u2)
       hits = hits + 1
