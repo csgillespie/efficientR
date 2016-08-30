@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-08-27">
+<meta name="date" content="2016-08-30">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -389,7 +389,7 @@ The wikipedia page on compiler opimisations gives a nice overview of standard op
 <p>A <strong>golden rule</strong> in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose <code>x</code> is a standard vector of length <code>n</code>. Then</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span>x +<span class="st"> </span><span class="dv">1</span></code></pre></div>
 <p>involves a single function call to the <code>+</code> function. Whereas the <code>for</code> loop</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(i in <span class="dv">1</span>:n) 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(i in <span class="kw">seq_len</span>(n)) 
   x[i] =<span class="st"> </span>x[i] +<span class="st"> </span><span class="dv">1</span> </code></pre></div>
 <p>has</p>
 <ul>
@@ -419,19 +419,19 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 <p>Let’s consider three methods of creating a sequence of numbers. <strong>Method 1</strong> creates an empty vector and grows the object</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method1 =<span class="st"> </span>function(n) {
   vec =<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Or vec = c()</span>
-  for(i in <span class="dv">1</span>:n)
+  for(i in <span class="kw">seq_len</span>(n))
     vec =<span class="st"> </span><span class="kw">c</span>(vec, i)
   vec
 }</code></pre></div>
 <p><strong>Method 2</strong> creates an object of the final length and then changes the values in the object by subscripting:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method2 =<span class="st"> </span>function(n) {
   vec =<span class="st"> </span><span class="kw">numeric</span>(n)
-  for(i in <span class="dv">1</span>:n)
+  for(i in <span class="kw">seq_len</span>(n))
     vec[i] =<span class="st"> </span>i
   vec
 }</code></pre></div>
 <p><strong>Method 3</strong> directly creates the final object</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="dv">1</span>:n</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="kw">seq_len</span>(n)</code></pre></div>
 <p>To compare the three methods we use the <code>microbenchmark</code> function from the previous chapter</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;s&quot;</span>, <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
@@ -509,7 +509,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <p>Implementing this Monte-Carlo algorithm in R would typically lead to something like:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo =<span class="st"> </span>function(N){
   hits =<span class="st"> </span><span class="dv">0</span>
-  for(i in <span class="dv">1</span>:N)  {
+  for(i in <span class="kw">seq_len</span>(N))  {
     u1 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>); u2 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)
     if(u1^<span class="dv">2</span> &gt;<span class="st"> </span>u2)
       hits =<span class="st"> </span>hits +<span class="st"> </span><span class="dv">1</span>
@@ -520,7 +520,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.764   0.018   2.798</span></code></pre></div>
+<span class="co">#&gt;   2.745   0.007   2.752</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
@@ -914,7 +914,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x3a29660&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x3b0e148&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -1002,7 +1002,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x370f460&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x36bc498&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
