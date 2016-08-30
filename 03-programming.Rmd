@@ -15,10 +15,19 @@ techniques about code optimisation, before describing idiomatic programming
 structures. We conclude the chapter by examining relatively easy ways of speeding up
 code using the **compiler** package and parallel processing, using multiple CPUs.
 
+### Prerequisites
+
+In this chapter we will introduce two new packages, **compiler** and **memoise**. The **compiler**
+package comes with R, so it will already be installed.
+```{r}
+library("compiler")
+library("memoise")
+```
+
 ## Top 5 tips for efficient programming
 
   * Be careful never to grow vectors.
-  * Use `invisible` to return potentially useful information.
+  * Vectorise codes whenever possible.
   * Use factors when appropriate.
   * Clever use of S3 objects can make code easier to understand.
   * Byte compile packages for an easy performance boost.
@@ -27,9 +36,9 @@ code using the **compiler** package and parallel processing, using multiple CPUs
 ## General advice
 
 Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
-every variable used and give you the burdensome responsibility of memory management. The
+every variable used, give you the burdensome responsibility of memory management and have to be compiled. The
 advantage of such languages, compared with R, is that they are faster to run.
-The disadvantage is that they take longer to learn and type.
+The disadvantage is that they take longer to learn and can not be run interactively.
 
 ```{block, type="rmdnote"}
 The wikipedia page on compiler opimisations gives a nice overview of standard
@@ -749,7 +758,6 @@ plot_mpg = function(row_to_remove) {
 ```
 We can use **memoise** speed up by caching results. A quick benchmark
 ```{r benchmark_memoise, fig.keep="none", cache=TRUE, results="hide"}
-library("memoise")
 m_plot_mpg = memoise(plot_mpg)
 microbenchmark(times=10, unit="ms", m_plot_mpg(10), plot_mpg(10))
 #> Unit: milliseconds
