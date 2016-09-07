@@ -71,6 +71,7 @@ if(!exists("x")){
   y=x[2]}
 ```
 
+<!-- XXX: Robin: Rstudio don't format code as below. -->
 This is a start, but it's still not easy to read. This can be fixed in RStudio as illustrated below (these options can be seen in the Code menu, accessed with `Alt+C` on Windows/Linux computers).
 
 ```{r}
@@ -78,7 +79,7 @@ This is a start, but it's still not easy to read. This can be fixed in RStudio a
 if(!exists("x")) {
   x = c(3, 5)
   y = x[2]
-  }
+}
 ```
 
 Note that some aspects of style are subjective: we would not leave a space after the `if` and `)`. 
@@ -95,6 +96,10 @@ load.R
 Normalise.r
 load data.R
 ```
+
+Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides
+more detailed guidence on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed 
+to work across locales. While the guidelines are strict, the guidence aids in making your scripts more portable.
 
 ### Loading packages
 
@@ -143,7 +148,7 @@ The example above illustrates that comments are more useful if they provide cont
 
 It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called `x`, `xx`, `xxx` etc. The code would run fine. However, it would be hard for other people, and a future you, to figure our what was going on, especially when you got to the object `xxxxxxxxxx`!
 
-For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names. Unless you are creating an S3 object, avoid using a `.` in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
+For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names^[One notable exception are packages in Bioconductor, where variable names are `camelCase`. In this case, you should match the existing style.]. Unless you are creating an S3 object, avoid using a `.` in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
 
 In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
 
@@ -154,7 +159,7 @@ R raises an error if you try to redefine `TRUE`/`FALSE`
 
 While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
 as it makes understanding the default behaviour harder to understand. Typically it's easier to set an argument to have a default value of `NULL` and check its value using `is.null` than by using `missing`. 
-Avoid using names of existing functions. Do not, for example, use `data` as a variable name.
+Where possible, avoid using names of existing functions. 
 
 ### Example package
 
@@ -289,7 +294,7 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 
 ### Branches, forks, pulls and clones
 
-Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the book Pro Git, which is available online at [git-scm.com/book/](https://git-scm.com/book/en/v2).
+Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and Github for the useR".
 
 Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
 
