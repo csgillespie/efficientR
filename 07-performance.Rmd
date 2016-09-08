@@ -4,21 +4,30 @@ knit: "bookdown::preview_chapter"
 
 # Efficient optimization {#performance}
 
-[Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a famous American
-computer scientist who developed a number of the key algorithms that we use today.
-On the subject of optimisation he give this advice.
+[Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a legendary American
+computer scientist who developed a number of the key algorithms that we use today (see for 
+example `?Random`).
+On the subject of optimization he give this advice.
 
 > The real problem is that programmers have spent far too much time worrying about
 efficiency in the wrong places and at the wrong times; premature optimization is the
 root of all evil (or at least most of it) in programming.
 
 Knuth's point is that it is easy to undertake code optimisation inefficiently.
-For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions
+When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that
+time spent optimizing code early in the developmental stage could be wasted. Even worse,
+there is a tradeoff between code speed and code readability; we've already made this trade-off
+once by using readable, (but slow) R compared with verbose C code! 
+
+For this reason this chapter is covered towards the latter half of the book. 
+The previous chapters deliberately focussed on concepts, packages and functions
 to increase efficiency. These are (relatively) easy ways of saving time
 that, once implemented, will work for future projects.
 Code optimisation, by contrast, is an advanced topic that should only be tackled once 'low hanging fruit' for efficiency gains have been taken.
 
-The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
+In this chapter we assume that you already have well-developed code 
+that is mature conceptually and has been tried and tested. Now you want to optimize this code, 
+but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
 Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section.
 Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems.
 The final section explains how `Rcpp` can be used to efficiently incorporating C++ code into an R analysis.
@@ -46,20 +55,25 @@ ifelse(test, yes, no)
 ```
 is a vectorised version of the standard control-flow `if` function. The return value
 of `ifelse` is filled with elements from the `yes` and `no` arguments that are
-determined by whether the element of `test` is `TRUE` or `FALSE`.
+determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
+suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then
+```{r}
+marks = c(25, 55, 75)
+ifelse(marks >=40, "pass", "fail")
+```
 
-If the length of `test` is equal to $1$, i.e. `length(test) == 1`, 
+If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
 then the standard conditional statement
 
-```{r, echo=-1}
-test = TRUE
-if(test) {
-  "yes" 
+```{r}
+mark = 25
+if(mark >= 40) {
+  "pass" 
 } else {
-  "no"
+  "fail"
 }
 ```
-is more efficient than `ifelse(test, "yes", "no")`.
+is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
 ### Sorting and ordering {-}
 
@@ -71,11 +85,14 @@ operation.
 
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
 be specified in the `sort` function; with `radix` being a new addition to R 3.3.
-Typically the `radix` (the non-default option) is optimal for most situations.
-<!-- __XXX__Colin__ by how much? -->
+Typically the `radix` (the non-default option) is the most computationally efficient option
+for most situations (it is around 
+20% faster when sorting a large vector of doubles).
 
 Another useful trick is to partially order the results. For example, if you only want
-to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`.
+to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial = 1:10)`.
+For very large vectors, this can give a three fold speed increase.
+
 
 ```{r, eval=FALSE, echo=FALSE}
 x = matrix(rnorm(1e7), ncol=100)
@@ -101,8 +118,7 @@ system.time({
 ### Reversing elements {-}
 
 The `rev` function provides a reversed version of its argument. If you wish to sort in
-increasing order, then use the more efficient `sort(x, decreasing=TRUE)` instead
-of `rev(sort(x))`.
+increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
