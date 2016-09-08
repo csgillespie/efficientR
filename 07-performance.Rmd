@@ -148,7 +148,8 @@ especially for long vectors.
 ### Logical AND and OR {-}
 
 The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
-typically used during multi-criteria subsetting operations. The code below, for example, returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
+typically used during multi-criteria subsetting operations. The code below, for example, 
+returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
 
 ```{r, echo=-1}
 x = c(0.2, 0.5, 0.7)
@@ -160,14 +161,22 @@ regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `
 only executes the second component if needed. This is efficient and leads to more
 neater code, e.g.
 
-```{r}
-# read.csv is only executed if the file exists
-file.exists("data.csv") && read.csv("data.csv")
+```{r, results="hide"}
+# We only calculate the mean if data doesn't contain NAs
+if(all(!is.na(x)) && mean(x) > 0) {
+  # Do something
+}
 ```
 
-<!-- __XXX__Colin__ Is this really good code? Why not use if? Could say "This is equivalent to the more commonly used
-if(file.exists("data.csv"))
-  read.csv("data.csv") " -->
+compared to 
+
+```{r, results="hide"}
+if(all(!is.na(x))) {
+  if(mean(x) > 0) {
+    # do somthing
+  }
+}
+```
 
 However care must be taken not to use `&&` or `||` on vectors since it only evaluates the first element of the vector, giving the
 incorrect answer. This is illustrated below:
