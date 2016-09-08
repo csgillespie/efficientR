@@ -54,20 +54,25 @@ ifelse(test, yes, no)
 ```
 is a vectorised version of the standard control-flow `if` function. The return value
 of `ifelse` is filled with elements from the `yes` and `no` arguments that are
-determined by whether the element of `test` is `TRUE` or `FALSE`.
+determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
+suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then
+```{r}
+marks = c(25, 55, 75)
+ifelse(marks >=40, "pass", "fail")
+```
 
-If the length of `test` is equal to $1$, i.e. `length(test) == 1`, 
+If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
 then the standard conditional statement
 
-```{r, echo=-1}
-test = TRUE
-if(test) {
-  "yes" 
+```{r}
+mark = 25
+if(mark >= 40) {
+  "pass" 
 } else {
-  "no"
+  "fail"
 }
 ```
-is more efficient than `ifelse(test, "yes", "no")`.
+is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
 ### Sorting and ordering {-}
 
