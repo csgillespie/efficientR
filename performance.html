@@ -414,8 +414,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
 </div>
 <div id="which-indices-are-true" class="section level3 unnumbered">
 <h3>Which indices are <code>TRUE</code>  </h3>
-<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then use the more efficient <code>which.min</code>/<code>which.max</code> variants.</p>
-<!-- __XXX__Colin__ Are we talking about programmer of computational efficiency, or both? Can it really be that much faster? Tell us how much so.  -->
+<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then using the efficient <code>which.min</code>/<code>which.max</code> variants can be orders of magnitude faster (see figure <a href="performance.html#fig:7-2b">7.1</a>)</p>
+<div class="figure" style="text-align: center"><span id="fig:7-2b"></span>
+<img src="_main_files/figure-html/7-2b-1.png" alt="Comparison of `which.min` with `which`." width="90%" />
+<p class="caption">
+Figure 7.1: Comparison of <code>which.min</code> with <code>which</code>.
+</p>
+</div>
 </div>
 <div id="converting-factors-to-numerics" class="section level3 unnumbered">
 <h3>Converting factors to numerics</h3>
@@ -466,9 +471,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00278 0.00434 0.0735 0.00633 0.0109  6.5   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.82394 1.08089 1.7480 1.55922 1.7992 17.5   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq   max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00294 0.00433 0.0565 0.00617 0.00827  4.95   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.74553 0.88165 1.2404 1.02932 1.39223 10.46   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -559,11 +564,11 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
   j =<span class="st"> </span><span class="kw">order</span>(movies$year)
   <span class="kw">lines</span>(movies$year[j], model$fitted[j]) <span class="co"># Add line to the plot</span>
 })</code></pre></div>
-<p>The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).</p>
+<p>The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.2</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-1"></span>
 <img src="figures/f7_1_profvis.png" alt="Output from profvis" width="100%" />
 <p class="caption">
-Figure 7.1: Output from profvis
+Figure 7.2: Output from profvis
 </p>
 </div>
 <p>The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the <code>loess</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess</code> function. Travelling up the function, we see that <code>loess</code> calls <code>simpleLoess</code> which in turn calls <code>.C</code> function.</p>
@@ -576,13 +581,13 @@ Figure 7.1: Output from profvis
 <p>The <strong>efficient</strong> package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for <code>profvis</code> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># args is also a valid argument for install.packages</span>
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient_pkg&quot;</span>, <span class="dt">args=</span><span class="st">&quot;--with-keep.source&quot;</span>)</code></pre></div>
-<p>The function can then be profiled via the following code, which results in figure <a href="performance.html#fig:7-2">7.2</a>.</p>
+<p>The function can then be profiled via the following code, which results in figure <a href="performance.html#fig:7-2">7.3</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
 <span class="kw">profvis</span>(<span class="kw">SimulateMonopoly</span>(<span class="dv">10000</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:7-2"></span>
 <img src="figures/f7_2_profvis_monopoly.png" alt="Code profiling for simulating the game of Monopoly." width="100%" />
 <p class="caption">
-Figure 7.2: Code profiling for simulating the game of Monopoly.
+Figure 7.3: Code profiling for simulating the game of Monopoly.
 </p>
 </div>
 <p>The output from <code>profvis</code> shows that the vast majority of time is spent in the <code>move</code> function. In Monopoly rolling a double (a pair of 1’s, 2’s, …, 6’s) is special:</p>
@@ -666,11 +671,11 @@ Another common use of <code>on.exit</code> is with the <code>par</code> function
 </div>
 <div id="rcpp" class="section level2">
 <h2><span class="header-section-number">7.5</span> Rcpp</h2>
-<p>Sometimes R is just slow. You’ve tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as <strong>Rcpp</strong>, <strong>rJava</strong>, <strong>rPython</strong> and recently <strong>V8</strong>. These provide R interfaces to C++, Java, Python and JavaScript respectively. <strong>Rcpp</strong> is the most popular of these (figure <a href="performance.html#fig:7-3">7.3</a>).</p>
+<p>Sometimes R is just slow. You’ve tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as <strong>Rcpp</strong>, <strong>rJava</strong>, <strong>rPython</strong> and recently <strong>V8</strong>. These provide R interfaces to C++, Java, Python and JavaScript respectively. <strong>Rcpp</strong> is the most popular of these (figure <a href="performance.html#fig:7-3">7.4</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-3"></span>
 <img src="_main_files/figure-html/7-3-1.png" alt="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages." width="70%" />
 <p class="caption">
-Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.
+Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.
 </p>
 </div>
 <p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easy.</p>
@@ -728,7 +733,7 @@ Figure 7.3: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8ba3d0d0d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b2ae64940d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -833,7 +838,7 @@ The above code adds <code>x[i]/n</code> to the value of <code>mean</code>. Other
 </ol>
 <p>To compare the C++ and R functions, we’ll generate some normal random numbers for the comparison</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</code></pre></div>
-<p>Then call the <code>microbenchmark</code> function (results plotted in figure <a href="performance.html#fig:7-4">7.4</a>).</p>
+<p>Then call the <code>microbenchmark</code> function (results plotted in figure <a href="performance.html#fig:7-4">7.5</a>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># com_mean_r is the compiled version of mean_r</span>
 z =<span class="st"> </span><span class="kw">microbenchmark</span>(
   <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_c</span>(x),
@@ -843,7 +848,7 @@ z =<span class="st"> </span><span class="kw">microbenchmark</span>(
 <div class="figure" style="text-align: center"><span id="fig:7-4"></span>
 <img src="_main_files/figure-html/7-4-1.png" alt="Comparison of mean functions." width="70%" />
 <p class="caption">
-Figure 7.4: Comparison of mean functions.
+Figure 7.5: Comparison of mean functions.
 </p>
 </div>
 <div id="exercises-15" class="section level4 unnumbered">
