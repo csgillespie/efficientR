@@ -14,11 +14,10 @@ efficiency in the wrong places and at the wrong times; premature optimization is
 root of all evil (or at least most of it) in programming.
 
 Knuth's point is that it is easy to undertake code optimisation inefficiently.
-When developing code the speed bottleneck is fluid and moves. This means that
+When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that
 time spent optimizing code early in the developmental stage could be wasted. Even worse,
 there is a tradeoff between code speed and code readability; we've already made this trade-off
-once by using readable, (but slow) R compared with verbose C code!
-
+once by using readable, (but slow) R compared with verbose C code! 
 
 For this reason this chapter is covered towards the latter half of the book. 
 The previous chapters deliberately focussed on concepts, packages and functions
@@ -26,7 +25,9 @@ to increase efficiency. These are (relatively) easy ways of saving time
 that, once implemented, will work for future projects.
 Code optimisation, by contrast, is an advanced topic that should only be tackled once 'low hanging fruit' for efficiency gains have been taken.
 
-The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
+In this chapter we assume that you already have well-developed code 
+that is mature conceptually and has been tried and tested. Now you want to optimize this code, 
+but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
 Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section.
 Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems.
 The final section explains how `Rcpp` can be used to efficiently incorporating C++ code into an R analysis.
@@ -84,11 +85,12 @@ operation.
 
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
 be specified in the `sort` function; with `radix` being a new addition to R 3.3.
-Typically the `radix` (the non-default option) is optimal for most situations (it is around 
+Typically the `radix` (the non-default option) is the most computationally efficient option
+for most situations (it is around 
 20% faster when sorting a large vector of doubles).
 
 Another useful trick is to partially order the results. For example, if you only want
-to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`.
+to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial = 1:10)`.
 For very large vectors, this can give a three fold speed increase.
 
 
@@ -116,7 +118,7 @@ system.time({
 ### Reversing elements {-}
 
 The `rev` function provides a reversed version of its argument. If you wish to sort in
-increasing order, `sort(x, decreasing=TRUE)` is marginally faster (around 10%) than `rev(sort(x))`.
+increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
