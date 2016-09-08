@@ -75,6 +75,20 @@ if(mark >= 40) {
 ```
 is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
+An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable, than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
+
+```{r}
+marks = runif(n = 10e6, min = 30, max = 99)
+system.time({
+  result1 = ifelse(marks >=40, "pass", "fail")
+})
+system.time({
+  result2 = rep("fail", length(marks)) 
+  result2[marks >= 40] = "pass"
+})
+identical(result1, result2)
+```
+
 ### Sorting and ordering {-}
 
 Sorting a vector a single vector is relatively quick; sorting a vector of length
