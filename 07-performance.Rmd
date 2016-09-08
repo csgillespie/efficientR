@@ -243,9 +243,8 @@ give you the true value of `y` (to 17 decimal places).
 ```
 
 Integers are another numeric data type. Integers primarily exist to be
-passed to C or Fortran code. You do will not need to create integers for most applications. However,
-they are occasionally used to optimise sub-setting operations. When we subset a data
-frame or matrix, we are interacting with C code. For example, if we look at the
+passed to C or Fortran code. You might be tempted to use integers with the 
+purpose of speeding up your R code. For example, if we look at the
 arguments for the `head` function
 
 ```{r}
@@ -256,37 +255,38 @@ args(head.matrix)
 Using the `:` operator automatically creates a vector of integers.
 ```
 
-Note that default argument for `n` is `6L` rather than simply `6` (the `L` is short for Literal and is used to create an
-integer). Since this function is ubiquitous, this low
-level optimisation is useful. To illustrate the speed increase, the code below selects the first $100$ rows from a data frame (`clock_speed`, from the
-**efficient** package) using integer and double indices, and benchmarks the results using the
-**microbenchmark** package:
+we see that the default argument for `n` is `6L` rather than simply `6` (the `L` is short for Literal and is used to create an
+integer). This gives a tiny speed boost (around 0.1 microseconds!)
 
 ```{r, matrix_timing, eval=FALSE}
-s_int = 1:100; s_double = seq(1, 100, 1.0)
-microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000)
-#> Unit: microseconds
-#> expr   min    lq  mean median    uq   max neval cld
-#> clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
-#> clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
+x = runif(10)
+microbenchmark(head(x, 6.0), head(x, 6L), times=1000000)
+# Unit: microseconds
+#        expr   min    lq  mean median    uq    max neval cld
+#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a
+# head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a
 ```
 
-The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth
-worrying about for most applications.
+Since this function is ubiquitous, this low level optimisation is useful. 
+In general, if you are worried about shaving microseconds off your R code run time, you should
+probably consider switching to another language.
 
-Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:
+However, integers are more space efficient. 
+The code below compares size of a integer vector to a standard numeric vector:
 
 ```{r}
 pryr::object_size(1:10000)
 pryr::object_size(y = seq(1, 10000, by=1.0))
 ```
 
-The results show that integer version is roughly half the size. However, most mathematical operations will convert
+The results show that the integer version is roughly half the size. However, most mathematical operations will convert
 the integer vector into a standard numerical vector, as illustrated below: 
 
 ```{r}
 is.integer(1L + 1)
 ```
+
+Further storage savings can be obtained using the **bit** package.
 
 ### Sparse matrices {-}
 
@@ -307,7 +307,9 @@ sp = sparseMatrix(1:N, 1:N, x = 1)
 m = diag(1, N, N)
 ```
 
-Both objects contain the same information, but the data is stored differently. The matrix object
+Both objects contain the same information, but the data is stored differently; since 
+we have the same value multiple times in the matrix, we only need to store the value once and 
+link it to multiple matrix locations. The matrix object
 stores each individual element, while the sparse matrix object only stores the location of the non-zero
 elements. This is much more memory efficient, as illustrated below:
 
