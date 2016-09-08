@@ -133,20 +133,17 @@ local(source("code/07-performance_f2b.R", local=TRUE))
 
 ###  Converting factors to numerics {-}
 
-<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
-
 A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. The most efficient way of doing this
-(especially for long factors) is
+convert a factor into its numerical equivalent. For example, our data 
+has been converted to factor by `read.csv` since it contained a string. Using
 
 ```{r, echo=2, results="hide"}
 f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
 
-<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
-
-where `f` is the factor.
+to convert a factor to a number is slightly more efficient than `as.numeric(as.character(f))`, 
+especially for long vectors.
 
 ### String concatenation {-}
 
