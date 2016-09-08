@@ -84,11 +84,13 @@ operation.
 
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
 be specified in the `sort` function; with `radix` being a new addition to R 3.3.
-Typically the `radix` (the non-default option) is optimal for most situations.
-<!-- __XXX__Colin__ by how much? -->
+Typically the `radix` (the non-default option) is optimal for most situations (it is around 
+20% faster when sorting a large vector of doubles).
 
 Another useful trick is to partially order the results. For example, if you only want
 to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial=1:10)`.
+For very large vectors, this can give a three fold speed increase.
+
 
 ```{r, eval=FALSE, echo=FALSE}
 x = matrix(rnorm(1e7), ncol=100)
@@ -114,8 +116,7 @@ system.time({
 ### Reversing elements {-}
 
 The `rev` function provides a reversed version of its argument. If you wish to sort in
-increasing order, then use the more efficient `sort(x, decreasing=TRUE)` instead
-of `rev(sort(x))`.
+increasing order, `sort(x, decreasing=TRUE)` is marginally faster (around 10%) than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
