@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-07">
+<meta name="date" content="2016-09-08">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -306,6 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
+<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
 <li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
 <li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
@@ -368,6 +369,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Collaborative programming provides an opportunity for people to review each other’s code. This can be encouraged by using a uniform style with many comments, as described in Section <a href="collaboration.html#coding-style">9.2</a>. Like using a clear style in human language, following a style guide has the additional advantage of making your code more understandable to others.</p>
 <p>When working on complex programming projects with multiple inter-dependencies version control is essential. Even on small projects tracking the progress of your project’s code-base has many advantages and makes collaboration much easier. Fortunately it is now easier than ever before to integrate version control into your project, using RStudio’s interface to the version control software <code>git</code> and online code sharing websites such as GitHub. This is the subject of Section <a href="collaboration.html#version-control">9.3</a>.</p>
 <p>The final section, <a href="collaboration.html#refactoring">9.4</a>, addresses the question of how to respond when you find inefficient code. Refactoring is the process of re-writing poorly written or scripts so they are faster, more comprehensible, more portable and easier to maintain.</p>
+<div id="prerequisites-2" class="section level3 unnumbered">
+<h3>Prerequisites</h3>
+<p>This chapter deals with coding standards and techniques. The only packages required for this chapter are <strong>lubridate</strong> and <strong>dplyr</strong>. These packages are used to illustrate good practice.</p>
+</div>
 <div id="top-5-tips-for-efficient-collaboration" class="section level2">
 <h2><span class="header-section-number">9.1</span> Top 5 tips for efficient collaboration</h2>
 <ul>
@@ -387,7 +392,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Don’t Repeat Yourself (DRY);</li>
 <li>Be concise, clear and consistent.</li>
 </ul>
-<p>Good coding style will make you more efficient even if you are the only person who reads it. When your code is read by multiple readers or you are developing code with co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by <a href="https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml">Google</a> and one by <a href="http://adv-r.had.co.nz/Style.html">Hadley Whickham</a>. The style followed in this book is based on a combination of Hadley Wickham’s guide and our own preferences (we follow Yihui Xie in preferring <code>=</code> to <code>&lt;-</code> for assignment, for example).</p>
+<p>Good coding style will make you more efficient even if you are the only person who reads it. When your code is read by multiple readers or you are developing code with co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by <a href="https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml">Google</a>, <a href="http://adv-r.had.co.nz/Style.html">Hadley Whickham</a> and <a href="https://4dpiecharts.com/r-code-style-guide/">Richie Cotton</a>. The style followed in this book is based on a combination of Hadley Wickham’s guide and our own preferences (we follow Yihui Xie in preferring <code>=</code> to <code>&lt;-</code> for assignment, for example).</p>
 <p>In-line with the principle of automation (automate any task that can save time by automating), the easiest way to improve your code is to ask your computer to do it, using RStudio.</p>
 <div id="reformatting-code-with-rstudio" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Reformatting code with RStudio</h3>
@@ -401,19 +406,14 @@ y=x[<span class="dv">2</span>]}</code></pre></div>
 if(!<span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)){
   x=<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)
   y=x[<span class="dv">2</span>]}</code></pre></div>
+<!-- XXX: Robin: Rstudio don't format code as below. -->
 <p>This is a start, but it’s still not easy to read. This can be fixed in RStudio as illustrated below (these options can be seen in the Code menu, accessed with <code>Alt+C</code> on Windows/Linux computers).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Automatically reformat the code (Ctrl+Shift+A in RStudio)</span>
 if(!<span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)) {
   x =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>)
   y =<span class="st"> </span>x[<span class="dv">2</span>]
-  }</code></pre></div>
+}</code></pre></div>
 <p>Note that some aspects of style are subjective: we would not leave a space after the <code>if</code> and <code>)</code>.</p>
-<!-- Another way to automate R code formatting is with the **formatR** package. The example below shows the above steps of indenting and formatting undertaken with a single function call. -->
-<!-- ```{r} -->
-<!-- formatR::tidy_source(text = 'if(!exists("x")){ -->
-<!-- x=c(3,5) -->
-<!-- y=x[2]}') -->
-<!-- ``` -->
 </div>
 <div id="file-names" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> File names</h3>
@@ -424,14 +424,15 @@ if(!<span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)) {
 <span class="co"># Bad names</span>
 <span class="kw">Normalise.r</span>
 <span class="kw">load</span> data.R</code></pre></div>
+<p>Section 1.1 of <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure">Writing R Extensions</a> provides more detailed guidence on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed to work across locales. While the guidelines are strict, the guidence aids in making your scripts more portable.</p>
 </div>
 <div id="loading-packages" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> Loading packages</h3>
 <p>Library function calls should be at the top of your script. When loading an essential package, use <code>library</code> instead of <code>require</code> since a missing package will then raise an error. If a package isn’t essential, use <code>require</code> and appropriately capture the warning raised. Package names should be surrounded with speech marks.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Good</span>
-<span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)
-<span class="co"># Bad</span>
-<span class="kw">library</span>(ggplot2)</code></pre></div>
+<span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
+<span class="co"># Non-standard evaluation</span>
+<span class="kw">library</span>(dplyr)</code></pre></div>
 <p>Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading many packages, consider putting all packages in a file called <code>packages.R</code> and using <code>source</code> appropriately.</p>
 </div>
 <div id="commenting" class="section level3">
@@ -454,14 +455,14 @@ x =<span class="st"> </span><span class="dv">1</span></code></pre></div>
 </ul>
 </blockquote>
 <p>It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called <code>x</code>, <code>xx</code>, <code>xxx</code> etc. The code would run fine. However, it would be hard for other people, and a future you, to figure our what was going on, especially when you got to the object <code>xxxxxxxxxx</code>!</p>
-<p>For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where <code>x</code> could be acceptable). Following discussion in <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span> and elsewhere, suggest an <code>underscore_separated</code> style for function and object names. Unless you are creating an S3 object, avoid using a <code>.</code> in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful.</p>
+<p>For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where <code>x</code> could be acceptable). Following discussion in <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span> and elsewhere, suggest an <code>underscore_separated</code> style for function and object names<a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a>. Unless you are creating an S3 object, avoid using a <code>.</code> in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful.</p>
 <p>In functions the required arguments should always be first, followed by optional arguments. The special <code>...</code> argument should last. If your argument has a boolean value, use <code>TRUE</code>/<code>FALSE</code> instead of <code>T</code>/<code>F</code> for clarity.</p>
 <div class="rmdwarning">
 <p>
 It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>
 </p>
 </div>
-<p>While it’s possible to write arguments that depend on other arguments, try to avoid using this idiom as it makes understanding the default behaviour harder to understand. Typically it’s easier to set an argument to have a default value of <code>NULL</code> and check its value using <code>is.null</code> than by using <code>missing</code>. Avoid using names of existing functions. Do not, for example, use <code>data</code> as a variable name.</p>
+<p>While it’s possible to write arguments that depend on other arguments, try to avoid using this idiom as it makes understanding the default behaviour harder to understand. Typically it’s easier to set an argument to have a default value of <code>NULL</code> and check its value using <code>is.null</code> than by using <code>missing</code>. Where possible, avoid using names of existing functions.</p>
 </div>
 <div id="example-package" class="section level3">
 <h3><span class="header-section-number">9.2.6</span> Example package</h3>
@@ -518,11 +519,11 @@ if(x &lt;<span class="st"> </span><span class="dv">5</span>){
 <div id="version-control" class="section level2">
 <h2><span class="header-section-number">9.3</span> Version control</h2>
 <p>When a project gets large, complicated or mission-critical it is important to keep track of how it evolves. In the same way that Dropbox saves a ‘backup’ of your files, version control systems keep a backup of your code. The only difference is that version control systems back-up your code <em>forever</em>.</p>
-<p>The version control system we recommend is Git, a command-line application created by Linus Torvalds, who also invented Linux.<a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> The easiest way to integrate your R projects with Git, if you’re not accustomed to using a shell (e.g. the Unix command line), is with RStudio’s Git tab, in the top right-hand window (see figure <a href="collaboration.html#fig:9-1">9.1</a>). This shows a number of files have been modified (as illustrated with the blue M symbol) and that some are new (as illustrated with the yellow ? symbol). Checking the tick-box will enable these files to be <em>committed</em>.</p>
+<p>The version control system we recommend is Git, a command-line application created by Linus Torvalds, who also invented Linux.<a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a> The easiest way to integrate your R projects with Git, if you’re not accustomed to using a shell (e.g. the Unix command line), is with RStudio’s Git tab, in the top right-hand window (see figure <a href="collaboration.html#fig:9-1">9.1</a>). This shows a number of files have been modified (as illustrated with the blue M symbol) and that some are new (as illustrated with the yellow ? symbol). Checking the tick-box will enable these files to be <em>committed</em>.</p>
 <div id="commits" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Commits</h3>
 <p>Commits are the basic units of version control. Keep your commits ‘atomic’: each one should only do one thing. Document your work with clear and concise commit messages, use the present tense, e.g.: ‘Add analysis functions’.</p>
-<p>Committing code only updates the files on your ‘local’ branch. To update the files stored on a remote server (e.g. on GitHub), you mush ‘push’ the commit. This can be done using <code>git push</code> from a shell or using the green up arrow in RStudio, illustrated in figure <a href="collaboration.html#fig:9-1">9.1</a>. The blue down arrow will ‘pull’ the latest version of the repository from the remote.<a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a></p>
+<p>Committing code only updates the files on your ‘local’ branch. To update the files stored on a remote server (e.g. on GitHub), you mush ‘push’ the commit. This can be done using <code>git push</code> from a shell or using the green up arrow in RStudio, illustrated in figure <a href="collaboration.html#fig:9-1">9.1</a>. The blue down arrow will ‘pull’ the latest version of the repository from the remote.<a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a></p>
 <div class="figure" style="text-align: center"><span id="fig:9-1"></span>
 <img src="figures/f9_1_rstudio-git.png" alt="The Git tab in RStudio" width="70%" />
 <p class="caption">
@@ -556,7 +557,7 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 </div>
 <div id="branches-forks-pulls-and-clones" class="section level3">
 <h3><span class="header-section-number">9.3.4</span> Branches, forks, pulls and clones</h3>
-<p>Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git’s powerful functionality, we recommend the book Pro Git, which is available online at <a href="https://git-scm.com/book/en/v2">git-scm.com/book/</a>.</p>
+<p>Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, can make you work more scalable but testing new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git’s powerful functionality, we recommend the Jenny Byran’s <a href="http://happygitwithr.com/">book</a>, “Happy Git and Github for the useR”.</p>
 <p>Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> checkout -b test</code></pre></div>
 <p>This is equivalent of entering two commands: <code>git branch test</code> to create the branch and then <code>git checkout test</code> to <em>checkout</em> that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure <a href="collaboration.html#fig:9-1">9.1</a>: see the <code>master</code> text followed by a down arrow. Clicking on this will allow you to select other branches.</p>
@@ -592,7 +593,7 @@ Note that the number of lines of code is not a good measure of code efficiency. 
 <div id="exercise-7" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <ol style="list-style-type: decimal">
-<li>Refactor the following code chunk to make it more efficient:</li>
+<li>Refactor the following code chunk to make it run faster:</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">letters =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;c&quot;</span>),
@@ -641,8 +642,9 @@ Note that the number of lines of code is not a good measure of code efficiency. 
 <div class="footnotes">
 <hr />
 <ol start="24">
-<li id="fn24"><p>We recommend ‘10 Years of Git: An Interview with Git Creator Linus Torvalds’ from <a href="http://www.linux.com/news/featured-blogs/185-jennifer-cloer/821541-10-years-of-git-an-interview-with-git-creator-linus-torvalds">Linux.com</a> for more information on this topic.<a href="collaboration.html#fnref24">↩</a></p></li>
-<li id="fn25"><p>For a more detailed account of this process, see <a href="https://help.github.com/">GitHub’s help pages</a>.<a href="collaboration.html#fnref25">↩</a></p></li>
+<li id="fn24"><p>One notable exception are packages in Bioconductor, where variable names are <code>camelCase</code>. In this case, you should match the existing style.<a href="collaboration.html#fnref24">↩</a></p></li>
+<li id="fn25"><p>We recommend ‘10 Years of Git: An Interview with Git Creator Linus Torvalds’ from <a href="http://www.linux.com/news/featured-blogs/185-jennifer-cloer/821541-10-years-of-git-an-interview-with-git-creator-linus-torvalds">Linux.com</a> for more information on this topic.<a href="collaboration.html#fnref25">↩</a></p></li>
+<li id="fn26"><p>For a more detailed account of this process, see <a href="https://help.github.com/">GitHub’s help pages</a>.<a href="collaboration.html#fnref26">↩</a></p></li>
 </ol>
 </div>
             </section>
