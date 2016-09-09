@@ -59,25 +59,57 @@ knitr::include_graphics("figures/f1_1_800px-QWERTY-home-keys-position.png")
 ## Benchmarking
 
 Benchmarking is the process of testing the performance of specific operations
-repeatedly. Modifying things from one benchmark to the next and recording the results
-after changing things allows experimentation to see which bits of code are fastest.
+repeatedly. Modifying elements from one benchmark to the next and recording the results
+after the alteration enables us to determine the fastest piece of code.
 Benchmarking is important in the efficient programmer's tool-kit: you may *think* that
-your code is faster than mine but benchmarking allows you to *prove* it. The easiest
-way to benchmark a function is to use `system.time()`. The **microbenchmark** package
-is more flexible and runs a test many times (by default $1000$), enabling the user to
-detect microsecond difference in code performance. 
+your code is faster than mine but benchmarking allows you to *prove* it.
+The easiest way to benchmark a function is to use `system.time()`. However
+it is important to remember that we are taking a sample. We wouldn't expect 
+a single person in London to be representative of the entire UK population, similarly,
+a single benchmark provides us with a single observation on our
+functions behaviour. Therefore, we'll need to repeat the
+timing many times with a loop. 
+
+An alternative way of benchmarking, is via the flexible **microbenchmark** package. 
+This allows us to easily run each function multiple times (by default $100$), enabling the user to
+detect microsecond difference in code performance. We then get a convenient summary of the results:
+the minimum/maximum, lower/upper quartiles and the mean/median times. We suggest
+focusing on the median time to get a feel for the standard time and the quartiles to understand
+the variability.
 
 ### Benchmarking example
 
 A good example is testing different methods to look-up a single value in a data frame.
 
-```{r}
+```{r, results="hide"}
 library("microbenchmark")
 df = data.frame(v = 1:4, name = letters[1:4])
 microbenchmark(df[3, 2], df[3, "name"], df$name[3])
+# Unit: microseconds
+#          expr   min    lq  mean median    uq   max neval cld
+#      df[3, 2] 17.99 18.96 20.16  19.38 19.77 35.14   100   b
+# df[3, "name"] 17.97 19.13 21.45  19.64 20.15 74.00   100   b
+#    df$name[3] 12.48 13.81 15.81  14.48 15.14 67.24   100  a 
 ```
 
-The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.
+When using `microbenchmark`, you need to pay careful attention to the units. In the above example, 
+each function call takes approximately 20 _microseconds_; so one million function calls takes a second! 
+When comparing quick functions, the standard units are:
+
+  * milliseconds (ms), one thousand functions takes a second;
+  * microseconds ($\mu$s),  one million function calls takes a second;
+  * nanoseconds  (ns), one billion calls takes a second.
+
+We can state the units we want to use with the `unit` argument, e.g. the results are reported
+in seconds if we set `unit = "s"`.
+
+When thinking about computational efficiency, they are (at least) two in measures:
+
+  * Relative time: `df$name[3]` is 25% faster than `df[3, "name"]`;
+  * Absolute time: `df$name[3]` is 5 microseconds faster than `df[3, "name"]`.
+
+Both measures are useful, but its important to not to forget the underlying 
+time scale.
 
 ## Profiling
 
