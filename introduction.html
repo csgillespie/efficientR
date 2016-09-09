@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-08">
+<meta name="date" content="2016-09-09">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -412,19 +412,32 @@ Figure 1.1: The starting position for touch typing, with the fingers over the �
 </div>
 <div id="benchmarking" class="section level2">
 <h2><span class="header-section-number">1.6</span> Benchmarking</h2>
-<p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying things from one benchmark to the next and recording the results after changing things allows experimentation to see which bits of code are fastest. Benchmarking is important in the efficient programmer’s tool-kit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it. The easiest way to benchmark a function is to use <code>system.time()</code>. The <strong>microbenchmark</strong> package is more flexible and runs a test many times (by default <span class="math inline">\(1000\)</span>), enabling the user to detect microsecond difference in code performance.</p>
+<p>Benchmarking is the process of testing the performance of specific operations repeatedly. Modifying elements from one benchmark to the next and recording the results after the alteration enables us to determine the fastest piece of code. Benchmarking is important in the efficient programmer’s tool-kit: you may <em>think</em> that your code is faster than mine but benchmarking allows you to <em>prove</em> it. The easiest way to benchmark a function is to use <code>system.time()</code>. However it is important to remember that we are taking a sample. We wouldn’t expect a single person in London to be representative of the entire UK population, similarly, a single benchmark provides us with a single observation on our functions behaviour. Therefore, we’ll need to repeat the timing many times with a loop.</p>
+<p>An alternative way of benchmarking, is via the flexible <strong>microbenchmark</strong> package. This allows us to easily run each function multiple times (by default <span class="math inline">\(100\)</span>), enabling the user to detect microsecond difference in code performance. We then get a convenient summary of the results: the minimum/maximum, lower/upper quartiles and the mean/median times. We suggest focusing on the median time to get a feel for the standard time and the quartiles to understand the variability.</p>
 <div id="benchmarking-example" class="section level3">
 <h3><span class="header-section-number">1.6.1</span> Benchmarking example</h3>
 <p>A good example is testing different methods to look-up a single value in a data frame.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
 df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">name =</span> letters[<span class="dv">1</span>:<span class="dv">4</span>])
 <span class="kw">microbenchmark</span>(df[<span class="dv">3</span>, <span class="dv">2</span>], df[<span class="dv">3</span>, <span class="st">&quot;name&quot;</span>], df$name[<span class="dv">3</span>])
-<span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;           expr  min   lq mean median   uq   max neval</span>
-<span class="co">#&gt;       df[3, 2] 23.4 24.4 28.4   24.9 25.8 201.5   100</span>
-<span class="co">#&gt;  df[3, &quot;name&quot;] 23.9 24.7 26.5   25.3 26.2  56.9   100</span>
-<span class="co">#&gt;     df$name[3] 16.4 18.0 20.4   18.8 19.8  47.6   100</span></code></pre></div>
-<p>The results show that seemingly arbitrary changes to how R code is written can affect the efficiency of computation. Without benchmarking, these differences would be very hard to detect.</p>
+<span class="co"># Unit: microseconds</span>
+<span class="co">#          expr   min    lq  mean median    uq   max neval cld</span>
+<span class="co">#      df[3, 2] 17.99 18.96 20.16  19.38 19.77 35.14   100   b</span>
+<span class="co"># df[3, &quot;name&quot;] 17.97 19.13 21.45  19.64 20.15 74.00   100   b</span>
+<span class="co">#    df$name[3] 12.48 13.81 15.81  14.48 15.14 67.24   100  a </span></code></pre></div>
+<p>When using <code>microbenchmark</code>, you need to pay careful attention to the units. In the above example, each function call takes approximately 20 <em>microseconds</em>; so one million function calls takes a second! When comparing quick functions, the standard units are:</p>
+<ul>
+<li>milliseconds (ms), one thousand functions takes a second;</li>
+<li>microseconds (<span class="math inline">\(\mu\)</span>s), one million function calls takes a second;</li>
+<li>nanoseconds (ns), one billion calls takes a second.</li>
+</ul>
+<p>We can state the units we want to use with the <code>unit</code> argument, e.g. the results are reported in seconds if we set <code>unit = &quot;s&quot;</code>.</p>
+<p>When thinking about computational efficiency, they are (at least) two in measures:</p>
+<ul>
+<li>Relative time: <code>df$name[3]</code> is 25% faster than <code>df[3, &quot;name&quot;]</code>;</li>
+<li>Absolute time: <code>df$name[3]</code> is 5 microseconds faster than <code>df[3, &quot;name&quot;]</code>.</li>
+</ul>
+<p>Both measures are useful, but its important to not to forget the underlying time scale.</p>
 </div>
 </div>
 <div id="profiling" class="section level2">

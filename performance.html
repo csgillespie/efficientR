@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-08">
+<meta name="date" content="2016-09-09">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -407,13 +407,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.164   0.224   4.389</span>
+<span class="co">#&gt;   2.907   0.199   3.107</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.206   0.040   0.246</span>
+<span class="co">#&gt;   0.205   0.012   0.217</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -486,9 +486,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr    min      lq   mean median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.0045 0.00544 0.0741 0.0086 0.0107 6.50   100</span>
-<span class="co">#&gt;   ex_df[1, ] 1.1529 1.23964 1.5681 1.3458 1.6169 9.28   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00271 0.0035 0.0515 0.00588 0.00651 4.60   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.72949 0.7980 1.1003 0.83294 1.19421 7.05   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -748,7 +748,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b43aa54e0d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b59ffee70d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
