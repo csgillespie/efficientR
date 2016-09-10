@@ -176,9 +176,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop</code></a></li>
-<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning</code></a></li>
-<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message</code> and <code class="unnumbered">cat</code></a></li>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop()</code></a></li>
+<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning()</code></a></li>
+<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></a></li>
 <li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#example-retrieving-a-web-resource"><i class="fa fa-check"></i><b>3.3.4</b> Example: Retrieving a web resource</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-7"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="3.3.5" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.5</b> Invisible returns</a></li>
@@ -443,7 +443,7 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 }</code></pre></div>
 <p><strong>Method 3</strong> directly creates the final object</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method3 =<span class="st"> </span>function(n) <span class="kw">seq_len</span>(n)</code></pre></div>
-<p>To compare the three methods we use the <code>microbenchmark</code> function from the previous chapter</p>
+<p>To compare the three methods we use the <code>microbenchmark()</code> function from the previous chapter</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;s&quot;</span>, <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
@@ -482,7 +482,7 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 <h3><span class="header-section-number">3.2.2</span> Vectorised code</h3>
 <p>The vector is one of the key data types in R, with many functions offering a vectorised version. For example, the code</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">runif</span>(n) +<span class="st"> </span><span class="dv">1</span></code></pre></div>
-<p>performs two vectorised operations. First <code>runif</code> returns <code>n</code> random numbers. Second we add <code>1</code> to each element of the vector. In general it is a good idea to exploit vectorised functions. Consider this piece of R code that calculates the sum of <span class="math inline">\(\log(x)\)</span></p>
+<p>performs two vectorised operations. First <code>runif()</code> returns <code>n</code> random numbers. Second we add <code>1</code> to each element of the vector. In general it is a good idea to exploit vectorised functions. Consider this piece of R code that calculates the sum of <span class="math inline">\(\log(x)\)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log_sum =<span class="st"> </span><span class="dv">0</span>
 for(i in <span class="dv">1</span>:<span class="kw">length</span>(x))
   log_sum =<span class="st"> </span>logsum +<span class="st"> </span><span class="kw">log</span>(x[i])</code></pre></div>
@@ -531,17 +531,17 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.640   0.004   2.645</span></code></pre></div>
+<span class="co">#&gt;   2.494   0.005   2.498</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
-<p>The <code>monte_carlo_vec</code> function contains (at least) four aspects of vectorisation</p>
+<p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
 <ul>
-<li>The <code>runif</code> function call is now fully vectorised;</li>
+<li>The <code>runif()</code> function call is now fully vectorised;</li>
 <li>We raise entire vectors to a power via <code>^</code>;</li>
 <li>Comparisons using <code>&gt;</code> are vectorised;</li>
-<li>Using <code>sum</code> is quicker than an equivalent for loop.</li>
+<li>Using <code>sum()</code> is quicker than an equivalent for loop.</li>
 </ul>
-The function <code>monte_carlo_vec</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo</code>.
+The function <code>monte_carlo_vec()</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo()</code>.
 <div class="figure" style="text-align: center"><span id="fig:3-1"></span>
 <img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
 <p class="caption">
@@ -559,9 +559,9 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 <h2><span class="header-section-number">3.3</span> Communicating with the user</h2>
 <p>When we create a function we often want the function to give feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques of communicating with the user.</p>
 <div id="fatal-errors-stop" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> Fatal errors: <code class="unnumbered">stop</code></h3>
-<p>Fatal errors are raised by calling the <code>stop</code>, i.e. execution is terminated. When <code>stop</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised.</p>
-<p>Errors can be caught using <code>try</code> and <code>tryCatch</code>. For example,</p>
+<h3><span class="header-section-number">3.3.1</span> Fatal errors: <code class="unnumbered">stop()</code></h3>
+<p>Fatal errors are raised by calling the <code>stop()</code>, i.e. execution is terminated. When <code>stop</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm()</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised.</p>
+<p>Errors can be caught using <code>try()</code> and <code>tryCatch()</code>. For example,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Suppress the error message</span>
 good =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)
 bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> &quot;1&quot;</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -581,28 +581,28 @@ bad =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</sp
 <p>Further details on error handling, as well as some excellent advice on general debugging techniques, are given in <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>.</p>
 </div>
 <div id="warnings-warning" class="section level3">
-<h3><span class="header-section-number">3.3.2</span> Warnings: <code class="unnumbered">warning</code></h3>
-<p>Warnings are generated using the <code>warning</code> function. When a warning is raised, it indicates potential problems. For example, <code>mean(NULL)</code> returns <code>NA</code> and also raises a warning. Warnings can be hidden using <code>suppressWarnings</code>:</p>
+<h3><span class="header-section-number">3.3.2</span> Warnings: <code class="unnumbered">warning()</code></h3>
+<p>Warnings are generated using the <code>warning()</code> function. When a warning is raised, it indicates potential problems. For example, <code>mean(NULL)</code> returns <code>NA</code> and also raises a warning. Warnings can be hidden using <code>suppressWarnings()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressWarnings</span>(<span class="kw">mean</span>(<span class="ot">NULL</span>))
 <span class="co">#&gt; [1] NA</span></code></pre></div>
-<p>In general, it is good practice to solve the underlying cause of the warning message, instead of evading the issue via <code>suppressWarning</code>.</p>
+<p>In general, it is good practice to solve the underlying cause of the warning message, instead of evading the issue via <code>suppressWarning()</code>.</p>
 </div>
 <div id="informative-output-message-and-cat" class="section level3">
-<h3><span class="header-section-number">3.3.3</span> Informative output: <code>message</code> and <code class="unnumbered">cat</code></h3>
-<p>To give informative output, use the <code>message</code> function. In my package for fitting powerlaws, I use messages to give the user an estimate of expected run time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
-<p>Another function used for printing messages is <code>cat</code>. In general <code>cat</code> should only be used in <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
+<h3><span class="header-section-number">3.3.3</span> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></h3>
+<p>To give informative output, use the <code>message()</code> function. In my package for fitting powerlaws, I use messages to give the user an estimate of expected run time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
+<p>Another function used for printing messages is <code>cat()</code>. In general <code>cat()</code> should only be used in <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
 </div>
 <div id="example-retrieving-a-web-resource" class="section level3">
 <h3><span class="header-section-number">3.3.4</span> Example: Retrieving a web resource</h3>
 <p>In some cases it isn’t clear what should be returned, a message, a <code>NA</code> value or an error. For example, suppose we wish to download data from a web site.</p>
-<p>The function <code>GET</code> from the <strong>httr</strong> package can be used to download a webpage. When we attempt to download data, the function also obtains an HTML status code. If the page exists, the function will return text (with the correct status code), e.g.</p>
+<p>The function <code>GET()</code> from the <strong>httr</strong> package can be used to download a webpage. When we attempt to download data, the function also obtains an HTML status code. If the page exists, the function will return text (with the correct status code), e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/&quot;</span>) <span class="co"># Status: 200</span></code></pre></div>
 <p>If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the output and use the Status to determine what to do next.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google.com/made_up&quot;</span>) <span class="co"># Status: 404</span></code></pre></div>
 <p>By examining the error code, the user has complete flexibility. However if the web-page doesn’t exist</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">GET</span>(<span class="st">&quot;http://google1.com/&quot;</span>)</code></pre></div>
-<p>or if we don’t have an internet connection, then <code>GET</code> raises an error via <code>stop</code>. Instead of raising an error the author could have returned <code>NA</code> (the web-page isn’t available). However for the typically use case, it’s not clear how returning <code>NA</code> would be helpful.</p>
-<p>The <code>install_github</code> function in the <strong>devtools</strong> package either installs the package or raises an error. When an error is raised, the function uses a combination of <code>message</code> and <code>stop</code> to indicate the source of an error, e.g.</p>
+<p>or if we don’t have an internet connection, then <code>GET()</code> raises an error via <code>stop()</code>. Instead of raising an error the author could have returned <code>NA</code> (the web-page isn’t available). However for the typically use case, it’s not clear how returning <code>NA</code> would be helpful.</p>
+<p>The <code>install_github()</code> function in the <strong>devtools</strong> package either installs the package or raises an error. When an error is raised, the function uses a combination of <code>message()</code> and <code>stop()</code> to indicate the source of an error, e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;bad/package&quot;</span>)
 <span class="co">#&gt; Downloading GitHub repo bad/package@master</span>
 <span class="co">#&gt; from URL https://api.github.com/repos/bad/package/zipball/master</span>
@@ -617,7 +617,7 @@ what can the user do if the function cannot complete it's purpose.
 </div>
 <div id="exercises-7" class="section level3 unnumbered">
 <h3>Exercises</h3>
-<p>The <code>stop</code> function has an argument <code>call.</code> that indicates if the function call should be part of the error message. Create a function and experiment with this option.</p>
+<p>The <code>stop()</code> function has an argument <code>call.</code> that indicates if the function call should be part of the error message. Create a function and experiment with this option.</p>
 </div>
 <div id="invisible-returns" class="section level3">
 <h3><span class="header-section-number">3.3.5</span> Invisible returns</h3>
@@ -633,7 +633,7 @@ what can the user do if the function cannot complete it's purpose.
   <span class="kw">invisible</span>(model)
 }</code></pre></div>
 <p>When the function is called, a scatter graph is plotted with the line of best fit, but the output is invisible. However when we assign the function to an object, i.e. <code>out = regression_plot(x, y)</code> the variable <code>out</code> contains the output of the <code>lm</code> call.</p>
-<p>Another example is <code>hist</code>. Typically we don’t want anything displayed in the console when we call the function</p>
+<p>Another example is <code>hist()</code>. Typically we don’t want anything displayed in the console when we call the function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(x)</code></pre></div>
 <p>However if we assign the output to an object, <code>out = hist(x)</code>, the object <code>out</code> is actually a list containing, <em>inter alia</em>, information on the mid-points, breaks and counts.</p>
 </div>
@@ -662,7 +662,7 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <div id="example-analysis-of-variance" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Example: Analysis of variance</h3>
 <p>Analysis of variance (ANOVA) is a type of statistical model that is used to determine differences among group means, while taken into account other factors. The function <code>aov</code> is used to fit standard analysis of variance models. Potential catastrophic bugs arise when a variable is numeric, but in reality is a categorical variable.</p>
-<p>Consider the <code>npk</code> dataset on the growth of peas that comes with R. The column <code>block</code>, indicates the block (typically a nuisance parameter) effect. This column takes values <span class="math inline">\(1\)</span> to <span class="math inline">\(5\)</span>, but has been carefully coded as a factor. Using the <code>aov</code> function to estimate the <code>block</code> effect, we get</p>
+<p>Consider the <code>npk</code> dataset on the growth of peas that comes with R. The column <code>block</code>, indicates the block (typically a nuisance parameter) effect. This column takes values <span class="math inline">\(1\)</span> to <span class="math inline">\(5\)</span>, but has been carefully coded as a factor. Using the <code>aov()</code> function to estimate the <code>block</code> effect, we get</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">aov</span>(yield ~<span class="st"> </span>block, npk)
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt;    aov(formula = yield ~ block, data = npk)</span>
@@ -709,7 +709,7 @@ Although this argument can add in the global <code>options()</code> list and pla
 <p>Overall factors are useful, but can lead to unwanted side-effects if we are not careful. Used at the right time and place, factors can lead to simpler code.</p>
 <div id="exercise-2" class="section level4 unnumbered">
 <h4>Exercise</h4>
-<p>Factors are slightly more space efficient than characters. Create a character vector and corresponding factor and use <code>pryr::object_size</code> to calculate the space needed for each object.</p>
+<p>Factors are slightly more space efficient than characters. Create a character vector and corresponding factor and use <code>pryr::object_size()</code> to calculate the space needed for each object.</p>
 </div>
 </div>
 </div>
@@ -730,11 +730,11 @@ Although this argument can add in the global <code>options()</code> list and pla
 There are also packages that also provide additional OO frameworks, such as <strong>proto</strong>, <strong>R6</strong> and <strong>R.oo</strong>. If you are new to OO in R, then S3 is the place to start.
 </p>
 </div>
-<p>In this section we will just discuss the S3 system since that is the most popular. The S3 system implements a generic-function object oriented (OO) system. This type of OO is different to the message-passing style of Java and C++. In a message-passing framework, messages/methods are sent to objects and the object determines which function to call, e.g. <code>normal.rand(1)</code>. The S3 class system is different. In S3, the <em>generic</em> function decides which method to call - it would have the form <code>rand(normal, 1)</code>. By using an OO framework, we avoid an explosion of exposed functions, such as, <code>rand_normal</code>, <code>rand_uniform</code>, <code>rand_poisson</code> and instead have a single function call <code>rand</code> that passes the object to the correct function.</p>
+<p>In this section we will just discuss the S3 system since that is the most popular. The S3 system implements a generic-function object oriented (OO) system. This type of OO is different to the message-passing style of Java and C++. In a message-passing framework, messages/methods are sent to objects and the object determines which function to call, e.g. <code>normal.rand(1)</code>. The S3 class system is different. In S3, the <em>generic</em> function decides which method to call - it would have the form <code>rand(normal, 1)</code>. By using an OO framework, we avoid an explosion of exposed functions, such as, <code>rand_normal()</code>, <code>rand_uniform()</code>, <code>rand_poisson()</code> and instead have a single function call <code>rand</code> that passes the object to the correct function.</p>
 <p>The S3 system is based on the class of an object. In S3, a class is just an attribute which can be determined with the <code>class</code> function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(USArrests)
 <span class="co">#&gt; [1] &quot;data.frame&quot;</span></code></pre></div>
-<p>The S3 system can be used to great effect. When we pass an object to a <em>generic</em> function, the function first examines the class of the object, and then dispatches the object to another method. For example, the <code>summary</code> function is a S3 generic function</p>
+<p>The S3 system can be used to great effect. When we pass an object to a <em>generic</em> function, the function first examines the class of the object, and then dispatches the object to another method. For example, the <code>summary()</code> function is a S3 generic function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">functionBody</span>(<span class="st">&quot;summary&quot;</span>)
 <span class="co">#&gt; UseMethod(&quot;summary&quot;)</span></code></pre></div>
 <p>Note that the only operational line is <code>UseMethod(&quot;summary&quot;)</code>. This handles the method dispatch based on the object’s class. So when <code>summary(USArrests)</code> is executed, the generic <code>summary</code> function passes <code>USArrests</code> to the function <code>summary.data.frame</code>. If the function <code>summary.data.frame</code> does not exist, then <code>summary.default</code> is called (if it exists). If neither function exist, an error is raised.</p>
@@ -749,22 +749,21 @@ There are also packages that also provide additional OO frameworks, such as <str
   x_mat =<span class="st"> </span><span class="kw">as.matrix</span>(x)
   <span class="kw">image</span>(x_mat, <span class="dt">main=</span><span class="kw">attr</span>(x, <span class="st">&quot;method&quot;</span>), ...)  
 }</code></pre></div>
-<p>The <code>...</code> argument allows us to pass arguments to the main <code>image</code> method, such as <code>axes</code> (see figure <a href="programming.html#fig:3-2">3.2</a>.</p>
+<p>The <code>...</code> argument allows us to pass arguments to the main <code>image()</code> method, such as <code>axes</code> (see figure <a href="programming.html#fig:3-2">3.2</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:3-2"></span>
 <img src="_main_files/figure-html/3-2-1.png" alt="S3 image method for data of class `dist`." width="480" />
 <p class="caption">
 Figure 3.2: S3 image method for data of class <code>dist</code>.
 </p>
 </div>
-<p>Many S3 methods work in the same way as the simple <code>image.dist</code> function created above: the object is manipulated into a standard format, then passed to the standard method. Creating S3 methods for standard functions such as <code>summary</code>, <code>mean</code>, and <code>plot</code> provides a nice uniform interface to a wide variety of data types.</p>
+<p>Many S3 methods work in the same way as the simple <code>image.dist()</code> function created above: the object is manipulated into a standard format, then passed to the standard method. Creating S3 methods for standard functions such as <code>summary()</code>, <code>mean()</code>, and <code>plot()</code> provides a nice uniform interface to a wide variety of data types.</p>
 <div id="exercises-8" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>A data frame is just an R list, with class <code>data.frame</code>.</p>
 <ol style="list-style-type: decimal">
-<li><p>Use a combination of <code>unclass</code> and <code>str</code> on a data frame to confirm that it is indeed a list.</p></li>
-<li><p>Use the function <code>length</code> on a data frame. What is return? Why?</p></li>
+<li><p>Use a combination of <code>unclass()</code> and <code>str()</code> on a data frame to confirm that it is indeed a list.</p></li>
+<li><p>Use the function <code>length()</code> on a data frame. What is return? Why?</p></li>
 </ol>
-<!-- __XXX__ Colin add a section on the apply family somewhere around here (reckon it deserves a section of its own) -->
 </div>
 </div>
 </div>
@@ -820,16 +819,16 @@ Most people rarely use the other apply functions. For example, I have only used 
 </tr>
 </tbody>
 </table>
-<p>The <code>apply</code> function is used to apply a function to the each row or column of a matrix. In many data science problems, this is a common task. For example, to calculate the standard deviation of the row we have</p>
+<p>The <code>apply()</code> function is used to apply a function to the each row or column of a matrix. In many data science problems, this is a common task. For example, to calculate the standard deviation of the row we have</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="co"># MARGIN=1: corresponds to rows</span>
 row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</code></pre></div>
-<p>The first argument of <code>apply</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
+<p>The first argument of <code>apply()</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_med =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</code></pre></div>
 <p>Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the <code>na.rm</code> argument to the <code>sd</code> function, we have</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p>The <code>apply</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
-<p>The <code>lapply</code> function is similar to <code>apply</code>; the main differences are the input types are vectors or lists and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply</code> and <code>vapply</code> are similar to <code>lapply</code>, but the return type is not necessary a list.</p>
+<p>The <code>apply()</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
+<p>The <code>lapply</code> function is similar to <code>apply()</code>; the main differences are the input types are vectors or lists and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply()</code> and <code>vapply()</code> are similar to <code>lapply()</code>, but the return type is not necessary a list.</p>
 <div id="example-the-movies-data-set" class="section level3">
 <h3><span class="header-section-number">3.6.1</span> Example: the movies data set</h3>
 <p>The internet movie <a href="http://imdb.com/">database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon. The <code>ggplot2movies</code> package contains about sixty thousand movies stored as a data frame</p>
@@ -842,7 +841,7 @@ row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span cla
 <span class="co">#&gt;      r1    r2    r3    r4    r5    r6    r7    r8    r9   r10</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1   4.5   4.5   4.5   4.5  14.5  24.5  24.5  14.5   4.5   4.5</span></code></pre></div>
-<p>We can use the <code>apply</code> function to investigate voting patterns. The function <code>nnet::which.is.max</code> finds the maximum position in a vector, but breaks ties at random; <code>which.max</code> just returns the first value. Using <code>apply</code>, we can easily determine the most popular rating for each movie and plot the results</p>
+<p>We can use the <code>apply()</code> function to investigate voting patterns. The function <code>nnet::which.is.max()</code> finds the maximum position in a vector, but breaks ties at random; <code>which.max</code> just returns the first value. Using <code>apply()</code>, we can easily determine the most popular rating for each movie and plot the results</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">popular =<span class="st"> </span><span class="kw">apply</span>(ratings, <span class="dv">1</span>, nnet::which.is.max)
 <span class="kw">plot</span>(<span class="kw">table</span>(popular))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3-3"></span>
@@ -876,7 +875,7 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 <div id="exercises-9" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
-<li><p>Rewrite the <code>sapply</code> function calls above using <code>vapply</code> to ensure type consistency.</p></li>
+<li><p>Rewrite the <code>sapply()</code> function calls above using <code>vapply()</code> to ensure type consistency.</p></li>
 <li><p>How would you make subsetting data frames with <code>[</code> type consistent? Hint: look at the <code>drop</code> argument.</p></li>
 </ol>
 </div>
@@ -916,7 +915,7 @@ The following section is meant to provide an introduction to function closures w
 <p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in <code>.GlobalEnv</code>. One of the environments associated with a function is known as the enclosing environment, that is, where was the function created. We can determine the enclosing environment using <code>environment</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(plot_mpg)
 <span class="co">#&gt; &lt;environment: R_GlobalEnv&gt;</span></code></pre></div>
-<p>The <code>plot_mpg</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
+<p>The <code>plot_mpg()</code> function’s enclosing environment is the <code>.GlobalEnv</code>. This is important for variable scope, i.e. where should be look for a particular object. Consider the function <code>f</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f =<span class="st"> </span>function() {
   x =<span class="st"> </span><span class="dv">5</span>
   function() x
@@ -924,7 +923,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x313d908&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x32cc208&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -935,7 +934,7 @@ The value returned is obtained from <code>environment(g)</code> not from the <co
 The operator <code>&lt;&lt;-</code> makes R search through the parent environments for an existing defintion. If such a variable is found (and its binding is not locked) then its value is redefined, otherwise assignment takes place in the global environment.
 </p>
 </div>
-<p>The <code>simple_counter</code> function exploits this feature to enable variable caching</p>
+<p>The <code>simple_counter()</code> function exploits this feature to enable variable caching</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simple_counter =<span class="st"> </span>function() {
   no =<span class="st"> </span><span class="dv">0</span>
   function() {
@@ -943,13 +942,13 @@ The operator <code>&lt;&lt;-</code> makes R search through the parent environmen
     no
   }
 }</code></pre></div>
-<p>When we call the <code>simple_counter</code> function, we retain object values between function calls</p>
+<p>When we call the <code>simple_counter()</code> function, we retain object values between function calls</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sc =<span class="st"> </span><span class="kw">simple_counter</span>()
 <span class="kw">sc</span>()
 <span class="co">#&gt; [1] 1</span>
 <span class="kw">sc</span>()
 <span class="co">#&gt; [1] 2</span></code></pre></div>
-<p>The key points of the <code>simple_counter</code> function are</p>
+<p>The key points of the <code>simple_counter()</code> function are</p>
 <ul>
 <li>The <code>simple_counter</code> function returns a function;</li>
 <li>The enclosing environment of <code>sc</code> is not <code>.GlobalEnv</code>, instead it’s the binding environment of <code>sc</code>;</li>
@@ -977,7 +976,7 @@ The operator <code>&lt;&lt;-</code> makes R search through the parent environmen
     new_square
   }
 }</code></pre></div>
-<p>Keeping the variable <code>no_of_snakes</code> attached to the <code>check_snake</code> function, enables us to have cleaner code.</p>
+<p>Keeping the variable <code>no_of_snakes</code> attached to the <code>check_snake()</code> function, enables us to have cleaner code.</p>
 </div>
 <div id="exercise-4" class="section level4 unnumbered">
 <h4>Exercise</h4>
@@ -1012,7 +1011,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x32e65f8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3474f30&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -1027,9 +1026,9 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
     m =<span class="st"> </span>m +<span class="st"> </span>x[i]/n
   m
 }</code></pre></div>
-<p>This is clearly a bad function and we should just <code>mean</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
+<p>This is clearly a bad function and we should just <code>mean()</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</code></pre></div>
-<p>Then we use the <code>microbenchmark</code> function to compare the three variants</p>
+<p>Then we use the <code>microbenchmark()</code> function to compare the three variants</p>
 <!-- Make n bigger and just copy and paster output -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
 x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
@@ -1040,7 +1039,7 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000<
 <span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span>
 <span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span>
 <span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></code></pre></div>
-<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:3-4">3.4</a>).</p>
+<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean()</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:3-4">3.4</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:3-4"></span>
 <img src="_main_files/figure-html/3-4-1.png" alt="Comparsion of mean functions." width="70%" />
 <p class="caption">
@@ -1050,12 +1049,12 @@ Figure 3.4: Comparsion of mean functions.
 </div>
 <div id="compiling-code" class="section level3">
 <h3><span class="header-section-number">3.8.2</span> Compiling code</h3>
-<p>There are a number of ways to compile code. The easiest is to compile individual functions using <code>cmpfun</code>, but this obviously doesn’t scale. If you create a package, you can automatically compile the package on installation by adding</p>
+<p>There are a number of ways to compile code. The easiest is to compile individual functions using <code>cmpfun()</code>, but this obviously doesn’t scale. If you create a package, you can automatically compile the package on installation by adding</p>
 <pre><code>ByteCompile: true</code></pre>
-<p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>
+<p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages()</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Windows users will need Rtools
 <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type=</span><span class="st">&quot;source&quot;</span>)</code></pre></div>
-A final option to use just-in-time (JIT) compilation. The <code>enableJIT</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.
+A final option to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.
 <div class="rmdtip">
 <p>
 I always set the compile level to the maximum value of 3.
