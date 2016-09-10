@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-09">
+<meta name="date" content="2016-09-10">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -119,7 +119,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who this book is for</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-is-efficiency"><i class="fa fa-check"></i><b>1.2</b> What is efficiency?</a></li>
 <li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#why-efficiency"><i class="fa fa-check"></i><b>1.3</b> Why efficiency?</a></li>
-<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#what-is-efficient-r-programming"><i class="fa fa-check"></i><b>1.4</b> What is efficient R programming?</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#what-is-efficient-r-programming"><i class="fa fa-check"></i><b>1.4</b> What is efficient R programming?</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="introduction.html"><a href="introduction.html#code-conventions"><i class="fa fa-check"></i><b>1.4.1</b> Code conventions</a></li>
+</ul></li>
 <li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#touch-typing"><i class="fa fa-check"></i><b>1.5</b> Touch typing</a></li>
 <li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#benchmarking"><i class="fa fa-check"></i><b>1.6</b> Benchmarking</a><ul>
 <li class="chapter" data-level="1.6.1" data-path="introduction.html"><a href="introduction.html#benchmarking-example"><i class="fa fa-check"></i><b>1.6.1</b> Benchmarking example</a></li>
@@ -407,13 +409,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.907   0.199   3.107</span>
+<span class="co">#&gt;   3.923   0.264   4.189</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.205   0.012   0.217</span>
+<span class="co">#&gt;   0.180   0.036   0.216</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -486,9 +488,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00271 0.0035 0.0515 0.00588 0.00651 4.60   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.72949 0.7980 1.1003 0.83294 1.19421 7.05   100</span></code></pre></div>
+<span class="co">#&gt;         expr    min      lq   mean median     uq   max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.0035 0.00655 0.0941 0.0108 0.0117  8.34   100</span>
+<span class="co">#&gt;   ex_df[1, ] 1.3957 1.88752 2.2327 1.9460 2.2628 14.56   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -748,7 +750,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b59ffee70d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b1276da30d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
