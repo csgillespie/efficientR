@@ -80,13 +80,22 @@ An additional quirk of `ifelse()` is that although it is more *programmer effici
 ```{r}
 marks = runif(n = 10e6, min = 30, max = 99)
 system.time({
-  result1 = ifelse(marks >=40, "pass", "fail")
+  result1 = ifelse(marks >= 40, "pass", "fail")
 })
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 identical(result1, result2)
+```
+
+There is talk on the [R-devel email](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html) list of speeding up `ifelse()` in base R. A simple solution is to use the `if_else()` function from **dplyr**, although, as discussed in the [same thread](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html), it cannot replace `ifelse()` in all situations. For our exam result test example, `if_else()` works fine and is much faster than base R's implentation (although is still around 3 times slower than the hard-coded solution):
+
+```{r}
+system.time({
+  result3 = dplyr::if_else(marks >= 40, "pass", "fail")
+})
+identical(result1, result3)
 ```
 
 ### Sorting and ordering {-}
