@@ -50,8 +50,22 @@ Computers are always getting more powerful. Does this not reduce the need for ef
 A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK's Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. For this work he developed the function, `line2route()` in the **stplanr** package, to generate routes via the ([cyclestreets.net](http://www.cyclestreets.net/)) API.
 Hundreds of thousands of routes were needed but, to his dismay, code slowed to a standstill after only a few thousand routes. This endangered the contract. After eliminating other issues and via code profiling (covered in section \@ref(performance-profvis)), it was found that the slowdown was due to a bug in `line2route()`: it suffered from the 'vector growing problem', discussed in Section \@ref(memory-allocation).
 
-The solution was simple. A [single commit](https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47) made `line2route()` more than *ten times faster* and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be *essential*.
+The solution was simple. A [single commit](https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47) made `line2route()` more than *ten times faster* and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be *essential*. 
 <!-- Add references to the above anecdote if appropriate -->
+
+There are many concepts and skills that are language agnostic. Much of knowledge imparted in this book should be relevant to programming in other languages (and other technical activities beyond programming). There are strong reasons for focussing on efficiency in one language, however: in R simply using replacement functions from a different package can greatly improve efficiency, as discussed in relation to reading in text files Chapter 5. This level of detail, with reproducible examples, would not be possible in a general purpose 'efficient programming' book. The meaning of 'efficient R code', as opposed to generic 'efficient code', is outlined in the next section. First, it is work considering how non programming skills can help your overall efficiency and why such skills are worth learning, with reference to the textbook example of a cross-transferable skill: touch typing.
+
+### Touch typing
+
+The other side of the efficiency coin is programmer efficiency. There are many things that will help increase the productivity of yourself and your collaborators, not least following the advice of @janert2010data to 'think more work less'. The evidence suggests that good diet, physical activity, plenty of sleep and a healthy work-life balance can all boost your speed and effectiveness at work [@jensen2011can;@pereira2015impact;@grant2013exploration].
+
+While we recommend the reader to reflect on this evidence and their own well-being, this is not a self help book. It is about programming. However, there is one non-programming skill that *can* have a huge impact on productivity: touch typing. This skill can be relatively painless to learn, and can have a huge impact on your ability to write, modify and test R code quickly. Learning to touch type properly will pay off in small increments throughout the rest of your programming life (of course, the benefits are not constrained to R programming).
+
+The key difference between a touch typist and someone who constantly looks down at the keyboard, or who uses only two or three fingers for typing, is hand placement. Touch typing involves positioning your hands on the keyboard with each finger of both hands touching or hovering over a specific letter (figure \@ref(fig:1-1)). This takes time and some discipline to learn. Fortunately there are many resources that will help you get in the habit of touch typing early, including open source software projects [Klavaro](https://sourceforge.net/projects/klavaro/) and [TypeFaster](https://sourceforge.net/projects/typefaster/).
+
+```{r 1-1, echo=FALSE, fig.cap="The starting position for touch typing, with the fingers over the 'home keys'. Source: [Wikipedia](https://commons.wikimedia.org/wiki/File:QWERTY-home-keys-position.svg) under the Creative Commons license.", out.width="100%"}
+knitr::include_graphics("figures/f1_1_800px-QWERTY-home-keys-position.png")
+```
 
 ## What is efficient R programming?
 
@@ -68,18 +82,6 @@ Throughout this book we use a consistent set of conventions to refer to code.
   * Other R objects, such as data or function arguments, are in a code font, without parentheses, like `x` and `name`.
   * Occasionally we'll highlight the package of the function, using two colons, e.g. `microbenchmark::microbenchmark()`.
   Note, this notation can be efficient if you only need to use a package's function once, as it avoids loading the package with `library()`.
-
-## Touch typing
-
-The other side of the efficiency coin is programmer efficiency. There are many things that will help increase the productivity of yourself and your collaborators, not least following the advice of @janert2010data to 'think more work less'. The evidence suggests that good diet, physical activity, plenty of sleep and a healthy work-life balance can all boost your speed and effectiveness at work [@jensen2011can;@pereira2015impact;@grant2013exploration].
-
-While we recommend the reader to reflect on this evidence and their own well-being, this is not a self help book. It is about programming. However, there is one non-programming skill that *can* have a huge impact on productivity: touch typing. This skill can be relatively painless to learn, and can have a huge impact on your ability to write, modify and test R code quickly. Learning to touch type properly will pay off in small increments throughout the rest of your programming life (of course, the benefits are not constrained to R programming).
-
-The key difference between a touch typist and someone who constantly looks down at the keyboard, or who uses only two or three fingers for typing, is hand placement. Touch typing involves positioning your hands on the keyboard with each finger of both hands touching or hovering over a specific letter (figure \@ref(fig:1-1)). This takes time and some discipline to learn. Fortunately there are many resources that will help you get in the habit of touch typing early, including open source software projects [Klavaro](https://sourceforge.net/projects/klavaro/) and [TypeFaster](https://sourceforge.net/projects/typefaster/).
-
-```{r 1-1, echo=FALSE, fig.cap="The starting position for touch typing, with the fingers over the 'home keys'. Source: [Wikipedia](https://commons.wikimedia.org/wiki/File:QWERTY-home-keys-position.svg) under the Creative Commons license.", out.width="100%"}
-knitr::include_graphics("figures/f1_1_800px-QWERTY-home-keys-position.png")
-```
 
 ## Benchmarking
 
@@ -183,7 +185,7 @@ knitr::include_graphics("figures/f1_2_profvis-ice.png")
 knitr::include_graphics("figures/f1_3_icesheet-change.png")
 ```
 
-## Associated R package
+## Associated R package and resources
 
 This book has an associated R package that contains data sets and functions referenced in the book. The
 package is hosted on [github](https://github.com/csgillespie/efficient) and can be installed
