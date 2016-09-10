@@ -111,22 +111,13 @@ we have managed to create an object that is three times larger than the original
 A rough rule of thumb is that your RAM should be three times the size of your data set.
 ```
 
-Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often.
+Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
 
-It is straightforward to determine how much RAM you have. Under Windows, 
-
-1. Clicking the `Start` button picture of the Start button, then right-clicking Computer. Next click on `Properties`.
-1. In the `System` section, you can see the amount of RAM your computer has next to the `Installed memory (RAM)` section. Windows reports how much RAM it can use, not the amount installed. This is only an issue if you are using a 32-bit version of Windows.
-
-In Mac, click the Apple menu. Select `About This Mac` and a window appears with the relevant information. 
-
-On almost all Unix-based OSs, you can find out how much RAM you have using the code `vmstat`, whilst on all Linux distributions, you can use the command `free`. Using this in conjunction with the `-h` tag will provide the answer in human readable format, as illustrated below for a $16$ GB machine:
-
+```{r, results="hide"}
+benchmarkme::get_ram()
+#> 16.3 GB
 ```
-$ free -h
-             total       used       free     
-Mem:           15G       4.0G        11G 
-```
+
 <!-- https://en.wikipedia.org/wiki/DIMM -->
 ```{r 8-1, fig.cap="Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org", echo=FALSE, out.width="100%"}
 knitr::include_graphics("figures/f8_1_3SDRAM-DIMMs.jpg")
@@ -257,7 +248,6 @@ Cloud computing uses networks of remote servers, instead of a local computer, to
 ### Amazon EC2
 
 Amazon Elastic Compute Cloud (EC2) is one of a number of providers of this service. EC2 makes it (relatively) easy to run R instances in the cloud. Users can configure the operating system, CPU, hard drive type, the amount of RAM and where your project is physically located.
-
 
 If you want to run a server in the Amazon EC2 cloud, you have to select the system you are going to boot up. There are a vast array of pre-packaged system images. Some of these images are just basic operating systems, such as Debian or Ubuntu, which require further configuration. There is also an [Amazon machine image](http://www.louisaslett.com/RStudio_AMI/) that specifically targets R and RStudio.
 
