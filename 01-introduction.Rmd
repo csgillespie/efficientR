@@ -83,10 +83,15 @@ Throughout this book we use a consistent set of conventions to refer to code.
   * Occasionally we'll highlight the package of the function, using two colons, e.g. `microbenchmark::microbenchmark()`.
   Note, this notation can be efficient if you only need to use a package's function once, as it avoids loading the package with `library()`.
 
-## Benchmarking
+## Benchmarking and profiling
 
-Benchmarking is the process of testing the performance of specific operations
-repeatedly. Modifying elements from one benchmark to the next and recording the results
+Benchmarking and profiling are key to efficient programming, especially in R. Benchmarking is the process of testing the performance of specific operations repeatedly. Profiling involves running many lines of code to find out where bottlenecks lie. Both are vital for understanding efficiency and we use them throughout the book. Their centrality to efficient programming practice means they must be covered in this introductory chapter, despite being seen by many as an intermediate or advance R programming topic.
+
+In some ways benchmarks can be seen as the building blocks of profiles. Profiling can be understood as automatically running many benchmarks, for every line in a script, and comparing the results line-by-line. Because benchmarks are smaller, easier and more modular, we cover them first.
+
+### Benchmarking
+
+Modifying elements from one benchmark to the next and recording the results
 after the alteration enables us to determine the fastest piece of code.
 Benchmarking is important in the efficient programmer's tool-kit: you may *think* that
 your code is faster than mine but benchmarking allows you to *prove* it.
@@ -149,7 +154,7 @@ When thinking about computational efficiency, they are (at least) two in measure
 Both measures are useful, but its important to not to forget the underlying 
 time scale.
 
-## Profiling
+### Profiling
 
 Benchmarking generally tests execution time of one function against another. Profiling, on the other hand, is about testing large chunks of code.
 
