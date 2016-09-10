@@ -406,17 +406,25 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
 <p>An additional quirk of <code>ifelse()</code> is that although it is more <em>programmer efficient</em>, as it is more concise and understandable, than multi-line alternatives, it is often <strong>less</strong> <em>computationally efficient</em> than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">marks =<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="fl">10e6</span>, <span class="dt">min =</span> <span class="dv">30</span>, <span class="dt">max =</span> <span class="dv">99</span>)
 <span class="kw">system.time</span>({
-  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
+  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.719   0.331   3.053</span>
+<span class="co">#&gt;   2.698   0.264   2.963</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.193   0.024   0.217</span>
+<span class="co">#&gt;   0.180   0.028   0.208</span>
 <span class="kw">identical</span>(result1, result2)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
+  result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
+})
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   0.576   0.296   0.887</span>
+<span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
 <div id="sorting-and-ordering" class="section level3 unnumbered">
@@ -488,9 +496,9 @@ if(file.exists("data.csv"))
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median      uq   max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00263 0.00346 0.0566 0.00599 0.00664  5.05   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.72116 0.79876 1.0895 0.84237 1.15055 10.11   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq  mean  median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00253 0.00361 0.052 0.00571 0.0065 4.64   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.71211 0.78463 1.054 0.83851 1.1563 7.22   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -750,7 +758,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2aafb72fe0d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b84286110d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
