@@ -49,17 +49,20 @@ highlight standard tricks or alternative methods that may improve performance.
 
 ### The `if` vs `ifelse` functions {-}
 
-The `ifelse` function 
+`ifelse()` is a vectorised version of the standard control-flow function `if(test) if_yes... else if_no...` that works as follows:
+
 ```{r eval=FALSE}
-ifelse(test, yes, no)
+ifelse(test, if_yes, if_no)
 ```
-is a vectorised version of the standard control-flow `if` function. The return value
-of `ifelse` is filled with elements from the `yes` and `no` arguments that are
+
+In the above imaginary example, the return value
+of  is filled with elements from the `yes` and `no` arguments that are
 determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
-suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then
+suppose we have a vector of exam marks. `ifelse()` could be used to clssify them as pass or fail:
+
 ```{r}
 marks = c(25, 55, 75)
-ifelse(marks >=40, "pass", "fail")
+ifelse(marks >= 40, "pass", "fail")
 ```
 
 If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
@@ -73,6 +76,7 @@ if(mark >= 40) {
   "fail"
 }
 ```
+
 is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
 An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable, than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
@@ -147,7 +151,7 @@ increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster
 
 To determine which index of a vector or array are `TRUE`, we would typically use the
 `which` function. If we want to find the index of just the minimum or maximum value,
-i.e. `which(x == min(x))` then using the efficient `which.min`/`which.max`
+i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()`
 variants can be orders of magnitude faster (see figure \@ref(fig:7-2b))
 
 ```{r 7-2b, fig.cap="Comparison of `which.min` with `which`.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
@@ -156,23 +160,39 @@ local(source("code/07-performance_f2b.R", local=TRUE))
 
 ###  Converting factors to numerics {-}
 
+<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
+
 A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. For example, our data 
-has been converted to factor by `read.csv` since it contained a string. Using
+convert a factor into its numerical equivalent. The most efficient way of doing this
+(especially for long factors) is
 
 ```{r, echo=2, results="hide"}
 f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
 
-to convert a factor to a number is slightly more efficient than `as.numeric(as.character(f))`, 
-especially for long vectors.
+<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
+
+where `f` is the factor.
+
+### String concatenation {-}
+
+To concatenate strings use the `paste` function
+
+```{r, results="hide"}
+paste("A", "B")
+```
+
+The separation character is specified via the `sep` argument. The function
+`paste0(..., collapse)` is equivalent to `paste(..., sep = "", collapse)`, but is
+slightly more efficient.
+
+<!-- __XXX__Colin__ Again, info on how much so would be enlightening  -->
 
 ### Logical AND and OR {-}
 
 The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
-typically used during multi-criteria subsetting operations. The code below, for example, 
-returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
+typically used during multi-criteria subsetting operations. The code below, for example, returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
 
 ```{r, echo=-1}
 x = c(0.2, 0.5, 0.7)
@@ -184,22 +204,14 @@ regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `
 only executes the second component if needed. This is efficient and leads to more
 neater code, e.g.
 
-```{r, results="hide"}
-# We only calculate the mean if data doesn't contain NAs
-if(all(!is.na(x)) && mean(x) > 0) {
-  # Do something
-}
+```{r}
+# read.csv is only executed if the file exists
+file.exists("data.csv") && read.csv("data.csv")
 ```
 
-compared to 
-
-```{r, results="hide"}
-if(all(!is.na(x))) {
-  if(mean(x) > 0) {
-    # do somthing
-  }
-}
-```
+<!-- __XXX__Colin__ Is this really good code? Why not use if? Could say "This is equivalent to the more commonly used
+if(file.exists("data.csv"))
+  read.csv("data.csv") " -->
 
 However care must be taken not to use `&&` or `||` on vectors since it only evaluates the first element of the vector, giving the
 incorrect answer. This is illustrated below:
@@ -211,15 +223,15 @@ x < 0.4 || x > 0.6
 ### Row and column operations {-}
 
 In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculation the column or row sums. The `apply`
+set. For example, we might want to calculation the column or row sums. The `apply()`
 function makes this type of operation straightforward.
+
 ```{r eval=FALSE}
 # Second argument: 1 -> rows. 2 -> columns
 apply(data_set, 1, function_name)
 ```
-There are optimised functions for calculating row and columns sums/means, such as,`rowSums`,
-`colSums`, `rowMeans` and `colMeans` that should be used whenever possible. The package
-**matrixStats** contains many optimised row/col functions.
+There are optimised functions for calculating row and columns sums/means, `rowSums()`,
+`colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.
 
 ### `is.na` and `anyNA` \ {-}
 
@@ -266,8 +278,9 @@ give you the true value of `y` (to 17 decimal places).
 ```
 
 Integers are another numeric data type. Integers primarily exist to be
-passed to C or Fortran code. You might be tempted to use integers with the 
-purpose of speeding up your R code. For example, if we look at the
+passed to C or Fortran code. You do will not need to create integers for most applications. However,
+they are occasionally used to optimise sub-setting operations. When we subset a data
+frame or matrix, we are interacting with C code. For example, if we look at the
 arguments for the `head` function
 
 ```{r}
@@ -278,38 +291,37 @@ args(head.matrix)
 Using the `:` operator automatically creates a vector of integers.
 ```
 
-we see that the default argument for `n` is `6L` rather than simply `6` (the `L` is short for Literal and is used to create an
-integer). This gives a tiny speed boost (around 0.1 microseconds!)
+Note that default argument for `n` is `6L` rather than simply `6` (the `L` is short for Literal and is used to create an
+integer). Since this function is ubiquitous, this low
+level optimisation is useful. To illustrate the speed increase, the code below selects the first $100$ rows from a data frame (`clock_speed`, from the
+**efficient** package) using integer and double indices, and benchmarks the results using the
+**microbenchmark** package:
 
 ```{r, matrix_timing, eval=FALSE}
-x = runif(10)
-microbenchmark(head(x, 6.0), head(x, 6L), times=1000000)
-# Unit: microseconds
-#        expr   min    lq  mean median    uq    max neval cld
-#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a
-# head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a
+s_int = 1:100; s_double = seq(1, 100, 1.0)
+microbenchmark(clock_speed[s_int, 2L], clock_speed[s_double, 2.0], times=1000000)
+#> Unit: microseconds
+#> expr   min    lq  mean median    uq   max neval cld
+#> clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a 
+#> clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b
 ```
 
-Since this function is ubiquitous, this low level optimisation is useful. 
-In general, if you are worried about shaving microseconds off your R code run time, you should
-probably consider switching to another language.
+The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth
+worrying about for most applications.
 
-However, integers are more space efficient. 
-The code below compares size of a integer vector to a standard numeric vector:
+Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:
 
 ```{r}
 pryr::object_size(1:10000)
 pryr::object_size(y = seq(1, 10000, by=1.0))
 ```
 
-The results show that the integer version is roughly half the size. However, most mathematical operations will convert
+The results show that integer version is roughly half the size. However, most mathematical operations will convert
 the integer vector into a standard numerical vector, as illustrated below: 
 
 ```{r}
 is.integer(1L + 1)
 ```
-
-Further storage savings can be obtained using the **bit** package.
 
 ### Sparse matrices {-}
 
@@ -330,9 +342,7 @@ sp = sparseMatrix(1:N, 1:N, x = 1)
 m = diag(1, N, N)
 ```
 
-Both objects contain the same information, but the data is stored differently; since 
-we have the same value multiple times in the matrix, we only need to store the value once and 
-link it to multiple matrix locations. The matrix object
+Both objects contain the same information, but the data is stored differently. The matrix object
 stores each individual element, while the sparse matrix object only stores the location of the non-zero
 elements. This is much more memory efficient, as illustrated below:
 
@@ -570,11 +580,12 @@ On a multi-processor computer, this can lead to a four-fold speed-up.
 
 Always call `stopCluster` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is omitted.
+function ends as the results of an error and so `stopCluster()` is omitted.
 
-The `on.exit` function handles this problem with the minimum of fuss; regardless how
+The `on.exit()` function handles this problem with the minimum of fuss; regardless how
 the function ends, `on.exit` is always called. In the context of parallel programming
 we will have something similar to
+
 ```{r}
 simulate = function(cores) {
   cl = makeCluster(cores)
@@ -772,7 +783,7 @@ Table \@ref{tab:cpptypes} gives an overview.
 
 ### The `sourceCpp` function {#sourcecpp}
 
-The `cppFunction` is great for getting small examples up and running. But it is better
+The `cppFunction()` is great for getting small examples up and running. But it is better
 practice to put your C++ code in a separate file (with file extension `cpp`) and use
 the function call `sourceCpp("path/to/file.cpp")` to compile them. However we need to
 include a few headers at the top of the file. The first line we add gives us access to
@@ -959,9 +970,11 @@ similar way to how we used `NumericVector`'s. The main differences are:
 **Rcpp** API. What this means in practice is that we can write C++ code in the style
 of R. For example, suppose we wanted to find the squared difference of two vectors; a
 squared residual in regression. In R we would use
+
 ```{r}
 sq_diff_r = function(x, y) (x - y)^2
 ```
+
 Rewriting the function in standard C++ would give
 
 ```{Rcpp eval=FALSE}
