@@ -49,17 +49,20 @@ highlight standard tricks or alternative methods that may improve performance.
 
 ### The `if` vs `ifelse` functions {-}
 
-The `ifelse` function 
+`ifelse()` is a vectorised version of the standard control-flow function `if(test) if_yes... else if_no...` that works as follows:
+
 ```{r eval=FALSE}
-ifelse(test, yes, no)
+ifelse(test, if_yes, if_no)
 ```
-is a vectorised version of the standard control-flow `if` function. The return value
-of `ifelse` is filled with elements from the `yes` and `no` arguments that are
+
+In the above imaginary example, the return value
+of  is filled with elements from the `yes` and `no` arguments that are
 determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
-suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then
+suppose we have a vector of exam marks. `ifelse()` could be used to clssify them as pass or fail:
+
 ```{r}
 marks = c(25, 55, 75)
-ifelse(marks >=40, "pass", "fail")
+ifelse(marks >= 40, "pass", "fail")
 ```
 
 If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
@@ -73,6 +76,7 @@ if(mark >= 40) {
   "fail"
 }
 ```
+
 is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
 An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable, than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
@@ -147,7 +151,7 @@ increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster
 
 To determine which index of a vector or array are `TRUE`, we would typically use the
 `which` function. If we want to find the index of just the minimum or maximum value,
-i.e. `which(x == min(x))` then using the efficient `which.min`/`which.max`
+i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()`
 variants can be orders of magnitude faster (see figure \@ref(fig:7-2b))
 
 ```{r 7-2b, fig.cap="Comparison of `which.min` with `which`.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
@@ -219,14 +223,15 @@ x < 0.4 || x > 0.6
 ### Row and column operations {-}
 
 In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculation the column or row sums. The `apply`
+set. For example, we might want to calculation the column or row sums. The `apply()`
 function makes this type of operation straightforward.
+
 ```{r eval=FALSE}
 # Second argument: 1 -> rows. 2 -> columns
 apply(data_set, 1, function_name)
 ```
-There are optimised functions for calculating row and columns sums/means, `rowSums`,
-`colSums`, `rowMeans` and `colMeans` that should be used whenever possible.
+There are optimised functions for calculating row and columns sums/means, `rowSums()`,
+`colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.
 
 ### `is.na` and `anyNA` \ {-}
 
@@ -575,11 +580,12 @@ On a multi-processor computer, this can lead to a four-fold speed-up.
 
 Always call `stopCluster` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is omitted.
+function ends as the results of an error and so `stopCluster()` is omitted.
 
-The `on.exit` function handles this problem with the minimum of fuss; regardless how
+The `on.exit()` function handles this problem with the minimum of fuss; regardless how
 the function ends, `on.exit` is always called. In the context of parallel programming
 we will have something similar to
+
 ```{r}
 simulate = function(cores) {
   cl = makeCluster(cores)
@@ -777,7 +783,7 @@ Table \@ref{tab:cpptypes} gives an overview.
 
 ### The `sourceCpp` function {#sourcecpp}
 
-The `cppFunction` is great for getting small examples up and running. But it is better
+The `cppFunction()` is great for getting small examples up and running. But it is better
 practice to put your C++ code in a separate file (with file extension `cpp`) and use
 the function call `sourceCpp("path/to/file.cpp")` to compile them. However we need to
 include a few headers at the top of the file. The first line we add gives us access to
@@ -964,9 +970,11 @@ similar way to how we used `NumericVector`'s. The main differences are:
 **Rcpp** API. What this means in practice is that we can write C++ code in the style
 of R. For example, suppose we wanted to find the squared difference of two vectors; a
 squared residual in regression. In R we would use
+
 ```{r}
 sq_diff_r = function(x, y) (x - y)^2
 ```
+
 Rewriting the function in standard C++ would give
 
 ```{Rcpp eval=FALSE}
