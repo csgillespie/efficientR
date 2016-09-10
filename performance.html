@@ -266,7 +266,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
 <li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
-<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#string-concatenation"><i class="fa fa-check"></i>String concatenation</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
 <li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
@@ -409,13 +408,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.687   0.215   2.903</span>
+<span class="co">#&gt;   2.802   0.288   3.090</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.180   0.036   0.217</span>
+<span class="co">#&gt;   0.172   0.040   0.212</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -423,7 +422,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.644   0.140   0.784</span>
+<span class="co">#&gt;   0.556   0.168   0.724</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -449,18 +448,9 @@ Figure 7.1: Comparison of <code>which.min</code> with <code>which</code>.
 </div>
 <div id="converting-factors-to-numerics" class="section level3 unnumbered">
 <h3>Converting factors to numerics</h3>
-<!-- __XXX__Colin__ Occassionally below: on what occassions? Curious -->
-<p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is</p>
+<p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. For example, our data has been converted to factor by <code>read.csv</code> since it contained a string. Using</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</code></pre></div>
-<!-- __XXX__Colin__ As opposed to? Worth mentioning its inefficient counterpart -->
-<p>where <code>f</code> is the factor.</p>
-</div>
-<div id="string-concatenation" class="section level3 unnumbered">
-<h3>String concatenation</h3>
-<p>To concatenate strings use the <code>paste</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">paste</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)</code></pre></div>
-<p>The separation character is specified via the <code>sep</code> argument. The function <code>paste0(..., collapse)</code> is equivalent to <code>paste(..., sep = &quot;&quot;, collapse)</code>, but is slightly more efficient.</p>
-<!-- __XXX__Colin__ Again, info on how much so would be enlightening  -->
+<p>to convert a factor to a number is slightly more efficient than <code>as.numeric(as.character(f))</code>, especially for long vectors.</p>
 </div>
 <div id="logical-and-and-or" class="section level3 unnumbered">
 <h3>Logical AND and OR</h3>
@@ -468,12 +458,16 @@ Figure 7.1: Comparison of <code>which.min</code> with <code>which</code>.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> |<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
 <span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></code></pre></div>
 <p>When R executes the above comparison, it will <strong>always</strong> calculate <code>x &gt; 0.6</code> regardless of the value of <code>x &lt; 0.4</code>. In contrast, the non-vectorised version, <code>&amp;&amp;</code>, only executes the second component if needed. This is efficient and leads to more neater code, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read.csv is only executed if the file exists</span>
-<span class="kw">file.exists</span>(<span class="st">&quot;data.csv&quot;</span>) &amp;&amp;<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data.csv&quot;</span>)
-<span class="co">#&gt; [1] FALSE</span></code></pre></div>
-<!-- __XXX__Colin__ Is this really good code? Why not use if? Could say "This is equivalent to the more commonly used
-if(file.exists("data.csv"))
-  read.csv("data.csv") " -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We only calculate the mean if data doesn&#39;t contain NAs</span>
+if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<span class="st"> </span><span class="kw">mean</span>(x) &gt;<span class="st"> </span><span class="dv">0</span>) {
+  <span class="co"># Do something</span>
+}</code></pre></div>
+<p>compared to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x))) {
+  if(<span class="kw">mean</span>(x) &gt;<span class="st"> </span><span class="dv">0</span>) {
+    <span class="co"># do somthing</span>
+  }
+}</code></pre></div>
 <p>However care must be taken not to use <code>&amp;&amp;</code> or <code>||</code> on vectors since it only evaluates the first element of the vector, giving the incorrect answer. This is illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> ||<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
@@ -483,7 +477,7 @@ if(file.exists("data.csv"))
 <p>In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculation the column or row sums. The <code>apply</code> function makes this type of operation straightforward.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span>
 <span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</code></pre></div>
-<p>There are optimised functions for calculating row and columns sums/means, <code>rowSums</code>, <code>colSums</code>, <code>rowMeans</code> and <code>colMeans</code> that should be used whenever possible.</p>
+<p>There are optimised functions for calculating row and columns sums/means, such as,<code>rowSums</code>, <code>colSums</code>, <code>rowMeans</code> and <code>colMeans</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
 </div>
 <div id="is.na-and-anyna" class="section level3 unnumbered">
 <h3><code>is.na</code> and <code>anyNA</code>  </h3>
@@ -497,8 +491,8 @@ if(file.exists("data.csv"))
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00267 0.00363 0.0569 0.00595 0.00657 5.11   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.74513 0.81921 1.0947 0.86838 1.19053 7.13   100</span></code></pre></div>
+<span class="co">#&gt;  ex_mat[1, ] 0.00292 0.00376 0.0517 0.00636 0.00701 4.56   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.78194 0.86106 1.1220 0.89985 1.20470 7.65   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -513,7 +507,7 @@ Use the <code>data.matrix</code> function to efficiently convert a data frame in
 When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
-<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code. For example, if we look at the arguments for the <code>head</code> function</p>
+<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You might be tempted to use integers with the purpose of speeding up your R code. For example, if we look at the arguments for the <code>head</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
 <span class="co">#&gt; function (x, n = 6L, ...) </span>
 <span class="co">#&gt; NULL</span></code></pre></div>
@@ -522,22 +516,23 @@ When comparing floating point numbers we should be particularly careful, since <
 Using the <code>:</code> operator automatically creates a vector of integers.
 </p>
 </div>
-<p>Note that default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an integer). Since this function is ubiquitous, this low level optimisation is useful. To illustrate the speed increase, the code below selects the first <span class="math inline">\(100\)</span> rows from a data frame (<code>clock_speed</code>, from the <strong>efficient</strong> package) using integer and double indices, and benchmarks the results using the <strong>microbenchmark</strong> package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s_int =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span>; s_double =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="fl">1.0</span>)
-<span class="kw">microbenchmark</span>(clock_speed[s_int, 2L], clock_speed[s_double, <span class="fl">2.0</span>], <span class="dt">times=</span><span class="dv">1000000</span>)
-<span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt; expr   min    lq  mean median    uq   max neval cld</span>
-<span class="co">#&gt; clock_speed[s_int, 2L] 11.79 13.43 15.30  13.81 14.22 87979 1e+06  a </span>
-<span class="co">#&gt; clock_speed[s_double, 2] 12.79 14.37 16.04  14.76 15.18 21964 1e+06   b</span></code></pre></div>
-<p>The above result shows that integer indices can be slightly faster than numeric indices. However, compared with other optimisations, this trick is probably not worth worrying about for most applications.</p>
-<p>Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:</p>
+<p>we see that the default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an integer). This gives a tiny speed boost (around 0.1 microseconds!)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)
+<span class="kw">microbenchmark</span>(<span class="kw">head</span>(x, <span class="fl">6.0</span>), <span class="kw">head</span>(x, 6L), <span class="dt">times=</span><span class="dv">1000000</span>)
+<span class="co"># Unit: microseconds</span>
+<span class="co">#        expr   min    lq  mean median    uq    max neval cld</span>
+<span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span>
+<span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></code></pre></div>
+<p>Since this function is ubiquitous, this low level optimisation is useful. In general, if you are worried about shaving microseconds off your R code run time, you should probably consider switching to another language.</p>
+<p>However, integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(<span class="dv">1</span>:<span class="dv">10000</span>)
 <span class="co">#&gt; 40 kB</span>
 pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))
 <span class="co">#&gt; 80 kB</span></code></pre></div>
-<p>The results show that integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below:</p>
+<p>The results show that the integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.integer</span>(1L +<span class="st"> </span><span class="dv">1</span>)
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
+<p>Further storage savings can be obtained using the <strong>bit</strong> package.</p>
 </div>
 <div id="sparse-matrices" class="section level3 unnumbered">
 <h3>Sparse matrices</h3>
@@ -547,7 +542,7 @@ pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span clas
 N =<span class="st"> </span><span class="dv">10000</span>
 sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span>:N, <span class="dv">1</span>:N, <span class="dt">x =</span> <span class="dv">1</span>)
 m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</code></pre></div>
-<p>Both objects contain the same information, but the data is stored differently. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:</p>
+<p>Both objects contain the same information, but the data is stored differently; since we have the same value multiple times in the matrix, we only need to store the value once and link it to multiple matrix locations. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(sp)
 <span class="co">#&gt; 161 kB</span>
 pryr::<span class="kw">object_size</span>(m)
@@ -758,7 +753,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2aacb20780d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b6a03d2d0d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
