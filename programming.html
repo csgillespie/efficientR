@@ -168,7 +168,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
-<li class="chapter" data-level="3.0.1" data-path="programming.html"><a href="programming.html#prerequisites"><i class="fa fa-check"></i><b>3.0.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="3.1" data-path="programming.html"><a href="programming.html#top-5-tips-for-efficient-programming"><i class="fa fa-check"></i><b>3.1</b> Top 5 tips for efficient programming</a></li>
 <li class="chapter" data-level="3.2" data-path="programming.html"><a href="programming.html#general-advice"><i class="fa fa-check"></i><b>3.2</b> General advice</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
@@ -266,6 +266,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
 <li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#string-concatenation"><i class="fa fa-check"></i>String concatenation</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
 <li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
@@ -367,8 +368,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">3</span> Efficient programming</h1>
 <p>Many people who use R would not describe themselves as “programmers”. Instead they tend to have advanced domain level knowledge, understand standard R data structures, such as vectors and data frames, but have little formal training in computing. Sound familiar? In that case this chapter is for you.</p>
 <p>In this chapter we will discuss “big picture” programming techniques. We cover general concepts and R programming techniques about code optimisation, before describing idiomatic programming structures. We conclude the chapter by examining relatively easy ways of speeding up code using the <strong>compiler</strong> package and parallel processing, using multiple CPUs.</p>
-<div id="prerequisites" class="section level3">
-<h3><span class="header-section-number">3.0.1</span> Prerequisites</h3>
+<div id="prerequisites" class="section level3 unnumbered">
+<h3>Prerequisites</h3>
 <p>In this chapter we will introduce two new packages, <strong>compiler</strong> and <strong>memoise</strong>. The <strong>compiler</strong> package comes with R, so it will already be installed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;memoise&quot;</span>)</code></pre></div>
@@ -530,7 +531,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;    2.56    0.00    2.56</span></code></pre></div>
+<span class="co">#&gt;   3.653   0.013   3.666</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -868,7 +869,7 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 <li>Each function has a number of examples in the associated help page. You can directly access the examples using the <code>example</code> function, e.g. to run the <code>apply</code> examples, use <code>example(&quot;apply&quot;)</code>.</li>
 <li>There is a very detailed Stackoverflow <a href="http://stackoverflow.com/q/3505701/203420">answer</a> description when, where and how to use each of the functions.</li>
 <li>In a similar vein, Neil Saunders has a nice blog <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">post</a> giving an overview of the functions.</li>
-<li>The apply functions are an example of functional programming. Chapter 16 of <em>R for data Science</em> describes the interplay between loops and functional programming in more detail <span class="citation">(Grolemund and Wickham, n.d.)</span>, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
+<li>The apply functions are an example of functional programming. Chapter 16 of <em>R for data Science</em> describes the interplay between loops and functional programming in more detail <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span>, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
 </ul>
 </div>
 <div id="exercises-9" class="section level4 unnumbered">
@@ -922,7 +923,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x2e870c8&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x24981a0&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -1005,12 +1006,12 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 </div>
 <div id="the-byte-compiler" class="section level2">
 <h2><span class="header-section-number">3.8</span> The byte compiler</h2>
-<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
+<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
 <p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3030b80&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x263f748&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -1074,11 +1075,14 @@ I always set the compile level to the maximum value of 3.
 <div id="ref-chambers_object-oriented_2014">
 <p>Chambers, John M. 2014. “Object-Oriented Programming, Functional Programming and R.” <em>Statistical Science</em> 29 (2): 167–80. doi:<a href="https://doi.org/10.1214/13-STS452">10.1214/13-STS452</a>.</p>
 </div>
+<div id="ref-grolemund_r_2016">
+<p>Grolemund, G., and H. Wickham. 2016. <em>R for Data Science</em>. O’Reilly Media.</p>
+</div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="7">
-<li id="fn7"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref7">↩</a></p></li>
+<ol start="6">
+<li id="fn6"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref6">↩</a></p></li>
 </ol>
 </div>
             </section>
