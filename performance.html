@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-10">
+<meta name="date" content="2016-09-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -286,7 +286,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#rcpp"><i class="fa fa-check"></i><b>7.5</b> Rcpp</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#pre-requisites"><i class="fa fa-check"></i><b>7.5.1</b> Pre-requisites</a></li>
 <li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#simple-c"><i class="fa fa-check"></i><b>7.5.2</b> A simple C++ function</a></li>
-<li class="chapter" data-level="7.5.3" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.5.3</b> The cppFunction command</a></li>
+<li class="chapter" data-level="7.5.3" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.5.3</b> The <code>cppFunction()</code> command</a></li>
 <li class="chapter" data-level="7.5.4" data-path="performance.html"><a href="performance.html#c-types"><i class="fa fa-check"></i><b>7.5.4</b> C++ data types</a></li>
 <li class="chapter" data-level="7.5.5" data-path="performance.html"><a href="performance.html#sourcecpp"><i class="fa fa-check"></i><b>7.5.5</b> The <code>sourceCpp</code> function</a></li>
 <li class="chapter" data-level="7.5.6" data-path="performance.html"><a href="performance.html#vectors-and-loops"><i class="fa fa-check"></i><b>7.5.6</b> Vectors and loops</a></li>
@@ -387,11 +387,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In R there is often more than one way to solve a problem. In this section we highlight standard tricks or alternative methods that may improve performance.</p>
 <div id="the-if-vs-ifelse-functions" class="section level3 unnumbered">
 <h3>The <code>if</code> vs <code>ifelse</code> functions</h3>
-<p>The <code>ifelse</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ifelse</span>(test, yes, no)</code></pre></div>
-<p>is a vectorised version of the standard control-flow <code>if</code> function. The return value of <code>ifelse</code> is filled with elements from the <code>yes</code> and <code>no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>. For example, suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then</p>
+<p><code>ifelse()</code> is a vectorised version of the standard control-flow function <code>if(test) if_yes else if_no</code> that works as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ifelse</span>(test, if_yes, if_no)</code></pre></div>
+<p>In the above imaginary example, the return value is filled with elements from the <code>if_yes</code> and <code>if_no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>. For example, suppose we have a vector of exam marks. <code>ifelse()</code> could be used to classify them as pass or fail:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">marks =<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">55</span>, <span class="dv">75</span>)
-<span class="kw">ifelse</span>(marks &gt;=<span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
+<span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 <span class="co">#&gt; [1] &quot;fail&quot; &quot;pass&quot; &quot;pass&quot;</span></code></pre></div>
 <p>If the length of <code>test</code> condition is equal to <span class="math inline">\(1\)</span>, i.e. <code>length(test) == 1</code>, then the standard conditional statement</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mark =<span class="st"> </span><span class="dv">25</span>
@@ -408,13 +408,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.955   0.372   3.326</span>
+<span class="co">#&gt;   3.944   0.316   4.260</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.188   0.064   0.252</span>
+<span class="co">#&gt;   0.376   0.052   0.428</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -422,7 +422,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.615   0.216   0.830</span>
+<span class="co">#&gt;   0.638   0.180   0.818</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -448,9 +448,8 @@ Figure 7.1: Comparison of <code>which.min</code> with <code>which</code>.
 </div>
 <div id="converting-factors-to-numerics" class="section level3 unnumbered">
 <h3>Converting factors to numerics</h3>
-<p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. For example, our data has been converted to factor by <code>read.csv</code> since it contained a string. Using</p>
+<p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</code></pre></div>
-<p>to convert a factor to a number is slightly more efficient than <code>as.numeric(as.character(f))</code>, especially for long vectors.</p>
 </div>
 <div id="logical-and-and-or" class="section level3 unnumbered">
 <h3>Logical AND and OR</h3>
@@ -474,10 +473,10 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 </div>
 <div id="row-and-column-operations" class="section level3 unnumbered">
 <h3>Row and column operations</h3>
-<p>In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculation the column or row sums. The <code>apply</code> function makes this type of operation straightforward.</p>
+<p>In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculation the column or row sums. The <code>apply()</code> function makes this type of operation straightforward.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span>
 <span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</code></pre></div>
-<p>There are optimised functions for calculating row and columns sums/means, such as,<code>rowSums</code>, <code>colSums</code>, <code>rowMeans</code> and <code>colMeans</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
+<p>There are optimised functions for calculating row and columns sums/means, <code>rowSums()</code>, <code>colSums()</code>, <code>rowMeans()</code> and <code>colMeans()</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
 </div>
 <div id="is.na-and-anyna" class="section level3 unnumbered">
 <h3><code>is.na</code> and <code>anyNA</code>  </h3>
@@ -491,8 +490,8 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00262 0.00354 0.0576 0.00591 0.00644 5.21   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73316 0.82050 1.0765 0.85639 1.17948 6.97   100</span></code></pre></div>
+<span class="co">#&gt;  ex_mat[1, ] 0.00312 0.00373 0.0582 0.00607 0.00692 5.23   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.76920 0.84786 1.1141 0.88753 1.19567 7.43   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -507,7 +506,8 @@ Use the <code>data.matrix</code> function to efficiently convert a data frame in
 When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
-<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You might be tempted to use integers with the purpose of speeding up your R code. For example, if we look at the arguments for the <code>head</code> function</p>
+<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C</p>
+<p>might be tempted to use integers with the purpose of speeding up your R code. For example, if we look at the arguments for the <code>head</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
 <span class="co">#&gt; function (x, n = 6L, ...) </span>
 <span class="co">#&gt; NULL</span></code></pre></div>
@@ -524,7 +524,7 @@ Using the <code>:</code> operator automatically creates a vector of integers.
 <span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span>
 <span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></code></pre></div>
 <p>Since this function is ubiquitous, this low level optimisation is useful. In general, if you are worried about shaving microseconds off your R code run time, you should probably consider switching to another language.</p>
-<p>However, integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:</p>
+<p>Integers are more space efficient. The code below compares size of a integer vector to a standard numeric vector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(<span class="dv">1</span>:<span class="dv">10000</span>)
 <span class="co">#&gt; 40 kB</span>
 pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))
@@ -662,8 +662,8 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 </div>
 <div id="exit-functions-with-care" class="section level3">
 <h3><span class="header-section-number">7.4.3</span> Exit functions with care</h3>
-<p>Always call <code>stopCluster</code> to free resources when you finish with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster</code> is omitted.</p>
-<p>The <code>on.exit</code> function handles this problem with the minimum of fuss; regardless how the function ends, <code>on.exit</code> is always called. In the context of parallel programming we will have something similar to</p>
+<p>Always call <code>stopCluster()</code> to free resources when you finish with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster()</code> is omitted.</p>
+<p>The <code>on.exit()</code> function handles this problem with the minimum of fuss; regardless how the function ends, <code>on.exit()</code> is always called. In the context of parallel programming we will have something similar to</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simulate =<span class="st"> </span>function(cores) {
   cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)
   <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))
@@ -671,7 +671,7 @@ cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv
 }</code></pre></div>
 <div class="rmdtip">
 <p>
-Another common use of <code>on.exit</code> is with the <code>par</code> function. If you use <code>par</code> to change graphical parameters within a function, <code>on.exit</code> ensures these parameters are reset to their previous value when the function ends.
+Another common use of <code>on.exit()</code> is with the <code>par()</code> function. If you use <code>par()</code> to change graphical parameters within a function, <code>on.exit()</code> ensures these parameters are reset to their previous value when the function ends.
 </p>
 </div>
 </div>
@@ -740,10 +740,10 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p>If we were writing a C++ program we would also need another function called <code>main</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
 </div>
 <div id="cppfunction" class="section level3">
-<h3><span class="header-section-number">7.5.3</span> The cppFunction command</h3>
+<h3><span class="header-section-number">7.5.3</span> The <code>cppFunction()</code> command</h3>
 <p>Load the <strong>Rcpp</strong> package using the usual <code>library</code> function call:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>) </code></pre></div>
-<p>Pass the C++ function created in the previous section as a text string argument to <code>cppFunction</code>:</p>
+<p>Pass the C++ function created in the previous section as a text string argument to <code>cppFunction()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cppFunction</span>(<span class="st">&#39;</span>
 <span class="st">  double add_c(double x, double y) {</span>
 <span class="st">    double value = x + y;</span>
@@ -753,7 +753,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ade0b6350d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b5f224ed0d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
