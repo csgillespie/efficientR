@@ -146,7 +146,7 @@ A good example is testing different methods to look-up a single value in a data 
 ```{r, results="hide"}
 library("microbenchmark")
 df = data.frame(v = 1:4, name = letters[1:4])
-microbenchmark(df[3, 2]; df[1,], df[3, "name"], df$name[3])
+microbenchmark(df[3, 2], df[1,], df[3, "name"], df$name[3])
 # Unit: microseconds
 #          expr     min    lq  mean median    uq   max neval cld
 #      df[3, 2]   17.99 18.96 20.16  19.38 19.77 35.14   100   b
@@ -209,11 +209,11 @@ knitr::include_graphics("figures/f1_2_profvis-ice.png")
 knitr::include_graphics("figures/f1_3_icesheet-change.png")
 ```
 
-For more information about profiling and benchmarking, please refer to the [Optimising code](http://adv-r.had.co.nz/Profiling.html) chapter in @Wickham2014, and Section \@ref(performance-profvis) in this book. We recommend 
+For more information about profiling and benchmarking, please refer to the [Optimising code](http://adv-r.had.co.nz/Profiling.html) chapter in @Wickham2014, and Section \@ref(performance-profvis) in this book. We recommend reading these additional resources while performing benchmarks and profiles on your own code, for example, based on the exercises below.
 
 #### Exercises
 
-Consider the following benchmark to evaluate different methods to evaluate the cumulative sum of the whole numbers from 1 to 100:
+Consider the following benchmark to evaluate different functions for calculating the cumulative sum of the whole numbers from 1 to 100:
 
 ```{r}
 x = 1:100 # initiate vector to cumulatively sum
@@ -239,6 +239,14 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 ```
 
+1. Which method is fastest and how many times faster is it?
+
+2. Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument `neval = 1` so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the *relative* time difference increase or decrease? By how much?
+
+```{r, eval=FALSE, echo=FALSE}
+x = 1:5e4 # initiate vector to cumulatively sum
+microbenchmark(cs_for(x), cs_apply(x), cumsum(x), times = 1, unit = "s")
+```
 
 3. Test how long the different methods for subsetting the data frame `df`, presented in Section \@ref(benchmarking-example), take on your computer. Is is faster or slower at subsetting than the computer on which this book was compiled?
 
@@ -252,6 +260,8 @@ system.time(
   }
 )
 ```
+
+5. Bonus exercise: try profiling a section of code you have written using **profvis**. Where are the bottlenecks? Were they where you expected?
 
 ## Book resources
 
