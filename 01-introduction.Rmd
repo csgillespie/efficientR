@@ -173,16 +173,6 @@ When thinking about computational efficiency, there are (at least) two in measur
 Both measures are useful, but its important to not to forget the underlying 
 time scale: it makes little sense to optimise a function that takes *microseconds* to complete if there are operations that take *seconds* to complete in your code.
 
-
-Testing this hypothesis provides an ideal opportunity to introduce another commonly benchmarking function provided in base R: `system.time()`: 
-
-```{r}
-# test how many subsets can be done in a second:
-system.time(for(i in 1:50000){
- df[3, 2]
-})
-```
-
 ### Profiling
 
 Benchmarking generally tests execution time of one function against another. Profiling, on the other hand, is about testing large chunks of code.
@@ -228,7 +218,7 @@ Consider the following benchmark to evaluate different methods to evaluate the c
 ```{r}
 x = 1:100 # initiate vector to cumulatively sum
 
-# method 1: with a for loop (10 lines)
+# Method 1: with a for loop (10 lines)
 cs_for = function(x){
   for(i in x){
     if(i == 1){
@@ -240,15 +230,28 @@ cs_for = function(x){
   xc
 }
 
-# method 2: with apply (3 lines)
+# Method 2: with apply (3 lines)
 cs_apply = function(x){
   sapply(x, function(x) sum(1:x))
 }
 
-# method 3: cumsum (1 line, not shown)
+# Method 3: cumsum (1 line, not shown)
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 ```
 
+
+3. Test how long the different methods for subsetting the data frame `df`, presented in Section \@ref(benchmarking-example), take on your computer. Is is faster or slower at subsetting than the computer on which this book was compiled?
+
+4. Use `system.time()` and a `for()` loop to test how long it takes to perform the subsetting operation 50,000 times. Before testing this, do you think it will be more or less than 1 second, for each subsetting method? Hint: the test for the first method is shown below:
+
+```{r, eval=FALSE}
+# Test how long it takes to subset the data frame 50,000 times:
+system.time(
+  for(i in 1:50000){
+    df[3, 2]
+  }
+)
+```
 
 ## Book resources
 
