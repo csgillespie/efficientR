@@ -49,17 +49,19 @@ highlight standard tricks or alternative methods that may improve performance.
 
 ### The `if` vs `ifelse` functions {-}
 
-The `ifelse` function 
+`ifelse()` is a vectorised version of the standard control-flow function `if(test) if_yes else if_no` 
+that works as follows:
 ```{r eval=FALSE}
-ifelse(test, yes, no)
+ifelse(test, if_yes, if_no)
 ```
-is a vectorised version of the standard control-flow `if` function. The return value
-of `ifelse` is filled with elements from the `yes` and `no` arguments that are
+In the above imaginary example, the return value
+is filled with elements from the `if_yes` and `if_no` arguments that are
 determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
-suppose we have a vector of exam marks and we wanted to classify them as pass or fail, then
+suppose we have a vector of exam marks. `ifelse()` could be used to classify
+them as pass or fail:
 ```{r}
 marks = c(25, 55, 75)
-ifelse(marks >=40, "pass", "fail")
+ifelse(marks >= 40, "pass", "fail")
 ```
 
 If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
@@ -157,16 +159,13 @@ local(source("code/07-performance_f2b.R", local=TRUE))
 ###  Converting factors to numerics {-}
 
 A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. For example, our data 
-has been converted to factor by `read.csv` since it contained a string. Using
+convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is
 
 ```{r, echo=2, results="hide"}
 f = factor(10:100)
 as.numeric(levels(f))[f]
 ```
 
-to convert a factor to a number is slightly more efficient than `as.numeric(as.character(f))`, 
-especially for long vectors.
 
 ### Logical AND and OR {-}
 
@@ -211,14 +210,14 @@ x < 0.4 || x > 0.6
 ### Row and column operations {-}
 
 In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculation the column or row sums. The `apply`
+set. For example, we might want to calculation the column or row sums. The `apply()`
 function makes this type of operation straightforward.
 ```{r eval=FALSE}
 # Second argument: 1 -> rows. 2 -> columns
 apply(data_set, 1, function_name)
 ```
-There are optimised functions for calculating row and columns sums/means, such as,`rowSums`,
-`colSums`, `rowMeans` and `colMeans` that should be used whenever possible. The package
+There are optimised functions for calculating row and columns sums/means, `rowSums()`,
+`colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.  The package
 **matrixStats** contains many optimised row/col functions.
 
 ### `is.na` and `anyNA` \ {-}
@@ -266,7 +265,11 @@ give you the true value of `y` (to 17 decimal places).
 ```
 
 Integers are another numeric data type. Integers primarily exist to be
-passed to C or Fortran code. You might be tempted to use integers with the 
+passed to C or Fortran code. You 
+do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C
+
+
+might be tempted to use integers with the 
 purpose of speeding up your R code. For example, if we look at the
 arguments for the `head` function
 
@@ -294,7 +297,7 @@ Since this function is ubiquitous, this low level optimisation is useful.
 In general, if you are worried about shaving microseconds off your R code run time, you should
 probably consider switching to another language.
 
-However, integers are more space efficient. 
+Integers are more space efficient. 
 The code below compares size of a integer vector to a standard numeric vector:
 
 ```{r}
@@ -568,12 +571,12 @@ On a multi-processor computer, this can lead to a four-fold speed-up.
 
 ### Exit functions with care
 
-Always call `stopCluster` to free resources when you finish with the
+Always call `stopCluster()` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster` is omitted.
+function ends as the results of an error and so `stopCluster()` is omitted.
 
-The `on.exit` function handles this problem with the minimum of fuss; regardless how
-the function ends, `on.exit` is always called. In the context of parallel programming
+The `on.exit()` function handles this problem with the minimum of fuss; regardless how
+the function ends, `on.exit()` is always called. In the context of parallel programming
 we will have something similar to
 ```{r}
 simulate = function(cores) {
@@ -584,8 +587,8 @@ simulate = function(cores) {
 ```
 
 ```{block, type="rmdtip"}
-Another common use of `on.exit` is with the `par` function. If you use
-`par` to change graphical parameters within a function, `on.exit` ensures these
+Another common use of `on.exit()` is with the `par()` function. If you use
+`par()` to change graphical parameters within a function, `on.exit()` ensures these
 parameters are reset to their previous value when the function ends.
 ```
 
@@ -705,7 +708,7 @@ dependent. The beauty of using **Rcpp** is that it makes it very easy to call C+
 functions from R and the user doesn't have to worry about the platform, or compilers
 or the R/C++ interface.
 
-### The cppFunction command {#cppfunction}
+### The `cppFunction()` command {#cppfunction}
 
 Load the **Rcpp** package using the usual `library` function call:
 
@@ -714,7 +717,7 @@ library("Rcpp")
 ```
 
 Pass the C++ function created in the previous section as a text string argument to
-`cppFunction`:
+`cppFunction()`:
 
 ```{r tidy=FALSE}
 cppFunction('
