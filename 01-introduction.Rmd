@@ -156,33 +156,32 @@ microbenchmark(df[3, 2]; df[1,], df[3, "name"], df$name[3])
 
 The results summarise how long each query took: the minimum (`min`), lower and upper quariles (`lq` and `uq` respectively) and the mean, median and maximum, for each of the number of evaluations (`neval`, with the default value of 100 used in this case). `cld` reports the relative rank of each row in the form of 'compact letter display': in this case `df$name[3]` performs best, with a rank of `a` and a mean time around 25% lower than the other two functions.
 
-When using `microbenchmark()`, you should pay careful attention to the units. In the above example, 
-each function call takes approximately 20 _microseconds_, implying around 50,000 function calls could be done in a second! 
-
-```{r, echo=FALSE, eval=FALSE}
-# test how many subsets can be done in a second:
-20 * 1e-6 * 50000
-system.time(for(i in 1:50000){
- df[3, 2] 
-})
-```
-
-When comparing quick functions, the standard units are:
+When using `microbenchmark()`, you should pay careful attention to the units. In the above example, each function call takes approximately 20 _microseconds_, implying around 50,000 function calls could be done in a second. When comparing quick functions, the standard units are:
 
   * milliseconds (ms), one thousand functions takes a second;
   * microseconds ($\mu$s),  one million function calls takes a second;
   * nanoseconds  (ns), one billion calls takes a second.
 
-We can state the units we want to use with the `unit` argument, e.g. the results are reported
+We can set the units we want to use with the `unit` argument, e.g. the results are reported
 in seconds if we set `unit = "s"`.
 
-When thinking about computational efficiency, they are (at least) two in measures:
+When thinking about computational efficiency, there are (at least) two in measures:
 
   * Relative time: `df$name[3]` is 25% faster than `df[3, "name"]`;
   * Absolute time: `df$name[3]` is 5 microseconds faster than `df[3, "name"]`.
 
 Both measures are useful, but its important to not to forget the underlying 
-time scale.
+time scale: it makes little sense to optimise a function that takes *microseconds* to complete if there are operations that take *seconds* to complete in your code.
+
+
+Testing this hypothesis provides an ideal opportunity to introduce another commonly benchmarking function provided in base R: `system.time()`: 
+
+```{r}
+# test how many subsets can be done in a second:
+system.time(for(i in 1:50000){
+ df[3, 2]
+})
+```
 
 ### Profiling
 
