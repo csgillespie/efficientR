@@ -4,7 +4,7 @@ knit: "bookdown::preview_chapter"
 
 # Efficient input/output {#input-output}
 
-Input/output (I/O) is the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. However, the majority of R resources and documentation start with the optimistic assumption that your data has already been loaded, ignoring the fact that importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. Tricky, slow or ultimately unsuccessful data I/O can cripple efficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make it your R projects more likely to succeed in the outside world. With these motivations in mind, this chapter explains how to efficiently read and write data in R.
+This chapter explains how to efficiently read and write data in R. Input/output (I/O) is the technical term for reading and writing data: the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. However, the majority of R resources and documentation start with the optimistic assumption that your data has already been loaded, ignoring the fact that importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. Tricky, slow or ultimately unsuccessful data I/O can cripple efficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make your R projects more likely to succeed in the outside world.
 
 The first section introduce **rio**, a 'meta package' for efficiently reading and writing data in a range of file formats. **rio** requires only two intuitive functions for data I/O, making it efficient to learn and use. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
 
@@ -16,7 +16,7 @@ Before reading in a single line of data, it is worth considering a general princ
 
 - If possible, keep the names of local files downloaded from the internet or copied onto your computer unchanged. This will help you trace the provenance of the data in the future.
 
-- R's native file format is `.Rds`. These files can imported and exported using `readRDS` and `saveRDS` for fast and space efficient data storage.
+- R's native file format is `.Rds`. These files can be imported and exported using `readRDS` and `saveRDS` for fast and space efficient data storage.
 
 - Use `import()` from the **rio** package to efficiently import data from a wide range of formats, avoiding the hassle of loading format-specific libraries.
 
@@ -26,7 +26,7 @@ Before reading in a single line of data, it is worth considering a general princ
 
 ## Versatile data import with rio
 
-**rio** is is a 'A Swiss-Army Knife for Data I/O'. **rio** provides easy-to-use and computationally efficient functions for importing and exporting tabular data in a range of file formats. As stated in the package's [vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html), **rio** aims to "simplify the process of importing data into R and exporting data from R." The vignette goes on to to explain how many of the functions for data I/O described in R's [Data Import/Export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) are out of date (for example referring to **WriteXLS** but not the more recent **readxl** package) and difficult to learn.
+**rio** is a 'A Swiss-Army Knife for Data I/O'. **rio** provides easy-to-use and computationally efficient functions for importing and exporting tabular data in a range of file formats. As stated in the package's [vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html), **rio** aims to "simplify the process of importing data into R and exporting data from R." The vignette goes on to to explain how many of the functions for data I/O described in R's [Data Import/Export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) are out of date (for example referring to **WriteXLS** but not the more recent **readxl** package) and difficult to learn.
 
 This is why **rio** is covered at the outset of this chapter: if you just want to get data into R, with a minimum of time learning new functions, there is a fair chance that **rio** can help, for many common file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate the key **rio** functions of `import()` and `export()`:
 
@@ -101,7 +101,7 @@ Figure \@ref(fig:5-1) demonstrates that the relative performance gains of the **
 
 For files beyond $100$ MB in size `fread` and `read_csv` can be expected to be around *5 times faster* than `read.delim`. This efficiency gain may be inconsequential for a one-off file of $100$ MB running on a fast computer (which still takes less than a minute with `read.csv`), but could represent an important speed-up if you frequently load large text files. 
 
-```{r 5-1, fig.cap="Benchmarks of **base**, **data.table** and **readr** functions for reading csv files. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
+```{r 5-1, fig.cap="Benchmarks of base, data.table and readr approches for reading csv files, using the functions read.csv(), fread() and read_csv(), respectively. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
 local(source("code/05-io_f1.R", local=TRUE))
 ```
 
@@ -257,7 +257,7 @@ We know that binary formats are advantageous from space and read/write time pers
 
 In terms of write times, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.
 
-```{r 5-2, echo=FALSE, fig.cap="Comparison of binary formats using a 20 column CSV file.", out.width="90%", fig.align="center", message=FALSE}
+```{r 5-2, echo=FALSE, fig.cap="Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather(). ", out.width="90%", fig.align="center", message=FALSE}
 local(source("code/05-io_f2.R", local=TRUE))
 ```
 
