@@ -74,13 +74,13 @@ apropos("lm")[1:6]
 
 ### Finding and using vignettes
 
-Some packages contain vignettes. These are pieces of 'long-form' documentation that allow package authors to go into detail explaining how the package works [@Wickham_2015]. In general they are high quality. Because they can be used to illustrate real world use cases, vignettes can be the best way to understand functions in the context of broader explanations and longer examples than are provided in function help pages. Although many packages lack vignettes, they deserve a sub-section of their own because they can boost the efficiency with which package functions are used, in an integrated workflow.
+Some packages contain vignettes. These are pieces of ['long-form' documentation](http://r-pkgs.had.co.nz/vignettes.html) that allow package authors to go into detail explaining how the package works [@Wickham_2015]. In general they are high quality. Because they can be used to illustrate real world use cases, vignettes can be the best way to understand functions in the context of broader explanations and longer examples than are provided in function help pages. Although many packages lack vignettes, they deserve a sub-section of their own because they can boost the efficiency with which package functions are used, in an integrated workflow.
 
 ```{block, type="rmdnote"}
 If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use `devtools::use_vignette()`. To add a vignette to the **efficient** package used in this book, for example, you could clone the repo, e.g. using the command `git clone git@github.com:csgillespie/efficient`. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called "efficient-learning" with the following command: `use_vignette("efficient-learning")`.
 ```
 
-To browse any vignettes associated with a particular package, we can use the handy function:
+To browse any vignettes associated with a particular package, we can use the handy function `browseVignettes()`:
 
 ```{r eval=FALSE}
 browseVignettes(package = "benchmarkme")
@@ -88,7 +88,15 @@ browseVignettes(package = "benchmarkme")
 
 This is roughly equivalent to `vignette(package = "benchmarkme")` but opens a new page in a browser and lets you navigate all the vignettes in that particular package. For an overview of all vignettes available from R packages installed on your computer, try browsing all available vignettes with `browseVignettes()`. You may be surprised at how many hidden gems there are in there!
 
-How best to *use* vignettes depends on the vignette and your aims. In general you should expect to spend longer reading vignette's than other types of R documentation
+How best to *use* vignettes depends on the vignette in question and your aims. In general you should expect to spend longer reading vignette's than other types of R documentation. The *Introduction to dplyr* vignette (opened with `vignette("introduction", package = "dplyr")`), for example, contains almost 4,000 words of prose and example code and outputs, illustrating how its functions work. We recommend working through the examples and typing the example code to 'learn by doing'.
+
+Another way to learn from package vignettes is to view their source code. You can find where vignette source code lives by looking in the `vignette/` folder of the package's source code: **dplyr**'s vignettes, for example, can be viewed (and edited) online at [github.com/hadley/dplyr/tree/master/vignettes](https://github.com/hadley/dplyr/tree/master/vignettes). A quick way to view a vignette's R code is with the `edit()` function:
+
+```{r, eval=FALSE}
+v = vignette("introduction", package = "dplyr")
+edit(v)
+```
+
 
 ### Getting help on functions
 
