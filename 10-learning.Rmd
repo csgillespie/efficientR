@@ -48,6 +48,47 @@ A 'wide boundary' search for a topic in R will often begin with a search for ins
 ??optim
 ```
 
+Note that the `??` symbol is simply a useful shorthand version of the function `help.search()`.
+It is sometimes useful to use the full function rather than the shorthand version, because that way you can specify a number of options.
+To search for all help pages that mention the more specific terms "optimisation" or "optimization" (the US spelling), in the title or alias of the help pages, for example, the following command would be used:
+
+```{r}
+help.search(pattern = "optimisation|optimization", fields = c("title", "concept"))
+```
+
+This will return a short (and potentially more efficiently focussed) list of help pages than the wide-ranging `??optim` call.
+To make the search even more specific, we can use the `package` argument to constrain the search to a single package.
+This can be very useful when you know that a function exists in a specific package, but you cannot remember what it is called:
+
+```{r}
+help.search(pattern = "optimisation|optimization", fields = c("title", "concept"), package = "stats")
+```
+
+
+`??topic`, which is analogous to `?function`. To search for information about
+regression in all installed packages, for example, use the following command:
+
+```{r, eval=FALSE}
+# Or help.search("regression")
+??regression
+```
+
+To search more specifically for objects the `appropos` function can be useful. To
+search for all objects and functions in the current workspace containing the text
+string `lm`, for example, one would enter:
+
+```{r, echo=-2}
+# Showing the first six results
+apropos("lm")[1:6]
+```
+
+Sometimes a package contains vignettes. To browse any vignettes associated with a
+particular package, we can use the handy function
+
+```{r eval=FALSE}
+browseVignettes(package = "benchmarkme")
+```
+
 ### Getting help on functions
 
 All functions functions have help pages. These contain, at a minimum, a list of the input arguments and the nature of the output that can be expected. Prefixing a function name with `?` will show the help for that function. To the help file for `plot`, for example just type:
@@ -78,33 +119,6 @@ platforms. This helps ensure that a package works on multiple systems.
 
 Another useful section in the help file is `See Also:`. In the `plot` help file, it
 gives pointers to 3d plotting.
-
-### Reading source code
-
-To look for help about a certain *topic* rather than a specific *function* use
-`??topic`, which is analogous to `?function`. To search for information about
-regression in all installed packages, for example, use the following command:
-
-```{r, eval=FALSE}
-# Or help.search("regression")
-??regression
-```
-
-To search more specifically for objects the `appropos` function can be useful. To
-search for all objects and functions in the current workspace containing the text
-string `lm`, for example, one would enter:
-
-```{r, echo=-2}
-# Showing the first six results
-apropos("lm")[1:6]
-```
-
-Sometimes a package contains vignettes. To browse any vignettes associated with a
-particular package, we can use the handy function
-
-```{r eval=FALSE}
-browseVignettes(package = "benchmarkme")
-```
 
 ### Reading R source code
 
