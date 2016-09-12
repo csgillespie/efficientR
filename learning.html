@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-11">
+<meta name="date" content="2016-09-12">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -332,8 +332,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
 <li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
-<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-r-help"><i class="fa fa-check"></i><b>10.2</b> Using R help</a><ul>
-<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.1</b> Reading R source code</a></li>
+<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#searching-r-for-topics"><i class="fa fa-check"></i><b>10.2.1</b> Searching R for topics</a></li>
+<li class="chapter" data-level="10.2.2" data-path="learning.html"><a href="learning.html#finding-and-using-vignettes"><i class="fa fa-check"></i><b>10.2.2</b> Finding and using vignettes</a></li>
+<li class="chapter" data-level="10.2.3" data-path="learning.html"><a href="learning.html#getting-help-on-functions"><i class="fa fa-check"></i><b>10.2.3</b> Getting help on functions</a></li>
+<li class="chapter" data-level="10.2.4" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.4</b> Reading R source code</a></li>
+<li class="chapter" data-level="10.2.5" data-path="learning.html"><a href="learning.html#swirl"><i class="fa fa-check"></i><b>10.2.5</b> Swirl</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
 <li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
@@ -366,26 +370,68 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="learning" class="section level1">
 <h1><span class="header-section-number">10</span> Efficient learning</h1>
-<p>As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never ‘finish’ learning R. On the other hand it can make R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore <em>learning how to learn</em> is one of the most important skills to have if you want to learn R <em>in depth</em>. We emphasise <em>depth</em> of learning because it is more efficient to learn something properly than to Google it repeatedly every time you forget how it works.</p>
+<p>As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never ‘finish’ learning R. On the other hand, it makes R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore <em>learning how to learn</em> is one of the most important skills to have if you want to learn R <em>in depth</em>. We emphasise <em>depth</em> of learning because it is more efficient to learn something properly than to Google it repeatedly every time you forget how it works.</p>
 <p>This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition from an R <em>hacker</em> to an R <em>programmer</em>. This inevitably involves effective use of R’s help, reading R source code, and use of online material.</p>
 <div id="top-5-tips-for-efficient-learning" class="section level2">
 <h2><span class="header-section-number">10.1</span> Top 5 tips for efficient learning</h2>
 <ul>
-<li>Monitor the <a href="stackoverflow.com/questions/tagged/r">R tag</a> at stackoverflow for new questions.</li>
-<li>Read about the latest developments in the R Journal.</li>
-<li>Regularly browse R-bloggers to get an overview of the R ecosystem.</li>
-<li>If asking a question, simplify your code and data as much as possible; the question should be reproducible.</li>
-<li>Subscribe (but not necessarily post) to the <code>R-devel</code> mailing list to gain a deeper insight into the R language.</li>
+<li>Use R’s internal help, e.g. with <code>?</code>, <code>??</code>, <code>vignette()</code> and <code>appropos()</code>. Try <strong>swirl</strong>.</li>
+<li>Read about the latest developments in established outlets such as the <em>Journal for Statistical Software</em>, the <em>R Journal</em>, R lists and the ‘blogosphere’.</li>
+<li>If stuck, ask for help! A clear question posted in an appropriate place, using reproducible code, should get a quick and enlightening answer.</li>
+<li>For more in-depth learning, nothing can beat immersive R books and tutorials. Do some research and decide which resources you should complete.</li>
+<li>One of the best ways to consolidate learning is to write-it-up and pass on the knowledge: telling the story of what you’ve learned with also help others.</li>
 </ul>
 </div>
-<div id="using-r-help" class="section level2">
-<h2><span class="header-section-number">10.2</span> Using R help</h2>
-<p>The best place to look for help on R functions is often within R itself. Although R’s internal documentation is notoriously terse, studying it as the first ‘port of call’ when stuck is time well spent: you will see what the function was designed to do and perhaps gain further insight about its history, e.g. through references to academic papers.</p>
-<p>All functions exported functions have help files, which contain, at a minimum, a list of the input arguments and the nature of the output that can be expected. Prefixing a function name with <code>?</code> will show the help for that function. To the help file for <code>plot</code>, for example just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or help(&quot;plot&quot;)</span>
+<div id="using-rs-internal-help" class="section level2">
+<h2><span class="header-section-number">10.2</span> Using R’s internal help</h2>
+<p>The best place to look for help on R functions is often within R itself. We suggest this as the ‘first port of call’ because it has 3 main advantages from an efficiency perspective, compared with other sources of help. First, it’s faster to query R from inside your IDE than to switch context and search for help on a different platform (e.g. the internet which has countless distractions). Second, you can more easily work offline if you learn to master R’s internal help. Third, learning to read R’s documentation (and source code) is a powerful skill in itself that will improve your R programming.</p>
+<p>The main disadvantage of R’s internal help is that it is notoriously terse and in some cases sparse. So do not expect to <em>always</em> be able to find the answer in R: while we recommend R’s internal help is the first place to look, we do not recommend <em>relying</em> on it. From a learning perspective becoming aquainted with R’s documentation is often better than finding out the solution from a different source: by reading the documentation, you will see what the function was designed to do and perhaps gain further insight about its history, e.g. through references to academic papers.</p>
+<p>As you look to learn about a topic or function in R, it is likely that you will have a search strategy of your own, ranging from broad to narrow:</p>
+<ol style="list-style-type: decimal">
+<li>Searching R and installed packages for help on a specific <em>topic</em>.</li>
+<li>Reading-up on <em>packages</em> vignettes.</li>
+<li>Getting help on a specific <em>function</em>.</li>
+<li>Looking into the <em>source code</em>.</li>
+<li>Swirl</li>
+</ol>
+<p>In many cases you may already have researched stages 1 and 2. Often you can stop and 3 and simply use the function without worrying exactly how it works. In every case, it is useful to be aware of this hierarchical approach to learning from R’s internal help, so you can start with the ‘Big Picture’ (and avoid going down a misguided route early on) and then quickly focus in on the functions that are most related to your task. To illustrate this approach in action, imagine that you are interested in a specific topic: optimisation. The remainder of this section will work through the stages 1 to 4 outlined above as if we wanted to find out more about this topic, with occassional diversions from this topic to see how specific help functions work in more detail.</p>
+<div id="searching-r-for-topics" class="section level3">
+<h3><span class="header-section-number">10.2.1</span> Searching R for topics</h3>
+<p>A ‘wide boundary’ search for a topic in R will often begin with a search for instances of a keyword in the documentation and function names. Using the example of optimisation, one could start with a search for a text string related to the topic of interest:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># help.search(&quot;optim&quot;) # or, more concisely</span>
+??optim</code></pre></div>
+<p>Note that the <code>??</code> symbol is simply a useful shorthand version of the function <code>help.search()</code>. It is sometimes useful to use the full function rather than the shorthand version, because that way you can specify a number of options. To search for all help pages that mention the more specific terms “optimisation” or “optimization” (the US spelling), in the title or alias of the help pages, for example, the following command would be used:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help.search</span>(<span class="dt">pattern =</span> <span class="st">&quot;optimisation|optimization&quot;</span>, <span class="dt">fields =</span> <span class="kw">c</span>(<span class="st">&quot;title&quot;</span>, <span class="st">&quot;concept&quot;</span>))</code></pre></div>
+<p>This will return a short (and potentially more efficiently focussed) list of help pages than the wide-ranging <code>??optim</code> call. To make the search even more specific, we can use the <code>package</code> argument to constrain the search to a single package. This can be very useful when you know that a function exists in a specific package, but you cannot remember what it is called:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help.search</span>(<span class="dt">pattern =</span> <span class="st">&quot;optimisation|optimization&quot;</span>, <span class="dt">fields =</span> <span class="kw">c</span>(<span class="st">&quot;title&quot;</span>, <span class="st">&quot;concept&quot;</span>), <span class="dt">package =</span> <span class="st">&quot;stats&quot;</span>)</code></pre></div>
+<p>Another function for searching R is <code>apropos()</code>. It prints to the console any R objects (including ‘hidden’ functions, those beginning with <code>.</code> and datasets) whose name matches a give text string. Because it does not search R’s documentation, it tends to return fewer results than <code>help.search()</code>. Its use and typical outputs can be seen from a couple of examples below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apropos</span>(<span class="st">&quot;optim&quot;</span>)
+<span class="co"># Showing the first six results</span>
+<span class="kw">apropos</span>(<span class="st">&quot;lm&quot;</span>)[<span class="dv">1</span>:<span class="dv">6</span>]</code></pre></div>
+</div>
+<div id="finding-and-using-vignettes" class="section level3">
+<h3><span class="header-section-number">10.2.2</span> Finding and using vignettes</h3>
+<p>Some packages contain vignettes. These are pieces of <a href="http://r-pkgs.had.co.nz/vignettes.html">‘long-form’ documentation</a> that allow package authors to go into detail explaining how the package works <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>. In general they are high quality. Because they can be used to illustrate real world use cases, vignettes can be the best way to understand functions in the context of broader explanations and longer examples than are provided in function help pages. Although many packages lack vignettes, they deserve a sub-section of their own because they can boost the efficiency with which package functions are used, in an integrated workflow.</p>
+<div class="rmdnote">
+<p>
+If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use <code>devtools::use_vignette()</code>. To add a vignette to the <strong>efficient</strong> package used in this book, for example, you could clone the repo, e.g. using the command <code>git clone <a href="mailto:git@github.com">git@github.com</a>:csgillespie/efficient</code>. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called “efficient-learning” with the following command: <code>use_vignette(“efficient-learning”)</code>.
+</p>
+</div>
+<p>To browse any vignettes associated with a particular package, we can use the handy function <code>browseVignettes()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;benchmarkme&quot;</span>)</code></pre></div>
+<p>This is roughly equivalent to <code>vignette(package = &quot;benchmarkme&quot;)</code> but opens a new page in a browser and lets you navigate all the vignettes in that particular package. For an overview of all vignettes available from R packages installed on your computer, try browsing all available vignettes with <code>browseVignettes()</code>. You may be surprised at how many hidden gems there are in there!</p>
+<p>How best to <em>use</em> vignettes depends on the vignette in question and your aims. In general you should expect to spend longer reading vignette’s than other types of R documentation. The <em>Introduction to dplyr</em> vignette (opened with <code>vignette(&quot;introduction&quot;, package = &quot;dplyr&quot;)</code>), for example, contains almost 4,000 words of prose and example code and outputs, illustrating how its functions work. We recommend working through the examples and typing the example code to ‘learn by doing’.</p>
+<p>Another way to learn from package vignettes is to view their source code. You can find where vignette source code lives by looking in the <code>vignette/</code> folder of the package’s source code: <strong>dplyr</strong>’s vignettes, for example, can be viewed (and edited) online at <a href="https://github.com/hadley/dplyr/tree/master/vignettes">github.com/hadley/dplyr/tree/master/vignettes</a>. A quick way to view a vignette’s R code is with the <code>edit()</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v =<span class="st"> </span><span class="kw">vignette</span>(<span class="st">&quot;introduction&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;dplyr&quot;</span>)
+<span class="kw">edit</span>(v)</code></pre></div>
+</div>
+<div id="getting-help-on-functions" class="section level3">
+<h3><span class="header-section-number">10.2.3</span> Getting help on functions</h3>
+<p>All functions functions have help pages. These contain, at a minimum, a list of the input arguments and the nature of the output that can be expected. Prefixing a function name with <code>?</code> will show the help for that function. To the help file for <code>plot</code>, for example just type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># help(&quot;plot&quot;) # or, more concisely:</span>
 ?plot</code></pre></div>
 <p>In general, help pages describe the public API of the package. This is one of the reasons that function help pages are thought (by some) to be difficult to understand. In practice, this means that the help page does not describe the underlying mathematics or algorithm in detail, it’s aim is to describe the interface.</p>
-<p>A help page is divided into a number of sections. The most <em>helpful</em> section (I find) is the examples (at the bottom of the help page) showing precisely how the function works. You can either copy and paste the code, or actually run the example code using the <code>example</code> command:.</p>
+<p>A help page is divided into a number of sections. The most <em>helpful</em> section is often is the examples (at the bottom of the help page) showing precisely how the function works. You can either copy and paste the code, or actually run the example code using the <code>example</code> command:.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(plot)</code></pre></div>
 <div class="rmdnote">
 <p>
@@ -393,17 +439,9 @@ When a package is added to CRAN, the example part of the documentation is run on
 </p>
 </div>
 <p>Another useful section in the help file is <code>See Also:</code>. In the <code>plot</code> help file, it gives pointers to 3d plotting.</p>
-<p>To look for help about a certain <em>topic</em> rather than a specific <em>function</em> use <code>??topic</code>, which is analogous to <code>?function</code>. To search for information about regression in all installed packages, for example, use the following command:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or help.search(&quot;regression&quot;)</span>
-??regression</code></pre></div>
-<p>To search more specifically for objects the <code>appropos</code> function can be useful. To search for all objects and functions in the current workspace containing the text string <code>lm</code>, for example, one would enter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Showing the first six results</span>
-<span class="co">#&gt; [1] &quot;.__C__anova.glm&quot;      &quot;.__C__anova.glm.null&quot; &quot;.__C__diagonalMatrix&quot;</span>
-<span class="co">#&gt; [4] &quot;.__C__generalMatrix&quot;  &quot;.__C__glm&quot;            &quot;.__C__glm.null&quot;</span></code></pre></div>
-<p>Sometimes a package contains vignettes. To browse any vignettes associated with a particular package, we can use the handy function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;benchmarkme&quot;</span>)</code></pre></div>
+</div>
 <div id="reading-r-source-code" class="section level3">
-<h3><span class="header-section-number">10.2.1</span> Reading R source code</h3>
+<h3><span class="header-section-number">10.2.4</span> Reading R source code</h3>
 <p>R is open source. This means that we view the underlying source code and examine any function. Of course the code is complex, and diving straight into the source code won’t help that much. However, watching to the github R source code <a href="https://github.com/wch/r-source/">mirror</a> will allow you to monitor small changes that occur. This gives a nice entry point into a complex code base. Likewise, examining the source of small functions, such as <code>NCOL</code> is informative, e.g. <code>getFunction(&quot;NCOL&quot;)</code></p>
 <div class="rmdtip">
 <p>
@@ -411,6 +449,10 @@ Subscribing to the R NEWS <a href="https://developer.r-project.org/blosxom.cgi/R
 </p>
 </div>
 <p>Many R packages are developed in the open on github or r-forge. Select a few well known packages and examine their source. A good package to start with is <strong><a href="https://github.com/eddelbuettel/drat">drat</a></strong>. This is a relatively simple package developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It gives you an excellent pointer into software development by one of the key R package writers.</p>
+</div>
+<div id="swirl" class="section level3">
+<h3><span class="header-section-number">10.2.5</span> Swirl</h3>
+<p><strong>swirl</strong> is an interactive teaching platform for R.</p>
 </div>
 </div>
 <div id="online-resources" class="section level2">
@@ -437,7 +479,7 @@ Subscribing to the R NEWS <a href="https://developer.r-project.org/blosxom.cgi/R
 <p>What is the smallest data set you can construct that will reproduce your issue? Your actual data set may contain <span class="math inline">\(10^5\)</span> rows and <span class="math inline">\(10^4\)</span> columns, but to get your idea across you might only need <span class="math inline">\(4\)</span> rows and <span class="math inline">\(3\)</span> columns. Making small example data sets is easy. For example, to create a data frame with two numeric columns and a column of characters just use</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 example_df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>), <span class="dt">z =</span> <span class="kw">sample</span>(LETTERS, <span class="dv">4</span>))</code></pre></div>
-<p>Note the call to <code>set.seed</code> ensures anyone who runs the code will get the same random number stream. Alternatively, you use one of the many data sets that come with R - <code>library(help=&quot;datasets&quot;)</code>.</p>
+<p>Note the call to <code>set.seed</code> ensures anyone who runs the code will get the same random number stream. Alternatively, you use one of the many data sets that come with R - <code>library(help = &quot;datasets&quot;)</code>.</p>
 <p>If creating an example data set isn’t possible, then use <code>dput</code> on your actual data set. This will create an ASCII text representation of the object that will enable anyone to recreate the object</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dput</span>(example_df)
 <span class="co">#&gt; structure(list(</span>

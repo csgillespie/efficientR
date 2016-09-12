@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-11">
+<meta name="date" content="2016-09-12">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -332,8 +332,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
 <li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
-<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-r-help"><i class="fa fa-check"></i><b>10.2</b> Using R help</a><ul>
-<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.1</b> Reading R source code</a></li>
+<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#searching-r-for-topics"><i class="fa fa-check"></i><b>10.2.1</b> Searching R for topics</a></li>
+<li class="chapter" data-level="10.2.2" data-path="learning.html"><a href="learning.html#finding-and-using-vignettes"><i class="fa fa-check"></i><b>10.2.2</b> Finding and using vignettes</a></li>
+<li class="chapter" data-level="10.2.3" data-path="learning.html"><a href="learning.html#getting-help-on-functions"><i class="fa fa-check"></i><b>10.2.3</b> Getting help on functions</a></li>
+<li class="chapter" data-level="10.2.4" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.4</b> Reading R source code</a></li>
+<li class="chapter" data-level="10.2.5" data-path="learning.html"><a href="learning.html#swirl"><i class="fa fa-check"></i><b>10.2.5</b> Swirl</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
 <li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
@@ -409,13 +413,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.407   0.208   4.617</span>
+<span class="co">#&gt;   2.739   0.243   2.984</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.318   0.032   0.349</span>
+<span class="co">#&gt;   0.175   0.036   0.211</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -423,7 +427,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.664   0.136   0.801</span>
+<span class="co">#&gt;   0.547   0.184   0.730</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -499,9 +503,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00315 0.00607 0.0757 0.00744 0.0121 6.65   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73192 1.45153 1.6871 1.68996 1.8561 8.95   100</span></code></pre></div>
+<span class="co">#&gt;         expr   min      lq   mean  median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.003 0.00374 0.0569 0.00575 0.0064 5.12   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.724 0.80060 1.0513 0.83971 1.1434 7.45   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -763,7 +767,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2af690b200d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ba832de60d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
