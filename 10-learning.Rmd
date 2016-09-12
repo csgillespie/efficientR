@@ -110,18 +110,48 @@ All functions functions have help pages. These contain, at a minimum, a list of 
 ?optim
 ```
 
-In general, help pages describe the public API of the package. This is one of the reasons
+In general, help pages describe *what* functions do, not *how* they work. This is one of the reasons
 that function help pages are thought (by some) to be difficult to understand. In practice, 
 this means that the help page does not describe the underlying mathematics or algorithm in 
 detail, it's aim is to describe the interface.
 
-A help page is divided into a number of sections. The most _helpful_
-section is often is the examples (at the bottom of the help page) showing precisely
+A help page is divided into a number of sections. 
+The help for `optim()` is typical, in that it has a title (General-purpose Optimization) followed by short Description, Usage and Arguments sections.
+The Description is usually just a sentence or two for explaining what it does. Usage shows the arguments that the function needs to work. And Arguments describes what kind of objects the function expects. Longer sections typlically include Details and Examples, which provide some context and provide (usually reproducible) examples of how the function can be used, respectively. The typically short Value, References and See Also sections facilitate efficient learning by explaining what the output means, where you can find academic literature on the subject, and which functions are related.
+
+`optim()` is a mature and heavily used function so it has a long help page: you'll probably be thankful to learn that not all help pages are this long!
+With so much potentially overwhelming information in a single help page, the placement of the short, dense sections at the beginning is efficient because it means can understand the fundamentals of a function in few words.
+Learning how to read and quickly interpret such help pages will greatly help your ability to learn R. Take some time to study the help for `optim()` in detail.
+
+It is worth discussing the contents of the Usage section in particular, because this contains information that may not be immediately obvious:
+
+```
+optim(par, fn, gr = NULL, ...,
+      method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN",
+                 "Brent"),
+      lower = -Inf, upper = Inf,
+      control = list(), hessian = FALSE)
+```
+
+This contains two pieces of critical information: 1) the *essential* arguments which must be provided for the function to work (`par` and `fn` in this case, as `gr` has a default value) before the `...` symbol; and 2) *optional* arguments that control how the function works (`method`, `lower`, and `hessian` in this case). `...` are optional arguments whose values depend on the other arguments (which will be passed to the function represented by `fn` in this case). Let's see how this works in practice by trying to run `optim()` to find the minimum value of the function $y = x^4 - x^2$:
+
+```{r}
+fn = function(x){
+  x^4 - x^2
+}
+optim(par = 0, fn = fn)
+```
+
+The results show that the minimum value of `fn(x)` is found when `x = 0.707..` ($\frac{1}{\sqrt{2}}$), with a minimum falue of -0.25. It took 58 iterations of the function call for `optim()` to converge on this value. Each of these output values is described in the Values section of the help pages.
+From the help pages, we could guess that providing the function call without specifying `par` (i.e. `optim(fn = fn)`) would fail, which indeed it does. 
+
+The most _helpful_
+section is often is the Examples. These lie at the bottom the help page and show precisely
 how the function works. You can either copy and paste the code, or actually run the
-example code using the `example` command:.
+example code using the `example` command (it is well worth running these examples due to the graphics produced):
 
 ```{r eval=FALSE}
-example(plot)
+example(optim)
 ```
 
 ```{block, type="rmdnote"}
@@ -129,8 +159,7 @@ When a package is added to CRAN, the example part of the documentation is run on
 platforms. This helps ensure that a package works on multiple systems.
 ```
 
-Another useful section in the help file is `See Also:`. In the `plot` help file, it
-gives pointers to 3d plotting.
+Another useful section in the help file is `See Also:`. In the `optim()` help page, it links to `optimize()` which may be more appropriate for this use case.
 
 ### Reading R source code
 
@@ -156,7 +185,12 @@ writers.
 
 ### Swirl
 
-**swirl** is an interactive teaching platform for R.
+**swirl** is an interactive teaching platform for R. It offers a number of extensions and, for the pioneering, the ability for others to create custom extensions. The learning curve and method will not work for everyone, but this package is worth flagging as a potent self teaching resource. In some ways **swirl** can be seen as the ultimate internal R help as it allows dedicated learning sessions, based on multiple choice questions, all within a usual R session. To enter the **swirl** world, just enter the following. The resultant instructions will explain the rest:
+
+```{r, eval=FALSE}
+library("swirl")
+swirl()
+```
 
 ## Online resources
 
