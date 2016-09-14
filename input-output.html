@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-12">
+<meta name="date" content="2016-09-14">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -381,13 +381,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Before reading in a single line of data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.</p>
 <div id="top-5-tips-for-efficient-data-io" class="section level2">
 <h2><span class="header-section-number">5.1</span> Top 5 tips for efficient data I/O</h2>
-<ul>
+<ol style="list-style-type: decimal">
 <li><p>If possible, keep the names of local files downloaded from the internet or copied onto your computer unchanged. This will help you trace the provenance of the data in the future.</p></li>
 <li><p>R’s native file format is <code>.Rds</code>. These files can be imported and exported using <code>readRDS</code> and <code>saveRDS</code> for fast and space efficient data storage.</p></li>
 <li><p>Use <code>import()</code> from the <strong>rio</strong> package to efficiently import data from a wide range of formats, avoiding the hassle of loading format-specific libraries.</p></li>
 <li><p>Use <strong>readr</strong> or <strong>data.table</strong> equivalents of <code>read.table()</code> to efficiently import large text files.</p></li>
 <li><p>Use <code>file.size()</code> and <code>object.size()</code> to keep track of the size of files and R objects and take action if they get too big.</p></li>
-</ul>
+</ol>
 </div>
 <div id="versatile-data-import-with-rio" class="section level2">
 <h2><span class="header-section-number">5.2</span> Versatile data import with rio</h2>
@@ -496,9 +496,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 16.8 17.3 17.3   17.4 17.5 17.6     5</span>
-<span class="co">#&gt;  without_select 28.7 28.8 29.0   28.9 29.2 29.3     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select  9.76  9.86 10.5   10.2 11.1 11.8     5</span>
+<span class="co">#&gt;  without_select 18.45 18.84 19.6   20.1 20.1 20.4     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>

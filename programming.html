@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-12">
+<meta name="date" content="2016-09-14">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -385,13 +385,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="top-5-tips-for-efficient-programming" class="section level2">
 <h2><span class="header-section-number">3.1</span> Top 5 tips for efficient programming</h2>
-<ul>
+<ol style="list-style-type: decimal">
 <li>Be careful never to grow vectors.</li>
 <li>Vectorise codes whenever possible.</li>
 <li>Use factors when appropriate.</li>
 <li>Clever use of S3 objects can make code easier to understand.</li>
 <li>Byte compile packages for an easy performance boost.</li>
-</ul>
+</ol>
 <!-- Weak title -->
 </div>
 <div id="general-advice" class="section level2">
@@ -540,7 +540,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   5.274   0.028   5.303</span></code></pre></div>
+<span class="co">#&gt;   2.731   0.012   2.743</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -932,7 +932,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x51c6830&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x4285a10&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -1020,7 +1020,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x49ac458&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3b67af8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

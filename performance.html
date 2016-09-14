@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-12">
+<meta name="date" content="2016-09-14">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -384,13 +384,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In this chapter we assume that you already have well-developed code that is mature conceptually and has been tried and tested. Now you want to optimize this code, but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section. Section <a href="performance.html#performance-parallel">7.4</a> discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how <code>Rcpp</code> can be used to efficiently incorporating C++ code into an R analysis.</p>
 <div id="top-5-tips-for-efficient-performance" class="section level2">
 <h2><span class="header-section-number">7.1</span> Top 5 tips for efficient performance</h2>
-<ul>
+<ol style="list-style-type: decimal">
 <li>Before you start to optimise you code, ensure you know where the bottleneck lies; use a code profiler.</li>
 <li>The <code>ifelse</code> function is optimal for vectorised comparisons.</li>
 <li>If the data in your data frame is all of the same type, consider converting it to a matrix for a speed boost.</li>
 <li>The <strong>parallel</strong> package is ideal for Monte-Carlo simulations.</li>
 <li>For optimal performance, consider re-writing key parts of your code in C++.</li>
-</ul>
+</ol>
 </div>
 <div id="efficient-base-r" class="section level2">
 <h2><span class="header-section-number">7.2</span> Efficient base R</h2>
@@ -418,13 +418,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.409   0.284   4.694</span>
+<span class="co">#&gt;    4.00    0.34    4.34</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.319   0.032   0.350</span>
+<span class="co">#&gt;   0.197   0.020   0.217</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -432,7 +432,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.519   0.136   0.655</span>
+<span class="co">#&gt;   0.609   0.232   0.841</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -508,9 +508,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr    min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.0027 0.00349 0.0514 0.00595 0.00641 4.62   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.7323 0.80001 1.0368 0.84003 1.10991 7.48   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00309 0.00358 0.0571 0.00639 0.00698 5.11   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.73343 0.82040 1.0969 0.87934 1.14818 8.04   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -772,7 +772,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b086f1950d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b570edc20d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
