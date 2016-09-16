@@ -347,8 +347,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
 <li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
 <li class="chapter" data-level="10.3.2" data-path="learning.html"><a href="learning.html#mailing-lists-and-groups."><i class="fa fa-check"></i><b>10.3.2</b> Mailing lists and groups.</a></li>
-<li class="chapter" data-level="10.3.3" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.3.3</b> Asking a question</a></li>
 </ul></li>
+<li class="chapter" data-level="10.4" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.4</b> Asking a question</a><ul>
+<li class="chapter" data-level="" data-path="learning.html"><a href="learning.html#minimal-data-set"><i class="fa fa-check"></i>Minimal data set</a></li>
+<li class="chapter" data-level="" data-path="learning.html"><a href="learning.html#minimal-example"><i class="fa fa-check"></i>Minimal example</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="learning.html"><a href="learning.html#learning-in-depth"><i class="fa fa-check"></i><b>10.5</b> Learning in depth</a></li>
+<li class="chapter" data-level="10.6" data-path="learning.html"><a href="learning.html#spread-the-knowledge"><i class="fa fa-check"></i><b>10.6</b> Spread the knowledge</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
@@ -418,13 +423,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.959   0.364   3.323</span>
+<span class="co">#&gt;   4.345   0.372   4.717</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.233   0.024   0.257</span>
+<span class="co">#&gt;   0.208   0.020   0.227</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -432,7 +437,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.632   0.196   0.829</span>
+<span class="co">#&gt;   0.751   0.120   0.871</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -508,9 +513,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00293 0.00393 0.0576 0.00679 0.00727 5.07   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.85362 1.00170 1.2819 1.08663 1.34351 8.71   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq   max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00396 0.00551 0.0668 0.00841 0.00945  5.87   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.88613 1.26999 1.5626 1.33721 1.61590 10.03   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -772,7 +777,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b834bd7b0d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b6f7e0470d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
