@@ -111,15 +111,15 @@ unzip("v59i10-data.zip", exdir = "extdata/reshape/")
 ```{r, message=FALSE}
 library("tidyr")
 library("readr")
-raw = read_csv("extdata/pew.csv") # read in the 'wide' dataset
-dim(raw)
-rawt = gather(raw, Income, Count, -religion)
-dim(rawt)
-rawt[1:3,]
+pew = read_csv("extdata/pew.csv") # read in the 'wide' dataset
+dim(pew)
+pewt = gather(pew, Income, Count, -religion)
+dim(pewt)
+pewt[1:3,]
 ```
 
 
-Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the `raw` and `rawt` datasets, respectively.
+Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively.
 They have different dimensions, but they contain precisely the same information.
 Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
@@ -143,26 +143,26 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 ```{block, gather-note, type='rmdtip'}
 Note
 that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
-Note that when we print the object `rawt[1:3,]`, the class of each variable is given
+Note that when we print the object `pewt[1:3,]`, the class of each variable is given
 (`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
 This is because **readr** creates `tbl` objects from the **tibble** package.
 ```
 
 ```{r tpew, echo=FALSE}
 # generate pew dataset
-raw = read_csv("extdata/reshape-pew.csv")
-raw = raw[-c(1, ncol(raw))] # remove excess cols
-names(raw) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
+pew = read_csv("extdata/reshape-pew.csv")
+pew = pew[-c(1, ncol(pew))] # remove excess cols
+names(pew) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
                "$40--50k", "$50--75k", "$75--100k", "$100--150k", ">150k")
-# write_csv(raw, "extdata/pew.csv")
-knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
+# write_csv(pew, "extdata/pew.csv")
+knitr::kable(pew[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
 ```
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-rawt = gather(raw, Income, Count, -religion)
-rawt_mini = gather(raw[1:3,1:4], Income, Count, -religion)
-knitr::kable(rawt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
+pewt = gather(pew, Income, Count, -religion)
+pewt_mini = gather(pew[1:3,1:4], Income, Count, -religion)
+knitr::kable(pewt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
 ```
 
 - Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the `separate()` function, as illustrated in the Tables \@ref(tab:to-separate) and \@ref(tab:separated) and in the code chunk below.
