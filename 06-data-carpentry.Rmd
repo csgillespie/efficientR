@@ -9,7 +9,7 @@ knit: "bookdown::preview_chapter"
 
 There are many words for data processing. You can **clean**, **hack**, **manipulate**, **munge**, **refine** and **tidy** your dataset, ready for the next stage, typically modelling and visualisation. Each word says something about perceptions towards the process: data processing is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception is wrong. Getting your data 'ship shape' is a respectable and in some cases vital skill. For this reason we use the more admirable term *data carpentry*.
 
-The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
+The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as the saying goes.
 
 Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in Chapter 5, can cripple your workflow, working with messy data can lead to project management hell.
 
@@ -49,6 +49,7 @@ library("data.table")
 ## Efficient data frames with tibble
 
 **tibble** is a package that defines a new data frame class for R, the `tbl_df`. These 'tibble diffs' (as their inventor [suggests](https://github.com/hadley/tibble) they should be pronounced) are like the base class `data.frame`, but with more user friendly printing, subsetting, and factor handling.
+
 ```{block, type="rmdnote"}
 A tibble data frame is an S3 object with three classes, `tbl_df`, `tbl`, and `data.frame`. Since 
 the object has the `data.frame` tag, this means that if a `tbl_df` or `tbl` method isn't available, 
@@ -94,7 +95,7 @@ Now create a tibble data frame and repeat the above commands.
 A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014], so getting it into a suitable form early could save hours in the future. Converting data into a 'tidy' form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.
 
 Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including **stringi** and **stringr** can help update messy character strings using regular expressions; **assertive** and **assertr** packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the **lubridate** vignette (see `vignette("lubridate")`). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling.
-The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014.
+The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014 and loaded using the code below:
 
 ```{r, echo=FALSE, eval=FALSE}
 # Download data from its original source - an academic paper
@@ -107,7 +108,19 @@ unzip("v59i10-data.zip", exdir = "extdata/reshape/")
 # write.csv(raw, "extdata/reshape-pew.csv")
 ```
 
-These tables may look different, but they contain precisely the same information.
+```{r, message=FALSE}
+library("tidyr")
+library("readr")
+raw = read_csv("extdata/pew.csv") # read in the 'wide' dataset
+dim(raw)
+rawt = gather(raw, Income, Count, -religion)
+dim(rawt)
+rawt[1:3,]
+```
+
+
+Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the `raw` and `rawt` datasets, respectively.
+They have different dimensions, but they contain precisely the same information.
 Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
 Note that 'correct' here is used in the context of data analysis and graphical visualisation.
@@ -126,17 +139,6 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 
 - Gathering: this means making 'wide' tables 'long' by converting column names to a new variable. This is done with the function
 `gather()` (the inverse of which is `spread()`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below:
-
-
-```{r}
-library("tidyr")
-library("readr")
-raw = read_csv("extdata/pew.csv") # read in the 'wide' dataset
-dim(raw)
-rawt = gather(raw, Income, Count, -religion)
-dim(rawt)
-rawt[1:3,]
-```
 
 ```{block, gather-note, type='rmdtip'}
 Note
