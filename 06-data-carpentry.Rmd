@@ -112,19 +112,18 @@ unzip("v59i10-data.zip", exdir = "extdata/reshape/")
 library("tidyr")
 library("readr")
 pew = read_csv("extdata/pew.csv") # read in the 'wide' dataset
-dim(pew)
-pewt = gather(pew, Income, Count, -religion)
-dim(pewt)
-pewt[1:3,]
+pew[1:3, 1:3] # take a look at the data
 ```
-
 
 Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively.
 They have different dimensions, but they contain precisely the same information.
 Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
 Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-For tabular presentation the wide form may be better. Wide data can also be less memory consuming because it requires fewer cells.
+Because R is a vector-based language, tidy data also has efficiency advantaged: it's often faster to operate on few long columns than many short ones.
+Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data.
+Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be
+able to transfer between wide (or otherwise 'untidy') and tidy formats.
 
 Tidy data has the following characteristics [@Wickham_2014]:
 
@@ -138,15 +137,16 @@ Large and complex datasets are usually represented by multiple tables, with uniq
 Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns.
 
 - Gathering: this means making 'wide' tables 'long' by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below:
+`gather()` (the inverse of which is `spread()`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below,
+which converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns:
 
-```{block, gather-note, type='rmdtip'}
-Note
-that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
-Note that when we print the object `pewt[1:3,]`, the class of each variable is given
-(`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
-This is because **readr** creates `tbl` objects from the **tibble** package.
+```{r}
+dim(pew)
+pewt = gather(pew, Income, Count, -religion)
+dim(pewt)
+pewt[1:3,]
 ```
+
 
 ```{r tpew, echo=FALSE}
 # generate pew dataset
@@ -192,6 +192,13 @@ Note that the above code used non standard evaluation, which means not surroundi
 
 Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 
+#### Exercises {-}
+
+1. What are the three criteria data?
+
+2. Take a look at each of these datasets: what is 'untidy' about each?
+
+3. Convert each of the above datasets into tidy form.
 
 ## Efficient data processing with dplyr {#dplyr}
 
