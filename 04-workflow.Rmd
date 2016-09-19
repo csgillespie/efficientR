@@ -4,13 +4,19 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow {#workflow}
 
-Efficient programming is an important and skill for generating the correct result, on time.
-Yet coding is only one part of a wider skillset needed for successful outcomes for projects involving R programming. Unless your project is to write generic R code (i.e. unless you are on the R Core Team), the project will probably transcend the confines of the R world: it must engage with a whole range of other factors.
-In this context we define 'workflow' as the sum of practices, habits and systems that enable productivity.^[The Oxford Dictionary's
-definition of workflow is similar, with a more industrial feel: "The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion."
-]
-To some extent workflow is about personal preferences.
-Everyone's mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending the scale and type of the project: it's a big topic but can usefully be condensed in 5 top tips.
+Efficient programming is an important and skill for generating the correct result, on
+time. Yet coding is only one part of a wider skillset needed for successful outcomes
+for projects involving R programming. Unless your project is to write generic R code
+(i.e. unless you are on the R Core Team), the project will probably transcend the
+confines of the R world: it must engage with a whole range of other factors. In this
+context we define 'workflow' as the sum of practices, habits and systems that enable
+productivity.^[The Oxford Dictionary's definition of workflow is similar, with a more
+industrial feel: "The sequence of industrial, administrative, or other processes
+through which a piece of work passes from initiation to completion." ] To some extent
+workflow is about personal preferences. Everyone's mind works differently so the most
+appropriate workflow varies from person to person and from one project to the next.
+Project management practices will also vary depending the scale and type of the
+project: it's a big topic but can usefully be condensed in 5 top tips.
 
 ## Top 5 tips for efficient workflow
 
@@ -286,19 +292,43 @@ Whether the final output is a report containing graphics produced by R, an onlin
 
 Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.
 
-### Dynamic documents with knitr
+### Dynamic documents with R Markdown
 
-When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
+When writing a report using R outputs a typical workflow has historically been to 1)
+do the analysis 2) save the resulting graphics and record the main results outside the
+R project and 3) open a program unrelated to R such as LibreOffice to import and
+communicate the results in prose. This is inefficient: it makes updating and
+maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be
+done again) and there is an overhead involved in jumping between incompatible
+computing environments.
 
-To overcome this inefficiency in the documentation of R outputs the **knitr** package was developed. Used in conjunction with RStudio and building on a version of Markdown that accepts R code (RMarkdown, saved as .Rmd files) **knitr** allows for documents to be generated automatically. Furthermore, *nothing* is efficient unless you can quickly redo it. Documenting your code inside dynamic documents in this ways ensures that this is the case.
+To overcome this inefficiency in the documentation of R outputs the R Markdown
+framework was developed. Used in conjunction with the **knitr** package, we have the ability
+to 
+
+  * process code chunks (via __knitr__)
+  * a notebook interface for R (via RStudio)
+  * the ability to render output to multiple formats (via pandoc).
+
+R Markdown documents are plain text and have file extension `.Rmd`. The framework
+allows for documents to be generated automatically. Furthermore, *nothing* is
+efficient unless you can quickly redo it. Documenting your code inside dynamic
+documents in this ways ensures that this is the case.
 
 ```{block, rmd, type='rmdnote'}
-This note briefly explains RMarkdown for the un-initiated. RMarkdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. RMarkdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. RMarkdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in RMarkdown.
+This note briefly explains R Markdown for the un-initiated. R markdown is a form of
+Markdown. Markdown is a pure text document format that has become a standard for
+documentation for software. It is the default format for displaying text on GitHub.
+R Markdown allows the user to embed R code in a Markdown document. This is a powerful
+addition to Markdown, as it allows custom images, tables and even interactive
+visualisations, to be included in your R documents. R Markdown is an efficient file
+format to write in because it is light-weight, human and computer readable, and is
+much less verbose than HTML, LaTeX. This book was written in R Markdown.
 ```
 
 Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
 
-    ```{r, sampleCode}
+    ```{r, sampleCode, eval=FALSE}
     (1:5)^2
     ```
 
