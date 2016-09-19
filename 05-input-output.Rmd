@@ -12,6 +12,25 @@ With the accelerating digital revolution and growth in open data, an increasing 
 
 Before reading in a single line of data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
+### Prerequisites {-}
+
+R can read data from a variety of sources. We begin by discussing the generic package **rio** that 
+handles a wide variety of data types. Special attention is paid to CSV files, which leads to 
+the **readr** and **data.table** packages. The relatively new package **feather** is
+introduced as binary file format, that has cross-language support.
+```{r}
+library("rio")
+library("readr")
+library("data.table")
+library("feather")
+```
+
+We also use the **WDI** package to illustrate accessing online data sets
+```{r}
+library("WDI")
+```
+
+
 ## Top 5 tips for efficient data I/O
 
 1. If possible, keep the names of local files downloaded from the internet or copied onto your computer unchanged. This will help you trace the provenance of the data in the future.
@@ -57,9 +76,9 @@ The ability to import and use `.json` data is becoming increasingly common as it
 
 1. The final line in the code chunk above shows a neat feature of **rio** and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the `voc_voyages.xlsx` file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient file format from your system:
 
-```{r, results="hide", warning=FALSE}
-file.remove("voc_voyages.xlsx")
-```
+    ```{r, results="hide", warning=FALSE}
+    file.remove("voc_voyages.xlsx")
+    ```
 
 2. Try saving the the `voyages` data frames into 3 other file formats of your choosing (see `vignette("rio")` for supported formats). Try opening these in external programs. Which file formats are more portable?
 
@@ -80,7 +99,7 @@ There is often more than one way to read data into R and `.csv` files are no exc
 ```{block, type="rmdwarning"}
 In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv` or an
 equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt)
-that facilites sharing CSV files between tools and operating systems.
+that facilities sharing CSV files between tools and operating systems.
 ```
 
 ```{r, echo=-1:-2}
@@ -120,14 +139,14 @@ that as the dataset size increases, the benefit of switching to `fread` and (eve
 
 ### Differences between `fread` and `read_csv`
 
-The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is dscribed more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
+The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
 
 ```{r, cache=TRUE}
 fname = system.file("extdata/voc_voyages.tsv", package = "efficient")
 voyages_base = read.delim(fname)
 ```
 
-When we run the equilivent operation using **readr**, 
+When we run the equivalent operation using **readr**, 
 ```{r, cache=TRUE}
 voyages_readr = readr::read_tsv(fname)
 ```
@@ -266,7 +285,7 @@ The results of this simple disk usage benchmark show that saving data in a compr
 The results show that file size is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although feather files occupied more disc space, they were roughly equivalent in terms of read times: the functions `read_feather()` and `readRDS()` were consistently around 10 times faster than `read.csv`. In terms of write times, feather excels: `write_feather()` was around 10 times faster than `write.csv()`, whereas `saveRDS()` was only around 1.2 times faster. 
 
 ```{block, content-dependent-performance, type='rmdnote'}
-Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The `voyages` dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was *larger* than the orginal when saved as a feather file!
+Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The `voyages` dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was *larger* than the original when saved as a feather file!
 ```
 
 ```{r size-voyages, eval=FALSE, echo=FALSE}
@@ -317,6 +336,13 @@ co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
 ```
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
+
+There are a number of R packages that provide more advanced functionality than simply downloading files. 
+The CRAN task view on [Web technologies](https://cran.r-project.org/web/views/WebTechnologies.html) provides
+a comprehensive list. The two packages for interacting with web pages are **httr** and **RCurl**. The former package
+provides (a relatively) user-friendly interface for executing standard HTTP methods, such as `GET` and `POST`.
+It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging. 
+The **RCurl** package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.
 
 ```{r, eval=FALSE, echo=FALSE}
 # Not shown as a distraction (RL)
