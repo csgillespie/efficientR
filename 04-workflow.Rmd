@@ -53,7 +53,7 @@ It builds on the concept of an R/RStudio *project*, introduced in Chapter 2, and
  
  - Package selection. After planning your project you should identify which packages are most suitable to get the work done quickly and effectively. With rapid increases in the number and performance of packages it is more important than ever to consider the range of options at the outset. For example `*_join()` from **dplyr** is often more appropriate than `merge()`, as we'll see in \@ref(data-carpentry). 
 
- - Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section \@ref(publication) touches on documentation using knitr and the much stricter approach to code publication of package development. 
+ - Publication. This final stage is relevant if you want your R code to be useful for others in the long term. To this end Section \@ref(publication) touches on documentation using **knitr** and the much stricter approach to code publication of package development. 
  
 ## Project planning and management
 
@@ -212,14 +212,14 @@ This method works but it takes time to write, test and debug. Much better to pac
 (d_hav2 = geosphere::distHaversine(o, d))
 ```
 
-The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subetting stages and small, similar functions (e.g. `sin` and `asin`) which are easy to confuse. The other is one line of simple code. The package method using **geosphere** took perhaps 100^th^ of the time *and* gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?
+The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subsetting stages and small, similar functions (e.g. `sin` and `asin`) which are easy to confuse. The other is one line of simple code. The package method using **geosphere** took perhaps 100^th^ of the time *and* gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?
 
 ### Searching for R packages
 
 Building on the example above, how can on find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere** package in the second result (a [hardcoded implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
 
 Beyond Google, there are also several sites for searching for packages and functions.
-[rdocumentation.org](http://www.rdocumentation.org/) provides a multi-field search environmnet to pinpoint the function or package you need. Amazingly, the search for `haversine` in the Description field yielded 10 results from 8 packages: R has at least *8* implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:
+[rdocumentation.org](http://www.rdocumentation.org/) provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for `haversine` in the Description field yielded 10 results from 8 packages: R has at least *8* implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:
 
 ```{r, eval=FALSE}
 # Search CRAN for mentions of haversine
@@ -310,10 +310,10 @@ to
   * a notebook interface for R (via RStudio)
   * the ability to render output to multiple formats (via pandoc).
 
-R Markdown documents are plain text and have file extension `.Rmd`. The framework
+R Markdown documents are plain text and have file extension `.Rmd`. This framework
 allows for documents to be generated automatically. Furthermore, *nothing* is
 efficient unless you can quickly redo it. Documenting your code inside dynamic
-documents in this ways ensures that this is the case.
+documents in this way ensures that analysis can be quickly re-run.
 
 ```{block, rmd, type='rmdnote'}
 This note briefly explains R Markdown for the un-initiated. R markdown is a form of
@@ -326,19 +326,29 @@ format to write in because it is light-weight, human and computer readable, and 
 much less verbose than HTML, LaTeX. This book was written in R Markdown.
 ```
 
-Results are generated *on the fly* by including 'code chunks' such as that illustrated below:
+In an R Markdown document, results are generated *on the fly* by including 'code
+chunks'. Code chunks are R code that are preceded by ` ```{r, options} ` on the line
+before the R code, and ` ``` ` at the end of the chunk. For example, suppose we have 
+the code chunk
 
-    ```{r, sampleCode, eval=FALSE}
+    ```{r eval=TRUE, echo=TRUE}`r ''`
     (1:5)^2
     ```
 
-This code, will result in the following output when the R Markdown document is compiled:
+in an R Markdown document. The `eval=TRUE` in the code indicates that the code should
+be evaluated while `echo=TRUE` controls whether the R code is displayed. When we
+compile the document, we get
 
 ```{r}
 (1:5)^2
 ```
 
-The resulting output is evaluated each time the document is compiled. To tell **knitr** that `(1:5)^2` is R code that needs to be evaluated, it must by preceded by ` ```{r} ` on the line before the R code, and ` ``` ` at the end of the chunk. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a .Rmd file, for example, simply enter `Ctrl+Alt+I` on Windows or Linux or select the option from the Code dropdown menu.
+R Markdown via **knitr** provides a wide range of options to customise what is
+displayed and evaluated. When you adapt to this workflow it is highly efficient,
+especially as RStudio provides a number of shortcuts that make it easy to create and
+modify code chunks. To create a chunk while editing a `.Rmd` file, for example, simply
+enter `Ctrl+Alt+I` on Windows or Linux or select the option from the Code drop down
+menu.
 
 Once your document has compiled it should appear on your screen into the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the [rpubs](https://rpubs.com) website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).
@@ -348,7 +358,7 @@ An important advantage of dynamically documenting work this way is that when the
 
 If your R Markdown documents include time-consuming processing stages, a speed boost can be attained after the first build by setting `opts_chunk$set(cache = TRUE)` in the first chunk of the document. This setting was used to reduce the build times of this book, as can be seen on [GitHub](https://github.com/csgillespie/efficientR/blob/master/code/before_script.R).
 
-Furthermore dynamic documents written in R Markdown can compile into a range of output formats including html, pdf and Microsoft's docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio's excellent website on R Markdown hosted at [rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) and, for a more detailed account of dynamic documents with R, [@xie2015dynamic].
+Furthermore dynamic documents written in R Markdown can compile into a range of output formats including html, pdf and Microsoft's docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio's excellent website on R Markdown hosted at [rmarkdown.rstudio.com](http://rmarkdown.rstudio.com/) and, for a more detailed account of dynamic documents with R, [@xie2015dynamic].
 
 ### R packages
 
