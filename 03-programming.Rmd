@@ -41,7 +41,7 @@ advantage of such languages, compared with R, is that they are faster to run.
 The disadvantage is that they take longer to learn and can not be run interactively.
 
 ```{block, type="rmdnote"}
-The wikipedia page on compiler opimisations gives a nice overview of standard
+The wikipedia page on compiler optimisations gives a nice overview of standard
 optimisation techniques (https://en.wikipedia.org/wiki/Optimizing_compiler).
 ```
 
@@ -386,34 +386,31 @@ counts.
 
 Factors are much maligned objects. While at times they are awkward, they do have their
 uses. A factor is used to store categorical variables. This data type is unique to R
-(or at least not common among programming languages). Often categorical variables get
-stored as $1$, $2$, $3$, $4$, and $5$, with associated documentation elsewhere that
-explains what each number means. This is clearly a pain. Alternatively we store the
-data as a character vector. While this is fine, the semantics are wrong because it
-doesn't convey that this is a categorical variable. It's not sensible to say that you
-should **always** or **never** use factors, since factors have both positive and
-negative features. Instead we need to examine each case individually. As a guide of
-when it's appropriate to use factors, consider the following examples.
-
-### Example: Months of the year
-
-Suppose our data set relates to months of the year
-
+(or at least not common among programming languages). The difference between factors
+and strings is important because R treats factors and strings differently. Although
+factors look similar to character vectors, they are actually integers. This leads to
+initially surprising behaviour
 ```{r}
-m = c("January", "December", "March")
+x = 4:6
+c(x)
+c(factor(x))
 ```
+In this case the `c` function is using the underlying integer representation of the
+factor. Dealing with the wrong case of behaviour is a common source of inefficiency for
+R users.
 
-If we sort `m` in the usual way, `sort(m)`, we perform standard alpha-numeric
-ordering; placing `December` first. This is technically correct, but not that helpful.
-We can use factors to remedy this problem by specifying the admissible levels
+Often categorical variables get stored as $1$, $2$, $3$, $4$, and $5$, with associated
+documentation elsewhere that explains what each number means. This is clearly a pain.
+Alternatively we store the data as a character vector. While this is fine, the
+semantics are wrong because it doesn't convey that this is a categorical variable.
+It's not sensible to say that you should **always** or **never** use factors, since
+factors have both positive and negative features. Instead we need to examine each case
+individually. 
 
-```{r}
-# month.name contains the 12 months
-fac_m = factor(m, levels=month.name)
-sort(fac_m)
-```
+As a general rule, if your variable has an inherent order, e.g. small vs large, or
+you have a fixed set of categories, then you should consider using a factor.
 
-### Example: Graphics
+### Inherent order
 
 Factors can be used for ordering in graphics. For instance, suppose we have a data set
 where the variable `type`, takes one of three values, `small`, `medium` and `large`.
@@ -432,54 +429,32 @@ would create a boxplot where the $x$-axis was alphabetically ordered. By convert
 boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
 ```
 
-### Example: Analysis of variance
-
-Analysis of variance (ANOVA) is a type of statistical model that is used to determine
-differences among group means, while taken into account other factors. The function
-`aov` is used to fit standard analysis of variance models. Potential catastrophic bugs
-arise when a variable is numeric, but in reality is a categorical variable.
-
-Consider the `npk` dataset on the growth of peas that comes with R. The column
-`block`, indicates the block (typically a nuisance parameter) effect. This column
-takes values $1$ to $5$, but has been carefully coded as a factor. Using the `aov()`
-function to estimate the `block` effect, we get
-```{r, echo=2}
-data(npk, package="datasets")
-aov(yield ~ block, npk)
-```
-If we repeat the analysis, but change `block` to a numeric data type we get different
-(and incorrect) results
-```{r}
-aov(yield ~ as.numeric(block), npk)
-```
-When we pass a numeric variable, the `aov` function is interpreting this variable 
-as continuous, and fits a regression line.
-
-### Example: data input
-
+```{block, type="rmdwarning"}
 Most users interact with factors via the `read.csv` function where character columns
 are automatically converted to factors. This feature can be irritating if our data is
 messy and we want to clean and recode variables. Typically when reading in data via
-`read.csv`, we use the `stringsAsFactors=FALSE` argument.
-```{block, type="rmdwarning"}
-Although this argument can add in the global `options()` list and placed in the
-`.Rprofile`, this leads to non-portable code, so should be avoided.
+`read.csv`, we use the `stringsAsFactors=FALSE` argument. Although this argument can
+add in the global `options()` list and placed in the `.Rprofile`, this leads to
+non-portable code, so should be avoided.
 ```
 
-### Example: Factors are not character vectors
+### Fixed set of categories
 
-Although factors look similar to character vectors, they are actually integers. This
-leads to initially surprising behaviour
+Suppose our data set relates to months of the year
+
 ```{r}
-x = 4:6
-c(x)
-c(factor(x))
+m = c("January", "December", "March")
 ```
-In this case the `c` function is using the underlying integer representation of the
-factor.
 
-Overall factors are useful, but can lead to unwanted side-effects if we are not
-careful. Used at the right time and place, factors can lead to simpler code.
+If we sort `m` in the usual way, `sort(m)`, we perform standard alpha-numeric
+ordering; placing `December` first. This is technically correct, but not that helpful.
+We can use factors to remedy this problem by specifying the admissible levels
+
+```{r}
+# month.name contains the 12 months
+fac_m = factor(m, levels=month.name)
+sort(fac_m)
+```
 
 #### Exercise {-}
 
@@ -607,7 +582,7 @@ at the end of this section.
 
 ```{block, type="rmdnote"}
 Most people rarely use the other apply functions. For example, I have only used `eapply` 
-once. Students in my class uploaded R scipts. Using `source`, I was able to read
+once. Students in my class uploaded R scripts. Using `source`, I was able to read
 in the scripts to a separate environment. I then applied a marking scheme to each
 environment using `eapply`. Using separate environments, avoided object name clashes.
 ```
@@ -816,7 +791,7 @@ The value returned is obtained from `environment(g)` not from the `.GlobalEnv`. 
 persistent environment allows us to cache variables between function calls.
 ```{block type="rmdnote"}
 The operator `<<-` makes R search through the parent environments for an existing
-defintion. If such a variable is found (and its binding is not locked) then its value
+definition. If such a variable is found (and its binding is not locked) then its value
 is redefined, otherwise assignment takes place in the global environment.
 ```
 
