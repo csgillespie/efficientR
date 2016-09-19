@@ -90,7 +90,7 @@ df_base$colB
 ```
 Now create a tibble data frame and repeat the above commands.
 
-## Tidying data with tidyr
+## Tidying data with tidyr and regular expressions
 
 A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014], so getting it into a suitable form early could save hours in the future. Converting data into a 'tidy' form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.
 
@@ -178,6 +178,10 @@ agesex_df = data.frame(agesex, n) # create a data frame
 separate(agesex_df, agesex, c("sex", "age"), 1)
 ```
 
+```{block, nse, type='rmdnote'}
+Note that the above code used non standard evaluation, which means not surrounding variable names (e.g. `agesex`) in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
+```
+
 ```{r to-separate, echo=FALSE,}
 knitr::kable(agesex_df, caption = "Joined age and sex variables in one column")
 ```
@@ -187,16 +191,18 @@ knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the function `separate`.")
 ```
 
-### Other functions for tidying data
+### Other tidyr functions
 
 There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
 The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
 
-```{block, nse, type='rmdnote'}
-Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
-```
-
 Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
+
+### Regular expressions
+
+Regular expressions (commonly known as regex) is a language for describing and manipulating text strings. There are books on the subject, and several good tutorials on regex in R [e.g. @sanchez_handling_2013], so we'll just scratch the surface of the topic, and provide a taster of what is possible. Regex is a deep topic. However, knowing the basics can save a huge amount of time from a data tidying perspective, by automating the cleaning of messy strings.
+
+
 
 #### Exercises {-}
 
