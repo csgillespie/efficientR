@@ -32,7 +32,7 @@ library("memoise")
 1. Avoid unnecessary computation by caching variables.
 1. Byte compile packages for an easy performance boost.
 
-## General advice
+## General advice {#general}
 
 Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
 every variable used, give you the burdensome responsibility of memory management and have to be compiled. The
@@ -103,7 +103,7 @@ loop; have they increased in length?
 ```
 
 Let's consider three methods of creating a sequence of numbers. __Method 1__ creates
-an empty vector and grows the object
+an empty vector and gradually increases (or grows) the length of the vector
 
 ```{r echo=TRUE, tidy=FALSE}
 method1 = function(n) {
@@ -150,8 +150,16 @@ hour while the other methods take less than $3$ seconds.
 
 ### Vectorised code
 
-The vector is one of the key data types in R, with many functions offering a
-vectorised version. For example, the code
+```{block, type="rmdnote"}
+Technically `x = 1` creates a vector of length $1$. In this section, we use _vectorised_
+to indicate that functions work with vectors of all lengths.
+```
+
+Recall the __golden rule__ in R programming, access the underlying C/Fortran routines
+as quickly as possible; the fewer functions calls required to achieve this, the
+better. With this mind, many R functions are _vectorised_,  that is
+the function's inputs and/or outputs naturally work with vectors, reducing the
+number of function calls required. For example, the code
 ```{r, echo=2}
 n = 10
 x = runif(n) + 1
@@ -176,13 +184,18 @@ log_sum = sum(log(x))
 ```
 Writing code this way has a number of benefits.
 
-  * It's faster. When $n = 10^7$ the ``R way'' is about forty times faster.
+  * It's faster. When $n = 10^7$ the _R way_ is about forty times faster.
   * It's neater.
   * It doesn't contain a bug when `x` is of length $0$.
   
+As with the general example in section \@ref(general), the slowdown isn't due to
+the `for` loop. Instead, it's because there are many more functions calls.
+
+  
 #### Exercises {-}
 
-Time the two methods for calculating the log sum. Try different values of $n$.
+1. Time the two methods for calculating the log sum. 
+1. What happens when the `length(x) = 0`, i.e. we have an empty vector?
 
 #### Example: Monte-Carlo integration {-}
 
@@ -244,18 +257,22 @@ the number of darts, i.e. the size of `N`, that is used
 
 ## Communicating with the user
 
-When we create a function we often want the function to give feedback on the current
-state. For example, are there missing arguments or has a numerical calculation failed.
-There are three main techniques of communicating with the user.
+When we create a function we often want the function to give efficient feedback on the
+current state. For example, are there missing arguments or has a numerical calculation
+failed. There are three main techniques of communicating with the user.
 
 ### Fatal errors: `stop()` {-}
 
 Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When
-`stop` is called, there is no way for a function to continue. For instance, when we
-generate random numbers using `rnorm()` the first argument is the sample size,`n`. If the number of
-observations to return less than $1$, an error is raised.
+`stop()` is called, there is no way for a function to continue. For instance, when we
+generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
+the number of observations to return less than $1$, an error is raised. When we need
+to raise an error, we should do so as quickly as possible; otherwise it's a waste of
+resources.
 
-Errors can be caught using `try()` and `tryCatch()`. For example, 
+Suppose we call a function that raises an error. What then? Efficient, robust code
+_catches_ the error and handles it appropriately. Errors can be caught using `try()`
+and `tryCatch()`. For example,
 ```{r}
 # Suppress the error message
 good = try(1 + 1, silent = TRUE)
@@ -282,67 +299,28 @@ debugging techniques, are given in [@Wickham2014].
 
 Warnings are generated using the `warning()` function. When a warning is raised, it
 indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a
-warning. Warnings can be hidden using `suppressWarnings()`:
-```{r}
-suppressWarnings(mean(NULL))
+warning. 
+
+When we come across a warning in our code, it is important to solve the problem and
+not just ignore the issue. While ignoring warnings saves time in the short-term, warnings
+can often mask deep issues that crept into our code longer term.
+
+```{block, type="rmdnote"}
+Warnings can be hidden using `suppressWarnings()`.
 ```
-In general, it is good practice to solve the underlying cause of the warning message,
-instead of evading the issue via `suppressWarning()`.
-  
+
 ### Informative output: `message()` and `cat()` {-}  
   
 To give informative output, use the `message()` function. In my package for fitting
-powerlaws, I use messages to give the user an estimate of expected run time. Similar
-to warnings, messages can be suppressed with `suppressMessages`.
+powerlaws, I use messages to give the user an estimate of expected run time. By
+providing an rough estimate of how long the function takes, allows the user to
+optimise their time. Similar to warnings, messages can be suppressed with
+`suppressMessages`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
 used in `print`/`show` methods, e.g. look at the function definition of the
 S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
 
-### Example: Retrieving a web resource
-
-In some cases it isn't clear what should be returned, a message, a `NA` value or an
-error. For example, suppose we wish to download data from a web site. 
-
-The function `GET()` from the **httr** package can be used to download a webpage. When
-we attempt to download data, the function also obtains an HTML status code. If the
-page exists, the function will return text (with the correct status code), e.g.
-```{r eval=FALSE}
-GET("http://google.com/") # Status: 200
-```
-If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the
-output and use the Status to determine what to do next.
-```{r eval=FALSE}
-GET("http://google.com/made_up") # Status: 404
-```
-By examining the error code, the user has complete flexibility. However if the
-web-page doesn't exist
-```{r eval=FALSE}
-GET("http://google1.com/")
-```
-or if we don't have an internet connection, then `GET()` raises an error via `stop()`.
-Instead of raising an error the author could have returned `NA` (the web-page isn't
-available). However for the typically use case, it's not clear how returning `NA`
-would be helpful.
-
-The `install_github()` function in the **devtools** package either installs the
-package or raises an error. When an error is raised, the function uses a combination
-of `message()` and `stop()` to indicate the source of an error, e.g.
-```{r, eval=FALSE}
-devtools::install_github("bad/package")
-#> Downloading GitHub repo bad/package@master
-#> from URL https://api.github.com/repos/bad/package/zipball/master
-#>  Error in curl::curl_fetch_memory(url, handle = handle) : 
-#>   Couldn't resolve host name 
-```
-With the key idea being that if a package isn't able to be installed, future
-calculations will break; so it's optimal to raise an error as soon as possible.
-
-<!--
-When deciding what to return, consider what the user can 
-The key idea is
-what can the user do if the function cannot complete it's purpose.
--->
 
 ### Exercises {-}
 
@@ -711,7 +689,7 @@ watch$stop()
 ```
 Without using function closures, the stop-watch function would be longer, more complex and
 therefore more inefficient. When used properly function closures are very useful 
-programming tools for writting concise code.
+programming tools for writing concise code.
 
 #### Exercise {-}
 
