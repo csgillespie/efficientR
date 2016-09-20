@@ -29,10 +29,9 @@ library("memoise")
 1. Be careful never to grow vectors.
 1. Vectorise codes whenever possible.
 1. Use factors when appropriate.
-1. Clever use of S3 objects can make code easier to understand.
+1. Avoid unnecessary computation by caching variables.
 1. Byte compile packages for an easy performance boost.
 
-<!-- Weak title -->
 ## General advice
 
 Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
@@ -607,10 +606,31 @@ the `drop` argument.
 ## Caching variables
 
 A straightforward method for speeding up code is to calculate objects once and reuse
-the value when necessary. This could be as simple with replacing `log(x)` in multiple
-function calls with the object `log_x` that is defined once and reused. This small
-saving in time quickly multiplies when the cached variable is used inside a `for`
-loop.
+the value when necessary. This could be as simple with replacing `sd(x)` in multiple
+function calls with the object `sd_x` that is defined once and reused. For example, 
+suppose we wish to normalise each column of a matrix. However, instead of using the
+standard deviation of each column, we will use the standard deviation of all the 
+entire data set
+
+```{r, echo=-1, results="hide"}
+x = matrix(rnorm(100), ncol=10)
+apply(x, 2, function(i) mean(i)/sd(x))
+```
+
+This is inefficient, since the value of `sd(x)` is constant recalculating the standard
+deviation is for early column is unnecessary. Instead, we should evaluate once and
+store the result
+```{r, results="hide"}
+sd_x = sd(x)
+apply(x, 2, function(i) mean(i)/sd_x)
+```
+
+If we we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
+version is around 100 times faster (figure \@ref(fig:3-5)).
+
+```{r, 3-5, fig.keep="last", echo=FALSE, fig.height=4, fig.width=6, fig.cap="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.", fig.align="center", out.width="70%"}
+local(source("code/03-programming_f5.R", local=TRUE))
+```
 
 A more advanced form of caching is to use the **memoise** package. If a function is
 called multiple times with the same input, it may be possible to speed things up by
@@ -662,110 +682,12 @@ object that contains functions bound to the environment the closure was created 
 Technically all functions in R have this property, but we use the term function
 closure to denote functions where the environment is not in `.GlobalEnv`. One of the
 environments associated with a function is known as the enclosing environment, that
-is, where was the function created. We can determine the enclosing environment using
-`environment`:
+is, where was the function created. This allows us to store values between function calls.
+Suppose we want to create a stop-watch type function. This is easily achieved with a function 
+closure
 
 ```{r}
-environment(plot_mpg)
-```
-
-The `plot_mpg()` function's enclosing environment is the `.GlobalEnv`. This is important
-for variable scope, i.e. where should be look for a particular object. Consider the
-function `f`
-
-```{r}
-f = function() {
-  x = 5
-  function() x
-}
-```
-
-When we call the function `f`, the object returned is a function. While the enclosing
-environment of `f` is `.GlobalEnv`, the enclosing environment of the _returned_
-function is something different
-
-```{r}
-g = f()
-environment(g)
-```
-When we call this new function `g`, 
-```{r}
-x = 10
-g()
-```
-The value returned is obtained from `environment(g)` not from the `.GlobalEnv`. This
-persistent environment allows us to cache variables between function calls.
-```{block type="rmdnote"}
-The operator `<<-` makes R search through the parent environments for an existing
-definition. If such a variable is found (and its binding is not locked) then its value
-is redefined, otherwise assignment takes place in the global environment.
-```
-
-The `simple_counter()` function exploits this feature to enable variable caching
-
-```{r}
-simple_counter = function() {
-  no = 0
-  function() {
-    no <<- no + 1
-    no
-  }
-}
-```
-When we call the `simple_counter()` function, we retain object values between function
-calls
-
-```{r}
-sc = simple_counter()
-sc()
-sc()
-```
-The key points of the `simple_counter()` function are 
-
-  * The `simple_counter` function returns a function;
-  * The enclosing environment of `sc` is not `.GlobalEnv`, instead it's the binding 
-    environment of `sc`;
-  * The function `sc` has an environment that can be used to store/cache values;
-  * The operator `<<-` is used to alter the object `no` in the `sc` environment.
-
-#### Example {-}
-
-We can exploit function closures to simplify our code. Suppose we wished to simulate a
-games of Snakes and Ladders. We have function that handles the logic of landing on a
-snake
-
-```{r}
-check_snake = function(square) {
-   switch(as.character(square), 
-       '16'=6,  '49'=12, '47'=26, '56'=48, '62'=19, 
-       '64'=60, '87'=24, '93'=73, '96'=76, '98'=78, 
-       square)
-}
-```
-If we then wanted to determine how often we landed on a Snake, we could use a function
-closure to easily keep track of the counter.
-
-```{r}
-check_snake = function() {
-  no_of_snakes = 0
-  function(square) {
-    new_square = switch(as.character(square), 
-       '16'=6,  '49'=12, '47'=26, '56'=48, '62'=19, 
-       '64'=60, '87'=24, '93'=73, '96'=76, '98'=78, 
-       square)
-    no_of_snakes <<- no_of_snakes + (new_square != square)
-    new_square
-  }
-}
-```
-
-Keeping the variable `no_of_snakes` attached to the `check_snake()` function, enables
-us to have cleaner code.
-
-#### Exercise {-}
-
-The following function implements a stop-watch function
-```{r}
+## <<- assigns values to the parent environment
 stop_watch = function() {
   start_time = stop_time = NULL
   start = function() start_time <<- Sys.time()
@@ -773,11 +695,13 @@ stop_watch = function() {
     stop_time <<- Sys.time()
     difftime(stop_time, start_time)
   }
-  list(start=start, stop=stop)
+  list(start = start, stop = stop)
 }
 watch = stop_watch()
 ```
-It contains two functions. One function for starting the timer
+
+The object `watch` is a list, that contains two functions. One function for starting
+the timer
 ```{r}
 watch$start()
 ```
@@ -785,7 +709,14 @@ the other for stopping the timer
 ```{r results="hide"}
 watch$stop()
 ```
-Many stop-watches have the ability to measure not only your overall time but also you
+Without using function closures, the stop-watch function would be longer, more complex and
+therefore more inefficient. When used properly function closures are very useful 
+programming tools for writting concise code.
+
+#### Exercise {-}
+
+1. Write a stop-watch function __without__ using function closures.
+1. Many stop-watches have the ability to measure not only your overall time but also you
 individual laps. Add a `lap` function to the `stop_watch` function that will record
 individual times, while still keeping track of the overall time.
 
