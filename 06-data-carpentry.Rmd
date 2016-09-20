@@ -140,15 +140,29 @@ Two common operations facilitated by **tidyr** are *gathering* and *splitting* c
 ### Make wide tables long with `gather()`
 
 Gathering means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below,
-which converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
+`gather()` (the inverse of which is `spread()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
+The code that performs this operation is provided in the code block below.
+This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
 
 ```{r}
 dim(pew)
-pewt = gather(pew, Income, Count, -religion)
+pewt = gather(data = pew, key = Income, value = Count, -religion)
 dim(pewt)
 pewt[c(1:3, 50),]
 ```
+
+The above code demonstrates the three arguments that `gather()` requires:
+
+1. `data`, a data frame in which column names will become row values.
+1. `key`, the name of the categorical variable into which the column names in the original datasets are converted .
+1. `value`, the name of cell value columns.
+
+As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this columns are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
+
+```{r}
+gather(pew)
+```
+
 
 
 ```{r tpew, echo=FALSE, message=FALSE}
