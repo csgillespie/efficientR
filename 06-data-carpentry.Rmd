@@ -331,16 +331,10 @@ names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 also think that your vapply command is **much** nicer, with `str` being more appropriate for the footnote.-->
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, character(1))` is an alternative way to query the class of columns in a dataset.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(idata)` is another way to see the contents of an object, but produces more verbose output.]
 
-```{r, eval=FALSE}
-str(idata) # only first 5 lines of output shown
-
-## Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6925 obs. of  9 variables:
-##  $ Country     : chr  "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
-##  $ Country Code: chr  "AFG" "AFG" "AFG" "AFG" ...
-##  $ Year        : int  1974 1975 1976 1977 1978 1979 1980 1981 1982 1983 ...
-##  $ Year Code   : chr  "YR1974" "YR1975" "YR1976" "YR1977" ...
+```{r}
+vapply(idata, class, character(1))
 ```
 
 This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
