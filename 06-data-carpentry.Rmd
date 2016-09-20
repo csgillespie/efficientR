@@ -39,6 +39,7 @@ This package relies on a number of packages for data cleaning and processing - t
 ```{r}
 library("tibble")
 library("tidyr")
+library("stringr")
 library("readr")
 library("dplyr")
 library("data.table")
@@ -202,7 +203,24 @@ Usually it is more efficient to use the non-standard evaluation version of varia
 
 Regular expressions (commonly known as regex) is a language for describing and manipulating text strings. There are books on the subject, and several good tutorials on regex in R [e.g. @sanchez_handling_2013], so we'll just scratch the surface of the topic, and provide a taster of what is possible. Regex is a deep topic. However, knowing the basics can save a huge amount of time from a data tidying perspective, by automating the cleaning of messy strings.
 
+In this section we teach both **stringr** and base R ways of doing pattern matching. The former provides easy to remember function names and consistency. The latter is useful to know as you'll find lots of base R regex code in other people code as **stringr** is relatively new and not installed by default. The foundational regex operation is to detect whether or not a particular text string exists in an element or not which is done with `grepl()` and `str_detect()` in base R and **stringr** respectively: 
 
+```{r}
+library("stringr")
+x = c("Hi I'm Robin.", "DoB 1985")
+
+grepl(pattern = "9", x = x)
+str_detect(string = x, pattern = "9")
+```
+
+Notice that `str_detect()` begins with `str_`. This is a common feature of **stringr** functions: they all do. This can be efficient because if you want to do some regex work, you just need to type `str_` and then hit Tab to see a list of all the options. The various base R regex function names, by contrast, are to remember, including `regmatches()`, `strsplit()` and `gsub()`. The **stringr** equivalents have more intuitive names that relate to the intention of the functions: `str_match_all()`, `str_split()` and `str_replace_all()`, respectively.
+
+There is much else to say on the topic but rather than repeat what has been said elsewhere, we feel it is more efficient to direct the interested reader towards existing excellent resources for learning regex in R. We recommend in (in order):
+
+- The [Strings chapter](http://r4ds.had.co.nz/strings.html) of @grolemund_r_2016.
+- The **stringr** vignette (`vignette("stringr")`).
+- A detailed tutorial on regex in base R [@sanchez_handling_2013].
+- For more advanced topics, reading the documentation of and [online articles](http://www.rexamine.com/blog/) about the **stringi** package, on which **stringr** depends.
 
 #### Exercises {-}
 
