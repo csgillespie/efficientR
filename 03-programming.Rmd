@@ -17,7 +17,7 @@ code using the **compiler** package and parallel processing, using multiple CPUs
 
 ### Prerequisites {-}
 
-In this chapter we will introduce two new packages, **compiler** and **memoise**. The **compiler**
+In this chapter we introduce two new packages, **compiler** and **memoise**. The **compiler**
 package comes with R, so it will already be installed.
 ```{r}
 library("compiler")
@@ -27,7 +27,7 @@ library("memoise")
 ## Top 5 tips for efficient programming
 
 1. Be careful never to grow vectors.
-1. Vectorise codes whenever possible.
+1. Vectorise code whenever possible.
 1. Use factors when appropriate.
 1. Avoid unnecessary computation by caching variables.
 1. Byte compile packages for an easy performance boost.
@@ -83,7 +83,7 @@ calls. Each individual function call is quick, but the total combination is slow
 
 ```{block, type="rmdnote"}
 Everything in R is a function call. When we execute `1 + 1`, we are actually
-executing `+(1, 1)`.
+executing `'+'(1, 1)`.
 ```
 
 #### Exercise {-}
@@ -129,7 +129,8 @@ method3 = function(n) seq_len(n)
 ```
 To compare the three methods we use the `microbenchmark()` function from the previous chapter
 ```{r tidy=FALSE,eval=FALSE}
-microbenchmark(times = 100, unit="s", method1(n), method2(n), method3(n))
+microbenchmark(times = 100, unit = "s", 
+               method1(n), method2(n), method3(n))
 ```
 
 The table below shows the timing in seconds on my machine for these three methods for
@@ -268,7 +269,7 @@ Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. W
 generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
 the number of observations to return less than $1$, an error is raised. When we need
 to raise an error, we should do so as quickly as possible; otherwise it's a waste of
-resources.
+resources. Hence, the first few lines of a function perform argument checking.
 
 Suppose we call a function that raises an error. What then? Efficient, robust code
 _catches_ the error and handles it appropriately. Errors can be caught using `try()`
@@ -303,7 +304,7 @@ warning.
 
 When we come across a warning in our code, it is important to solve the problem and
 not just ignore the issue. While ignoring warnings saves time in the short-term, warnings
-can often mask deep issues that crept into our code longer term.
+can often mask deeper issues that have crept into our code.
 
 ```{block, type="rmdnote"}
 Warnings can be hidden using `suppressWarnings()`.
@@ -312,10 +313,9 @@ Warnings can be hidden using `suppressWarnings()`.
 ### Informative output: `message()` and `cat()` {-}  
   
 To give informative output, use the `message()` function. In my package for fitting
-powerlaws, I use messages to give the user an estimate of expected run time. By
-providing an rough estimate of how long the function takes, allows the user to
-optimise their time. Similar to warnings, messages can be suppressed with
-`suppressMessages`.
+powerlaws, I use messages to give the user an estimate of expected run time. Providing
+a rough estimate of how long the function takes, allows the user to optimise their
+time. Similar to warnings, messages can be suppressed with `suppressMessages`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
 used in `print`/`show` methods, e.g. look at the function definition of the
@@ -665,7 +665,7 @@ Suppose we want to create a stop-watch type function. This is easily achieved wi
 closure
 
 ```{r}
-## <<- assigns values to the parent environment
+# <<- assigns values to the parent environment
 stop_watch = function() {
   start_time = stop_time = NULL
   start = function() start_time <<- Sys.time()
