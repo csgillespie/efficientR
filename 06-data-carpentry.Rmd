@@ -313,7 +313,7 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 ```{r, message=FALSE}
 # Load global inequality data
 fname = system.file("extdata/world-bank-ineq.csv", package = "efficient") 
-idata = read_csv(fname)
+wb_ineq = read_csv(fname)
 ```
 
 **dplyr** is a large package and can be seen as
@@ -333,36 +333,36 @@ Note also the syntax:
 
 ```{r, message=FALSE}
 library("dplyr")
-idata = rename(idata, Country = `Country Name`)
+wb_ineq = rename(wb_ineq, Country = `Country Name`)
 ```
 <!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
 To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated for clarity.
 
 ```{r}
 # The dplyr way (rename two variables)
-idata = rename(idata,
+wb_ineq = rename(wb_ineq,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
 # The base R way (rename five variables)
-names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
+names(wb_ineq)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ```
 
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(idata)` is another way to see the contents of an object, but produces more verbose output.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
 
 ```{r}
-vapply(idata, class, character(1))
+vapply(wb_ineq, class, character(1))
 ```
 
-This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
+This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(wb_ineq$gini)` fails.
 
-Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
+Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
 
 ```{r}
-idata$gini = as.numeric(idata$gini)
-mean(idata$gini, na.rm = TRUE) # now the mean is calculated
+wb_ineq$gini = as.numeric(wb_ineq$gini)
+mean(wb_ineq$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
 However the purpose of programming languages is to *automate* tasks and reduce typing.
@@ -371,22 +371,22 @@ The following code chunk re-classifies all of the numeric variables using `data.
 <!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
 ```{r, warning=FALSE}
 id = 5:9 # column ids to change
-idata[id] = data.matrix(idata[id])
-vapply(idata, class, character(1))
+wb_ineq[id] = data.matrix(wb_ineq[id])
+vapply(wb_ineq, class, character(1))
 ```
 
 As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
 
 ```{r, warning=FALSE}
-idata[id] = as.numeric(unlist(idata[id]))
+wb_ineq[id] = as.numeric(unlist(wb_ineq[id]))
 ```
 
 <!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE, echo=-2}
-idata = mutate_each(idata, "as.numeric", id)
-# This file is saved as idata in the efficient package
+wb_ineq = mutate_each(wb_ineq, "as.numeric", id)
+# This file is saved as wb_ineq in the efficient package
 ```
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
@@ -394,12 +394,11 @@ As with other operations there are other ways of achieving the same result in R,
 ```{r, echo=FALSE, warning=FALSE}
 # Idea: these 4 methods could be benchmarked
 # An alternative method for changing the column class
-idata[id] = apply(idata[id], 2, as.numeric)
+wb_ineq[id] = apply(wb_ineq[id], 2, as.numeric)
 
 # Another alternative method using a for loop
-idata_df = as_tibble(idata)
 for(i in id){
-  idata_df[[i]] = as.numeric(idata_df[[i]])
+  wb_ineq[[i]] = as.numeric(wb_ineq[[i]])
 }
 ```
 
@@ -408,12 +407,12 @@ for(i in id){
 **dplyr** offers an alternative and more flexible way of filtering data, using `filter()`.
 
 ```{r}
-# Base R: idata[idata$Country == "Australia",]
-aus2 = filter(idata, Country == "Australia")
+# Base R: wb_ineq[wb_ineq$Country == "Australia",]
+aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
 In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-Note that **dplyr** does not use the `$` symbol. It knows that that `Country` is a variable of `idata`:
+Note that **dplyr** does not use the `$` symbol. It knows that that `Country` is a variable of `wb_ineq`:
 the first argument of **dplyr** functions is a data frame and
 subsequent raw variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
 and many of its functions work in the same way.
@@ -507,11 +506,11 @@ group_by(ghg_ems, Country) %>%
 The example above relates to a philosophical question in programming: how much work should one function do?  The [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well".  And shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual `group_by` and `summarise` stages.
 ```
 
-To reinforce the point, this operation is also performed below on the `idata` dataset:
+To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
 
 ```{r}
-data(idata, package="efficient")
-countries = group_by(idata, Country)
+data(wb_ineq, package="efficient")
+countries = group_by(wb_ineq, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
@@ -562,7 +561,7 @@ ghg_ems = rename(ghg_ems,
 
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
-3. Test additional **dplyr** 'verbs' on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
+3. Test additional **dplyr** 'verbs' on the `wb_ineq` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
 
 ### Chaining operations
 
@@ -578,7 +577,7 @@ Here's how chains can help organise the analysis needed to answer this question
 step-by-step:
 
 ```{r tidy=FALSE}
-idata %>% 
+wb_ineq %>% 
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
@@ -605,7 +604,7 @@ top_n(
   arrange(
     summarise(
       group_by(
-        filter(idata, grepl("g", Country)),
+        filter(wb_ineq, grepl("g", Country)),
         Year),
       gini = mean(gini, na.rm  = TRUE)),
     desc(gini)),
@@ -899,9 +898,9 @@ The foundational object class of **data.table** is the `data.table`. Like **dply
 
 ```{r}
 library("data.table")
-idata = readRDS("extdata/idata-renamed.Rds")
-idata_dt = data.table(idata) # convert to data.table class
-aus3a = idata_dt[Country == "Australia"]
+wb_ineq = readRDS("extdata/wb_ineq-renamed.Rds")
+wb_ineq_dt = data.table(wb_ineq) # convert to data.table class
+aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
 To boost performance, one can set 'keys'. These are
@@ -909,32 +908,32 @@ To boost performance, one can set 'keys'. These are
 which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
 
 ```{r}
-setkey(idata_dt, Country)
-aus3b = idata_dt[.("Australia")]
+setkey(wb_ineq_dt, Country)
+aus3b = wb_ineq_dt[.("Australia")]
 ```
 
-The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
+The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `wb_ineq` dataset. 
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
 for(i in seq(10, 1000, length.out = 10)){
-  idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
-  idata_dt = as.data.table(idata_big)
-  idata_key = copy(idata_dt) # copy the object
-  setkey(idata_key, "Country")
+  wb_ineq_big = do.call("rbind", replicate(i, wb_ineq, simplify = FALSE))
+  wb_ineq_dt = as.data.table(wb_ineq_big)
+  wb_ineq_key = copy(wb_ineq_dt) # copy the object
+  setkey(wb_ineq_key, "Country")
   mb = microbenchmark(
     times = 1,
-    base_sqrbrkt = idata_big[idata_big$Country == "Australia", ],
-    dplyr_filter = filter(idata_big, Country == "Australia"),
-    dt_standard = idata_dt[Country == "Australia"],
-    dt_key = idata_key[list("Australia"), ]
+    base_sqrbrkt = wb_ineq_big[wb_ineq_big$Country == "Australia", ],
+    dplyr_filter = filter(wb_ineq_big, Country == "Australia"),
+    dt_standard = wb_ineq_dt[Country == "Australia"],
+    dt_key = wb_ineq_key[list("Australia"), ]
   )
   tab = tapply(mb$time / 1000, mb$expr, mean)
   res_tmp = data.frame(
     exp = names(tab),
     time = as.vector(tab),
-    rows = nrow(idata_big),
-    MB = as.numeric(object.size(idata_big) / 1000000)
+    rows = nrow(wb_ineq_big),
+    MB = as.numeric(object.size(wb_ineq_big) / 1000000)
   )
   res_tmp$Time = res_tmp$time / min(res_tmp$time)
   res = rbind(res, res_tmp)
