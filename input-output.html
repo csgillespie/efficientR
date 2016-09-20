@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.9 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-16">
+<meta name="date" content="2016-09-20">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -228,6 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="input-output.html"><a href="input-output.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a><ul>
+<li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="5.1" data-path="input-output.html"><a href="input-output.html#top-5-tips-for-efficient-data-io"><i class="fa fa-check"></i><b>5.1</b> Top 5 tips for efficient data I/O</a></li>
 <li class="chapter" data-level="5.2" data-path="input-output.html"><a href="input-output.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.2</b> Versatile data import with rio</a><ul>
 <li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#exercises-12"><i class="fa fa-check"></i>Exercises</a></li>
@@ -301,7 +302,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
-<li class="chapter" data-level="" data-path="hardware.html"><a href="hardware.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="hardware.html"><a href="hardware.html#prerequisites-3"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="8.1" data-path="hardware.html"><a href="hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
 <li class="chapter" data-level="8.2" data-path="hardware.html"><a href="hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
 <li class="chapter" data-level="8.3" data-path="hardware.html"><a href="hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
@@ -313,7 +314,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
-<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-3"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-4"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
 <li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
 <li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
@@ -384,6 +385,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The first section introduce <strong>rio</strong>, a ‘meta package’ for efficiently reading and writing data in a range of file formats. <strong>rio</strong> requires only two intuitive functions for data I/O, making it efficient to learn and use. Next we explore in more detail efficient functions for reading in files stored in common <em>plain text</em> file formats from the <strong>readr</strong> and <strong>data.table</strong> packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.</p>
 <p>With the accelerating digital revolution and growth in open data, an increasing proportion of the world’s data can be downloaded from the internet. This trend is set to continue, making section <a href="input-output.html#download">5.5</a>, on downloading and importing data from the web, important for ‘future-proofing’ you I/O skills. The benchmarks in this chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency.</p>
 <p>Before reading in a single line of data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.</p>
+<div id="prerequisites-2" class="section level3 unnumbered">
+<h3>Prerequisites</h3>
+<p>R can read data from a variety of sources. We begin by discussing the generic package <strong>rio</strong> that handles a wide variety of data types. Special attention is paid to CSV files, which leads to the <strong>readr</strong> and <strong>data.table</strong> packages. The relatively new package <strong>feather</strong> is introduced as binary file format, that has cross-language support.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;rio&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
+<span class="kw">library</span>(<span class="st">&quot;feather&quot;</span>)</code></pre></div>
+<p>We also use the <strong>WDI</strong> package to illustrate accessing online data sets</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;WDI&quot;</span>)</code></pre></div>
+</div>
 <div id="top-5-tips-for-efficient-data-io" class="section level2">
 <h2><span class="header-section-number">5.1</span> Top 5 tips for efficient data I/O</h2>
 <ol style="list-style-type: decimal">
@@ -416,10 +427,8 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 <div id="exercises-12" class="section level3 unnumbered">
 <h3>Exercises</h3>
 <ol style="list-style-type: decimal">
-<li>The final line in the code chunk above shows a neat feature of <strong>rio</strong> and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the <code>voc_voyages.xlsx</code> file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient file format from your system:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(<span class="st">&quot;voc_voyages.xlsx&quot;</span>)</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
+<li><p>The final line in the code chunk above shows a neat feature of <strong>rio</strong> and some other packages: the output format is determined by the suffix of the file-name, which make for concise code. Try opening the <code>voc_voyages.xlsx</code> file with an editor such as LibreOffice Calc or Microsoft Excel to ensure that the export worked, before removing this rather inefficient file format from your system:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.remove</span>(<span class="st">&quot;voc_voyages.xlsx&quot;</span>)</code></pre></div></li>
 <li><p>Try saving the the <code>voyages</code> data frames into 3 other file formats of your choosing (see <code>vignette(&quot;rio&quot;)</code> for supported formats). Try opening these in external programs. Which file formats are more portable?</p></li>
 <li><p>As a bonus exercise, create a simple benchmark to compare the write times for the different file formats used to complete the previous exercise. Which is fastest? Which is the most space efficient?</p></li>
 </ol>
@@ -432,7 +441,7 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 <p>There is often more than one way to read data into R and <code>.csv</code> files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R’s plain text reading functions such as <code>read.csv</code>; the <strong>data.table</strong> approach, which uses the function <code>fread</code>; and the newer <strong>readr</strong> package which provides <code>read_csv</code> and other <code>read_</code> functions such as <code>read_tsv</code>. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO<sup>2</sup> in the atmosphere over time:</p>
 <div class="rmdwarning">
 <p>
-In general, you should never “hand-write” a CSV file. Instead, you should use <code>write.csv</code> or an equivalent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilites sharing CSV files between tools and operating systems.
+In general, you should never “hand-write” a CSV file. Instead, you should use <code>write.csv</code> or an equivalent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilities sharing CSV files between tools and operating systems.
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_co2 =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;extdata/co2.csv&quot;</span>)
@@ -464,10 +473,10 @@ Figure 5.1: Benchmarks of base, data.table and readr approches for reading csv f
 <p>In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how <strong>readr</strong>, <strong>data.table</strong> and base R approaches handle unexpected values. Figure <a href="input-output.html#fig:5-1">5.1</a> highlights that as the dataset size increases, the benefit of switching to <code>fread</code> and (eventually) to <code>read_csv</code> . For a small (<span class="math inline">\(1\)</span>MB) dataset: <code>fread</code> is around <span class="math inline">\(5\)</span> times faster than base R.</p>
 <div id="differences-between-fread-and-read_csv" class="section level3">
 <h3><span class="header-section-number">5.3.1</span> Differences between <code>fread</code> and <code>read_csv</code></h3>
-<p>The file <code>voc_voyages</code> was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is dscribed more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>. From this dataset we primarily use the ‘voyages’ table with lists Dutch shipping expeditions by their date of departure.</p>
+<p>The file <code>voc_voyages</code> was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is described more fully at <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">monetdb.org</a>. From this dataset we primarily use the ‘voyages’ table with lists Dutch shipping expeditions by their date of departure.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fname =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/voc_voyages.tsv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
 voyages_base =<span class="st"> </span><span class="kw">read.delim</span>(fname)</code></pre></div>
-<p>When we run the equilivent operation using <strong>readr</strong>,</p>
+<p>When we run the equivalent operation using <strong>readr</strong>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_readr =<span class="st"> </span>readr::<span class="kw">read_tsv</span>(fname)
 <span class="co">#&gt; Parsed with column specification:</span>
 <span class="co">#&gt; cols(</span>
@@ -502,8 +511,8 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
 )
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 13.6 13.9 14.0   14.0 14.3 14.3     5</span>
-<span class="co">#&gt;  without_select 22.3 22.3 23.2   23.2 23.5 24.5     5</span></code></pre></div>
+<span class="co">#&gt;     with_select 10.2 10.3 10.4   10.4 10.5 10.8     5</span>
+<span class="co">#&gt;  without_select 18.2 18.2 18.4   18.3 18.3 18.9     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv</code> and <code>fread</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -600,7 +609,7 @@ Figure 5.2: Comparison of the performance of binary formats for reading and writ
 <p>The results show that file size is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although feather files occupied more disc space, they were roughly equivalent in terms of read times: the functions <code>read_feather()</code> and <code>readRDS()</code> were consistently around 10 times faster than <code>read.csv</code>. In terms of write times, feather excels: <code>write_feather()</code> was around 10 times faster than <code>write.csv()</code>, whereas <code>saveRDS()</code> was only around 1.2 times faster.</p>
 <div class="rmdnote">
 <p>
-Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The <code>voyages</code> dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was <em>larger</em> than the orginal when saved as a feather file!
+Note that the performance of different file formats depends on the content of the data being saved. The benchmarks above showed savings for matrices of random numbers. For real life data, the results would be quite different. The <code>voyages</code> dataset, saved as an Rds file, occupied less than a quarter the disc space as the original TSV file, whereas the file size was <em>larger</em> than the original when saved as a feather file!
 </p>
 </div>
 </div>
@@ -625,6 +634,7 @@ df_co2 =<span class="st"> </span><span class="kw">read_csv</span>(<span class="s
 <span class="kw">WDIsearch</span>(<span class="st">&quot;CO2&quot;</span>) <span class="co"># search for data on a topic</span>
 co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class="dt">indicator =</span> <span class="st">&quot;EN.CO2.TRAN.ZS&quot;</span>) <span class="co"># import data</span></code></pre></div>
 <p>There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data’s origin (e.g. <code># Downloaded from http://example.com</code>) before referring to the dataset can greatly improve the utility of the code to yourself and others.</p>
+<p>There are a number of R packages that provide more advanced functionality than simply downloading files. The CRAN task view on <a href="https://cran.r-project.org/web/views/WebTechnologies.html">Web technologies</a> provides a comprehensive list. The two packages for interacting with web pages are <strong>httr</strong> and <strong>RCurl</strong>. The former package provides (a relatively) user-friendly interface for executing standard HTTP methods, such as <code>GET</code> and <code>POST</code>. It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging. The <strong>RCurl</strong> package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.</p>
 </div>
 <div id="accessing-data-stored-in-packages" class="section level2">
 <h2><span class="header-section-number">5.6</span> Accessing data stored in packages</h2>

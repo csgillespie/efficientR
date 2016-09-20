@@ -8,7 +8,7 @@
   <title>Efficient R programming</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.9 and GitBook 2.6.7">
 
   <meta property="og:title" content="Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-16">
+<meta name="date" content="2016-09-20">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -228,6 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="input-output.html"><a href="input-output.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a><ul>
+<li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="5.1" data-path="input-output.html"><a href="input-output.html#top-5-tips-for-efficient-data-io"><i class="fa fa-check"></i><b>5.1</b> Top 5 tips for efficient data I/O</a></li>
 <li class="chapter" data-level="5.2" data-path="input-output.html"><a href="input-output.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.2</b> Versatile data import with rio</a><ul>
 <li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#exercises-12"><i class="fa fa-check"></i>Exercises</a></li>
@@ -301,7 +302,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
-<li class="chapter" data-level="" data-path="hardware.html"><a href="hardware.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="hardware.html"><a href="hardware.html#prerequisites-3"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="8.1" data-path="hardware.html"><a href="hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
 <li class="chapter" data-level="8.2" data-path="hardware.html"><a href="hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
 <li class="chapter" data-level="8.3" data-path="hardware.html"><a href="hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
@@ -313,7 +314,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
-<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-3"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-4"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
 <li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
 <li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
@@ -573,9 +574,9 @@ cs_apply =<span class="st"> </span>function(x){
 <span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))
 <span class="co">#&gt; Unit: nanoseconds</span>
 <span class="co">#&gt;         expr    min     lq   mean median     uq    max neval</span>
-<span class="co">#&gt;    cs_for(x) 257143 396485 408370 416312 438238 496283   100</span>
-<span class="co">#&gt;  cs_apply(x) 174078 238741 259018 259640 280304 356025   100</span>
-<span class="co">#&gt;    cumsum(x)    557   1070   1688   1464   1680  15487   100</span></code></pre></div>
+<span class="co">#&gt;    cs_for(x) 219605 260298 286866 272502 289653 563158   100</span>
+<span class="co">#&gt;  cs_apply(x) 133401 159790 192218 174058 196575 420510   100</span>
+<span class="co">#&gt;    cumsum(x)    479    562   1214    930   1110  14659   100</span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Which method is fastest and how many times faster is it?</p></li>
 <li><p>Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument <code>neval = 1</code> so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the <em>relative</em> time difference increase or decrease? By how much?</p></li>
