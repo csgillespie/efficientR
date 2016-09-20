@@ -312,10 +312,11 @@ Warnings can be hidden using `suppressWarnings()`.
 
 ### Informative output: `message()` and `cat()` {-}  
   
-To give informative output, use the `message()` function. In my package for fitting
-powerlaws, I use messages to give the user an estimate of expected run time. Providing
-a rough estimate of how long the function takes, allows the user to optimise their
-time. Similar to warnings, messages can be suppressed with `suppressMessages`.
+To give informative output, use the `message()` function. For example, in the
+**poweRlaw** package, the `message()` function is used to give the user an estimate of
+expected run time. Providing a rough estimate of how long the function takes, allows the user to
+optimise their time. Similar to warnings, messages can be suppressed with
+`suppressMessages`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
 used in `print`/`show` methods, e.g. look at the function definition of the
@@ -397,7 +398,7 @@ set.seed(1)
 level = c("Small", "Medium", "Large")
 type = rep(level, each=30)
 y = rnorm(90)
-type_factor = factor(type, levels=level)
+type_factor = factor(type, levels = level)
 boxplot(y ~ type)
 ```
 would create a boxplot where the $x$-axis was alphabetically ordered. By converting
@@ -429,7 +430,7 @@ We can use factors to remedy this problem by specifying the admissible levels
 
 ```{r}
 # month.name contains the 12 months
-fac_m = factor(m, levels=month.name)
+fac_m = factor(m, levels = month.name)
 sort(fac_m)
 ```
 
@@ -592,7 +593,7 @@ entire data set
 
 ```{r, echo=-1, results="hide"}
 x = matrix(rnorm(100), ncol=10)
-apply(x, 2, function(i) mean(i)/sd(x))
+apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
 This is inefficient, since the value of `sd(x)` is constant recalculating the standard
@@ -600,7 +601,7 @@ deviation is for early column is unnecessary. Instead, we should evaluate once a
 store the result
 ```{r, results="hide"}
 sd_x = sd(x)
-apply(x, 2, function(i) mean(i)/sd_x)
+apply(x, 2, function(i) mean(i) / sd_x)
 ```
 
 If we we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
