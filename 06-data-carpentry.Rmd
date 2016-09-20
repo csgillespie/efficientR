@@ -191,10 +191,6 @@ agesex_df = data_frame(agesex, n) # create a data frame
 separate(agesex_df, col = agesex, into = c("age", "sex"))
 ```
 
-```{block, nse, type='rmdnote'}
-Note that the above code used non standard evaluation, which means not surrounding variable names (e.g. `agesex`) in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
-```
-
 ```{r to-separate, echo=FALSE,}
 knitr::kable(agesex_df, caption = "Joined age and sex variables in one column")
 ```
@@ -624,6 +620,21 @@ top_n(
 ```
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
+
+### Non standard evaluation
+
+The final thing to say about **dplyr** does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. `Country` rather than `"Country"`). This is called non-standard evaluation (NSE) (see `vignette("nse")`). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.
+
+This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `gather()` function, used above:
+
+```{r}
+# 1: Default NSE function
+group_by(cars, cut(speed, c(0, 10, 100))) %>% summarise(mean(dist))
+# 2: Standard evaluation using quote marks
+group_by_(cars, "cut(speed, c(0, 10, 100))") %>% summarise_("mean(dist)")
+# 3: Standard evaluation using formula, tilde notation (recommended standard evaluation method)
+group_by_(cars, ~cut(speed, c(0, 10, 100))) %>% summarise_(~mean(dist))
+```
 
 ## Combining datasets
 
