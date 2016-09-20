@@ -273,7 +273,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
 <li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
-<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#string-concatenation"><i class="fa fa-check"></i>String concatenation</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
 <li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
@@ -358,7 +357,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.6" data-path="learning.html"><a href="learning.html#spread-the-knowledge"><i class="fa fa-check"></i><b>10.6</b> Spread the knowledge</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>A</b> Package Dependencies</a></li>
+<li class="chapter" data-level="A" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html"><i class="fa fa-check"></i><b>A</b> Building the book from source</a></li>
+<li class="chapter" data-level="B" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>B</b> Package dependencies</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
@@ -547,7 +547,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.034   0.008   3.049</span></code></pre></div>
+<span class="co">#&gt;   2.745   0.011   2.756</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -939,7 +939,7 @@ The following section is meant to provide an introduction to function closures w
 <p>When we call the function <code>f</code>, the object returned is a function. While the enclosing environment of <code>f</code> is <code>.GlobalEnv</code>, the enclosing environment of the <em>returned</em> function is something different</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g =<span class="st"> </span><span class="kw">f</span>()
 <span class="kw">environment</span>(g)
-<span class="co">#&gt; &lt;environment: 0x4f1e280&gt;</span></code></pre></div>
+<span class="co">#&gt; &lt;environment: 0x4656728&gt;</span></code></pre></div>
 <p>When we call this new function <code>g</code>,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">g</span>()
@@ -1027,7 +1027,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x49d4e00&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x4483590&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
