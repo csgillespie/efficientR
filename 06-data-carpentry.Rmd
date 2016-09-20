@@ -350,22 +350,22 @@ The following code chunk re-classifies all of the numeric variables using `data.
 
 <!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
 ```{r, warning=FALSE}
-id = 5:9 # column ids to change
-wb_ineq[id] = data.matrix(wb_ineq[id])
+cols_to_change= 5:9 # column ids to change
+wb_ineq[cols_to_change] = data.matrix(wb_ineq[cols_to_change])
 vapply(wb_ineq, class, character(1))
 ```
 
 As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
 
 ```{r, warning=FALSE}
-wb_ineq[id] = as.numeric(unlist(wb_ineq[id]))
+wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
 ```
 
 <!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE, echo=-2}
-wb_ineq = mutate_each(wb_ineq, "as.numeric", id)
+wb_ineq = mutate_each(wb_ineq, "as.numeric", cols_to_change)
 # This file is saved as wb_ineq in the efficient package
 ```
 
@@ -374,10 +374,10 @@ As with other operations there are other ways of achieving the same result in R,
 ```{r, echo=FALSE, warning=FALSE}
 # Idea: these 4 methods could be benchmarked
 # An alternative method for changing the column class
-wb_ineq[id] = apply(wb_ineq[id], 2, as.numeric)
+wb_ineq[cols_to_change] = apply(wb_ineq[cols_to_change], 2, as.numeric)
 
 # Another alternative method using a for loop
-for(i in id){
+for(i in cols_to_change){
   wb_ineq[[i]] = as.numeric(wb_ineq[[i]])
 }
 ```
