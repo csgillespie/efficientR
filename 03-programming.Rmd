@@ -17,7 +17,7 @@ code using the **compiler** package and parallel processing, using multiple CPUs
 
 ### Prerequisites {-}
 
-In this chapter we will introduce two new packages, **compiler** and **memoise**. The **compiler**
+In this chapter we introduce two new packages, **compiler** and **memoise**. The **compiler**
 package comes with R, so it will already be installed.
 ```{r}
 library("compiler")
@@ -27,13 +27,12 @@ library("memoise")
 ## Top 5 tips for efficient programming
 
 1. Be careful never to grow vectors.
-1. Vectorise codes whenever possible.
+1. Vectorise code whenever possible.
 1. Use factors when appropriate.
-1. Clever use of S3 objects can make code easier to understand.
+1. Avoid unnecessary computation by caching variables.
 1. Byte compile packages for an easy performance boost.
 
-<!-- Weak title -->
-## General advice
+## General advice {#general}
 
 Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
 every variable used, give you the burdensome responsibility of memory management and have to be compiled. The
@@ -41,7 +40,7 @@ advantage of such languages, compared with R, is that they are faster to run.
 The disadvantage is that they take longer to learn and can not be run interactively.
 
 ```{block, type="rmdnote"}
-The wikipedia page on compiler opimisations gives a nice overview of standard
+The wikipedia page on compiler optimisations gives a nice overview of standard
 optimisation techniques (https://en.wikipedia.org/wiki/Optimizing_compiler).
 ```
 
@@ -84,7 +83,7 @@ calls. Each individual function call is quick, but the total combination is slow
 
 ```{block, type="rmdnote"}
 Everything in R is a function call. When we execute `1 + 1`, we are actually
-executing `+(1, 1)`.
+executing `'+'(1, 1)`.
 ```
 
 #### Exercise {-}
@@ -104,7 +103,7 @@ loop; have they increased in length?
 ```
 
 Let's consider three methods of creating a sequence of numbers. __Method 1__ creates
-an empty vector and grows the object
+an empty vector and gradually increases (or grows) the length of the vector
 
 ```{r echo=TRUE, tidy=FALSE}
 method1 = function(n) {
@@ -130,7 +129,8 @@ method3 = function(n) seq_len(n)
 ```
 To compare the three methods we use the `microbenchmark()` function from the previous chapter
 ```{r tidy=FALSE,eval=FALSE}
-microbenchmark(times = 100, unit="s", method1(n), method2(n), method3(n))
+microbenchmark(times = 100, unit = "s", 
+               method1(n), method2(n), method3(n))
 ```
 
 The table below shows the timing in seconds on my machine for these three methods for
@@ -151,8 +151,16 @@ hour while the other methods take less than $3$ seconds.
 
 ### Vectorised code
 
-The vector is one of the key data types in R, with many functions offering a
-vectorised version. For example, the code
+```{block, type="rmdnote"}
+Technically `x = 1` creates a vector of length $1$. In this section, we use _vectorised_
+to indicate that functions work with vectors of all lengths.
+```
+
+Recall the __golden rule__ in R programming, access the underlying C/Fortran routines
+as quickly as possible; the fewer functions calls required to achieve this, the
+better. With this mind, many R functions are _vectorised_,  that is
+the function's inputs and/or outputs naturally work with vectors, reducing the
+number of function calls required. For example, the code
 ```{r, echo=2}
 n = 10
 x = runif(n) + 1
@@ -177,13 +185,18 @@ log_sum = sum(log(x))
 ```
 Writing code this way has a number of benefits.
 
-  * It's faster. When $n = 10^7$ the ``R way'' is about forty times faster.
+  * It's faster. When $n = 10^7$ the _R way_ is about forty times faster.
   * It's neater.
   * It doesn't contain a bug when `x` is of length $0$.
   
+As with the general example in section \@ref(general), the slowdown isn't due to
+the `for` loop. Instead, it's because there are many more functions calls.
+
+  
 #### Exercises {-}
 
-Time the two methods for calculating the log sum. Try different values of $n$.
+1. Time the two methods for calculating the log sum. 
+1. What happens when the `length(x) = 0`, i.e. we have an empty vector?
 
 #### Example: Monte-Carlo integration {-}
 
@@ -245,18 +258,22 @@ the number of darts, i.e. the size of `N`, that is used
 
 ## Communicating with the user
 
-When we create a function we often want the function to give feedback on the current
-state. For example, are there missing arguments or has a numerical calculation failed.
-There are three main techniques of communicating with the user.
+When we create a function we often want the function to give efficient feedback on the
+current state. For example, are there missing arguments or has a numerical calculation
+failed. There are three main techniques of communicating with the user.
 
 ### Fatal errors: `stop()` {-}
 
 Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When
-`stop` is called, there is no way for a function to continue. For instance, when we
-generate random numbers using `rnorm()` the first argument is the sample size,`n`. If the number of
-observations to return less than $1$, an error is raised.
+`stop()` is called, there is no way for a function to continue. For instance, when we
+generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
+the number of observations to return less than $1$, an error is raised. When we need
+to raise an error, we should do so as quickly as possible; otherwise it's a waste of
+resources. Hence, the first few lines of a function perform argument checking.
 
-Errors can be caught using `try()` and `tryCatch()`. For example, 
+Suppose we call a function that raises an error. What then? Efficient, robust code
+_catches_ the error and handles it appropriately. Errors can be caught using `try()`
+and `tryCatch()`. For example,
 ```{r}
 # Suppress the error message
 good = try(1 + 1, silent = TRUE)
@@ -283,67 +300,28 @@ debugging techniques, are given in [@Wickham2014].
 
 Warnings are generated using the `warning()` function. When a warning is raised, it
 indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a
-warning. Warnings can be hidden using `suppressWarnings()`:
-```{r}
-suppressWarnings(mean(NULL))
+warning. 
+
+When we come across a warning in our code, it is important to solve the problem and
+not just ignore the issue. While ignoring warnings saves time in the short-term, warnings
+can often mask deeper issues that have crept into our code.
+
+```{block, type="rmdnote"}
+Warnings can be hidden using `suppressWarnings()`.
 ```
-In general, it is good practice to solve the underlying cause of the warning message,
-instead of evading the issue via `suppressWarning()`.
-  
+
 ### Informative output: `message()` and `cat()` {-}  
   
-To give informative output, use the `message()` function. In my package for fitting
-powerlaws, I use messages to give the user an estimate of expected run time. Similar
-to warnings, messages can be suppressed with `suppressMessages`.
+To give informative output, use the `message()` function. For example, in the
+**poweRlaw** package, the `message()` function is used to give the user an estimate of
+expected run time. Providing a rough estimate of how long the function takes, allows the user to
+optimise their time. Similar to warnings, messages can be suppressed with
+`suppressMessages`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
 used in `print`/`show` methods, e.g. look at the function definition of the
 S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
 
-### Example: Retrieving a web resource
-
-In some cases it isn't clear what should be returned, a message, a `NA` value or an
-error. For example, suppose we wish to download data from a web site. 
-
-The function `GET()` from the **httr** package can be used to download a webpage. When
-we attempt to download data, the function also obtains an HTML status code. If the
-page exists, the function will return text (with the correct status code), e.g.
-```{r eval=FALSE}
-GET("http://google.com/") # Status: 200
-```
-If the url is incorrect, e.g. a broken link or is a redirect, then we can interrogate the
-output and use the Status to determine what to do next.
-```{r eval=FALSE}
-GET("http://google.com/made_up") # Status: 404
-```
-By examining the error code, the user has complete flexibility. However if the
-web-page doesn't exist
-```{r eval=FALSE}
-GET("http://google1.com/")
-```
-or if we don't have an internet connection, then `GET()` raises an error via `stop()`.
-Instead of raising an error the author could have returned `NA` (the web-page isn't
-available). However for the typically use case, it's not clear how returning `NA`
-would be helpful.
-
-The `install_github()` function in the **devtools** package either installs the
-package or raises an error. When an error is raised, the function uses a combination
-of `message()` and `stop()` to indicate the source of an error, e.g.
-```{r, eval=FALSE}
-devtools::install_github("bad/package")
-#> Downloading GitHub repo bad/package@master
-#> from URL https://api.github.com/repos/bad/package/zipball/master
-#>  Error in curl::curl_fetch_memory(url, handle = handle) : 
-#>   Couldn't resolve host name 
-```
-With the key idea being that if a package isn't able to be installed, future
-calculations will break; so it's optimal to raise an error as soon as possible.
-
-<!--
-When deciding what to return, consider what the user can 
-The key idea is
-what can the user do if the function cannot complete it's purpose.
--->
 
 ### Exercises {-}
 
@@ -386,16 +364,59 @@ counts.
 
 Factors are much maligned objects. While at times they are awkward, they do have their
 uses. A factor is used to store categorical variables. This data type is unique to R
-(or at least not common among programming languages). Often categorical variables get
-stored as $1$, $2$, $3$, $4$, and $5$, with associated documentation elsewhere that
-explains what each number means. This is clearly a pain. Alternatively we store the
-data as a character vector. While this is fine, the semantics are wrong because it
-doesn't convey that this is a categorical variable. It's not sensible to say that you
-should **always** or **never** use factors, since factors have both positive and
-negative features. Instead we need to examine each case individually. As a guide of
-when it's appropriate to use factors, consider the following examples.
+(or at least not common among programming languages). The difference between factors
+and strings is important because R treats factors and strings differently. Although
+factors look similar to character vectors, they are actually integers. This leads to
+initially surprising behaviour
+```{r}
+x = 4:6
+c(x)
+c(factor(x))
+```
+In this case the `c` function is using the underlying integer representation of the
+factor. Dealing with the wrong case of behaviour is a common source of inefficiency for
+R users.
 
-### Example: Months of the year
+Often categorical variables get stored as $1$, $2$, $3$, $4$, and $5$, with associated
+documentation elsewhere that explains what each number means. This is clearly a pain.
+Alternatively we store the data as a character vector. While this is fine, the
+semantics are wrong because it doesn't convey that this is a categorical variable.
+It's not sensible to say that you should **always** or **never** use factors, since
+factors have both positive and negative features. Instead we need to examine each case
+individually. 
+
+As a general rule, if your variable has an inherent order, e.g. small vs large, or
+you have a fixed set of categories, then you should consider using a factor.
+
+### Inherent order
+
+Factors can be used for ordering in graphics. For instance, suppose we have a data set
+where the variable `type`, takes one of three values, `small`, `medium` and `large`.
+Clearly there is an ordering. Using a standard `boxplot` call, 
+```{r fig.keep="none", echo=6}
+set.seed(1)
+level = c("Small", "Medium", "Large")
+type = rep(level, each=30)
+y = rnorm(90)
+type_factor = factor(type, levels = level)
+boxplot(y ~ type)
+```
+would create a boxplot where the $x$-axis was alphabetically ordered. By converting
+`type` into factor, we can easily specify the correct ordering.
+```{r, boxplot_factor, eval=TRUE, fig.keep="none"}
+boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
+```
+
+```{block, type="rmdwarning"}
+Most users interact with factors via the `read.csv` function where character columns
+are automatically converted to factors. This feature can be irritating if our data is
+messy and we want to clean and recode variables. Typically when reading in data via
+`read.csv`, we use the `stringsAsFactors=FALSE` argument. Although this argument can
+add in the global `options()` list and placed in the `.Rprofile`, this leads to
+non-portable code, so should be avoided.
+```
+
+### Fixed set of categories
 
 Suppose our data set relates to months of the year
 
@@ -409,77 +430,9 @@ We can use factors to remedy this problem by specifying the admissible levels
 
 ```{r}
 # month.name contains the 12 months
-fac_m = factor(m, levels=month.name)
+fac_m = factor(m, levels = month.name)
 sort(fac_m)
 ```
-
-### Example: Graphics
-
-Factors can be used for ordering in graphics. For instance, suppose we have a data set
-where the variable `type`, takes one of three values, `small`, `medium` and `large`.
-Clearly there is an ordering. Using a standard `boxplot` call, 
-```{r fig.keep="none", echo=6}
-set.seed(1)
-level = c("Small", "Medium", "Large")
-type = rep(level, each=30)
-y = rnorm(90)
-type_factor = factor(type, levels=level)
-boxplot(y ~ type)
-```
-would create a boxplot where the $x$-axis was alphabetically ordered. By converting
-`type` into factor, we can easily specify the correct ordering.
-```{r, boxplot_factor, eval=TRUE, fig.keep="none"}
-boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
-```
-
-### Example: Analysis of variance
-
-Analysis of variance (ANOVA) is a type of statistical model that is used to determine
-differences among group means, while taken into account other factors. The function
-`aov` is used to fit standard analysis of variance models. Potential catastrophic bugs
-arise when a variable is numeric, but in reality is a categorical variable.
-
-Consider the `npk` dataset on the growth of peas that comes with R. The column
-`block`, indicates the block (typically a nuisance parameter) effect. This column
-takes values $1$ to $5$, but has been carefully coded as a factor. Using the `aov()`
-function to estimate the `block` effect, we get
-```{r, echo=2}
-data(npk, package="datasets")
-aov(yield ~ block, npk)
-```
-If we repeat the analysis, but change `block` to a numeric data type we get different
-(and incorrect) results
-```{r}
-aov(yield ~ as.numeric(block), npk)
-```
-When we pass a numeric variable, the `aov` function is interpreting this variable 
-as continuous, and fits a regression line.
-
-### Example: data input
-
-Most users interact with factors via the `read.csv` function where character columns
-are automatically converted to factors. This feature can be irritating if our data is
-messy and we want to clean and recode variables. Typically when reading in data via
-`read.csv`, we use the `stringsAsFactors=FALSE` argument.
-```{block, type="rmdwarning"}
-Although this argument can add in the global `options()` list and placed in the
-`.Rprofile`, this leads to non-portable code, so should be avoided.
-```
-
-### Example: Factors are not character vectors
-
-Although factors look similar to character vectors, they are actually integers. This
-leads to initially surprising behaviour
-```{r}
-x = 4:6
-c(x)
-c(factor(x))
-```
-In this case the `c` function is using the underlying integer representation of the
-factor.
-
-Overall factors are useful, but can lead to unwanted side-effects if we are not
-careful. Used at the right time and place, factors can lead to simpler code.
 
 #### Exercise {-}
 
@@ -494,100 +447,6 @@ pryr::object_size(ch)
 pryr::object_size(fac)
 ```
 
-## R objects
-
-R is a functional and object orientated language. There are many ways to explain this, but probably most concise and easy to remember is via a couple of 'slogans' [@chambers_object-oriented_2014]:
-
-- "Everything that exists is an object.
-- Everything that happens is a function call."
-
-Furthermore, functions are themselves objects, any of which can be modified. This makes R extremely flexible [@Wickham2014].
-
-In everyday use you don't need to worry much about objects. However, understanding something of their design and inner workings in some cases increase inefficiencies. There are 3 'class systems' in R: S3, S4 and Reference Classes. Readers interested in the details of each are directed towards the '[OO field guide](http://adv-r.had.co.nz/OO-essentials.html)' in @Wickham2014. From an efficiency perspective, S3 is most relevant for many applications. This is covered in the next section.
-  
-### S3 objects {#S3}
-
-R has three built-in object oriented (OO) systems. These systems differ in how classes
-and methods are defined. The easiest and oldest system is the S3 system. S3 refers to
-the third version of S. The syntax of R is largely based on this version of S. In R
-there has never been S1 and S2 classes. The other two OO frameworks are S4 classes
-(used mainly in [bioconductor](http://bioconductor.org/) packages) and reference
-classes.
-
-```{block, type="rmdnote"}
-There are also packages that also provide additional OO frameworks, such as **proto**,
-**R6** and **R.oo**. If you are new to OO in R, then S3 is the place to start.
-```
-
-In this section we will just discuss the S3 system since that is the most popular. The
-S3 system implements a generic-function object oriented (OO) system. This type of OO
-is different to the message-passing style of Java and C++. In a message-passing
-framework, messages/methods are sent to objects and the object determines which
-function to call, e.g. `normal.rand(1)`. The S3 class system is different. In S3, the
-_generic_ function decides which method to call - it would have the form `rand(normal,
-1)`. By using an OO framework, we avoid an explosion of exposed functions, such as,
-`rand_normal()`, `rand_uniform()`, `rand_poisson()` and instead have a single function call
-`rand` that passes the object to the correct function.
-
-The S3 system is based on the class of an object. In S3, a class is just an attribute
-which can be determined with the `class` function.
-
-```{r echo=2}
-data("USArrests", package="datasets")
-class(USArrests)
-```
-The S3 system can be used to great effect. When we pass an object to a _generic_
-function, the function first examines the class of the object, and then dispatches the
-object to another method. For example, the `summary()` function is a S3 generic function
-```{r}
-functionBody("summary")
-```
-Note that the only operational line is `UseMethod("summary")`. This handles the method
-dispatch based on the object's class. So when `summary(USArrests)` is executed, the
-generic `summary` function passes `USArrests` to the function `summary.data.frame`. If
-the function `summary.data.frame` does not exist, then `summary.default` is called (if
-it exists). If neither function exist, an error is raised.
-
-This simple message passage mechanism enables us to quickly create our own functions.
-Consider the distance object:
-```{r}
-dist_usa = dist(USArrests)
-```
-The `dist_usa` object has class `dist`. To visualise the distances, we create an
-`image` method. First we'll check if the existing `image` function is generic, via
-```{r}
-# In R3.3, a new function isS3stdGeneric is going to be introduced.
-functionBody("image")
-```
-Since `image` is already a generic method, we just have to create a specific `dist`
-method
-```{r image_dist_s3}
-image.dist = function(x, ...) {
-  x_mat = as.matrix(x)
-  image(x_mat, main=attr(x, "method"), ...)  
-}
-```
-The `...` argument allows us to pass arguments to the main `image()` method, such as
-`axes` (see figure \@ref(fig:3-2).
-
-```{r 3-2, fig.cap="S3 image method for data of class `dist`.", echo=FALSE, fig.asp=0.7, fig.width=5,fig.align="center"}
-par(mar=c(1, 1, 2, 1), mgp=c(0, 0, 0))
-image(dist(USArrests), axes=FALSE)
-```
-
-Many S3 methods work in the same way as the simple `image.dist()` function created
-above: the object is manipulated into a standard format, then passed to the standard
-method. Creating S3 methods for standard functions such as `summary()`, `mean()`, and
-`plot()` provides a nice uniform interface to a wide variety of data types.
-
-#### Exercises {-}
-
-A data frame is just an R list, with class `data.frame`.
-
-1. Use a combination of `unclass()` and `str()` on a data frame to confirm that it is
-indeed a list.
-
-2. Use the function `length()` on a data frame. What is return? Why?
 
 ## The apply family
 
@@ -607,7 +466,7 @@ at the end of this section.
 
 ```{block, type="rmdnote"}
 Most people rarely use the other apply functions. For example, I have only used `eapply` 
-once. Students in my class uploaded R scipts. Using `source`, I was able to read
+once. Students in my class uploaded R scripts. Using `source`, I was able to read
 in the scripts to a separate environment. I then applied a marking scheme to each
 environment using `eapply`. Using separate environments, avoided object name clashes.
 ```
@@ -726,10 +585,31 @@ the `drop` argument.
 ## Caching variables
 
 A straightforward method for speeding up code is to calculate objects once and reuse
-the value when necessary. This could be as simple with replacing `log(x)` in multiple
-function calls with the object `log_x` that is defined once and reused. This small
-saving in time quickly multiplies when the cached variable is used inside a `for`
-loop.
+the value when necessary. This could be as simple with replacing `sd(x)` in multiple
+function calls with the object `sd_x` that is defined once and reused. For example, 
+suppose we wish to normalise each column of a matrix. However, instead of using the
+standard deviation of each column, we will use the standard deviation of all the 
+entire data set
+
+```{r, echo=-1, results="hide"}
+x = matrix(rnorm(100), ncol=10)
+apply(x, 2, function(i) mean(i) / sd(x))
+```
+
+This is inefficient, since the value of `sd(x)` is constant recalculating the standard
+deviation is for early column is unnecessary. Instead, we should evaluate once and
+store the result
+```{r, results="hide"}
+sd_x = sd(x)
+apply(x, 2, function(i) mean(i) / sd_x)
+```
+
+If we we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
+version is around 100 times faster (figure \@ref(fig:3-5)).
+
+```{r, 3-5, fig.keep="last", echo=FALSE, fig.height=4, fig.width=6, fig.cap="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.", fig.align="center", out.width="70%"}
+local(source("code/03-programming_f5.R", local=TRUE))
+```
 
 A more advanced form of caching is to use the **memoise** package. If a function is
 called multiple times with the same input, it may be possible to speed things up by
@@ -781,110 +661,12 @@ object that contains functions bound to the environment the closure was created 
 Technically all functions in R have this property, but we use the term function
 closure to denote functions where the environment is not in `.GlobalEnv`. One of the
 environments associated with a function is known as the enclosing environment, that
-is, where was the function created. We can determine the enclosing environment using
-`environment`:
+is, where was the function created. This allows us to store values between function calls.
+Suppose we want to create a stop-watch type function. This is easily achieved with a function 
+closure
 
 ```{r}
-environment(plot_mpg)
-```
-
-The `plot_mpg()` function's enclosing environment is the `.GlobalEnv`. This is important
-for variable scope, i.e. where should be look for a particular object. Consider the
-function `f`
-
-```{r}
-f = function() {
-  x = 5
-  function() x
-}
-```
-
-When we call the function `f`, the object returned is a function. While the enclosing
-environment of `f` is `.GlobalEnv`, the enclosing environment of the _returned_
-function is something different
-
-```{r}
-g = f()
-environment(g)
-```
-When we call this new function `g`, 
-```{r}
-x = 10
-g()
-```
-The value returned is obtained from `environment(g)` not from the `.GlobalEnv`. This
-persistent environment allows us to cache variables between function calls.
-```{block type="rmdnote"}
-The operator `<<-` makes R search through the parent environments for an existing
-defintion. If such a variable is found (and its binding is not locked) then its value
-is redefined, otherwise assignment takes place in the global environment.
-```
-
-The `simple_counter()` function exploits this feature to enable variable caching
-
-```{r}
-simple_counter = function() {
-  no = 0
-  function() {
-    no <<- no + 1
-    no
-  }
-}
-```
-When we call the `simple_counter()` function, we retain object values between function
-calls
-
-```{r}
-sc = simple_counter()
-sc()
-sc()
-```
-The key points of the `simple_counter()` function are 
-
-  * The `simple_counter` function returns a function;
-  * The enclosing environment of `sc` is not `.GlobalEnv`, instead it's the binding 
-    environment of `sc`;
-  * The function `sc` has an environment that can be used to store/cache values;
-  * The operator `<<-` is used to alter the object `no` in the `sc` environment.
-
-#### Example {-}
-
-We can exploit function closures to simplify our code. Suppose we wished to simulate a
-games of Snakes and Ladders. We have function that handles the logic of landing on a
-snake
-
-```{r}
-check_snake = function(square) {
-   switch(as.character(square), 
-       '16'=6,  '49'=12, '47'=26, '56'=48, '62'=19, 
-       '64'=60, '87'=24, '93'=73, '96'=76, '98'=78, 
-       square)
-}
-```
-If we then wanted to determine how often we landed on a Snake, we could use a function
-closure to easily keep track of the counter.
-
-```{r}
-check_snake = function() {
-  no_of_snakes = 0
-  function(square) {
-    new_square = switch(as.character(square), 
-       '16'=6,  '49'=12, '47'=26, '56'=48, '62'=19, 
-       '64'=60, '87'=24, '93'=73, '96'=76, '98'=78, 
-       square)
-    no_of_snakes <<- no_of_snakes + (new_square != square)
-    new_square
-  }
-}
-```
-
-Keeping the variable `no_of_snakes` attached to the `check_snake()` function, enables
-us to have cleaner code.
-
-#### Exercise {-}
-
-The following function implements a stop-watch function
-```{r}
+# <<- assigns values to the parent environment
 stop_watch = function() {
   start_time = stop_time = NULL
   start = function() start_time <<- Sys.time()
@@ -892,11 +674,13 @@ stop_watch = function() {
     stop_time <<- Sys.time()
     difftime(stop_time, start_time)
   }
-  list(start=start, stop=stop)
+  list(start = start, stop = stop)
 }
 watch = stop_watch()
 ```
-It contains two functions. One function for starting the timer
+
+The object `watch` is a list, that contains two functions. One function for starting
+the timer
 ```{r}
 watch$start()
 ```
@@ -904,7 +688,14 @@ the other for stopping the timer
 ```{r results="hide"}
 watch$stop()
 ```
-Many stop-watches have the ability to measure not only your overall time but also you
+Without using function closures, the stop-watch function would be longer, more complex and
+therefore more inefficient. When used properly function closures are very useful 
+programming tools for writing concise code.
+
+#### Exercise {-}
+
+1. Write a stop-watch function __without__ using function closures.
+1. Many stop-watches have the ability to measure not only your overall time but also you
 individual laps. Add a `lap` function to the `stop_watch` function that will record
 individual times, while still keeping track of the overall time.
 
