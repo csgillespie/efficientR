@@ -242,14 +242,35 @@ There is much else to say on the topic but rather than repeat what has been said
 
 1. What are the three criteria of tidy data?
 
-2. Take a look at each of these datasets: what is 'untidy' about each?
+2. Load and look at subsets of these datasets. The first is the `pew` datasets we've been using already. The second reports the points that define, roughly, the geographical boundaries of different London boroughs. What is 'untidy' about each?
 
-```{r}
-
+```{r, warning=FALSE}
+pew = read_csv("extdata/reshape-pew.csv")
+head(pew, 10)
+lnd_geo_df = readRDS("extdata/lnd_geo_df.Rds")
+head(lnd_geo_df, 10)
 ```
 
-
 3. Convert each of the above datasets into tidy form.
+
+4. Consider the following string of phone numbers and fruits from [@wickham2010stringr]:
+
+```{r}
+strings = c(" 219 733 8965", "329-293-8753 ", "banana", "595 794 7569",
+             "387 287 6718", "apple", "233.398.9187  ", "482 952 3315", "239 923 8115",
+             "842 566 4692", "Work: 579-499-7527", "$1000", "Home: 543.355.3679")
+```
+
+Write functions in **stringr** and base R that return:
+
+- A logical vector reporting whether or not each string contains a number.
+- Complete words only, without extraneous non-letter characters.
+
+```{r}
+str_detect(string = strings, pattern = "[0-9]")
+str_extract(strings, pattern = "[A-z]+")
+```
+
 
 ## Efficient data processing with dplyr {#dplyr}
 
