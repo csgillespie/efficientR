@@ -187,7 +187,7 @@ Splitting means taking a variable that is really two variables combined and crea
 ```{r}
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
-agesex_df = data.frame(agesex, n) # create a data frame
+agesex_df = data_frame(agesex, n) # create a data frame
 separate(agesex_df, col = agesex, into = c("age", "sex"))
 ```
 
@@ -271,7 +271,6 @@ str_detect(string = strings, pattern = "[0-9]")
 str_extract(strings, pattern = "[A-z]+")
 ```
 
-
 ## Efficient data processing with dplyr {#dplyr}
 
 After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.
@@ -353,7 +352,7 @@ names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(idata)` is another way to see the contents of an object, but produces more verbose output.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(idata)` is another way to see the contents of an object, but produces more verbose output.]
 
 ```{r}
 vapply(idata, class, character(1))
@@ -400,7 +399,7 @@ As with other operations there are other ways of achieving the same result in R,
 idata[id] = apply(idata[id], 2, as.numeric)
 
 # Another alternative method using a for loop
-idata_df = as.data.frame(idata)
+idata_df = as.data_frame(idata)
 for(i in id){
   idata_df[,i] = as.numeric(idata_df[,i])
 }
@@ -416,9 +415,9 @@ aus2 = filter(idata, Country == "Australia")
 ```
 
 In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
-the first argument of **dplyr** functions usually a `data.frame`, and
-subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
+Note that **dplyr** does not use the `$` symbol. It knows that that `Country` is a variable of `idata`:
+the first argument of **dplyr** functions is a data frame and
+subsequent raw variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
 and many of its functions work in the same way.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 ] 
