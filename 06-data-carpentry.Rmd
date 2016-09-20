@@ -98,21 +98,9 @@ A key skill in data analysis is understanding the structure of datasets and bein
 Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including **stringi** and **stringr** can help update messy character strings using regular expressions; **assertive** and **assertr** packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the **lubridate** vignette (see `vignette("lubridate")`). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling.
 The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014 and loaded using the code below:
 
-```{r, echo=FALSE, eval=FALSE}
-# Download data from its original source - an academic paper
-downloader::download("http://www.jstatsoft.org/v59/i10/supp/4", destfile = "v59i10-data.zip")
-# The source code associated with the paper
-downloader::download("http://www.jstatsoft.org/v59/i10/supp/3", destfile = "extdata/reshape/v59i10.R")
-# After running the R script...
-dir.create("extdata/reshape")
-unzip("v59i10-data.zip", exdir = "extdata/reshape/")
-# write.csv(raw, "extdata/reshape-pew.csv")
-```
-
 ```{r, message=FALSE}
-library("tidyr")
-library("readr")
-pew = read_csv("extdata/pew.csv") # read in the 'wide' dataset
+library("efficient")
+data(pew) # see ?pew - dataset from the efficient package
 pew[1:3, 1:4] # take a look at the data
 ```
 
@@ -164,12 +152,6 @@ gather(pew)
 ```
 
 ```{r tpew, echo=FALSE, message=FALSE}
-# generate pew dataset
-pew = read_csv("extdata/reshape-pew.csv")
-pew = pew[-c(1, ncol(pew))] # remove excess cols
-names(pew) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
-               "$40--50k", "$50--75k", "$75--100k", "$100--150k", ">150k")
-# write_csv(pew, "extdata/pew.csv")
 knitr::kable(pew[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
 ```
 
@@ -243,9 +225,8 @@ There is much else to say on the topic but rather than repeat what has been said
 2. Load and look at subsets of these datasets. The first is the `pew` datasets we've been using already. The second reports the points that define, roughly, the geographical boundaries of different London boroughs. What is 'untidy' about each?
 
 ```{r, warning=FALSE}
-pew = read_csv("extdata/reshape-pew.csv")
 head(pew, 10)
-lnd_geo_df = readRDS("extdata/lnd_geo_df.Rds")
+data(lnd_geo_df)
 head(lnd_geo_df, 10)
 ```
 
@@ -312,8 +293,7 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 
 ```{r, message=FALSE}
 # Load global inequality data
-fname = system.file("extdata/world-bank-ineq.csv", package = "efficient") 
-wb_ineq = read_csv(fname)
+data(wb_ineq)
 ```
 
 **dplyr** is a large package and can be seen as
@@ -333,12 +313,12 @@ Note also the syntax:
 
 ```{r, message=FALSE}
 library("dplyr")
-wb_ineq = rename(wb_ineq, Country = `Country Name`)
+wb_ineq = rename(wb_ineq, code = `Country Code`)
 ```
-<!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
-To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated for clarity.
 
-```{r}
+To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated on an older version of the dataset (not run) to illustrate how long, clunky and inefficient names can be converted into short and lean ones.
+
+```{r, eval=FALSE}
 # The dplyr way (rename two variables)
 wb_ineq = rename(wb_ineq,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
@@ -893,8 +873,6 @@ so it should be stated at the outset that which to use can be a matter of person
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
 The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
-
-<!-- __XXX__ Anything read from data/* isn't reproducible for the reader. MOve to the package?-->
 
 ```{r}
 library("data.table")
