@@ -399,48 +399,7 @@ and many of its functions work in the same way.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 ] 
 
-There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). For consistency, however, we next look at filtering columns.
-
-### Filtering columns
-
-Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
-
-Imagine that we have a text file called `miniaa` which is large enough to consume most of your computer's RAM. We can load it with the following command:
-
-```{r}
-data(miniaa, package="efficient") # load imaginary large data
-dim(miniaa)
-```
-
-Note that the data frame has 329 columns, and imagine it has millions of rows, instead of $9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
-
-<!-- __XXX__ I didn't find this helpful for a large data set -->
-```{r, eval=FALSE}
-glimpse(miniaa)
-#> Observations: 9
-#> Variables: 329
-#> $ NPI          
-#>     <int> ...
-#> ...
-```
-
-The majority of variables in this dataset only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
-
-```{r, echo=FALSE}
-# TODO: demonstrate dplyr::select
-## __XXX__ I'm not sure it's possible with select (I just spent 20 minutes trying). SO question?
-```
-
-<!-- __XXX__ This isn't correct (I know I suggested it). `anyNA` detects if there are any NA's. According to your comment it -->
-<!-- should be `!sum(!is.na(x))` - but there are no columns that are all NA's -->
-```{r}
-# Identify the variable which are all NA
-all_na = vapply(miniaa, function(x) anyNA(x), logical(1))
-summary(all_na) # summary of the results
-miniaa1 = miniaa[!all_na] # subset the dataframe
-```
-
-The new `miniaa` object has fewer than a third of the original columns.
+There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
 
 ### Data aggregation
 
