@@ -384,26 +384,24 @@ for(i in cols_to_change){
 
 ### Filtering rows
 
-**dplyr** offers an alternative and more flexible way of filtering data, using `filter()`.
+**dplyr** offers an alternative way of filtering data, using `filter()`.
 
 ```{r}
 # Base R: wb_ineq[wb_ineq$Country == "Australia",]
 aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
-In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-Note that **dplyr** does not use the `$` symbol. It knows that that `Country` is a variable of `wb_ineq`:
-the first argument of **dplyr** functions is a data frame and
-subsequent raw variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
-and many of its functions work in the same way.
+`filter()` is slightly more felxible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+By avoiding the `$` symbol **dplyr** subsetting than subsetting in base R.
+The first argument is a data frame and
+subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
-] 
 
 There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
 
 ### Data aggregation
 
-Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the `ghg_ems` dataset stored in the **efficient** package.
+Data aggregation involves creating summaries of data based on a grouping variable, in a process that has been referred to as 'split-apply-combine'. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the `ghg_ems` dataset stored in the **efficient** package.
 
 ```{r, warning=FALSE}
 # data available online, from github.com/csgillespie/efficient_pkg
@@ -413,11 +411,7 @@ nrow(ghg_ems)
 length(unique(ghg_ems$Country))
 ```
 
-Note that while there are almost $8000$ rows, there are fewer than 200 countries.
-
-```{block, gsub, type='rmdnote'}
-Note that the `ghg_ems` column names were cleaned using the command `word(names(ghg_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
-```
+Note that while there are almost $8000$ rows, there are fewer than 200 countries: factors would have been a more space efficient way of storing the countries data.
 
 <!-- Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries). -->
 <!-- Another way to specify the `by` argument is with the tilde (`~`). -->
@@ -442,7 +436,7 @@ group_by(ghg_ems, Country) %>%
 ```
 
 ```{block, unix-philosophy, type='rmdnote'}
-The example above relates to a philosophical question in programming: how much work should one function do?  The [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well".  And shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual `group_by` and `summarise` stages.
+The example above relates to a wider programming: how much work should one function do? The work could have been done with a single `aggregate()` call. However, the [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well", which is how **dplyr**'s functions were designed. Shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing.
 ```
 
 To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
@@ -487,16 +481,6 @@ summary statistics
 
 1. Refer back to the greenhouse gas emissions example at the outset of section \@ref(dplyr), in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?
 
-1. Referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the **dplyr** function `rename`. Follow the pattern `ECO2`, `MCO2` etc.
-
-```{r, echo=FALSE, eval=FALSE}
-# Using dplyr::rename
-ghg_ems = rename(ghg_ems,
-             ECO2 = Electricity.Heat..CO2...MtCO2.,
-             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
-             TCO2 = Transportation..CO2...MtCO2.,
-             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
-```
 
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
@@ -599,41 +583,37 @@ Ensure that both joining variables have the same class (combining `character` an
 How large is the overlap between `ghg_ems$Country` and `world$Country`? We can find out using the `%in%` operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many *unique* country names from `ghg_ems` are present in the `world` dataset:
 
 ```{r}
-# save the result as 'm', for match
-c_u = unique(ghg_ems$Country)
-w_u = unique(world$Country)
-summary({m = c_u %in% w_u})
+unique_countries_ghg_ems = unique(ghg_ems$Country)
+unique_countries_world = unique(world$Country)
+matched = unique_countries_ghg_ems %in% unique_countries_world
+table(matched)
 ```
 
 This comparison exercise has been fruitful: most of the countries in the `co2` dataset exist in the `world` dataset. But what about the 20 country names that do not match? We can identify these as follows:
 
-<!-- __XXX__ This doesn't look very dplyr like -->
 ```{r}
-(n = c_u[!m]) # non-matching country names in world data
+(unmatched_countries_ghg_ems <- unique_countries_ghg_ems[!matched])
 ```
 
-It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help to rectify this, as illustrated the first non-matching country below:
+It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help find which countries *do* match, as illustrated the first non-matching country below:
 
 ```{r}
-grep(n[1], w_u) # no match
-(fm = agrep(n[1], w_u, max.distance = 10))
-(w_u1 = w_u[fm])
+(unmatched_country = unmatched_countries_ghg_ems[1])
+unmatched_world_selection = agrep(pattern = unmatched_country, unique_countries_world, max.distance = 10)
+unmatched_world_countries = unique_countries_world[unmatched_world_selection]
 ```
 
-What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names with a `grep`. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10` after trial and error). The results show that the country `Antigua & Barbuda` from the `ghg_ems` data is matched *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
+What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10`. The results show that the country `Antigua & Barbuda` from the `ghg_ems` data matches *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
 
-<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
 ```{r}
-world$Country[world$Country %in% w_u1] = n[1]
+world$Country[world$Country %in% unmatched_world_countries] =
+  unmatched_countries_ghg_ems[1]
 ```
 
-Fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. This can be fixed manually:
+The above code reduces the number of country names in the `world` dataset by replacing *both* "Antigua" and "Barbuda" to "Antigua & Barbuda". This would not work other way around: how would one know whether to change "Antigua & Barbuda" to "Antigua" or to "Barbuda".
 
-<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
-```{r}
-world$Country[world$Country == "USA"] = "United States"
-```
-<!-- __XXX__ Point people to a vignette in the package -->
+Thus fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. 
+
 To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
 
 ```{r co2-clean, echo=FALSE, eval=FALSE}
@@ -831,7 +811,7 @@ so it should be stated at the outset that which to use can be a matter of person
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
-The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
 library("data.table")
