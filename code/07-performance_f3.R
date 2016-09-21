@@ -1,59 +1,41 @@
 source("code/initialise.R")
-
-# # Code to download logs of various packages
-# # Not run to avoid cranlogs dependency for book
-# dd = cranlogs::cran_downloads(packages = c("V8", "Rcpp", "rPython", "rJava"),
-#                               from = "2013-01-01", to = "2016-09-01")
-# dd$Downloads <- ave(
-#   dd$count,
-#   dd$package,
-#   FUN = function(x)
-#     zoo::rollmean(x, k = 30, na.pad = T)
-# )
-# saveRDS(dd, "extdata/cranlog.Rds")
-
-dd = readRDS("extdata/cranlog.Rds")
-dd = dd[dd$count > 0, ]
-
-v8 = dd[dd$package=="V8",]
-rcpp = dd[dd$package=="Rcpp",]
-rjava = dd[dd$package=="rJava",]
-rpython = dd[dd$package=="rPython",]
+# ## Original idea from https://github.com/csgillespie/efficientR/issues/121 and @adamryczkowski
+# 
+# n_rep=10 #Number of times to generate a test sample. This smooths the chart.
+# dd = matrix(0, nrow=100, ncol=3)
+# ns = 10^(seq(from=log10(10), to=log10(10^6), length.out =nrow(dd)))
+# 
+# tmp = matrix(0, nrow=n_rep, ncol=2)
+# for (i in seq_len(nrow(dd)))
+# {
+#   for(j in seq_len(n_rep))
+#   {
+#     s = sample(c(TRUE, FALSE), ns[i], TRUE, prob=c(1-0.0001,0.0001))
+#     tmp[j,] = summary(
+#      microbenchmark::microbenchmark(
+#         which.max(s),
+#         which(s)[[1]])
+#       )[['median']]
+#   }
+#   dd[i,] = c(ns[i], colMeans(tmp))
+#   cat(".")
+# }
+#saveRDS(dd, file="extdata/07-which_comparison.RData")
+dd = readRDS(file="extdata/07-which_comparison.RData")
 
 par(mar=c(3,3,2,1), mgp=c(2,0.4,0), tck=-.01,
     cex.axis=0.9, las=1, xaxs='i',yaxs='i')
-
-# Blank graph
-start = as.Date("2013-01-01"); end = as.Date("2016-09-01")
-plot(rcpp$date[1], type="n", xlim=c(start, end), ylim=c(10^0, 2*10^4), 
+plot(dd[,1], dd[,3]/dd[,2], log="xy",
+     pch=21, xlim=c(9, 10^4), ylim=c(1, 10^2), 
      axes=FALSE, frame=FALSE, 
-     xlab="Time", ylab="Downloads per day", 
-     log="y")
-abline(h=10^(0:4), lty=3, col="grey80")
+     ylab="Relative speed of 'which.min' compared to 'which'", xlab="Vector length",
+     bg="steelblue")
+abline(h=10^(0:2), lty=3, col="grey80")
+abline(h=c(2, 5, 20, 50), lty=3, col="grey90")
 
-# Add R versions
-R_dates = as.Date(c("2013-04-03", "2014-04-03", "2015-04-03", "2016-04-03"))
-R_vers = paste0("R 3.", 0:3)
-abline(v=R_dates, col="grey90", lty=2)
-text(R_dates, 11800, R_vers,  pos=4, col="grey50")
 
-# Label lines
-lines(rcpp$date, rcpp$Downloads,  lwd=3,col=3)
-lines(v8$date, v8$Downloads, lwd=2, col=4)
-lines(rjava$date, rjava$Downloads, lwd=2, col=2)
-lines(rpython$date, rpython$Downloads, lwd=2, col=1)
-
-# Add axis
 axis(2, tick=FALSE)
-axis(1, at = c(as.Date("2013-01-01"),as.Date("2014-01-01"),as.Date("2015-01-01"), as.Date("2016-01-01")), 
-     labels=2013:2016, tick=F)
+axis(1, at = 10^(1:4), labels=c(expression(10^1),expression(10^2),expression(10^3),expression(10^4)), tick=F)
 
-title("The rise of Rcpp", adj=1, 
-      cex.main=1, font.main=2, col.main="black")
 
-# Label lines
-text(as.Date("2013-06-01"), 6, "rPython", col=1, font = 2)
-text(as.Date("2014-02-01"), 3000, "Rcpp", col=3, font = 2)
-text(as.Date("2015-02-01"), 80, "V8", col=4, font = 2)
-text(as.Date("2015-03-01"), 1000, "rJava", col=2, font = 2)
 

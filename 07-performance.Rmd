@@ -16,31 +16,170 @@ root of all evil (or at least most of it) in programming.
 Knuth's point is that it is easy to undertake code optimisation inefficiently.
 When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that
 time spent optimizing code early in the developmental stage could be wasted. Even worse,
-there is a tradeoff between code speed and code readability; we've already made this trade-off
+there is a trade-off between code speed and code readability; we've already made this trade-off
 once by using readable, (but slow) R compared with verbose C code! 
 
-For this reason this chapter is covered towards the latter half of the book. 
-The previous chapters deliberately focussed on concepts, packages and functions
-to increase efficiency. These are (relatively) easy ways of saving time
-that, once implemented, will work for future projects.
-Code optimisation, by contrast, is an advanced topic that should only be tackled once 'low hanging fruit' for efficiency gains have been taken.
+For this reason this chapter is covered towards the latter half of the book. The
+previous chapters deliberately focussed on concepts, packages and functions to
+increase efficiency. These are (relatively) easy ways of saving time that, once
+implemented, will work for future projects. Code optimisation, by contrast, is an
+advanced topic that should only be tackled once 'low hanging fruit' for efficiency
+gains have been taken.
 
-In this chapter we assume that you already have well-developed code 
-that is mature conceptually and has been tried and tested. Now you want to optimize this code, 
-but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code.
-Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section.
-Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems.
-The final section explains how `Rcpp` can be used to efficiently incorporating C++ code into an R analysis.
+In this chapter we assume that you already have well-developed code that is mature
+conceptually and has been tried and tested. Now you want to optimize this code, but
+not prematurely. The chapter is organised as follows. First we begin with general
+hints and tips about optimising base R code. Code profiling can identify key
+bottlenecks in the code in need of optimization, and this is covered in the next
+section. Section \@ref(performance-parallel) discusses how parallel code can overcome
+efficiency bottlenecks for some problems. The final section explains how `Rcpp` can be
+used to efficiently incorporating C++ code into an R analysis.
+
+### Prerequistes {-}
+
+In this chapter, some of the examples require a working C++ compiler. The installation
+method depends on your operating system:
+ 
+ * Linux: A compiler should already be installed. Otherwise, install `r-base` and a compiler will be installed as a dependency.
+ * Macs: Install `Xcode`.
+ * Windows: Install [Rtools](http://cran.r-project.org/bin/windows/). Make sure you select the version that corresponds to your version of R.
+
+The packages used in this chapter are
+```{r}
+library("microbenchmark")
+library("ggplot2movies")
+library("profvis")
+library("Rcpp")
+```
 
 ## Top 5 tips for efficient performance
 
   1. Before you start to optimise you code, ensure you know where the bottleneck lies; use
   a code profiler.
-  1. The `ifelse` function is optimal for vectorised comparisons.
   1. If the data in your data frame is all of the same type, consider converting it
   to a matrix for a speed boost.
+  1. Use specialised row and column functions whenever possible.
   1. The __parallel__ package is ideal for Monte-Carlo simulations.
   1. For optimal performance, consider re-writing key parts of your code in C++.
+
+## Code profiling {#performance-profvis}
+
+Often you will have working code, but simply want it to run faster. In some cases it's
+obvious where the bottle neck lies. Sometimes you will guess, relying on intuition. A
+drawback of this is that you could be wrong, and waste time optimising the wrong piece
+of code. To make slow code run faster, it is first important to determine where the
+slow code lives. This is the purpose of code profiling.
+
+The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At
+regular time intervals, the profiler stops the R interpreter, records the current
+function call stack, and saves the information to a file. The results from `Rprof` are
+stochastic. Each time we run a function R, the conditions have changed. Hence, each
+time you profile your code, the result will be slightly different.
+
+Unfortunately `Rprof` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
+**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof`.
+
+### Getting started with **profvis**
+
+After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used
+to profile R code. As a simple example, we will use the `movies` data set, which
+contains information on around 60,000 movies. First, we'll select movies that are
+classed as comedies, then plot year the movies was made verus the movie rating, and
+draw a local polynomial regression line to pick out the trend. The main function from
+the **profvis** package is `profvis()`, which profiles the code and creates an
+interactive HTML page of the results. The first argument of `profvis()` is the R
+expression of interest. This can be many lines long:
+
+```{r, eval=FALSE}
+library("profvis")
+profvis({
+  data(movies, package = "ggplot2movies") # Load data
+  movies = movies[movies$Comedy == 1,]
+  plot(movies$year, movies$rating)
+  model = loess(rating ~ year, data = movies) # loess regression line
+  j = order(movies$year)
+  lines(movies$year[j], model$fitted[j]) # Add line to the plot
+})
+```
+
+The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the
+left side is the code and on the right is a flame graph (horizontal direction is time
+in milliseconds and the vertical direction is the call stack).
+
+```{r 7-1, echo=FALSE, fig.cap="Output from profvis", out.width="100%"}
+knitr::include_graphics("figures/f7_1_profvis.png")
+```
+
+The left hand panel gives the amount of time spent on each line of code. It shows that
+majority of time is spent calculating the `loess` smoothing line. The bottom line of
+the right panel also highlights that most of the execution time is spent on the
+`loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
+which in turn calls `.C` function.
+
+The conclusion from this graph is that if optimisation were required, it would make
+sense to focus on the `loess` and possibly the `order` function calls.
+ 
+```{r, eval=FALSE, echo=FALSE}
+# Code for screen shot
+library("profvis")
+x = 
+  profvis({
+    data(movies, package="ggplot2movies")
+    movies = movies[movies$Comedy==1, ]
+    plot(movies$year, movies$rating)
+    model = loess(rating ~ year, data=movies)
+    j = order(movies$year)
+    lines(movies$year[j], model$fitted[j])
+})
+print(x, viewer=TRUE, width="1300px", height="300px")
+```
+
+### Example: Monopoly Simulation {#monopoloy}
+
+Monopoly is a board game that originated in the United States over $100$ years ago. The
+objective of the game is to go round the board and purchase squares (properties). If
+other players land on your properties they have to pay a tax. The player with the most
+money at the end of the game, wins. To make things more interesting, there are Chance
+and Community Chest squares. If you land on one of these squares, you draw card, which
+may send to you to other parts of the board. The other special square, is Jail. One
+way of entering Jail is to roll three successive doubles.
+
+The **efficient** package contains a Monte-Carlo function for simulating a simplified
+game of monopoly. By keeping track of where a person lands when going round the board,
+we obtain an estimate of the probability of landing on a certain square. The entire
+code is around 100 lines long. In order for **profvis** to fully profile the code, the
+**efficient** package needs to be installed from source
+
+```{r eval=FALSE, echo=-1}
+#devtools::install_github("csgillespie/efficient", args="--with-keep.source")
+install.packages("efficient", configure.args="--with-keep.source")
+```
+
+The function can then be profiled via the following code, which results in figure \@ref(fig:7-2). 
+
+```{r eval=FALSE}
+library("efficient")
+profvis(simulate_monopoly(10000))
+```
+
+```{r 7-2, echo=FALSE, out.width="100%", fig.cap="Code profiling for simulating the game of Monopoly."}
+knitr::include_graphics("figures/f7_2_profvis_monopoly.png")
+```
+
+The output from **profvis** shows that the vast majority of time (around 65%) is spent in the
+`move_square()` function.
+
+In Monopoly moving around the board is complicated by the fact that rolling a double
+(a pair of 1's, 2's, ..., 6's) is special:
+
+ * Roll two dice (`total1`): `total_score = total1`;
+ * If you get a double, roll again (`total2`) and `total_score = total1 + total2`;
+ * If you get a double, roll again (`total3`) and `total_score = total1 + total2 + total3`;
+ * If roll three is a double, Go To Jail, otherwise move `total_score`.
+
+The function `move_square()` captures this logic. Now we know where the code is slow, 
+how can we speed up the computation? In the next section, we will discuss standard
+techniques that can be used. We will then revisit this example.
 
 ## Efficient base R 
 
@@ -67,7 +206,7 @@ ifelse(marks >= 40, "pass", "fail")
 If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
 then the standard conditional statement
 
-```{r}
+```{r, results="hide"}
 mark = 25
 if(mark >= 40) {
   "pass" 
@@ -91,7 +230,7 @@ system.time({
 identical(result1, result2)
 ```
 
-There is talk on the [R-devel email](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html) list of speeding up `ifelse()` in base R. A simple solution is to use the `if_else()` function from **dplyr**, although, as discussed in the [same thread](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html), it cannot replace `ifelse()` in all situations. For our exam result test example, `if_else()` works fine and is much faster than base R's implentation (although is still around 3 times slower than the hard-coded solution):
+There is talk on the [R-devel email](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html) list of speeding up `ifelse()` in base R. A simple solution is to use the `if_else()` function from **dplyr**, although, as discussed in the [same thread](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html), it cannot replace `ifelse()` in all situations. For our exam result test example, `if_else()` works fine and is much faster than base R's implantation (although is still around 3 times slower than the hard-coded solution):
 
 ```{r}
 system.time({
@@ -150,10 +289,10 @@ increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster
 To determine which index of a vector or array are `TRUE`, we would typically use the
 `which` function. If we want to find the index of just the minimum or maximum value,
 i.e. `which(x == min(x))` then using the efficient `which.min`/`which.max`
-variants can be orders of magnitude faster (see figure \@ref(fig:7-2b))
+variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 
-```{r 7-2b, fig.cap="Comparison of `which.min` with `which`.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
-local(source("code/07-performance_f2b.R", local=TRUE))
+```{r 7-3, fig.cap="Comparison of `which.min` with `which`.", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
+local(source("code/07-performance_f3.R", local=TRUE))
 ```
 
 ###  Converting factors to numerics {-}
@@ -180,8 +319,8 @@ x < 0.4 | x > 0.6
 
 When R executes the above comparison, it will **always** calculate `x > 0.6`
 regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `&&`,
-only executes the second component if needed. This is efficient and leads to more
-neater code, e.g.
+only executes the second component if needed. This is efficient and leads to neater
+code, e.g.
 
 ```{r, results="hide"}
 # We only calculate the mean if data doesn't contain NAs
@@ -264,14 +403,12 @@ is not exactly $2$, instead it's __almost__ $2$. Using `sprintf("%.17f", y)` wil
 give you the true value of `y` (to 17 decimal places).
 ```
 
-Integers are another numeric data type. Integers primarily exist to be
-passed to C or Fortran code. You 
-do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C
-
-
-might be tempted to use integers with the 
-purpose of speeding up your R code. For example, if we look at the
-arguments for the `head` function
+Integers are another numeric data type. Integers primarily exist to be passed to C or
+Fortran code. You do will not need to create integers for most applications. However,
+they are occasionally used to optimise sub-setting operations. When we subset a data
+frame or matrix, we are interacting with C code we might be tempted to use integers
+with the purpose of speeding up our code. For example, if we look at the arguments for
+the `head` function
 
 ```{r}
 args(head.matrix)
@@ -364,145 +501,68 @@ with vectors from the **bit** package which take up just over 16th of the space
 (but you can't use `NA`s).
 ```
 
-## Code profiling {#performance-profvis}
+## Example: Optimising  the `movie_square()` function
 
-Often you will have working code, but simply want it to run
-faster. In some cases it's obvious where the bottle neck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could
-be wrong, and waste time optimising the wrong piece of code. To make slow
-code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.
+Figure \@ref(fig:7-2) shows that in our main bottle neck in simulating the game of
+Monopoly is the `movie_square()` function. Within this function, we spend around 50%
+of the time creating a data frame, 20% time calculating row sums, and the remainder on
+a comparison operations. This piece of code can be optimised fairly easily (will still
+retaining the same overall structure) by incorporating the following
+improvements^[Solutions are available in the **efficient** package vignette.]:
 
-The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At
-regular time intervals, the profiler stops the R interpreter, records the current
-function call stack, and saves the information to a file. The results from `Rprof` are
-stochastic. Each time we run a function R, the conditions have changed. Hence, each
-time you profile your code, the result will be slightly different.
-
-Unfortunately `Rprof` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
-**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof`.
-
-### Getting started with **profvis**
-
-After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used to profile any R script of piece of R code.
-As a simple example, we will use the `movies` data set, which contains information on
-around 60,000 movies. First, we'll select movies that are classed as
-comedies, then plot year vs movies rating, and draw a local polynomial regression line
-to pick out the trend. The main function from the **profvis** package is `profvis()`,
-which profiles the code and creates an interactive HTML page of the results. The first argument of
-`profvis()` is the R expression of interest. This can be many lines long:
-
-```{r, eval=FALSE}
-library("profvis")
-profvis({
-  data(movies, package="ggplot2movies") # Load data
-  movies = movies[movies$Comedy==1, ]
-  plot(movies$year, movies$rating)
-  model = loess(rating ~ year, data=movies) # loess regression line
-  j = order(movies$year)
-  lines(movies$year[j], model$fitted[j]) # Add line to the plot
-})
-```
-
-The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the
-left side is the code and on the right is a flame graph (horizontal direction is time
-in milliseconds and the vertical direction is the call stack).
-
-```{r 7-1, echo=FALSE, fig.cap="Output from profvis", out.width="100%"}
-knitr::include_graphics("figures/f7_1_profvis.png")
-```
-
-The left hand panel gives the amount of time spent on each line of code. It shows that
-majority of time is spent calculating the `loess` smoothing line. The bottom line of
-the right panel also highlights that most of the execution time is spent on the
-`loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
-which in turn calls `.C` function.
-
-The conclusion from this graph is that if optimisation were required, it would make
-sense to focus on the `loess` and possibly the `order` function calls.
- 
-<!-- http://rpubs.com/wch/123888 -->
-
-```{r, eval=FALSE, echo=FALSE}
-# Code for screen shot
-library("profvis")
-x = 
-  profvis({
-    data(movies, package="ggplot2movies")
-    movies = movies[movies$Comedy==1, ]
-    plot(movies$year, movies$rating)
-    model = loess(rating ~ year, data=movies)
-    j = order(movies$year)
-    lines(movies$year[j], model$fitted[j])
-})
-print(x, viewer=TRUE, width="1300px", height="300px")
-```
-
-### Example: Monopoly Simulation {#monopoloy}
-
-Monopoly is a board game that originated in the United States over $100$ years ago. The
-objective of the game is to go round the board and purchase squares (properties). If
-other players land on your properties they have to pay a tax. The player with the most
-money at the end of the game, wins. To make things more interesting, there are Chance
-and Community Chest squares. If you land on one of these squares, you draw card, which
-may send to you to other parts of the board. The other special square, is Jail. One
-way of entering Jail is to roll three successive doubles.
-
-The **efficient** package contains a Monte-Carlo function for simulating a simplified game of monopoly. 
-By keeping track of where a person lands when going round the board, we obtain an estimate of the
-probability of landing on a certain square. The
-entire code is around 100 lines long. In order for `profvis` to fully profile the
-code, the **efficient** package needs to be installed from source
-
-```{r eval=FALSE}
-# args is also a valid argument for install.packages
-devtools::install_github("csgillespie/efficient_pkg", args="--with-keep.source")
-```
-
-The function can then be profiled via the following code, which results in figure \@ref(fig:7-2). 
-
-```{r eval=FALSE}
-library("efficient")
-profvis(SimulateMonopoly(10000))
-```
-
-```{r 7-2, echo=FALSE, out.width="100%", fig.cap="Code profiling for simulating the game of Monopoly."}
-knitr::include_graphics("figures/f7_2_profvis_monopoly.png")
-```
-
-The output from `profvis` shows that the vast majority of time is spent in the
-`move` function. In Monopoly rolling a double (a pair of 1's, 2's,
-..., 6's) is special:
-
- * Roll two dice (`total1`): `total_score = total1`;
- * If you get a double, roll again (`total2`) and `total_score = total1 + total2`;
- * If you get a double, roll again (`total3`) and `total_score = total1 + total2 + total3`;
- * If roll three is a double, Go To Jail, otherwise move `total_score`.
-
-The `move` function spends around 50% of the time creating a data frame, 25%
-time calculating row sums, and the remainder on a comparison operations. This piece of
-code can be optimised fairly easily (will still retaining the same overall structure)
-by incorporating the following improvements^[Solutions are available in the
-**efficient** package vignette.]:
-
-  * Use a matrix instead of a data frame;
-  * Sample $6$ numbers at once, instead of two groups of three;
-  * Switch from `apply` to `rowSums`;
-  * Use `&&` in the `if` condition.
+  * Instead of using `seq(1, 6)` to generate the 6 possible values of rolling a dice, 
+  use `1:6`. Also, instead of a data frame, use a matrix and perform a single call to 
+  the `sample()` function
   
-Impressively, the refactored code runs 25 times faster than the original code.
+    ```{r, results="hide"}
+    matrix(sample(1:6, 6, replace = TRUE), ncol = 2)
+    ```
+  
+    Overall, this revised line is around 25 times faster; most of the speed boost came from
+    switching to a matrix.
+  * Using `rowSums` instead of `apply`. The `apply` function call is already faster since we've switched 
+  from a data frame to a matrix (around 3 times). Using `rowSums` with a matrix, gives a 10 fold speed boost.
+  * Use `&&` in the `if` condition; this is around twice as fast compared to `&`.
+  
+Impressively the refactored code runs 20 times faster than the original code, compare
+figures \@ref(fig:7-2) and \@ref(fig:7-4), with the main speed boost coming from using
+a matrix instead of a data frame.
+
+```{r 7-4, echo=FALSE, out.width="100%", fig.cap="Code profiling of the optimised code."}
+knitr::include_graphics("figures/f7_4_profvis_monopoly.png")
+```
+
+
+```{r eval=FALSE, echo=FALSE}
+library(microbenchmark)
+microbenchmark(seq(1, 6), 1:6)
+
+microbenchmark(data.frame(d1 = sample(seq(1, 6), 3, replace = TRUE),
+                  d2 = sample(seq(1, 6), 3, replace = TRUE)), 
+               matrix(sample(1:6, 6, replace = TRUE), ncol = 2))
+
+df = data.frame(d1 = sample(seq(1, 6), 3, replace = TRUE),
+                  d2 = sample(seq(1, 6), 3, replace = TRUE))
+dm = matrix(sample(1:6, 6, replace = TRUE), ncol = 2)
+microbenchmark(apply(df, 1, sum), rowSums(df), apply(dm, 1, sum), rowSums(dm)) 
+```
+
 
 #### Exercise {-}
 
-The `move` function above uses a vectorised solution. Whenever we move, we always roll six
-dice, then examine the outcome and determine the number of doubles. However, this is
-potentially wasteful, since the probability of getting one double is $1/6$ and two
-doubles is $1/36$. Another method is too only roll additional dice if and when they
-are needed. Implement and time this solution.
+The `move_square()` function above uses a vectorised solution. Whenever we move, we
+always roll six dice, then examine the outcome and determine the number of doubles.
+However, this is potentially wasteful, since the probability of getting one double is
+$1/6$ and two doubles is $1/36$. Another method is too only roll additional dice if
+and when they are needed. Implement and time this solution.
 
 ## Parallel computing {#performance-parallel}
 
-This section provides a brief foray into the word of parallel computing.
-It only looks
-at methods for parallel computing on 'shared memory systems'. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides flavour of what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
+This section provides a brief foray into the word of parallel computing. It only looks
+at methods for parallel computing on 'shared memory systems'. This simply means
+computers in which multiple central processor unit (CPU) cores can access the same
+block, i.e. most laptops and desktops sold worldwide. This section provides flavour of
+what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
 
 The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed
 with base R. The **parallel** package must still be loaded before use, however, and
@@ -512,6 +572,13 @@ you must determine the number of available cores manually, as illustrated below:
 library("parallel")
 no_of_cores = detectCores()
 ```
+
+```{block, type="rmdnote"}
+The value returned by `detectCores()` turns out to be operating system and chip maker
+dependent - see `help("detectCores")` for full details. For most standard machines,
+`detectCores()` returns the number of simultaneous threads.
+```
+
 
 ### Parallel versions of apply functions
 
@@ -526,9 +593,10 @@ parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
 ```
 
 The key point is that there is very little difference in arguments between `parLapply`
-and `apply`, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each
-function above has an argument `cl`, which is created by a `makeCluster` call. This
-function, amongst other things, specifies the number of processors to use.
+and `apply`, so the barrier to using (this form) of parallel computing is low,
+assuming you are proficient with the apply family of functions. Each function above
+has an argument `cl`, which is created by a `makeCluster` call. This function, amongst
+other things, specifies the number of processors to use.
 
 ### Example: Snakes and Ladders
 
@@ -567,7 +635,12 @@ It is important to stop the created clusters, as this can lead to memory leaks,^
 stopCluster(cl)
 ```
 
-On a multi-processor computer, this can lead to a four-fold speed-up.
+If we achieved perfect parallelisation and used a four (or more) core, then we would
+obtain a four-fold speed up (we set `makeCluster(4)`). However, we rarely get this 
+
+On a multi-processor computer, this can lead to a four-fold speed-up. However, it is
+rare that we would achieve this optimal speed-up since there always communication
+between threads.
 
 ### Exit functions with care
 
@@ -575,9 +648,9 @@ Always call `stopCluster()` to free resources when you finish with the
 cluster object. However if the parallel code is within function, it's possible that
 function ends as the results of an error and so `stopCluster()` is omitted.
 
-The `on.exit()` function handles this problem with the minimum of fuss; regardless how
-the function ends, `on.exit()` is always called. In the context of parallel programming
-we will have something similar to
+The `on.exit()` function handles this problem with the minimum of fuss; regardless of
+how the function ends, `on.exit()` is always called. In the context of parallel
+programming we will have something similar to
 ```{r}
 simulate = function(cores) {
   cl = makeCluster(cores)
@@ -592,25 +665,23 @@ Another common use of `on.exit()` is with the `par()` function. If you use
 parameters are reset to their previous value when the function ends.
 ```
 
-### Process forking
+### Parallel code under Linux & OS X
 
 ```{r echo=FALSE}
 library("efficient")
 library("parallel")
 ```
 
-Another way of running code in parallel is to use the `mclapply` and `mcmapply`
-functions, i.e.
+If you are using Linux or OS, then another way of running code in parallel is to use 
+the `mclapply` and `mcmapply` functions
 ```{r results="hide"}
 # This will run on Windows, but will only use 1 core
-mclapply(1:2, snakes_ladders)
+mclapply(1:N, snakes_ladders)
 ```
 These functions use forking, that is creating a new copy of a process running on the
 CPU. However Windows does not support this low-level functionality in the way that
-Linux does. If I'm writing code that I don't intend to share, I use `mclapply` since it 
-is more efficient.
-
-<!-- __Colin__XXX I don't think the use of the person 'I' fits with the rest of the book - suggest changing to 'you' or just using the passive voice. -->
+Linux does. The main advantage of `mclapply` is that you don't have to start and stop cluster 
+objects. The big disadvantage is that on Windows machines, you are limited to a single core.
 
 ## Rcpp
 
@@ -619,13 +690,15 @@ crawling along. At this point you could consider rewriting key parts of your cod
 another, faster language. R has interfaces to other languages via packages, such as
 **Rcpp**, **rJava**, **rPython** and recently **V8**. These provide R interfaces to
 C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of these
-(figure \@ref(fig:7-3)).
+(figure \@ref(fig:7-5)).
 
-```{r 7-3, echo=FALSE, fig.cap="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.", warning=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}
-local(source("code/07-performance_f3.R", local=TRUE))
+```{r 7-5, echo=FALSE, fig.cap="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.", warning=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}
+local(source("code/07-performance_f5.R", local=TRUE))
 ```
 
-C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. **Rcpp** makes incorporating C++ code into your R workflow easy.
+C++ is a modern, fast and very well-supported language with libraries for performing
+many kinds of computational task. **Rcpp** makes incorporating C++ code into your R
+workflow easy.
 
 Although C/Fortran routines can be used using the `.Call` function this is not
 recommended: using `.Call` can be a painful experience. **Rcpp** provides a friendly
@@ -636,28 +709,20 @@ recursive functions.
 C++ is a powerful programming language about which entire books have been written.
 This section therefore is focussed on getting started and provide a flavour of what is
 possible. It is structured as follows. After ensuring that your computer is set-up for
-**Rcpp** in Section \@ref(pre-requisites), we proceed by creating a simple C++
-function, to show how C++ compares with R (Section \@ref(simple-c)). This is converted
-into an R function using `cppFunction()` in Section \@ref(cppfunction). The remainder
-of the chapter explains C++ data types (Section \@ref(c-types)), illustrates how to
-source C++ code directly (Section \@ref(sourcecpp)) and explains vectors (Section
-\@ref(vectors-and-loops)) **Rcpp** sugar (Section \@ref(sugar)) and finally provides
-guidance on further resources on the subject (Section \@ref(rcpp-resources)).
+**Rcpp**, we proceed by creating a simple C++ function, to show how C++ compares with
+R (Section \@ref(simple-c)). This is converted into an R function using
+`cppFunction()` in Section \@ref(cppfunction). The remainder of the chapter explains
+C++ data types (Section \@ref(c-types)), illustrates how to source C++ code directly
+(Section \@ref(sourcecpp)) and explains vectors (Section \@ref(vectors-and-loops))
+**Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
+resources on the subject (Section \@ref(rcpp-resources)).
 
 
-### Pre-requisites
+### A simple C++ function {#simple-c}
 
-To write and compile C++ functions, you need a working C++ compiler. The installation method depends on your operating system:
- 
- * Linux: A compiler should already be installed. Otherwise, install `r-base` and a compiler will be installed as a dependency.
- * Macs: Install `Xcode`.
- * Windows: Install [Rtools](http://cran.r-project.org/bin/windows/). Make sure you select the version that corresponds to your version of R.
-
-The code in this chapter was generated using version `r packageDescription("Rcpp")$Version` of **Rcpp**. The latest version can be installed from CRAN:
-
-```{r eval=FALSE}
-install.packages("Rcpp")
-```
+To write and compile C++ functions, you need a working C++ compiler (see the
+Prerequiste section at the beginning of this chapter). The code in this chapter was
+generated using version `r packageDescription("Rcpp")$Version` of **Rcpp**. 
 
 **Rcpp** is well documented, as illustrated by the number of vignettes on the package's
 [CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its
@@ -670,8 +735,6 @@ code from the course R package:
 ```{r cache=TRUE, results="hide"}
 efficient::test_rcpp()
 ```
-
-### A simple C++ function {#simple-c}
 
 A C++ function is similar to an R function: you pass a set of inputs to function, some
 code is run, a single object is returned. However there are some key differences.
@@ -696,7 +759,7 @@ In C++ it is a bit more long winded
 /* Return type double
  * Two arguments, also doubles
  */
-double add_c(double x, double y) { 
+double add_cpp(double x, double y) { 
   double value = x + y;
   return value;
 }
@@ -710,18 +773,12 @@ or the R/C++ interface.
 
 ### The `cppFunction()` command {#cppfunction}
 
-Load the **Rcpp** package using the usual `library` function call:
-
-```{r message=FALSE}
-library("Rcpp") 
-```
-
-Pass the C++ function created in the previous section as a text string argument to
+If we pass the C++ function created in the previous section as a text string argument to
 `cppFunction()`:
 
 ```{r tidy=FALSE}
 cppFunction('
-  double add_c(double x, double y) {
+  double add_cpp(double x, double y) {
     double value = x + y;
     return value;
   }
@@ -729,16 +786,16 @@ cppFunction('
 ```
 
 **Rcpp** will magically compile the C++ code and construct a function that bridges the
-gap between R and C++. After running the above code, we now have access to the `add_c`
+gap between R and C++. After running the above code, we now have access to the `add_cpp()`
 function
 
 ```{r}
-add_c
+add_cpp
 ```
-and can call the `add_c` function in the usual way
+and can call the `add_cpp()` function in the usual way
 
 ```{r}
-add_c(1, 2)
+add_cpp(1, 2)
 ```
 
 We don't have to worry about compilers. Also, if you include this function in a
@@ -747,10 +804,11 @@ package, users don't have to worry about any of the **Rcpp** magic. It just work
 ### C++ data types {#c-types}
 
 The most basic type of variable is an integer, `int`. An `int` variable can store a
-value in the range $-32768$ to $+32767$. To store floating point numbers, there are single
-precision numbers, `float` and double precision numbers, `double`. A `double` takes
-twice as much memory as a `float`. For __single__ characters, we use the `char` data
-type.
+value in the range $-32768$ to $+32767$. To store floating point numbers, there are
+single precision numbers, `float` and double precision numbers, `double`. A `double`
+takes twice as much memory as a `float` (in general, we should always work with double
+precision numbers unless we have a compiling reason to switch to floats). For
+__single__ characters, we use the `char` data type.
 
 ```{block, type="rmdnote"}
 There is also something called an unsigned
@@ -771,7 +829,7 @@ name. Pointers are a very powerful, but primitive facility contained in the C++
 language. They are very useful since rather than passing large objects around, we pass
 a pointer to the memory location; rather than pass the house, we just give the
 address. We won't use pointers in this chapter, but mention them for completeness.
-Table \@ref{tab:cpptypes} gives an overview.
+Table \@ref(tab:cpptypes) gives an overview.
 
 ### The `sourceCpp` function {#sourcecpp}
 
@@ -804,6 +862,12 @@ export/use in R, we add the tag
 // [[Rcpp::export]]
 ```
 
+```{block, type="rmdnote"}
+Similar to packages and the `library()` function in R, we access additional functions
+via `#include`. A standard header to include is `#include <math.h>` which contains
+standard mathematics functions.
+```
+
 This would give the complete file
 
 ```{Rcpp}
@@ -811,7 +875,7 @@ This would give the complete file
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double add_c(double x, double y) {
+double add_cpp(double x, double y) {
   double value = x + y;
   return value;
 }
@@ -837,7 +901,7 @@ mean_r = function(x) {
   m = 0
   n = length(x)
   for(i in 1:n)
-    m = m + x[i]/n
+    m = m + x[i] / n
   m
 }
 ```
@@ -854,16 +918,18 @@ type. Other common classes are: `IntegerVector`, `CharacterVector`, and
 In the C++ version of the mean function, we specify the arguments types: `x`
 (`NumericVector`) and the return value (`double`). The C++ version of the `mean`
 function is a few lines longer. Almost always, the corresponding C++ version will be,
-possibly much, longer.
+possibly much, longer. In general R optimises for reduced development time; C++
+optimises for fast execution time. The corresponding C++ function for calculating the
+mean is
 
 ```{Rcpp eval=FALSE}
-double mean_c(NumericVector x) {
+double mean_cpp(NumericVector x) {
   int i;
   int n = x.size();
   double mean = 0;
 
   for(i=0; i<n; i++) {
-    mean = mean + x[i]/n;
+    mean = mean + x[i] / n;
   }
   return mean;
 }
@@ -872,7 +938,7 @@ double mean_c(NumericVector x) {
 To use the C++ function we need to source the file (remember to put the necessary headers in).
 
 ```{r}
-sourceCpp("src/mean_c.cpp")
+sourceCpp("src/mean_cpp.cpp")
 ```
 
 Although the C++ version is similar, there are a few crucial differences.
@@ -880,15 +946,17 @@ Although the C++ version is similar, there are a few crucial differences.
 1. We use the `.size()` method to find the length of `x`.
 1. The `for` loop has a more complicated syntax.
     ```{Rcpp eval=FALSE}
-    for (variable initialization; condition; variable update ) {
+    for (variable initialisation; condition; variable update ) {
       // Code to execute
     }
     ```
-1. C++ provides operators to modify variables in place. So `i++` increases the value of `i` by `1`. Similarly, we could rewrite part of the loop as
+    In this example, the loop initialises `i = 0` and will continue running until `i < n` is false. 
+    The statement `i++` increases the value of `i` by `1`; essentially it's just shortcut for `i = i + 1`.
+1. Similar to `i++`, C++ provides other operators to modify variables in place. For example we could rewrite part of the loop as
     ```{Rcpp eval=FALSE}
-    mean += x[i]/n;
+    mean += x[i] / n;
     ```
-The above code adds `x[i]/n` to the value of `mean`. Other similar operators are `-=`, `*=`, `/=` and `i--`.
+The above code adds `x[i] / n` to the value of `mean`. Other similar operators are `-=`, `*=`, `/=` and `i--`.
 1. A C++ vector starts at `0` **not** `1`
 
 To compare the C++ and R functions, we'll generate some normal random numbers for the
@@ -899,23 +967,26 @@ x = rnorm(1e4)
 ```
 
 Then call the `microbenchmark` function (results plotted in figure
-\@ref(fig:7-4)).
+\@ref(fig:7-6)).
 
 ```{r cache=TRUE, echo=-1, eval=FALSE}
 com_mean_r = compiler::cmpfun(mean_r)
 # com_mean_r is the compiled version of mean_r
 z = microbenchmark(
-  mean(x), mean_r(x), com_mean_r(x), mean_c(x),
-  times=1000
+  mean(x), mean_r(x), com_mean_r(x), mean_cpp(x),
+  times = 1000
 )
 ```
 
 In this simple example, the Rcpp variant is around $100$ times faster than the
-corresponding R version. This sort of speed-up is not uncommon when switching to an
-Rcpp solution.
+corresponding pure R version. This sort of speed-up is not uncommon when switching to
+an Rcpp solution. Notice that the Rcpp version and standard base function `mean()` run
+at roughly the same speed; after all, the base R function is written in C. However,
+`mean()` uses a more sophisticated algorithm when calculating the mean to ensure
+accuracy.
 
-```{r 7-4, fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t', out.width="70%"}
-local(source("code/07-performance_f4.R", local=TRUE))
+```{r 7-6, fig.width=6, fig.height=4, echo=2, fig.cap="Comparison of mean functions.", echo=2, cache=TRUE, fig.pos='t', out.width="70%"}
+local(source("code/07-performance_f6.R", local=TRUE))
 ```
 
 #### Exercises {-}
@@ -932,9 +1003,9 @@ double test1() {
 }
 ```
 
-1. Save the function `test1` in a separate file. Make sure it works.
+1. Save the function `test1()` in a separate file. Make sure it works.
 2. Write a similar function in R and compare the speed of the C++ and R versions.
-3. Create a function called `test2` where the `double` variables have been replaced by `float`. Do you still get the correct answer?
+3. Create a function called `test2()` where the `double` variables have been replaced by `float`. Do you still get the correct answer?
 4. Change `b = b + a` to `b += a` to make your code more C++ like. 
 5. (Hard) What's the difference between `i++` and `++i`?
 
@@ -953,7 +1024,7 @@ similar way to how we used `NumericVector`'s. The main differences are:
     ```
 
  * We subset using `()`, i.e. `mat(5, 4)`.
- * The first view in a matrix is `mat(0, 0)` - remember indexes start with `0`.
+ * The first element in a matrix is `mat(0, 0)` - remember indexes start with `0` not `1`.
  * To determine the number of rows and columns, we use the `.nrow()` and `.ncol()` methods.
 
 ### C++ with sugar on top {#sugar}
@@ -972,7 +1043,7 @@ NumericVector res_c(NumericVector x, NumericVector y) {
   int i;
   int n = x.size();
   NumericVector residuals(n);
-  for(i=0; i<n; i++) {
+  for(i=0; i < n; i++) {
     residuals[i] = pow(x[i] - y[i], 2);
   }
   return residuals;
@@ -996,7 +1067,8 @@ the sugared variety, the code is shorter and is constantly being improved.
 
 #### Exercises {-}
 
-1. Construct an R version, `res_r` and compare the three function variants.
+1. Construct an R version (using a `for` loop rather than the vectorised solution),
+`res_r` and compare the three function variants. 
 1. In the above example, `res_sugar` is faster than `res_c`. Do you know why?
 
 ### Rcpp resources
