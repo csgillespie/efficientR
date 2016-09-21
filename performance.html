@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-20">
+<meta name="date" content="2016-09-21">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -261,7 +261,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient optimization</a><ul>
 <li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
 <li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.2</b> Efficient base R</a><ul>
-<li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if</code> vs <code>ifelse</code> functions</a></li>
+<li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if()</code> vs <code>ifelse()</code> functions</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sorting-and-ordering"><i class="fa fa-check"></i>Sorting and ordering</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
 <li><a href="performance.html#which-indices-are-true">Which indices are <code>TRUE</code>  </a></li>
@@ -381,7 +381,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </blockquote>
 <p>Knuth’s point is that it is easy to undertake code optimisation inefficiently. When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that time spent optimizing code early in the developmental stage could be wasted. Even worse, there is a tradeoff between code speed and code readability; we’ve already made this trade-off once by using readable, (but slow) R compared with verbose C code!</p>
 <p>For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions to increase efficiency. These are (relatively) easy ways of saving time that, once implemented, will work for future projects. Code optimisation, by contrast, is an advanced topic that should only be tackled once ‘low hanging fruit’ for efficiency gains have been taken.</p>
-<p>In this chapter we assume that you already have well-developed code that is mature conceptually and has been tried and tested. Now you want to optimize this code, but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section. Section <a href="performance.html#performance-parallel">7.4</a> discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how <code>Rcpp</code> can be used to efficiently incorporating C++ code into an R analysis.</p>
+<p>In this chapter we assume that you already have well-developed code that is mature conceptually and has been tried and tested. Now you want to optimize this code, but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimization, and this is covered in the next section. Section <a href="performance.html#performance-parallel">7.4</a> discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how <code>Rcpp</code> can be used to efficiently incorporate C++ code into an R analysis.</p>
 <div id="top-5-tips-for-efficient-performance" class="section level2">
 <h2><span class="header-section-number">7.1</span> Top 5 tips for efficient performance</h2>
 <ol style="list-style-type: decimal">
@@ -396,7 +396,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">7.2</span> Efficient base R</h2>
 <p>In R there is often more than one way to solve a problem. In this section we highlight standard tricks or alternative methods that may improve performance.</p>
 <div id="the-if-vs-ifelse-functions" class="section level3 unnumbered">
-<h3>The <code>if</code> vs <code>ifelse</code> functions</h3>
+<h3>The <code>if()</code> vs <code>ifelse()</code> functions</h3>
 <p><code>ifelse()</code> is a vectorised version of the standard control-flow function <code>if(test) if_yes else if_no</code> that works as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ifelse</span>(test, if_yes, if_no)</code></pre></div>
 <p>In the above imaginary example, the return value is filled with elements from the <code>if_yes</code> and <code>if_no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>. For example, suppose we have a vector of exam marks. <code>ifelse()</code> could be used to classify them as pass or fail:</p>
@@ -418,13 +418,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.586   0.252   3.839</span>
+<span class="co">#&gt;    2.74    0.20    2.94</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.195   0.020   0.216</span>
+<span class="co">#&gt;   0.185   0.032   0.217</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implentation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -432,13 +432,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.523   0.132   0.654</span>
+<span class="co">#&gt;   0.544   0.140   0.685</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
 <div id="sorting-and-ordering" class="section level3 unnumbered">
 <h3>Sorting and ordering</h3>
-<p>Sorting a vector a single vector is relatively quick; sorting a vector of length <span class="math inline">\(10^7\)</span> takes around <span class="math inline">\(0.01\)</span> seconds. If you only sort a vector once at the top of a script, then don’t worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.</p>
+<p>Sorting a vector is relatively quick; sorting a vector of length <span class="math inline">\(10^7\)</span> takes around <span class="math inline">\(0.01\)</span> seconds. If you only sort a vector once at the top of a script, then don’t worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.</p>
 <p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is the most computationally efficient option for most situations (it is around 20% faster when sorting a large vector of doubles).</p>
 <p>Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the <code>partial</code> argument, i.e. <code>sort(x, partial = 1:10)</code>. For very large vectors, this can give a three fold speed increase.</p>
 </div>
@@ -499,9 +499,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00277 0.00366 0.0498 0.00528 0.0057 4.48   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.74731 0.81441 1.0781 0.86218 1.1743 7.60   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00266 0.00365 0.0531 0.00616 0.00697 4.72   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.76187 0.83629 1.0900 0.87798 1.17615 7.84   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -687,11 +687,6 @@ Another common use of <code>on.exit()</code> is with the <code>par()</code> func
 </div>
 <div id="process-forking" class="section level3">
 <h3><span class="header-section-number">7.4.4</span> Process forking</h3>
-<pre><code>#&gt; 
-#&gt; Attaching package: &#39;efficient&#39;
-#&gt; The following object is masked _by_ &#39;.GlobalEnv&#39;:
-#&gt; 
-#&gt;     idata</code></pre>
 <p>Another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions, i.e.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This will run on Windows, but will only use 1 core</span>
 <span class="kw">mclapply</span>(<span class="dv">1</span>:<span class="dv">2</span>, snakes_ladders)</code></pre></div>
@@ -763,7 +758,7 @@ Figure 7.4: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_c</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_c
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ad08acf80d0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ab5aead80d0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_c</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_c</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
