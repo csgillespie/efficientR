@@ -9,7 +9,7 @@ knit: "bookdown::preview_chapter"
 
 There are many words for data processing. You can **clean**, **hack**, **manipulate**, **munge**, **refine** and **tidy** your dataset, ready for the next stage, typically modelling and visualisation. Each word says something about perceptions towards the process: data processing is often seen as *dirty work*, an unpleasant necessity that must be endured before the *real*, *fun* and *important* work begins. This perception is wrong. Getting your data 'ship shape' is a respectable and in some cases vital skill. For this reason we use the more admirable term *data carpentry*.
 
-The metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as Abraham Lincoln put it, continuing the metaphor.
+This metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as the saying goes.
 
 Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in Chapter 5, can cripple your workflow, working with messy data can lead to project management hell.
 
@@ -32,10 +32,25 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 
 1. Using the ` %>%` 'pipe' operator in combination with **dplyr**'s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.
 
+### Prerequisites {-}
+
+This chapter relies on a number of packages for data cleaning and processing - test they are installed on your computer and load them with:
+
+```{r}
+library("tibble")
+library("tidyr")
+library("stringr")
+library("readr")
+library("dplyr")
+library("data.table")
+```
+
+**RSQLite** and **ggmap** are also used in a couple of examples, although they are not central to the chapter's content.
 
 ## Efficient data frames with tibble
 
 **tibble** is a package that defines a new data frame class for R, the `tbl_df`. These 'tibble diffs' (as their inventor [suggests](https://github.com/hadley/tibble) they should be pronounced) are like the base class `data.frame`, but with more user friendly printing, subsetting, and factor handling.
+
 ```{block, type="rmdnote"}
 A tibble data frame is an S3 object with three classes, `tbl_df`, `tbl`, and `data.frame`. Since 
 the object has the `data.frame` tag, this means that if a `tbl_df` or `tbl` method isn't available, 
@@ -76,29 +91,28 @@ df_base$colB
 ```
 Now create a tibble data frame and repeat the above commands.
 
-## Tidying data with tidyr
+## Tidying data with tidyr and regular expressions
 
 A key skill in data analysis is understanding the structure of datasets and being able to 'reshape' them. This is important from a workflow efficiency perspective: more than half of a data analyst's time can be spent re-formatting datasets [@Wickham_2014], so getting it into a suitable form early could save hours in the future. Converting data into a 'tidy' form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.
 
 Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including **stringi** and **stringr** can help update messy character strings using regular expressions; **assertive** and **assertr** packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the **lubridate** vignette (see `vignette("lubridate")`). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling.
-The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014.
+The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:tpewt), provided by @Wickham_2014 and loaded using the code below:
 
-```{r, echo=FALSE, eval=FALSE}
-# Download data from its original source - an academic paper
-downloader::download("http://www.jstatsoft.org/v59/i10/supp/4", destfile = "v59i10-data.zip")
-# The source code associated with the paper
-downloader::download("http://www.jstatsoft.org/v59/i10/supp/3", destfile = "extdata/reshape/v59i10.R")
-# After running the R script...
-dir.create("extdata/reshape")
-unzip("v59i10-data.zip", exdir = "extdata/reshape/")
-# write.csv(raw, "extdata/reshape-pew.csv")
+```{r, message=FALSE}
+library("efficient")
+data(pew) # see ?pew - dataset from the efficient package
+pew[1:3, 1:4] # take a look at the data
 ```
 
-These tables may look different, but they contain precisely the same information.
+Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively.
+They have different dimensions, but they contain precisely the same information.
 Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
 Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-For tabular presentation the wide form may be better. Wide data can also be less memory consuming because it requires fewer cells.
+Because R is a vector-based language, tidy data also has efficiency advantaged: it's often faster to operate on few long columns than many short ones.
+Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data.
+Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be
+able to transfer between wide (or otherwise 'untidy') and tidy formats.
 
 Tidy data has the following characteristics [@Wickham_2014]:
 
@@ -109,54 +123,54 @@ Tidy data has the following characteristics [@Wickham_2014]:
 Because there is only one observational unit in the example (religions), it can be described in a single table.
 Large and complex datasets are usually represented by multiple tables, with unique identifiers or 'keys' to join them together [@Codd1979]. 
 
-Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns.
+Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns. 
 
-- Gathering: this means making 'wide' tables 'long' by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`) , as illustrated in Table \@ref(tab:tpew) and Table \@ref(tab:tpewt) and in the code block below:
+### Make wide tables long with `gather()`
 
+Gathering means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
+`gather()` (the inverse of which is `spread()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
+The code that performs this operation is provided in the code block below.
+This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
 
 ```{r}
-library("tidyr")
-library("readr")
-raw = read_csv("extdata/pew.csv") # read in the 'wide' dataset
-dim(raw)
-rawt = gather(raw, Income, Count, -religion)
-dim(rawt)
-rawt[1:3,]
+dim(pew)
+pewt = gather(data = pew, key = Income, value = Count, -religion)
+dim(pewt)
+pewt[c(1:3, 50),]
 ```
 
-```{block, gather-note, type='rmdtip'}
-Note
-that the dimensions of the data change from having 10 observations across 18 columns to 162 rows in only 3 columns.
-Note that when we print the object `rawt[1:3,]`, the class of each variable is given
-(`chr`, `fctr`, `int` refer to character, factor and integer classes, respectively).
-This is because **readr** creates `tbl` objects from the **tibble** package.
+The above code demonstrates the three arguments that `gather()` requires:
+
+1. `data`, a data frame in which column names will become row values.
+1. `key`, the name of the categorical variable into which the column names in the original datasets are converted .
+1. `value`, the name of cell value columns.
+
+As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this columns are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
+
+```{r}
+gather(pew)
 ```
 
-```{r tpew, echo=FALSE}
-# generate pew dataset
-raw = read_csv("extdata/reshape-pew.csv")
-raw = raw[-c(1, ncol(raw))] # remove excess cols
-names(raw) = c("religion", "<$10k", "$10--20k", "$20--30k", "$30--40k",
-               "$40--50k", "$50--75k", "$75--100k", "$100--150k", ">150k")
-# write_csv(raw, "extdata/pew.csv")
-knitr::kable(raw[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
+```{r tpew, echo=FALSE, message=FALSE}
+knitr::kable(pew[1:3,1:4], caption = "First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
 ```
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-rawt = gather(raw, Income, Count, -religion)
-rawt_mini = gather(raw[1:3,1:4], Income, Count, -religion)
-knitr::kable(rawt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
+pewt = gather(pew, Income, Count, -religion)
+pewt_mini = gather(pew[1:3,1:4], Income, Count, -religion)
+knitr::kable(pewt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
 ```
 
-- Splitting: this means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the `separate()` function, as illustrated in the Tables \@ref(tab:to-separate) and \@ref(tab:separated) and in the code chunk below.
+### Split joint variables with `separate()`
+
+Splitting means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the `separate()` function, as illustrated in the Tables \@ref(tab:to-separate) and \@ref(tab:separated) and in the code chunk below. See `?separate` for more information on this function. 
 
 ```{r}
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
-agesex_df = data.frame(agesex, n) # create a data frame
-separate(agesex_df, agesex, c("sex", "age"), 1)
+agesex_df = tibble(agesex, n) # create a data frame
+separate(agesex_df, col = agesex, into = c("age", "sex"))
 ```
 
 ```{r to-separate, echo=FALSE,}
@@ -168,29 +182,87 @@ knitr::kable(separate(agesex_df, agesex, c("sex", "age"), 1),
              caption = "Age and sex variables separated by the function `separate`.")
 ```
 
-There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
-The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. These same principles can also be applied to the representation of model results: the **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)).
+### Other tidyr functions
 
-```{block, nse, type='rmdnote'}
-Note that the above code used non standard evaluation, which means not surrounding variable names in quote marks for ease of typing and autocompletion. This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation.
-```
+There are other tidying operations that **tidyr** can perform, as described in the package's vignette (`vignette("tidy-data")`).
+The wider issue of manipulation is a large topic with major potential implications for efficiency [@Spector_2008] and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms. 
+
+These same principles can also be applied to the representation of model results. The **broom** package provides a standard output format for model results, easing interpretation (see [the broom vignette](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)). The function `broom::tidy()` can be applied to a wide range of model objects and return the model's output in a standardized data frame output.
 
 Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix `_` can be added to **dplyr** and **tidyr** function names to allow the use of standard evaluation. Thus the standard evaluation version of `separate(agesex_df, agesex, c("sex", "age"), 1)` is `separate_(agesex_df, "agesex", c("sex", "age"), 1)`.
 
+### Regular expressions
+
+Regular expressions (commonly known as regex) is a language for describing and manipulating text strings. There are books on the subject, and several good tutorials on regex in R [e.g. @sanchez_handling_2013], so we'll just scratch the surface of the topic, and provide a taster of what is possible. Regex is a deep topic. However, knowing the basics can save a huge amount of time from a data tidying perspective, by automating the cleaning of messy strings.
+
+In this section we teach both **stringr** and base R ways of doing pattern matching. The former provides easy to remember function names and consistency. The latter is useful to know as you'll find lots of base R regex code in other people code as **stringr** is relatively new and not installed by default. The foundational regex operation is to detect whether or not a particular text string exists in an element or not which is done with `grepl()` and `str_detect()` in base R and **stringr** respectively: 
+
+```{r}
+library("stringr")
+x = c("Hi I'm Robin.", "DoB 1985")
+
+grepl(pattern = "9", x = x)
+str_detect(string = x, pattern = "9")
+```
+
+```{block stringr-grep, type="rmdnote"}
+Note: **stringr** does not include a direct replacement for `grep()`. You can use `which(str_detect())` instead.
+```
+
+Notice that `str_detect()` begins with `str_`. This is a common feature of **stringr** functions: they all do. This can be efficient because if you want to do some regex work, you just need to type `str_` and then hit Tab to see a list of all the options. The various base R regex function names, by contrast, are to remember, including `regmatches()`, `strsplit()` and `gsub()`. The **stringr** equivalents have more intuitive names that relate to the intention of the functions: `str_match_all()`, `str_split()` and `str_replace_all()`, respectively.
+
+There is much else to say on the topic but rather than repeat what has been said elsewhere, we feel it is more efficient to direct the interested reader towards existing excellent resources for learning regex in R. We recommend reading, in order:
+
+- The [Strings chapter](http://r4ds.had.co.nz/strings.html) of @grolemund_r_2016.
+- The **stringr** vignette (`vignette("stringr")`).
+- A detailed tutorial on regex in base R [@sanchez_handling_2013].
+- For more advanced topics, reading the documentation of and [online articles](http://www.rexamine.com/blog/) about the **stringi** package, on which **stringr** depends.
+
+#### Exercises {-}
+
+1. What are the three criteria of tidy data?
+
+2. Load and look at subsets of these datasets. The first is the `pew` datasets we've been using already. The second reports the points that define, roughly, the geographical boundaries of different London boroughs. What is 'untidy' about each?
+
+```{r, warning=FALSE}
+head(pew, 10)
+data(lnd_geo_df)
+head(lnd_geo_df, 10)
+```
+
+3. Convert each of the above datasets into tidy form.
+
+4. Consider the following string of phone numbers and fruits from [@wickham2010stringr]:
+
+```{r}
+strings = c(" 219 733 8965", "329-293-8753 ", "banana", "595 794 7569",
+             "387 287 6718", "apple", "233.398.9187  ", "482 952 3315", "239 923 8115",
+             "842 566 4692", "Work: 579-499-7527", "$1000", "Home: 543.355.3679")
+```
+
+Write functions in **stringr** and base R that return:
+
+- A logical vector reporting whether or not each string contains a number.
+- Complete words only, without extraneous non-letter characters.
+
+```{r}
+str_detect(string = strings, pattern = "[0-9]")
+str_extract(strings, pattern = "[A-z]+")
+```
 
 ## Efficient data processing with dplyr {#dplyr}
 
 After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.
 
-Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data pliers'. **dplyr** has a number of advantages over base R and **data.table** approaches to data processing:
+Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data frame pliers'. **dplyr** has a number of advantages over base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run (due to its C++ backend) and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning)). It has small number of intuitively named functions, or 'verbs'. These can be used in combination with each other, and the grouping function `group_by()`, to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
+Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning)). It has small number of intuitively named functions, or 'verbs'. These were partly inspired by SQL, one of the longest established languages for data analysis, which combines multiple simple functions (such as `SELECT` and `WHERE`, roughly analogous to `dplyr::select()` and `dplyr::filter()`) to create powerful analysis workflows. Likewise, **dplyr** functions were designed to be used together to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
 
-```{r verbs, echo=FALSE}
+```{r verbs, echo=FALSE, message=FALSE}
 verbs = read_csv("extdata/dplyr-verbs.csv")
 knitr::kable(verbs, caption = "dplyr verb functions.")
 ```
@@ -221,12 +293,10 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 
 ```{r, message=FALSE}
 # Load global inequality data
-fname = system.file("extdata/world-bank-ineq.csv", package = "efficient") 
-idata = read_csv(fname)
+data(wb_ineq)
 ```
 
-You should not be expecting to master **dplyr**'s functionality in one sitting:
-the package is large and can be seen as
+**dplyr** is a large package and can be seen as
 a language in its own right. Following the 'walk before you run' principle,
 we'll start simple, by filtering and aggregating rows.
 
@@ -243,39 +313,36 @@ Note also the syntax:
 
 ```{r, message=FALSE}
 library("dplyr")
-idata = rename(idata, Country = `Country Name`)
+wb_ineq = rename(wb_ineq, code = `Country Code`)
 ```
-<!-- __XXX__ Is `names` used for clarity or is it because `rename` would be clunky in this context? -->
-To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated for clarity.
 
-```{r}
+To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated on an older version of the dataset (not run) to illustrate how long, clunky and inefficient names can be converted into short and lean ones.
+
+```{r, eval=FALSE}
 # The dplyr way (rename two variables)
-idata = rename(idata,
+wb_ineq = rename(wb_ineq,
  top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
  bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
 # The base R way (rename five variables)
-names(idata)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
+names(wb_ineq)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
 ```
 
 ### Changing column classes
 
-<!-- __XXX__ The bit below is a bit odd. The data frame is a tibble. The class is printed in a column. I 
-also think that your vapply command is **much** nicer, with `str` being more appropriate for the footnote.-->
-
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a `data.frame` can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`vapply(idata, class, character(1))` is an alternative way to query the class of columns in a dataset.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
 
 ```{r}
-str(idata)
+vapply(wb_ineq, class, character(1))
 ```
 
-This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(idata$gini)` fails.
+This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(wb_ineq$gini)` fails.
 
-Visual inspection of the data (e.g. via `View(idata)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
+Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
 
 ```{r}
-idata$gini = as.numeric(idata$gini)
-mean(idata$gini, na.rm = TRUE) # now the mean is calculated
+wb_ineq$gini = as.numeric(wb_ineq$gini)
+mean(wb_ineq$gini, na.rm = TRUE) # now the mean is calculated
 ```
 
 However the purpose of programming languages is to *automate* tasks and reduce typing.
@@ -283,23 +350,23 @@ The following code chunk re-classifies all of the numeric variables using `data.
 
 <!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
 ```{r, warning=FALSE}
-id = 5:9 # column ids to change
-idata[id] = data.matrix(idata[id])
-vapply(idata, class, character(1))
+cols_to_change= 5:9 # column ids to change
+wb_ineq[cols_to_change] = data.matrix(wb_ineq[cols_to_change])
+vapply(wb_ineq, class, character(1))
 ```
 
 As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
 
 ```{r, warning=FALSE}
-idata[id] = as.numeric(unlist(idata[id]))
+wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
 ```
 
 <!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
 *Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
 
 ```{r, warning=FALSE, echo=-2}
-idata = mutate_each(idata, "as.numeric", id)
-# This file is saved as idata in the efficient package
+wb_ineq = mutate_each(wb_ineq, "as.numeric", cols_to_change)
+# This file is saved as wb_ineq in the efficient package
 ```
 
 As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
@@ -307,78 +374,34 @@ As with other operations there are other ways of achieving the same result in R,
 ```{r, echo=FALSE, warning=FALSE}
 # Idea: these 4 methods could be benchmarked
 # An alternative method for changing the column class
-idata[id] = apply(idata[id], 2, as.numeric)
+wb_ineq[cols_to_change] = apply(wb_ineq[cols_to_change], 2, as.numeric)
 
 # Another alternative method using a for loop
-idata_df = as.data.frame(idata)
-for(i in id){
-  idata_df[,i] = as.numeric(idata_df[,i])
+for(i in cols_to_change){
+  wb_ineq[[i]] = as.numeric(wb_ineq[[i]])
 }
 ```
 
 ### Filtering rows
 
-**dplyr** offers an alternative and more flexible way of filtering data, using `filter()`.
+**dplyr** offers an alternative way of filtering data, using `filter()`.
 
 ```{r}
-# Base R: idata[idata$Country == "Australia",]
-aus2 = filter(idata, Country == "Australia")
+# Base R: wb_ineq[wb_ineq$Country == "Australia",]
+aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
-In addition to being more flexible (see `?filter`), `filter` is slightly faster than base R's notation.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-Note that **dplyr** does not use the `$` symbol: it knows that that `Country` is a variable of `idata`:
-the first argument of **dplyr** functions usually a `data.frame`, and
-subsequent in this context variable names can be treated as vector objects.^[Note that this syntax is a defining feature of **dplyr**
-and many of its functions work in the same way.
+`filter()` is slightly more felxible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+By avoiding the `$` symbol **dplyr** subsetting than subsetting in base R.
+The first argument is a data frame and
+subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
 Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
-] 
 
-There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). For consistency, however, we next look at filtering columns.
-
-### Filtering columns
-
-Large datasets often contain much worthless or blank information. This consumes RAM and reduces computational efficiency. Being able to focus quickly only on the variables of interest becomes especially important when handling large datasets.
-
-Imagine that we have a text file called `miniaa` which is large enough to consume most of your computer's RAM. We can load it with the following command:
-
-```{r}
-data(miniaa, package="efficient") # load imaginary large data
-dim(miniaa)
-```
-
-Note that the data frame has 329 columns, and imagine it has millions of rows, instead of $9. That's a lot of variables. Do we need them all? It's worth taking a glimpse at this dataset to find out:
-
-<!-- __XXX__ I didn't find this helpful for a large data set -->
-```{r, eval=FALSE}
-glimpse(miniaa)
-#> Observations: 9
-#> Variables: 329
-#> $ NPI          
-#>     <int> ...
-#> ...
-```
-
-The majority of variables in this dataset only contain `NA`. To clean the giant dataset, removing the empty columns, we need to identify which variables these are.
-
-```{r, echo=FALSE}
-# TODO: demonstrate dplyr::select
-## __XXX__ I'm not sure it's possible with select (I just spent 20 minutes trying). SO question?
-```
-
-<!-- __XXX__ This isn't correct (I know I suggested it). `anyNA` detects if there are any NA's. According to your comment it -->
-<!-- should be `!sum(!is.na(x))` - but there are no columns that are all NA's -->
-```{r}
-# Identify the variable which are all NA
-all_na = vapply(miniaa, function(x) anyNA(x), logical(1))
-summary(all_na) # summary of the results
-miniaa1 = miniaa[!all_na] # subset the dataframe
-```
-
-The new `miniaa` object has fewer than a third of the original columns.
+There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
 
 ### Data aggregation
 
-Data aggregation is the process of creating summaries of data based on a grouping variable. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the `ghg_ems` dataset stored in the **efficient** package.
+Data aggregation involves creating summaries of data based on a grouping variable, in a process that has been referred to as 'split-apply-combine'. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the `ghg_ems` dataset stored in the **efficient** package.
 
 ```{r, warning=FALSE}
 # data available online, from github.com/csgillespie/efficient_pkg
@@ -388,11 +411,7 @@ nrow(ghg_ems)
 length(unique(ghg_ems$Country))
 ```
 
-Note that while there are almost $8000$ rows, there are fewer than 200 countries.
-
-```{block, gsub, type='rmdnote'}
-Note that the `ghg_ems` column names were cleaned using the command `word(names(ghg_ems), sep = " |/")` from the **stringr** package before it was saved as a dataset within the **efficient** package. `" |/"` in this context means "any space or forward slash is a word break". See the Pattern matching section in `vignette("stringr")` for more on this. For details about the `ghg_ems` dataset, see the documentation in `?efficient::ghg_ems`.
-```
+Note that while there are almost $8000$ rows, there are fewer than 200 countries: factors would have been a more space efficient way of storing the countries data.
 
 <!-- Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries). -->
 <!-- Another way to specify the `by` argument is with the tilde (`~`). -->
@@ -417,14 +436,14 @@ group_by(ghg_ems, Country) %>%
 ```
 
 ```{block, unix-philosophy, type='rmdnote'}
-The example above relates to a philosophical question in programming: how much work should one function do?  The [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well".  And shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing, and the code hard to maintain. In general, being modular and specific is advantageous for clarity, and this modular approach is illustrated in the above example with the dual `group_by` and `summarise` stages.
+The example above relates to a wider programming: how much work should one function do? The work could have been done with a single `aggregate()` call. However, the [Unix philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html) states that programs should "do one thing well", which is how **dplyr**'s functions were designed. Shorter functions are easier to understand and debug.  But having too many functions can also make your call stack confusing.
 ```
 
-To reinforce the point, this operation is also performed below on the `idata` dataset:
+To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
 
 ```{r}
-data(idata, package="efficient")
-countries = group_by(idata, Country)
+data(wb_ineq, package="efficient")
+countries = group_by(wb_ineq, Country)
 summarise(countries, gini = mean(gini, na.rm  = TRUE))
 ```
 
@@ -462,20 +481,10 @@ summary statistics
 
 1. Refer back to the greenhouse gas emissions example at the outset of section \@ref(dplyr), in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?
 
-1. Referring back to Section \@ref(renaming-columns), rename the variables 4 to 8 using the **dplyr** function `rename`. Follow the pattern `ECO2`, `MCO2` etc.
-
-```{r, echo=FALSE, eval=FALSE}
-# Using dplyr::rename
-ghg_ems = rename(ghg_ems,
-             ECO2 = Electricity.Heat..CO2...MtCO2.,
-             MCO2 = Manufacturing.Construction..CO2...MtCO2.,
-             TCO2 = Transportation..CO2...MtCO2.,
-             FCO2 = Fugitive.Emissions..CO2...MtCO2.)
-```
 
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
-3. Test additional **dplyr** 'verbs' on the `idata` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
+3. Test additional **dplyr** 'verbs' on the `wb_ineq` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
 
 ### Chaining operations
 
@@ -491,7 +500,7 @@ Here's how chains can help organise the analysis needed to answer this question
 step-by-step:
 
 ```{r tidy=FALSE}
-idata %>% 
+wb_ineq %>% 
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
@@ -518,7 +527,7 @@ top_n(
   arrange(
     summarise(
       group_by(
-        filter(idata, grepl("g", Country)),
+        filter(wb_ineq, grepl("g", Country)),
         Year),
       gini = mean(gini, na.rm  = TRUE)),
     desc(gini)),
@@ -533,6 +542,21 @@ top_n(
 ```
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
+
+### Non standard evaluation
+
+The final thing to say about **dplyr** does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. `Country` rather than `"Country"`). This is called non-standard evaluation (NSE) (see `vignette("nse")`). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.
+
+This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `gather()` function, used above:
+
+```{r}
+# 1: Default NSE function
+group_by(cars, cut(speed, c(0, 10, 100))) %>% summarise(mean(dist))
+# 2: Standard evaluation using quote marks
+group_by_(cars, "cut(speed, c(0, 10, 100))") %>% summarise_("mean(dist)")
+# 3: Standard evaluation using formula, tilde notation (recommended standard evaluation method)
+group_by_(cars, ~cut(speed, c(0, 10, 100))) %>% summarise_(~mean(dist))
+```
 
 ## Combining datasets
 
@@ -559,41 +583,37 @@ Ensure that both joining variables have the same class (combining `character` an
 How large is the overlap between `ghg_ems$Country` and `world$Country`? We can find out using the `%in%` operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many *unique* country names from `ghg_ems` are present in the `world` dataset:
 
 ```{r}
-# save the result as 'm', for match
-c_u = unique(ghg_ems$Country)
-w_u = unique(world$Country)
-summary({m = c_u %in% w_u})
+unique_countries_ghg_ems = unique(ghg_ems$Country)
+unique_countries_world = unique(world$Country)
+matched = unique_countries_ghg_ems %in% unique_countries_world
+table(matched)
 ```
 
 This comparison exercise has been fruitful: most of the countries in the `co2` dataset exist in the `world` dataset. But what about the 20 country names that do not match? We can identify these as follows:
 
-<!-- __XXX__ This doesn't look very dplyr like -->
 ```{r}
-(n = c_u[!m]) # non-matching country names in world data
+(unmatched_countries_ghg_ems <- unique_countries_ghg_ems[!matched])
 ```
 
-It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help to rectify this, as illustrated the first non-matching country below:
+It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help find which countries *do* match, as illustrated the first non-matching country below:
 
 ```{r}
-grep(n[1], w_u) # no match
-(fm = agrep(n[1], w_u, max.distance = 10))
-(w_u1 = w_u[fm])
+(unmatched_country = unmatched_countries_ghg_ems[1])
+unmatched_world_selection = agrep(pattern = unmatched_country, unique_countries_world, max.distance = 10)
+unmatched_world_countries = unique_countries_world[unmatched_world_selection]
 ```
 
-What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names with a `grep`. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10` after trial and error). The results show that the country `Antigua & Barbuda` from the `ghg_ems` data is matched *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
+What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10`. The results show that the country `Antigua & Barbuda` from the `ghg_ems` data matches *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
 
-<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
 ```{r}
-world$Country[world$Country %in% w_u1] = n[1]
+world$Country[world$Country %in% unmatched_world_countries] =
+  unmatched_countries_ghg_ems[1]
 ```
 
-Fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. This can be fixed manually:
+The above code reduces the number of country names in the `world` dataset by replacing *both* "Antigua" and "Barbuda" to "Antigua & Barbuda". This would not work other way around: how would one know whether to change "Antigua & Barbuda" to "Antigua" or to "Barbuda".
 
-<!-- __XXX__ This doesn't look very dplyr like. Select? filter? -->
-```{r}
-world$Country[world$Country == "USA"] = "United States"
-```
-<!-- __XXX__ Point people to a vignette in the package -->
+Thus fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. 
+
 To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
 
 ```{r co2-clean, echo=FALSE, eval=FALSE}
@@ -651,7 +671,7 @@ n = c_u[!m]
 ```
 
 
-There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets), as illustrated below:
+There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets). This is a very clear case of when **dplyr** is advantageous: `merge()`'s interface is complicated, the code is less readable, and `*_join` functions are faster. `inner_` and `lef_` `join()` methods are illustrated below:
 
 ```{r}
 nrow({world_co2 = left_join(world, ghg_ems)})
@@ -791,15 +811,13 @@ so it should be stated at the outset that which to use can be a matter of person
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
-The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()` presented in Section \@ref(filtering-columns), we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
-
-<!-- __XXX__ Anything read from data/* isn't reproducible for the reader. MOve to the package?-->
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
 
 ```{r}
 library("data.table")
-idata = readRDS("extdata/idata-renamed.Rds")
-idata_dt = data.table(idata) # convert to data.table class
-aus3a = idata_dt[Country == "Australia"]
+data(wb_ineq_renamed) # from the efficient package
+wb_ineq_dt = data.table(wb_ineq_renamed) # convert to data.table class
+aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
 To boost performance, one can set 'keys'. These are
@@ -807,32 +825,32 @@ To boost performance, one can set 'keys'. These are
 which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
 
 ```{r}
-setkey(idata_dt, Country)
-aus3b = idata_dt[.("Australia")]
+setkey(wb_ineq_dt, Country)
+aus3b = wb_ineq_dt[.("Australia")]
 ```
 
-The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `idata` dataset. 
+The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `wb_ineq` dataset. 
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
 for(i in seq(10, 1000, length.out = 10)){
-  idata_big = do.call("rbind", replicate(i, idata, simplify = FALSE))
-  idata_dt = as.data.table(idata_big)
-  idata_key = copy(idata_dt) # copy the object
-  setkey(idata_key, "Country")
+  wb_ineq_big = do.call("rbind", replicate(i, wb_ineq, simplify = FALSE))
+  wb_ineq_dt = as.data.table(wb_ineq_big)
+  wb_ineq_key = copy(wb_ineq_dt) # copy the object
+  setkey(wb_ineq_key, "Country")
   mb = microbenchmark(
     times = 1,
-    base_sqrbrkt = idata_big[idata_big$Country == "Australia", ],
-    dplyr_filter = filter(idata_big, Country == "Australia"),
-    dt_standard = idata_dt[Country == "Australia"],
-    dt_key = idata_key[list("Australia"), ]
+    base_sqrbrkt = wb_ineq_big[wb_ineq_big$Country == "Australia", ],
+    dplyr_filter = filter(wb_ineq_big, Country == "Australia"),
+    dt_standard = wb_ineq_dt[Country == "Australia"],
+    dt_key = wb_ineq_key[list("Australia"), ]
   )
   tab = tapply(mb$time / 1000, mb$expr, mean)
   res_tmp = data.frame(
     exp = names(tab),
     time = as.vector(tab),
-    rows = nrow(idata_big),
-    MB = as.numeric(object.size(idata_big) / 1000000)
+    rows = nrow(wb_ineq_big),
+    MB = as.numeric(object.size(wb_ineq_big) / 1000000)
   )
   res_tmp$Time = res_tmp$time / min(res_tmp$time)
   res = rbind(res, res_tmp)
