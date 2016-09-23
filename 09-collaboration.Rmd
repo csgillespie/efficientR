@@ -19,7 +19,8 @@ Collaborative programming provides an opportunity for people to review each othe
 
 When working on complex programming projects with multiple inter-dependencies version control is essential. Even on small projects tracking the progress of your project's code-base has many advantages and makes collaboration much easier. Fortunately it is now easier than ever before to integrate version control into your project, using RStudio's interface to the version control software `git` and online code sharing websites such as GitHub. This is the subject of Section \@ref(version-control).
 
-The final section, \@ref(refactoring), addresses the question of how to respond when you find inefficient code. Refactoring is the process of re-writing poorly written or scripts so they are faster, more comprehensible, more portable and easier to maintain.
+The final section, \@ref(code-review), addresses the question of working in a team and performing
+code reviews.
 
 ### Prerequisites {-}
 
@@ -32,7 +33,7 @@ chapter are **lubridate** and **dplyr**. These packages are used to illustrate g
 1. Think carefully about your comments and keep them up to date.
 1. Use version control whenever possible.
 1. Use informative commit messages.
-1. Don't be afraid to update (refactor) code when needed.
+1. Don't be afraid to elicit feedback from colleagues.
 
 ## Coding style
 
@@ -100,8 +101,8 @@ load data.R
 ```
 
 Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides
-more detailed guidence on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed 
-to work across locales. While the guidelines are strict, the guidence aids in making your scripts more portable.
+more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed 
+to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.
 
 ### Loading packages
 
@@ -296,7 +297,7 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 
 ### Branches, forks, pulls and clones
 
-Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and Github for the useR".
+Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and GitHub for the useR".
 
 Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
 
@@ -317,137 +318,71 @@ A pull request (PR) is a mechanism on GitHub by which your code can be added to 
 ### Using GitHub
 ```
 
-## Refactoring code {#refactoring}
+## Code review {#code-review}
 
-It is likely that your skills as an R programmer will improve over time (e.g. after reading books such as this!). Furthermore, as R packages evolve, the best way to accomplish a task 6 months ago may not be the best way to accomplish it now. Thus it is likely that you will want to rewrite your code at some point. From a collaboration perspective, you may also need to adapt someone else's code to be more efficient. This is *refactoring*.
+What is a code review?^[This section is being written with small teams in mind. Larger
+teams should consult a more detailed text on code review.] Simply when we have
+finished working on a piece of code, a colleague reviews our work and considers
+questions such as
 
-An example would be messy code that creates many objects and uses overlapping packages. The refactored code would be much clearer, efficient and more concise. There is no 'magic bullet' formula to refactor code, but a [series of techniques](https://en.wikipedia.org/wiki/Code_refactoring) can be used, including improving variable names, breaking the code into smaller, more modular chunks and making the code more abstract and generalisable. Refactoring it is a skill that you will learn over time. Good practice involves frequently updating your code - that will get you into the habit of reading code at a 'high level' so you identify quickly its key components and hopefully write it in a better form.
+ * Is the code correct and properly documented?
+ * Could the code be improved?
+ * Does the code conform to existing style guidelines.
+ * Are there any automated tests? If so, are they sufficient.
 
-Let's use some code introduced in Chapter 5 as an example of something that could be written more efficiently:
+A good code review shares knowledge and best practice. 
 
-```{r, eval=FALSE}
-# old code
-fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-co2_ems = read.csv(fname)
-names(co2_ems) = gsub("\\..*", "", names(co2_ems)) 
-e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
-                  mean, data = co2_ems)
-```
+A lightweight code review can take a variety of forms. For example, it could be 
+as simple as emailing round some code for comments, or "over the shoulder", where
+someone literally looks over your shoulder while coding. More formal techniques
+include paired programming where two developers work side by side on the same project.
 
-```{r, eval=FALSE}
-# new code
-library("dplyr")
-fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-co2_ems = readr::read_csv(fname)
-co2_elec_agg = group_by(co2_ems, Country) %>% 
-  summarise(Elec = mean(`Electricity/Heat (CO2) (MtCO2)`, na.rm = TRUE))
-```
+Regardless of the review method being employed, there a number of points to remember.
+First, as with all forms of feedback, be constructive. Rather than pointing out flaws,
+give suggested improvements. Closely related is give praise when appropriate. Second,
+if you are reviewing a piece of code set a time frame or the number of lines of code
+you will review. For example, you will spend one hour review a piece of code, or a
+maximum of 400 lines. Third, a code review should be performed before the code
+is merged into a larger code base; fix mistakes as soon as possible.
 
-Although both approaches generate the same output data using the same number of lines of code (5), the new, refactored code is better in a number of ways. It is more efficient to type (containing 10 fewer characters) and more efficient to run (it is around 20% faster). More importantly, the refactored code is more readable and easily extended, which is a vital consideration from the perspective of efficient collaboration. Adding the following line after the penultimate bracket in the second code chunk would create a new aggregate variable, for example:
-
-```{r, eval=FALSE}
-, Trans = mean(`Transportation (CO2) (MtCO2)`, na.rm= TRUE)
-```
-
-Furthermore, by using the origin column names, the refactored code remains more faithful to the source data. The benefits of being explicit and verbose (i.e. including the units in the variable names) will likely outweigh the costs of additional characters in the analysis process when it comes to publishing the results.
-
-```{block, nlines, type='rmdnote'}
-Note that the number of lines of code is not a good measure of code efficiency. Clear and easily readable that is many lines of code is better than code that is compressed into a few lines that is tricky to read. Do not be afraid to make functions with multiple arguments more than one line. The ` %>%` pipe operator encourages multi-line code that is easy to read. The number of *characters* in code is a better measure, but is still an imperfect measure of efficiency, let alone readability.
-```
-
-```{r, echo=FALSE, eval=FALSE}
-# benchmarking code
-system.time({
-  fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-  co2_ems = read.csv(fname)
-  names(co2_ems) = gsub("\\..*", "", names(co2_ems)) # clean column names
-  e_ems = aggregate(co2_ems$Electricity, list(co2_ems$Country),
-                  mean, data = co2_ems)
-})
+Many R users don't work in team or group; instead they work by themselves.
+Practically, there isn't anyone nearby to review their code. However there is still
+the option of an _unoffical_ code review. For example, if you have hosted code on an
+online repository such as GitHub, users will naturally give feedback on our code
+(especially if you make it clear that you welcome feedback). Another good place is
+Stackoverflow (covered in detail in chapter \@ref(learning)). This site allows you to
+post answers to other users questions. When you post an answer, if you code is
+unclear, this will be flagged in comments below your answer.
 
 
-system.time({
-  fname = system.file("extdata/ghg-ems.csv", package = "efficient")
-  co2_ems = readr::read_csv(fname)
-  co2_elec_agg = group_by(co2_ems, Country) %>% 
-    summarise(Elec = mean(`Electricity/Heat (CO2) (MtCO2)`, na.rm = TRUE))
-})
-```
 
-#### Exercise {-}
 
-1. Refactor the following code chunk to make it run faster:
 
-```{r}
-df = data.frame(
-  letters = c("a", "a", "b", "b", "c", "c"),
-  numbers = c(1, 2, 3, 4, 5, 6)
-)
-aggregate(df$numbers, list(df$letters), sum)
-```
 
-```{r, echo=FALSE, results='hide'}
-# option 1
-df = data.frame(
-  letters = rep(letters[1:3], each = 2),
-  numbers = 1:6
-)
-aggregate(numbers ~ letters, df, sum)
-```
 
-```{r, echo=FALSE, results='hide'}
-# option 2
-df = data.frame(
-  letters = rep(letters[1:3], each = 2),
-  numbers = 1:6
-)
-group_by(df, letters) %>%
-  summarise(sum = sum(numbers))
-```
 
-2. Refector the code in the move function below, to make it faster, more stylish, and more concise.
-This is from [monopoly.R](https://github.com/csgillespie/efficient/blob/master/R/monopoly.R) file in the efficient package (see section \@ref(monopoloy) in the previous chapter for guidance).
 
-```{r}
-move = function(current) {
-  
-  df = data.frame(d1 = sample(1:6, 3, replace=TRUE), 
-                  d2 = sample(1:6, 3, replace=TRUE))
-  
-  df$Total = apply(df, 1, sum)
-  df$IsDouble = df$d1 == df$d2
-  
-  if(df$IsDouble[1] & df$IsDouble[2] & df$IsDouble[3]) {
-    current = 11#Go To Jail
-  } else if(df$IsDouble[1] & df$IsDouble[2]) {
-    current = current + sum(df$Total[1:3])
-  } else if(df$IsDouble[1]) {
-    current = current + sum(df$Total[1:2])
-  } else {
-    current = current + df$Total[1]
-  }
-  return(current)
-}
-```
 
-```{r, eval=FALSE, echo=FALSE}
-# The refactored code, after implementing these optimisations, is shown below
-# It is around 25 times faster!
-move = function(current) {
-  # data.frame -> matrix
-  rolls = matrix(sample(1:6, 6, replace=TRUE), ncol=2)
-  Total = rowSums(rolls)	# apply -> rowSums	
-  IsDouble = rolls[,1] == rolls[,2]
-  # & -> &&
-  if(IsDouble[1] && IsDouble[2] && IsDouble[3]) {
-    current = 11#Go To Jail
-  } else if(IsDouble[1] && IsDouble[2]) {
-    current = current + sum(Total[1:3])
-  } else if(IsDouble[1]) {
-    current = current + Total[1:2]
-  } else {
-    current = Total[1]
-  }
-  current
-}
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
