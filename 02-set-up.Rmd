@@ -308,17 +308,21 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts a number of things happen.
-It can be useful to understand this startup process, so you can make R work the way you want it, fast.
-This section explains how.
+Every time R starts a couple of files are initiated by default, as documented in `?Startup`.
+This section explains how to customise these files, allowing you to save API key or load frequently used functions.
+Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments.
+If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
+
+```{block, rstudio-tip, type='rmdtip'}
+Some of R's startup arguments can be controlled interactively in RStudio. See the online help file [Customizing RStudio](https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio) for more on this.
+```
 
 ### R startup arguments
 
-The arguments passed to the R startup command (typically simply `R` from a shell environment)
-determine what happens.
-The following arguments are particularly important from an efficiency perspective:
+A number of arguments can be appended to the R startup command (`R` in a shell environment) which relate to startup.
+The following are particularly important:
 
-- `--no-environ` tells R to only look for startup files in the current working directory. (Do not worry if you don't understand what this means at present: it will become clear as the later in the section.)
+- `--no-environ` and `--no-init` arguments tell R to only look for startup files (described in the next section) in the current working directory. 
 
 - `--no-restore` tells R not to load any `.RData` files knocking around in the current working directory.
 
@@ -328,9 +332,14 @@ Adding each of these will make R load slightly faster, and mean that slightly le
 R's default setting of loading data from the last session automatically is potentially problematic in this context.
 See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
 
-```{block, rstudio-tip, type='rmdtip'}
-Some of R's startup arguments can be controlled interactively in RStudio. See the online help file [Customizing RStudio](https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio) for more on this.
+```{block type='rmdtip'}
+A concise way to load a 'vanilla' version of R, with all of the above options enabled is with an option of the same name: 
 ```
+
+```{r, engine='bash', eval=FALSE}
+R --vanilla
+```
+
 
 ### An overview of R's startup files
 
