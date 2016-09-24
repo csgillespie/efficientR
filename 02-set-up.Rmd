@@ -90,15 +90,14 @@ Sometimes external package dependencies must be installed manually (i.e. not usi
 This is especially common Unix-based systems (Linux and Mac).
 On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
-Resource monitoring is the process of checking the status of key OS variables, such as RAM usage.
+Resource monitoring is the process of checking the status of key OS variables.
 For computationally intensive work, it is sensible to monitor system resources in this way.
-Resource monitoring can help identify bottlenecks, such as when you are running low on RAM.
-Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to the OS state.
+Resource monitoring can help identify computational bottlenecks.
+Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter \@ref(programming)).
 
-A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter \@ref(programming)).
-System monitors also report the percentage of CPU resource allocated over time.
-On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter \@ref(performance-parallel) on parallel programming).
-Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure \@ref(fig:2-1)).
+CPU resource allocated over time is another common OS variable that is worth monitoring.
+A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)),
+and whether there there is spare CPU capacity on the OS that could be harnessed by parallel code.
 
 ```{r 2-1, echo=FALSE, fig.cap="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.", out.width="100%"}
 knitr::include_graphics("figures/f2_1_sysmon.png")
