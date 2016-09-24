@@ -394,9 +394,66 @@ aus2 = filter(wb_ineq, Country == "Australia")
 By avoiding the `$` symbol **dplyr** subsetting than subsetting in base R.
 The first argument is a data frame and
 subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
-Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
+In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 
 There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
+
+### Chaining operations
+
+Another interesting feature of **dplyr** is its ability
+to chain operations together. This overcomes one of the
+aesthetic issues with R code: you can end-up with
+very long commands with many functions nested inside each
+other to answer relatively simple questions.
+
+What, for example were, the 5 most unequal
+years for countries containing the letter g?
+Here's how chains can help organise the analysis needed to answer this question
+step-by-step:
+
+```{r tidy=FALSE}
+wb_ineq %>% 
+  filter(grepl("g", Country)) %>%
+  group_by(Year) %>%
+  summarise(gini = mean(gini, na.rm  = TRUE)) %>%
+  arrange(desc(gini)) %>%
+  top_n(n = 5)
+```
+
+The above function consists of 6 stages, each of which
+corresponds to a new line and **dplyr** function:
+
+1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
+2. Group the output by year.
+3. Summarise, for each year, the mean gini index.
+4. Arrange the results by average gini index
+5. Select only the top 5 most unequal years.
+
+To see why this method is preferable to the nested
+function approach, take a look at the latter.
+Even after indenting properly it looks terrible
+and is almost impossible to understand!
+
+```{r, eval=FALSE, tidy=FALSE}
+top_n(
+  arrange(
+    summarise(
+      group_by(
+        filter(wb_ineq, grepl("g", Country)),
+        Year),
+      gini = mean(gini, na.rm  = TRUE)),
+    desc(gini)),
+  n = 5)
+```
+
+```{r, echo=FALSE}
+# # Removed - should illustrate how to do it in base R if mentioned:
+# Of course, you *could* write code in base R to
+# undertake the above analysis but for many
+# people the **dplyr** approach is the most agreeable to write.
+```
+
+This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
 ### Data aggregation
 
@@ -484,63 +541,6 @@ summary statistics
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
 3. Test additional **dplyr** 'verbs' on the `wb_ineq` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
-
-### Chaining operations
-
-Another interesting feature of **dplyr** is its ability
-to chain operations together. This overcomes one of the
-aesthetic issues with R code: you can end-up with
-very long commands with many functions nested inside each
-other to answer relatively simple questions.
-
-What, for example were, the 5 most unequal
-years for countries containing the letter g?
-Here's how chains can help organise the analysis needed to answer this question
-step-by-step:
-
-```{r tidy=FALSE}
-wb_ineq %>% 
-  filter(grepl("g", Country)) %>%
-  group_by(Year) %>%
-  summarise(gini = mean(gini, na.rm  = TRUE)) %>%
-  arrange(desc(gini)) %>%
-  top_n(n = 5)
-```
-
-The above function consists of 6 stages, each of which
-corresponds to a new line and **dplyr** function:
-
-1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
-2. Group the output by year.
-3. Summarise, for each year, the mean gini index.
-4. Arrange the results by average gini index
-5. Select only the top 5 most unequal years.
-
-To see why this method is preferable to the nested
-function approach, take a look at the latter.
-Even after indenting properly it looks terrible
-and is almost impossible to understand!
-
-```{r, eval=FALSE, tidy=FALSE}
-top_n(
-  arrange(
-    summarise(
-      group_by(
-        filter(wb_ineq, grepl("g", Country)),
-        Year),
-      gini = mean(gini, na.rm  = TRUE)),
-    desc(gini)),
-  n = 5)
-```
-
-```{r, echo=FALSE}
-# # Removed - should illustrate how to do it in base R if mentioned:
-# Of course, you *could* write code in base R to
-# undertake the above analysis but for many
-# people the **dplyr** approach is the most agreeable to write.
-```
-
-This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
 ### Non standard evaluation
 
