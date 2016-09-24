@@ -11,17 +11,18 @@ data("USArrests", package="datasets")
 
 # Efficient set-up {#set-up}
 
-An efficient computer set-up is analogous to a well-tuned vehicle:
-its components work in harmony, it is well-serviced,
-and it is fast.
-This chapter describes the software decisions that will enable
+An efficient computer set-up is analogous to a well-tuned vehicle.
+Its components work in harmony. It is well-serviced.
+It's fast!
+
+This chapter describes the set-up that will enable
 a productive workflow.
-Starting with the basics and moving to progressively more advanced topics, we explore how the operating system,
-R version, startup files and IDE can make your R work faster (though IDE could be seen as basic need for efficient programming).
-Ensuring correct configuration of these elements will have knock-on benefits in many aspects of your R workflow. That's why we cover them at this early stage (hardware, the other fundamental consideration, is covered in the next [chapter](#programming). 
+It explores how the operating system,
+R version, startup files and IDE can make your R work faster.
+Understanding and at times changing these set-up options can have many knock-on benefits.
+That's why we cover them at this early stage (hardware is covered in the next [chapter](#programming)). 
 By the end of this chapter you should understand how to set-up your computer
-and R installation (skip to section \@ref(r-version) if R is not already installed on your computer)
-for optimal computational and programmer efficiency.
+and R installation for optimal efficiency.
 It covers the following topics:
 
 - R and the operating systems: system monitoring on Linux, Mac and Windows
@@ -30,36 +31,35 @@ It covers the following topics:
 - RStudio: an integrated development environment (IDE) to boost your programming productivity
 - BLAS and alternative R interpreters: looks at ways to make R faster
 
-For lazy readers, and to provide a taster of what's to come, we begin with our 'top 5' tips for an efficient R set-up. It is important to understand that efficient programming is not simply the result of following a recipe of tips: understanding is vital for knowing when to use a memorised solution to a problem and when to go back to first principles. Thinking about and *understanding* R in depth, e.g. by reading this chapter carefully, will make efficiency second nature in your R workflow.
+Efficient programming is more than a series of tips: there is no substitute for in-depth understanding. However, to help remember the key messages buried within the detail of this book, each chapter from now on contains a 'top 5 tips' section, after the pre-requisites.
 
 ### Prerequisites {-}
 
-This chapter is primarily about base R so for the most part all you need is R installed on your computer(see Section \@ref(install-rstudio)). We also discuss how your IDE set-up can boost efficiency and recommend RStudio. The only package used in **benchmarkme**.
+Only one package needs to be installed to run the code in this chapter:
 
 ```{r}
 library("benchmarkme")
 ```
 
-
 ## Top 5 tips for an efficient R set-up
 
-1. Use system monitoring to identify bottlenecks in your hardware/code
-1. Keep your R installation and packages up-to-date
-1. Make use of RStudio's powerful autocompletion capabilities and shortcuts
-1. Store API keys in the `.Renviron` file
-1. Use BLAS if your R number crunching is too slow
+1. Use system monitoring to identify bottlenecks in your hardware/code.
+1. Keep your R installation and packages up-to-date.
+1. Make use of RStudio's powerful autocompletion capabilities and shortcuts.
+1. Store API keys in the `.Renviron` file.
+1. Use BLAS if your R number crunching is too slow.
 
 ## Operating system
 
-R works on all three consumer operating systems (OS) (Linux, Mac and Windows)
-as well as the server-orientated Solaris OS.
-R is predominantly platform-independent, meaning that it should behave
-in the same way on each of these platforms.
-This is partly facilitated by CRAN tests which ensure that
-R packages work on all OSs mentioned above.
-There are some operating system-specific quirks that may influence the choice
-of OS and how it is set-up for R programming in the long-term.
-Basic system information can be queried from within R using `Sys.info()`, as illustrated below for a selection its output:
+R supports all three major operating system (OS) types: Linux, Mac and
+Windows.^[All CRAN packages are automatically tested on these
+systems, in addition to Solaris. R has also been reported to run on more exotic
+operating systems, including those used in smart phones and game consoles [@peng_data_2015].]
+R is platform-independent, although there are some OS-specific quirks,
+e.g. in relation to file path
+notation (see Section \@ref(location)).
+
+Basic OS-specific information can be queried from within R using `Sys.info()`:
 
 ```{r, eval=FALSE}
 Sys.info()
@@ -67,16 +67,15 @@ Sys.info()
 #R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin" 
 ```
 
-Translated into English, this means that R is running on a 64 bit (`x86_64`) Linux distribution (kernel version `4.2.0-35-generic`) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in `?Sys.info`.
+Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
 
 ```{block, assertive.reflection, type='rmdtip'}
 The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_windows` will cause an error. The package can also test for IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code`). These functions can be useful for running code that designed only to run on one type of set-up.
 ```
 
-
 ### Operating system and resource monitoring
 
-Minor differences aside^[Benchmarking
+Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking
 conducted for a presentation "R on Different Platforms" at useR 2006
 found that R was marginally faster on Windows than Linux set-ups.
 Similar results were reported in an academic paper, with R completing
@@ -85,32 +84,16 @@ In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of
 supported these results with slightly faster
 run times for certain benchmarks on Ubuntu than Mac systems. The data from the `benchmarkme` package
 also suggests that running code under the Linux OS is faster.
-], R's computational efficiency is broadly the same across different operating systems.
-This is important as it means the techniques will, in general, work equally well on different OSs.
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)) the main issue for many will be user friendliness and compatibility other programs used alongside R for work.
-Changing operating system can be a time consuming process so
-our advice is usually to stick to whatever OS you are most comfortable with.
+]
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)) OS-related issue to consider is external dependencies: programs that R packages depend on.
+Sometimes external package dependencies must be installed manually (i.e. not using `install.packages`).
+This is especially common Unix-based systems (Linux and Mac).
+On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
-```{r, echo=FALSE}
-# # Removed as superfluous - reinclude reworded?
-# Processing very large text files without loading them into RAM can be done using the Linux command line with tools such as `sed`.
-# To take another example, the `shiny-server` program used to deploy apps developed with the `shiny` package runs only on Linux, so users may want to develop their shiny-compatible code on a Linux machine.
-# Clearly requirements will vary depending on use:
-# for basic statistics and plotting the operating system does not matter.
-# But if you rely heavily on cutting-edge open source programs, Linux-based systems may be preferable because the latest versions of new libraries are often easier to install and maintain on Linux.
-
-# Because of Linux's central role in the history of open source software, many open source
-# projects are better supported on Linux than Windows and, to a lesser extent, Mac.
-# The OpenCPU system for reproducible scientific
-# computing, for example, is better supported on Ubuntu-based systems.
-```
-
-Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using `install.packages`) on Linux systems.
-On Debian-based operating systems such as Ubuntu, these are named with the prefix `r-cran-` (see Section \@ref(deps)).
-
-Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming or RAM-intensive tasks.
-If you only process small datasets, system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM.
-Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.
+Resource monitoring is the process of checking the status of key OS variables, such as RAM usage.
+For computationally intensive work, it is sensible to monitor system resources in this way.
+Resource monitoring can help identify bottlenecks, such as when you are running low on RAM.
+Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to the OS state.
 
 ```{r, echo=FALSE}
 # # Removed for now - not essential information - shall we include a 'real world' example?
@@ -385,7 +368,7 @@ Although `.Renviron` is searched for first, we will look at `.Rprofile` first as
 Modification of R's startup files should not be taken lightly. This is an advanced topic. If you modify your startup files in the wrong way, it can cause problems. We recommend proceeding with caution and take a conservative approach to modifying your startup files so that your R installation behaves similar to other 'vanilla' R installations, aiding reproducibility.
 ```
 
-### The location of startup files
+### The location of startup files {#location}
 
 Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session.
 Note also that these files should only be changed with caution and if you know what you are doing.
@@ -415,7 +398,7 @@ file.edit(".Rprofile") # edit project specific .Rprofile
 ```
 
 ```{block, file.path, type="rmdwarning"}
-File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path` and `normalizePath`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
+File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path()` and `normalizePath()`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
 ```
 
 Editing the `.Renviron` file in the same locations will have the same effect.
