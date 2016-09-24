@@ -118,7 +118,7 @@ process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del`
 
 1. What is the exact version of your computer's operating system?
 2. Start an activity monitor then type and execute the following code.
-In it the `lapply()` function is used to *apply* a function, `median()` over every element in a list (see Section \@ref(the-apply-family)). How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
+In it `lapply()` (or parallel version `parLapply()`) is used to *apply* a function, `median()` over every element in a list (see Section \@ref(the-apply-family)). How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
     ```{r, eval=FALSE}
     # Note: uses 2+ GB RAM and several seconds or more depending on hardware
@@ -127,7 +127,7 @@ In it the `lapply()` function is used to *apply* a function, `median()` over eve
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
     # 3: Find the median of each column using many cores
-    r2 = parallel::mclapply(X, median) # runs in serial on Windows
+    r2 = parallel::parLapply(X, median) # runs in serial on Windows
     ```
 
 3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
@@ -135,7 +135,7 @@ In it the `lapply()` function is used to *apply* a function, `median()` over eve
 
 ```{r timings-tests, echo=FALSE, eval=FALSE}
 system.time(lapply(X, median))
-system.time(parallel::mclapply(X, median))
+system.time(parallel::parLapply(X, median))
 identical(r1, r2)
 # Answers:
 # 1: The RAM use should jump up by 1 Gb or so and one processor should max out.
@@ -340,18 +340,11 @@ A concise way to load a 'vanilla' version of R, with all of the above options en
 R --vanilla
 ```
 
-
 ### An overview of R's startup files
 
-There are two special files, `.Renviron` and `.Rprofile`, which determine how R performs for the duration of the session. R searches and *acts on* both files *by default* every time it starts. To turn off this default behaviour, R can be launched with the command line options `--no environ` and `--no-init-file` respectively. Thus to launch R without your usual `.Rprofile` settings (e.g. to ensure that your personal settings are not responsible for an error) from a shell, one would enter the following:
+Two script files run each time R starts (unless one of the command line options outlined above is used):
 
-```{r, eval=FALSE, engine='bash'}
-R --no-init-file
-```
-
-But what do these mysterious files do? Their purpose is summarised in the bullet points below and the rest of this chapter is dedicated to demystifying them.
-
-- The primary purpose of `.Renviron` is to set *environment variables*. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as *API key*, small text strings used to verify the user when interacting web services.
+- `.Renviron`, the primary purpose of which is to set *environment variables*. These tell R where to find external programs and can hold user-specific information than needs to be kept secret, typically *API keys*. 
 
 - `.Rprofile` is a plain text file (which is always called `.Rprofile`, hence its name) that simply runs lines of R code every time R starts. If you want R to check for package updates each time it starts (as explained in the previous section), you simply add the relevant line somewhere in this file.
 
