@@ -73,7 +73,6 @@ Translated into English, the above output means that R is running on a 64 bit (`
 The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_windows` will cause an error. The package can also test for IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code`). These functions can be useful for running code that designed only to run on one type of set-up.
 ```
 
-
 ### Operating system and resource monitoring
 
 Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking
@@ -86,31 +85,15 @@ supported these results with slightly faster
 run times for certain benchmarks on Ubuntu than Mac systems. The data from the `benchmarkme` package
 also suggests that running code under the Linux OS is faster.
 ]
-This is important as it means the techniques will, in general, work equally well on different OSs.
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)) the main issue for many will be user friendliness and compatibility other programs used alongside R for work.
-Changing operating system can be a time consuming process so
-our advice is usually to stick to whatever OS you are most comfortable with.
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)) OS-related issue to consider is external dependencies: programs that R packages depend on.
+Sometimes external package dependencies must be installed manually (i.e. not using `install.packages`).
+This is especially common Unix-based systems (Linux and Mac).
+On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
-```{r, echo=FALSE}
-# # Removed as superfluous - reinclude reworded?
-# Processing very large text files without loading them into RAM can be done using the Linux command line with tools such as `sed`.
-# To take another example, the `shiny-server` program used to deploy apps developed with the `shiny` package runs only on Linux, so users may want to develop their shiny-compatible code on a Linux machine.
-# Clearly requirements will vary depending on use:
-# for basic statistics and plotting the operating system does not matter.
-# But if you rely heavily on cutting-edge open source programs, Linux-based systems may be preferable because the latest versions of new libraries are often easier to install and maintain on Linux.
-
-# Because of Linux's central role in the history of open source software, many open source
-# projects are better supported on Linux than Windows and, to a lesser extent, Mac.
-# The OpenCPU system for reproducible scientific
-# computing, for example, is better supported on Ubuntu-based systems.
-```
-
-Some packages (e.g. those that must be compiled and that depend on external libraries) are best installed at the operating system level (i.e. not using `install.packages`) on Linux systems.
-On Debian-based operating systems such as Ubuntu, these are named with the prefix `r-cran-` (see Section \@ref(deps)).
-
-Regardless of your operating system, it is good practice to track how system resources (primarily CPU and RAM use) respond when running time-consuming or RAM-intensive tasks.
-If you only process small datasets, system monitoring may not be necessary but when handling datasets at the limits of your computer's resources, it can be a useful tool for identifying bottlenecks, such as when you are running low on RAM.
-Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring can help identify performance bottlenecks and opportunities for making tasks run faster.
+Resource monitoring is the process of checking the status of key OS variables, such as RAM usage.
+For computationally intensive work, it is sensible to monitor system resources in this way.
+Resource monitoring can help identify bottlenecks, such as when you are running low on RAM.
+Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to the OS state.
 
 ```{r, echo=FALSE}
 # # Removed for now - not essential information - shall we include a 'real world' example?
