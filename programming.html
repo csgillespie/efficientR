@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-23">
+<meta name="date" content="2016-09-24">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -151,7 +151,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4" data-path="set-up.html"><a href="set-up.html#r-startup"><i class="fa fa-check"></i><b>2.4</b> R startup</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="set-up.html"><a href="set-up.html#r-startup-arguments"><i class="fa fa-check"></i><b>2.4.1</b> R startup arguments</a></li>
 <li class="chapter" data-level="2.4.2" data-path="set-up.html"><a href="set-up.html#an-overview-of-rs-startup-files"><i class="fa fa-check"></i><b>2.4.2</b> An overview of R’s startup files</a></li>
-<li class="chapter" data-level="2.4.3" data-path="set-up.html"><a href="set-up.html#the-location-of-startup-files"><i class="fa fa-check"></i><b>2.4.3</b> The location of startup files</a></li>
+<li class="chapter" data-level="2.4.3" data-path="set-up.html"><a href="set-up.html#location"><i class="fa fa-check"></i><b>2.4.3</b> The location of startup files</a></li>
 <li class="chapter" data-level="2.4.4" data-path="set-up.html"><a href="set-up.html#rprofile"><i class="fa fa-check"></i><b>2.4.4</b> The <code>.Rprofile</code> file</a></li>
 <li class="chapter" data-level="2.4.5" data-path="set-up.html"><a href="set-up.html#an-example-.rprofile-file"><i class="fa fa-check"></i><b>2.4.5</b> An example <code>.Rprofile</code> file</a></li>
 <li class="chapter" data-level="2.4.6" data-path="set-up.html"><a href="set-up.html#renviron"><i class="fa fa-check"></i><b>2.4.6</b> The <code>.Renviron</code> file</a></li>
@@ -558,7 +558,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.075   0.036   4.112</span></code></pre></div>
+<span class="co">#&gt;    2.88    0.02    2.90</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -873,12 +873,12 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 </div>
 <div id="the-byte-compiler" class="section level2">
 <h2><span class="header-section-number">3.7</span> The byte compiler</h2>
-<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
+<p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
 <p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x3d18800&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3fe9ba8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -946,8 +946,8 @@ I always set the compile level to the maximum value of 3.
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref6">↩</a></p></li>
+<ol start="7">
+<li id="fn7"><p>The authors have yet to find a situation where byte compiled code runs significantly slower.<a href="programming.html#fnref7">↩</a></p></li>
 </ol>
 </div>
             </section>
