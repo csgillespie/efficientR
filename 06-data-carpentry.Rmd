@@ -282,7 +282,7 @@ top_table =
 ```
 
 The results, illustrated in table \@ref(tab:speed), show that the USA has the highest growth and average emissions from the transport sector, followed closely by China.
-The aim of this code chunk is to provide a taster of **dplyr**'s unique syntax, which is described in more detail throughout the duration of this section.
+The aim of this code chunk is not for you to somehow read it and understand it: it is to provide a taster of **dplyr**'s unique syntax, which is described in more detail throughout the duration of this section.
 
 ```{r speed, echo=FALSE}
 knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).")
@@ -405,8 +405,27 @@ to chain operations together. This overcomes one of the
 aesthetic issues with R code: you can end-up with
 very long commands with many functions nested inside each
 other to answer relatively simple questions.
+Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable.
+Here's how you could use the chains to summarize average gini indexes per decade, for example:
 
-What, for example were, the 5 most unequal
+```{r}
+wb_ineq %>% 
+  select(Year, gini) %>% 
+  mutate(decade = floor(Year / 10) * 10) %>% 
+  group_by(decade) %>% 
+  summarise(mean(gini, na.rm = TRUE))
+```
+
+Often the best way to learn is to try and break something, so try running the above commands with different **dplyr** verbs. 
+By way of explanation, this is what happened:
+
+1. Only the columns `Year` and `gini` were selected, using `select()`.
+1. A new variable, `decade` was created, only the decade figures (e.g. 1989 becomes 1980).
+1. This new variable was used to group rows in the dataframe with the same decade.
+1. The mean value per decade was caculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
+
+Let's ask another question to see how **dplyr** chaining workflow can be used to
+answer questions interactively: What the 5 most unequal
 years for countries containing the letter g?
 Here's how chains can help organise the analysis needed to answer this question
 step-by-step:
@@ -454,6 +473,25 @@ top_n(
 ```
 
 This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
+
+#### Exercises {-}
+
+1. Try running each of the chaining examples above line-by-line, so the first two entries for the first example would look like this:
+
+```{r}
+wb_ineq
+```
+
+followed by:
+
+```{r}
+wb_ineq %>% 
+  select(Year, gini) 
+```
+
+Explain in your own words what changes each time.
+
+2. Use chained **dplyr** functions to answer the following question: In which year did countries without and 'a' in their name have the lowest level of inequality?
 
 ### Data aggregation
 
@@ -612,98 +650,6 @@ world$Country[world$Country %in% unmatched_world_countries] =
 The above code reduces the number of country names in the `world` dataset by replacing *both* "Antigua" and "Barbuda" to "Antigua & Barbuda". This would not work other way around: how would one know whether to change "Antigua & Barbuda" to "Antigua" or to "Barbuda".
 
 Thus fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. 
-
-To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
-
-```{r co2-clean, echo=FALSE, eval=FALSE}
-i = n[1]
-match_df = tibble(co2_name = n, w_name = NA)
-for(i in n){
-  (fm = agrep(i, w_u, max.distance = 10))
-  (w_um = w_u[fm])
-  match_df$w_name[match_df$co2_name == i] = paste(w_um, collapse = "|")
-  # world$Country[world$Country %in% w_u1] = i
-}
-
-# View(match_df) # check the results: 1, 3 , 14, 16, 17 are right
-i = 3
-for(i in c(1, 3 , 14, 16, 17)){
-  world$Country[grep(match_df$w_name[i], world$Country) ] =
-    match_df$co2_name[i]
-}
-match_df = match_df[-c(1, 3 , 14, 16, 17),]
-
-# manually fix countries with multiple matches
-world$Country[grep("Baham", world$Country)] =
-  c_u[grep("Baham", c_u)]
-world$Country[grep("Democratic Republic of the Congo", world$Country)] =
-  c_u[grep("Congo, Dem. Rep.", c_u)]
-world$Country[grep("Republic of C", world$Country)] =
-  c_u[grep("Congo, R", c_u)]
-world$Country[grep("Ivo", world$Country)] =
-  c_u[grep("Ivo", c_u)]
-world$Country[grep("Gambia", world$Country)] =
-  c_u[grep("Gambia", c_u)]
-world$Country[grep("Macedonia", world$Country)] =
-  c_u[grep("Macedonia", c_u)]
-world$Country[grep("USA", world$Country)] =
-  c_u[grep("United States", c_u)]
-world$Country[grep("UK", world$Country)] =
-  c_u[grep("United Kingdom", c_u)]
-world$Country[grep("North Korea", world$Country)] =
-  c_u[grep("Korea, Dem. Rep. \\(N", c_u)]
-world$Country[grep("South Korea", world$Country)] =
-  c_u[grep("Korea, Rep", c_u)]
-world$Country[grep("Russia", world$Country)] =
-  c_u[grep("Russia", c_u)]
-world$Country[grep("Vincent", world$Country)] =
-  c_u[grep("Vincent", c_u)]
-
-# ghg_ems = ghg_ems[!ghg_ems$Country == "World",]
-
-# save the result as 'm', for match
-c_u = unique(ghg_ems$Country)
-w_u = unique(world$Country)
-m = c_u %in% w_u
-# summary(m)
-n = c_u[!m]
-```
-
-
-There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets). This is a very clear case of when **dplyr** is advantageous: `merge()`'s interface is complicated, the code is less readable, and `*_join` functions are faster. `inner_` and `lef_` `join()` methods are illustrated below:
-
-```{r}
-nrow({world_co2 = left_join(world, ghg_ems)})
-nrow(inner_join(world, ghg_ems))
-```
-
-Note that `inner_join` removes rows from the `world` dataset which have no match in `ghg_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `ghg_ems` dataset would be absent. Figure \@ref(fig:6-1) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
-
-```{r, eval=FALSE}
-world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
-ggplot(world_co2_2012, aes(long, lat)) +
-  geom_polygon(aes(fill = All, group = group))
-```
-
-```{r 6-1, echo=FALSE, fig.cap="The geographical distribution of carbon dioxide emissions in 2012.", out.width="100%"}
-knitr::include_graphics("figures/f6_1_world_co2.png")
-```
-
-```{r, eval=FALSE, echo=FALSE}
-library("scales")
-world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
-ggplot(world_co2_2012, aes(long, lat, group = group)) +
-  geom_polygon(aes(fill = All)) +
-  geom_path(size = 0.2) +
-  scale_fill_gradient(
-    low = "blue", high = "red", trans = "log",
-    breaks = trans_breaks("log10", function(x) 10^x),
-    labels = trans_format("log10", math_format(10^.x)),
-    name = expression(MtCO[2])) +
-  coord_equal() +
-  theme_nothing(legend = TRUE)
-# ggsave("figures/world_co2.png")
-```
 
 ## Working with databases
 
