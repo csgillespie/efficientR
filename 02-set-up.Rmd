@@ -117,8 +117,12 @@ process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del`
 #### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
-2. Start an activity monitor then type and execute the following code.
-In it `lapply()` (or parallel version `parLapply()`) is used to *apply* a function, `median()` over every element in a list (see Section \@ref(the-apply-family)). How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
+2. Start an activity monitor then execute the following code chunk.
+In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object
+`X`.[The reason this works is that a data frame is really a collection of list objects. See Section \@ref(the-apply-family) for more on the 'apply family' of 
+functions.
+]
+How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
     ```{r, eval=FALSE}
     # Note: uses 2+ GB RAM and several seconds or more depending on hardware
@@ -127,8 +131,13 @@ In it `lapply()` (or parallel version `parLapply()`) is used to *apply* a functi
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
     # 3: Find the median of each column using many cores
-    r2 = parallel::parLapply(X, median) 
+    r2 = parallel::mclapply(X, median) 
     ```
+
+```{block type='rmdtip'}
+`mclapply` only works in parallel on Mac and Linux. In Chapter 7 you'll learn about an equivalent function `parLapply()` that works in parallel on Windows. 
+```
+
 
 3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
 4. Bonus question: how would the results change depending on operating system?
