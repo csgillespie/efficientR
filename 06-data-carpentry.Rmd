@@ -773,13 +773,17 @@ Both are powerful and efficient packages that take time to learn, so it is best 
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
-The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but (unlike base R and like **dplyr**) uses non-standard evaluation so you need not refer to the object name inside the brackets:
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but (unlike base R but like **dplyr**) uses non-standard evaluation so you need not refer to the object name inside the brackets:
 
 ```{r}
 library("data.table")
 data(wb_ineq_renamed) # from the efficient package
 wb_ineq_dt = data.table(wb_ineq_renamed) # convert to data.table class
 aus3a = wb_ineq_dt[Country == "Australia"]
+```
+
+```{block, type='rmdnote'}
+Note that the square brackets do not need a comma to refer to rows with `data.table` objects: in base R you would write `wb_ineq_renamed[wb_ineq_renamed$Country == "Australia",]`.
 ```
 
 To boost performance, one can set 'keys'. These are
