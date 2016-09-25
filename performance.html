@@ -339,6 +339,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.4" data-path="collaboration.html"><a href="collaboration.html#code-review"><i class="fa fa-check"></i><b>9.4</b> Code review</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
+<li class="chapter" data-level="10.0.1" data-path="learning.html"><a href="learning.html#prerequisties"><i class="fa fa-check"></i><b>10.0.1</b> Prerequisties</a></li>
 <li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
 <li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a><ul>
 <li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#searching-r-for-topics"><i class="fa fa-check"></i><b>10.2.1</b> Searching R for topics</a></li>
@@ -493,13 +494,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
 })
 <span class="co">#&gt; Warning: Closing open result set</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.671   0.224   2.897</span>
+<span class="co">#&gt;    3.64    0.18    3.84</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.191   0.024   0.215</span>
+<span class="co">#&gt;   0.321   0.032   0.354</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -507,7 +508,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.504   0.128   0.634</span>
+<span class="co">#&gt;   0.722   0.172   0.893</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -574,9 +575,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00258 0.0036 0.0523 0.00495 0.00529 4.78   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.75796 0.8399 0.9834 0.85333 0.88750 6.02   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00539 0.00675 0.0792 0.0112 0.0123 6.90   100</span>
+<span class="co">#&gt;   ex_df[1, ] 1.77373 1.87316 2.0765 1.9102 1.9567 8.92   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -783,7 +784,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ad6f3e210e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b5da78ec0e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>

@@ -339,6 +339,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.4" data-path="collaboration.html"><a href="collaboration.html#code-review"><i class="fa fa-check"></i><b>9.4</b> Code review</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
+<li class="chapter" data-level="10.0.1" data-path="learning.html"><a href="learning.html#prerequisties"><i class="fa fa-check"></i><b>10.0.1</b> Prerequisties</a></li>
 <li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
 <li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a><ul>
 <li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#searching-r-for-topics"><i class="fa fa-check"></i><b>10.2.1</b> Searching R for topics</a></li>
@@ -386,6 +387,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">10</span> Efficient learning</h1>
 <p>As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never ‘finish’ learning R. On the other hand, it makes R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore <em>learning how to learn</em> is one of the most important skills to have if you want to learn R <em>in depth</em>. We emphasise <em>depth</em> of learning because it is more efficient to learn something properly than to Google it repeatedly every time you forget how it works.</p>
 <p>This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition from an R <em>hacker</em> to an R <em>programmer</em>. This inevitably involves effective use of R’s help, reading R source code, and use of online material.</p>
+<div id="prerequisties" class="section level3">
+<h3><span class="header-section-number">10.0.1</span> Prerequisties</h3>
+<p>The only package used in this section is <strong>swirl</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;swirl&quot;</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; | Hi! Type swirl() when you are ready to begin.</span></code></pre></div>
+</div>
 <div id="top-5-tips-for-efficient-learning" class="section level2">
 <h2><span class="header-section-number">10.1</span> Top 5 tips for efficient learning</h2>
 <ol style="list-style-type: decimal">
@@ -423,8 +431,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">apropos</span>(<span class="st">&quot;lm&quot;</span>)[<span class="dv">1</span>:<span class="dv">6</span>] <span class="co"># show only first six results</span>
 <span class="co">#&gt; [1] &quot;.__C__anova.glm&quot;      &quot;.__C__anova.glm.null&quot; &quot;.__C__diagonalMatrix&quot;</span>
 <span class="co">#&gt; [4] &quot;.__C__generalMatrix&quot;  &quot;.__C__glm&quot;            &quot;.__C__glm.null&quot;</span></code></pre></div>
-<p>To search <em>all R packages</em>, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take and example, if you are looking for a package for geospatial data analysis, you could do worse than enter the text string “geo” (without quote marks) as an argument into package installation function (for example <code>install.packages(geo)</code>) and hitting <code>Tab</code> when the cursor is between the <code>o</code> and the <code>)</code> in the example. The resulting options are are shown in the figure below: selection one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-316"></span>
+<p>To search <em>all R packages</em>, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take an example, if you are looking for a package for geospatial data analysis, you could do worse than enter the text string <code>geo</code> as an argument into package installation function (for example <code>install.packages(geo)</code>) and hitting <code>Tab</code> when the cursor is between the <code>o</code> and the <code>)</code> in the example. The resulting options are are shown in the figure below: selecting one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.</p>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-317"></span>
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
 <p class="caption">
 Figure 10.1: Package name autocompletion in action in RStudio for packages beginning with ‘geo’.
@@ -462,7 +470,7 @@ If you are frustrated because a certain package lacks a vignette, you can create
       lower = -Inf, upper = Inf,
       control = list(), hessian = FALSE)</code></pre>
 <p>This contains two pieces of critical information: 1) the <em>essential</em> arguments which must be provided for the function to work (<code>par</code> and <code>fn</code> in this case, as <code>gr</code> has a default value) before the <code>...</code> symbol; and 2) <em>optional</em> arguments that control how the function works (<code>method</code>, <code>lower</code>, and <code>hessian</code> in this case). <code>...</code> are optional arguments whose values depend on the other arguments (which will be passed to the function represented by <code>fn</code> in this case). Let’s see how this works in practice by trying to run <code>optim()</code> to find the minimum value of the function <span class="math inline">\(y = x^4 - x^2\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fn =<span class="st"> </span>function(x){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fn =<span class="st"> </span>function(x) {
   x^<span class="dv">4</span> -<span class="st"> </span>x^<span class="dv">2</span>
 }
 <span class="kw">optim</span>(<span class="dt">par =</span> <span class="dv">0</span>, <span class="dt">fn =</span> fn)
@@ -483,7 +491,7 @@ If you are frustrated because a certain package lacks a vignette, you can create
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $message</span>
 <span class="co">#&gt; NULL</span></code></pre></div>
-<p>The results show that the minimum value of <code>fn(x)</code> is found when <code>x = 0.707..</code> (<span class="math inline">\(\frac{1}{\sqrt{2}}\)</span>), with a minimum value of -0.25. It took 58 iterations of the function call for <code>optim()</code> to converge on this value. Each of these output values is described in the Values section of the help pages. From the help pages, we could guess that providing the function call without specifying <code>par</code> (i.e. <code>optim(fn = fn)</code>) would fail, which indeed it does.</p>
+<p>The results show that the minimum value of <code>fn(x)</code> is found when <code>x = 0.707..</code> (<span class="math inline">\(\frac{1}{\sqrt{2}}\)</span>), with a minimum value of <span class="math inline">\(-0.25\)</span>. It took <span class="math inline">\(58\)</span> iterations of the function call for <code>optim()</code> to converge on this value. Each of these output values is described in the Values section of the help pages. From the help pages, we could guess that providing the function call without specifying <code>par</code> (i.e. <code>optim(fn = fn)</code>) would fail, which indeed it does.</p>
 <p>The most <em>helpful</em> section is often is the Examples. These lie at the bottom the help page and show precisely how the function works. You can either copy and paste the code, or actually run the example code using the <code>example</code> command (it is well worth running these examples due to the graphics produced):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">example</span>(optim)</code></pre></div>
 <div class="rmdnote">
