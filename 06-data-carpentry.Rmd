@@ -665,7 +665,7 @@ The **DBI** package is a unified framework for accessing databases allowing for 
 # Set up temporary data base for next section.
 data("ghg_ems", package = "efficient")
 ghg_db = tempfile()
-db = dplyr::src_sqlite(path=ghg_db, create=TRUE)
+db = dplyr::src_sqlite(path = ghg_db, create = TRUE)
 wb_sqlite = dplyr::copy_to(db, ghg_ems, temporary = FALSE)
 ```
 Imagine you have access to a database that contains the `ghg_ems` data set.
@@ -708,11 +708,13 @@ ghg_tbl = tbl(ghg_db, "ghg_ems")
 ```
 
 The `ghg_tbl` object can then be queried in a similar way as a standard data frame. For example, suppose we wished to 
-filter by `Country`. Then we use the `filter` function as before
+filter by `Country`. Then we use the `filter` function as before:
+
 ```{r}
 rm_world = ghg_tbl %>%
   filter(Country != "World")
 ```
+
 In the above code, **dplyr** has actually generated the necessary SQL command, which can be examined using `explain(rm_world)`.
 When working with databases, **dplyr** uses lazy evaluation: the data is only fetched at the last moment when it's needed. The SQL command associated with `rm_world` hasn't yet been executed, this is why
 `tail(rm_world)` doesn't work. By using lazy evaluation, **dplyr** is more efficient at handling large data structures since it avoids unnecessary copying. 
