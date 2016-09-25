@@ -742,15 +742,20 @@ The next stage is to create an SQLite database to hold the data:
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
 land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
-class(land_sqlite)
 ```
+
+What class is the new object `land_sqlite`?
 
 From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
 
 ```{r}
 # Method 1: using sql
 tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
+```
 
+How would you erform the same query using `select()`? Try it to see if you get the same result.
+
+```{r, echo=FALSE}
 # Method 2: using dplyr
 select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
 ```
