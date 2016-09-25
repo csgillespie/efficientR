@@ -741,25 +741,26 @@ The next stage is to create an SQLite database to hold the data:
 ```{r}
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
-land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
+land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price")) 
 ```
 
 What class is the new object `land_sqlite`?
+
+Why did we use the `indexes` argument?
 
 From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
 
 ```{r}
 # Method 1: using sql
-tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
+tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
 ```
 
-How would you erform the same query using `select()`? Try it to see if you get the same result.
+How would you erform the same query using `select()`? Try it to see if you get the same result (hint: use backticks for the `old/new` variable name).
 
 ```{r, echo=FALSE}
 # Method 2: using dplyr
-select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
+select(land_sqlite, price, postcode, `old/new`)
 ```
-
 
 ## Data processing with data.table
 
