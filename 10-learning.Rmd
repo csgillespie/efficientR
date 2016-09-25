@@ -20,6 +20,14 @@ This chapter aims to equip you with concepts, guidance and tips that will accele
 from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's
 help, reading R source code, and use of online material.
 
+### Prerequisties
+
+The only package used in this section is **swirl**
+
+```{r}
+library("swirl")
+```
+
 ## Top 5 tips for efficient learning
 
 1. Use R's internal help, e.g. with `?`, `??`, `vignette()` and `apropos()`. Try **swirl**.
@@ -75,7 +83,7 @@ apropos("optim")
 apropos("lm")[1:6] # show only first six results
 ```
 
-To search *all R packages*, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take and example, if you are looking for a package for geospatial data analysis, you could do worse than enter the text string "geo" (without quote marks) as an argument into package installation function (for example `install.packages(geo)`) and hitting `Tab` when the cursor is between the `o` and the `)` in the example. The resulting options are are shown in the figure below: selection one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.
+To search *all R packages*, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take an example, if you are looking for a package for geospatial data analysis, you could do worse than enter the text string `geo` as an argument into package installation function (for example `install.packages(geo)`) and hitting `Tab` when the cursor is between the `o` and the `)` in the example. The resulting options are are shown in the figure below: selecting one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.
 
 ```{r, echo=FALSE, fig.cap="Package name autocompletion in action in RStudio for packages beginning with 'geo'.", out.width="100%"}
 knitr::include_graphics("figures/pf10_1_package-autocompletion.png")
@@ -142,13 +150,13 @@ optim(par, fn, gr = NULL, ...,
 This contains two pieces of critical information: 1) the *essential* arguments which must be provided for the function to work (`par` and `fn` in this case, as `gr` has a default value) before the `...` symbol; and 2) *optional* arguments that control how the function works (`method`, `lower`, and `hessian` in this case). `...` are optional arguments whose values depend on the other arguments (which will be passed to the function represented by `fn` in this case). Let's see how this works in practice by trying to run `optim()` to find the minimum value of the function $y = x^4 - x^2$:
 
 ```{r}
-fn = function(x){
+fn = function(x) {
   x^4 - x^2
 }
 optim(par = 0, fn = fn)
 ```
 
-The results show that the minimum value of `fn(x)` is found when `x = 0.707..` ($\frac{1}{\sqrt{2}}$), with a minimum value of -0.25. It took 58 iterations of the function call for `optim()` to converge on this value. Each of these output values is described in the Values section of the help pages.
+The results show that the minimum value of `fn(x)` is found when `x = 0.707..` ($\frac{1}{\sqrt{2}}$), with a minimum value of $-0.25$. It took $58$ iterations of the function call for `optim()` to converge on this value. Each of these output values is described in the Values section of the help pages.
 From the help pages, we could guess that providing the function call without specifying `par` (i.e. `optim(fn = fn)`) would fail, which indeed it does. 
 
 The most _helpful_
