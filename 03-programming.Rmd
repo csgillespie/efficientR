@@ -753,8 +753,6 @@ cmp_mean_r = cmpfun(mean_r)
 ```
 Then we use the `microbenchmark()` function to compare the three variants
 
-
-<!-- Make n bigger and just copy and paster output -->
 ```{r results="hide", eval=FALSE}
 # Generate some data
 x = rnorm(1000)
@@ -790,10 +788,16 @@ that we install the package from `source`, i.e.
 ## Windows users will need Rtools
 install.packages("ggplot2", type = "source")
 ```
+Or if we want to avoid altering the `.Renviron` file, we can specify an additional
+argument
+```{r eval=FALSE}
+install.packages("ggplot2", type="source", INSTALL_opts = "--byte-compile") 
+```
+
 A final option to use just-in-time (JIT) compilation. The `enableJIT()` function
 disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
 different levels of optimisation. JIT can also be enabled by setting the environment
 variable `R_ENABLE_JIT`, to one of these values.
 ```{block, type="rmdtip"}
-I always set the compile level to the maximum value of 3.
+We recommending setting the compile level to the maximum value of 3.
 ```
