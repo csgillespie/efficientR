@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-25">
+<meta name="date" content="2016-09-26">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -242,9 +242,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.6" data-path="input-output.html"><a href="input-output.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.6</b> Accessing data stored in packages</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
-<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a><ul>
 <li class="chapter" data-level="" data-path="data-carpentry.html"><a href="data-carpentry.html#prerequisites-5"><i class="fa fa-check"></i>Prerequisites</a></li>
-</ul></li>
+<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
 <li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-gather"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>gather()</code></a></li>
@@ -256,8 +255,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4.1" data-path="data-carpentry.html"><a href="data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="data-carpentry.html"><a href="data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
 <li class="chapter" data-level="6.4.3" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>6.4.3</b> Filtering rows</a></li>
-<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.4</b> Data aggregation</a></li>
-<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.5</b> Chaining operations</a></li>
+<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.4</b> Chaining operations</a></li>
+<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.5</b> Data aggregation</a></li>
 <li class="chapter" data-level="6.4.6" data-path="data-carpentry.html"><a href="data-carpentry.html#non-standard-evaluation"><i class="fa fa-check"></i><b>6.4.6</b> Non standard evaluation</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="data-carpentry.html"><a href="data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
@@ -560,7 +559,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   2.917   0.009   2.931</span></code></pre></div>
+<span class="co">#&gt;   2.958   0.017   2.985</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -880,7 +879,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x538c568&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x46aaef8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

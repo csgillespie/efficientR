@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-09-25">
+<meta name="date" content="2016-09-26">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -242,9 +242,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.6" data-path="input-output.html"><a href="input-output.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.6</b> Accessing data stored in packages</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
-<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a><ul>
 <li class="chapter" data-level="" data-path="data-carpentry.html"><a href="data-carpentry.html#prerequisites-5"><i class="fa fa-check"></i>Prerequisites</a></li>
-</ul></li>
+<li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
 <li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-gather"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>gather()</code></a></li>
@@ -256,8 +255,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4.1" data-path="data-carpentry.html"><a href="data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="data-carpentry.html"><a href="data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
 <li class="chapter" data-level="6.4.3" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>6.4.3</b> Filtering rows</a></li>
-<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.4</b> Data aggregation</a></li>
-<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.5</b> Chaining operations</a></li>
+<li class="chapter" data-level="6.4.4" data-path="data-carpentry.html"><a href="data-carpentry.html#chaining-operations"><i class="fa fa-check"></i><b>6.4.4</b> Chaining operations</a></li>
+<li class="chapter" data-level="6.4.5" data-path="data-carpentry.html"><a href="data-carpentry.html#data-aggregation"><i class="fa fa-check"></i><b>6.4.5</b> Data aggregation</a></li>
 <li class="chapter" data-level="6.4.6" data-path="data-carpentry.html"><a href="data-carpentry.html#non-standard-evaluation"><i class="fa fa-check"></i><b>6.4.6</b> Non standard evaluation</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="data-carpentry.html"><a href="data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
@@ -492,15 +491,14 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
 <span class="kw">system.time</span>({
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
-<span class="co">#&gt; Warning: Closing open result set</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;    3.64    0.18    3.84</span>
+<span class="co">#&gt;   3.883   0.251   4.151</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.321   0.032   0.354</span>
+<span class="co">#&gt;   0.288   0.036   0.324</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -508,7 +506,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.722   0.172   0.893</span>
+<span class="co">#&gt;   0.979   0.152   1.131</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -575,9 +573,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00539 0.00675 0.0792 0.0112 0.0123 6.90   100</span>
-<span class="co">#&gt;   ex_df[1, ] 1.77373 1.87316 2.0765 1.9102 1.9567 8.92   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00264 0.0038 0.0544 0.00636 0.00701 4.85   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.76388 0.8336 0.9879 0.85183 0.89588 5.80   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -632,7 +630,7 @@ m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</spa
 <span class="co">#&gt; 161 kB</span>
 pryr::<span class="kw">object_size</span>(m)
 <span class="co">#&gt; 800 MB</span></code></pre></div>
-<div id="exercises-15" class="section level4 unnumbered">
+<div id="exercises-16" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li><p>Create a vector <code>x</code>. Benchmark <code>any(is.na(x))</code> against <code>anyNA</code>. Do the results vary with the size of the vector.</p></li>
@@ -784,7 +782,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b5da78ec0e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b8037acf0e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -908,7 +906,7 @@ z =<span class="st"> </span><span class="kw">microbenchmark</span>(
 Figure 7.6: Comparison of mean functions.
 </p>
 </div>
-<div id="exercises-16" class="section level4 unnumbered">
+<div id="exercises-17" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Consider the following piece of code</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> test1() {
@@ -960,7 +958,7 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
   <span class="kw">return</span> pow(x-y, <span class="dv">2</span>);
 }</code></pre></div>
 <p>In the above C++ code, the <code>pow</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm</code> and <code>pnorm</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
-<div id="exercises-17" class="section level4 unnumbered">
+<div id="exercises-18" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li>Construct an R version (using a <code>for</code> loop rather than the vectorised solution), <code>res_r</code> and compare the three function variants.</li>
