@@ -164,7 +164,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.5" data-path="set-up.html"><a href="set-up.html#keyboard-shortcuts"><i class="fa fa-check"></i><b>2.5.5</b> Keyboard shortcuts</a></li>
 <li class="chapter" data-level="2.5.6" data-path="set-up.html"><a href="set-up.html#object-display-and-output-table"><i class="fa fa-check"></i><b>2.5.6</b> Object display and output table</a></li>
 <li class="chapter" data-level="2.5.7" data-path="set-up.html"><a href="set-up.html#project-management"><i class="fa fa-check"></i><b>2.5.7</b> Project management</a></li>
-<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-5"><i class="fa fa-check"></i>Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="set-up.html"><a href="set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="set-up.html"><a href="set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
@@ -425,8 +424,8 @@ The <strong>assertive.reflection</strong> package can be used to report addition
 <div id="operating-system-and-resource-monitoring" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Operating system and resource monitoring</h3>
 <p>Minor differences aside, R’s computational efficiency is broadly the same across different operating systems.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> Beyond the <span class="math inline">\(32\)</span> vs <span class="math inline">\(64\)</span> bit issue (covered in the next chapter) and <em>process forking</em> (covered in Chapter <a href="performance.html#performance">7</a>) OS-related issue to consider is external dependencies: programs that R packages depend on. Sometimes external package dependencies must be installed manually (i.e. not using <code>install.packages()</code>). This is especially common Unix-based systems (Linux and Mac). On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section <a href="set-up.html#deps">2.3.4</a>).</p>
-<p>Resource monitoring is the process of checking the status of key OS variables, such as RAM usage. For computationally intensive work, it is sensible to monitor system resources in this way. Resource monitoring can help identify bottlenecks, such as when you are running low on RAM. Alongside R profiling functions such as <strong>profvis</strong> (see Section <a href="performance.html#performance-profvis">7.2</a>), system monitoring provides a useful tool for understanding how R is performing in relation to the OS state.</p>
-<p>A common use case for system monitoring of R processes is to identify how much RAM is being used and whether more is needed (covered in Chapter <a href="programming.html#programming">3</a>). System monitors also report the percentage of CPU resource allocated over time. On modern multi-threaded CPUs, many tasks will use only a fraction of the available CPU resource because R is by default a single-threaded program (see Chapter <a href="performance.html#performance-parallel">7.5</a> on parallel programming). Monitoring CPU load in this context can be useful for identifying whether R is running in parallel (see Figure <a href="set-up.html#fig:2-1">2.1</a>).</p>
+<p>Resource monitoring is the process of checking the status of key OS variables. For computationally intensive work, it is sensible to monitor system resources in this way. Resource monitoring can help identify computational bottlenecks. Alongside R profiling functions such as <strong>profvis</strong> (see Section <a href="performance.html#performance-profvis">7.2</a>), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter <a href="programming.html#programming">3</a>).</p>
+<p>CPU resource allocated over time is another common OS variable that is worth monitoring. A basic use case is to check whether your code is running in parallel (see Figure <a href="set-up.html#fig:2-1">2.1</a>), and whether there there is spare CPU capacity on the OS that could be harnessed by parallel code.</p>
 <div class="figure" style="text-align: center"><span id="fig:2-1"></span>
 <img src="figures/f2_1_sysmon.png" alt="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded." width="100%" />
 <p class="caption">
@@ -436,23 +435,30 @@ Figure 2.1: Output from a system monitor (<code>gnome-system-monitor</code> runn
 <p>System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring all major operating systems.</p>
 <ul>
 <li>On Linux, the shell command <code>top</code> displays key resource use figures for most distributions. <code>htop</code> and Gnome’s <strong>System Monitor</strong> (<code>gnome-system-monitor</code>, see figure <a href="set-up.html#fig:2-1">2.1</a>) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as <code>nethogs</code> monitor internet usage.</li>
-<li>On Windows the <strong>Task Manager</strong> provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing <code>Ctrl-Alt-Del</code> or by clicking the task bar and ‘Start Task Manager’.</li>
 <li>On Mac the <strong>Activity Monitor</strong> provides similar functionality. This can be initiated from the Utilities folder in Launchpad.</li>
+<li>On Windows the <strong>Task Manager</strong> provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing <code>Ctrl-Alt-Del</code> or by clicking the task bar and ‘Start Task Manager’.</li>
 </ul>
 <div id="exercises-1" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li>What is the exact version of your computer’s operating system?</li>
-<li><p>Start an activity monitor then type and execute the following code. How do the results on your system compare to those presented in Figure <a href="set-up.html#fig:2-1">2.1</a>?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Note: this will consume more than 2 GB RAM and may take several seconds to run depending on hardware</span>
+<li><p>Start an activity monitor then execute the following code chunk. In it <code>lapply()</code> (or its parallel version <code>mclapply()</code>) is used to <em>apply</em> a function, <code>median()</code>, over every column in the data frame object <code>X</code> (see Section <a href="programming.html#the-apply-family">3.5</a> for more on the ‘apply family’ of functions).[The reason this works is that a data frame is really a list of vectors, each vector forming a column.] How do the system output logs results on your system compare to those presented in Figure <a href="set-up.html#fig:2-1">2.1</a>?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Note: uses 2+ GB RAM and several seconds or more depending on hardware</span>
 <span class="co"># 1: Create large dataset</span>
 X =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e8</span>), <span class="dt">nrow =</span> <span class="fl">1e7</span>))
 <span class="co"># 2: Find the median of each column using a single core</span>
 r1 =<span class="st"> </span><span class="kw">lapply</span>(X, median)
 <span class="co"># 3: Find the median of each column using many cores</span>
-r2 =<span class="st"> </span>parallel::<span class="kw">mclapply</span>(X, median) <span class="co"># runs in serial on Windows</span></code></pre></div></li>
+r2 =<span class="st"> </span>parallel::<span class="kw">mclapply</span>(X, median) </code></pre></div></li>
+</ol>
+<div class="rmdnote">
+<p>
+<code>mclapply</code> only works in parallel on Mac and Linux. In Chapter 7 you’ll learn about an equivalent function <code>parLapply()</code> that works in parallel on Windows.
+</p>
+</div>
+<ol start="3" style="list-style-type: decimal">
 <li>What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?</li>
-<li><p>Bonus question: how would the results change depending on operating system?</p></li>
+<li>Bonus question: how would the results change depending on operating system?</li>
 </ol>
 </div>
 </div>
@@ -549,35 +555,42 @@ To update packages automatically, you can add the line <code>update.packages(ask
 </div>
 <div id="r-startup" class="section level2">
 <h2><span class="header-section-number">2.4</span> R startup</h2>
-<p>Every time R starts a number of things happen. It can be useful to understand this startup process, so you can make R work the way you want it, fast. This section explains how.</p>
-<div id="r-startup-arguments" class="section level3">
-<h3><span class="header-section-number">2.4.1</span> R startup arguments</h3>
-<p>The arguments passed to the R startup command (typically simply <code>R</code> from a shell environment) determine what happens. The following arguments are particularly important from an efficiency perspective:</p>
-<ul>
-<li><p><code>--no-environ</code> tells R to only look for startup files in the current working directory. (Do not worry if you don’t understand what this means at present: it will become clear as the later in the section.)</p></li>
-<li><p><code>--no-restore</code> tells R not to load any <code>.RData</code> files knocking around in the current working directory.</p></li>
-<li><p><code>--no-save</code> tells R not to ask the user if they want to save objects saved in RAM when the session is ended with <code>q()</code>.</p></li>
-</ul>
-<p>Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit. R’s default setting of loading data from the last session automatically is potentially problematic in this context. See <a href="https://cran.r-project.org/doc/manuals/R-intro.pdf">An Introduction to R</a>, Appendix B, for more startup arguments.</p>
+<p>Every time R starts a couple of files scripts are run default, as documented in <code>?Startup</code>. This section explains how to customise these files, allowing you to save API keys or load frequently used functions. Before learning how to modify these files, we’ll take a look at how to ignore them, with R’s startup arguments. If you want to turn custom set-up ‘on’ it’s useful to be able to turn it ‘off’, e.g. for debugging.</p>
 <div class="rmdtip">
 <p>
 Some of R’s startup arguments can be controlled interactively in RStudio. See the online help file <a href="https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio">Customizing RStudio</a> for more on this.
 </p>
 </div>
+<div id="r-startup-arguments" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> R startup arguments</h3>
+<p>A number of arguments can be appended to the R startup command (<code>R</code> in a shell environment) which relate to startup. The following are particularly important:</p>
+<ul>
+<li><p><code>--no-environ</code> and <code>--no-init</code> arguments tell R to only look for startup files (described in the next section) in the current working directory.</p></li>
+<li><p><code>--no-restore</code> tells R not to load a file called <code>.RData</code> (the default name for R session files) that may be present in the current working directory.</p></li>
+<li><p><code>--no-save</code> tells R not to ask the user if they want to save objects saved in RAM when the session is ended with <code>q()</code>.</p></li>
+</ul>
+<p>Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit. R’s default setting of loading data from the last session automatically is potentially problematic in this context. See <a href="https://cran.r-project.org/doc/manuals/R-intro.pdf">An Introduction to R</a>, Appendix B, for more startup arguments.</p>
+<div class="rmdtip">
+<p>
+A concise way to load a ‘vanilla’ version of R, with all of the above options enabled is with an option of the same name:
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">R</span> --vanilla</code></pre></div>
 </div>
 <div id="an-overview-of-rs-startup-files" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> An overview of R’s startup files</h3>
-<p>There are two special files, <code>.Renviron</code> and <code>.Rprofile</code>, which determine how R performs for the duration of the session. R searches and <em>acts on</em> both files <em>by default</em> every time it starts. To turn off this default behaviour, R can be launched with the command line options <code>--no environ</code> and <code>--no-init-file</code> respectively. Thus to launch R without your usual <code>.Rprofile</code> settings (e.g. to ensure that your personal settings are not responsible for an error) from a shell, one would enter the following:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">R</span> --no-init-file</code></pre></div>
-<p>But what do these mysterious files do? Their purpose is summarised in the bullet points below and the rest of this chapter is dedicated to demystifying them.</p>
+<p>Two script files run each time R starts (unless one of the command line options outlined above is used):</p>
 <ul>
-<li><p>The primary purpose of <code>.Renviron</code> is to set <em>environment variables</em>. These are settings that relate to the operating system for telling where to find external programs and the contents of user-specific variables that other users should not have access to such as <em>API key</em>, small text strings used to verify the user when interacting web services.</p></li>
+<li><p><code>.Renviron</code>, the primary purpose of which is to set <em>environment variables</em>. These tell R where to find external programs and can hold user-specific information than needs to be kept secret, typically <em>API keys</em>.</p></li>
 <li><p><code>.Rprofile</code> is a plain text file (which is always called <code>.Rprofile</code>, hence its name) that simply runs lines of R code every time R starts. If you want R to check for package updates each time it starts (as explained in the previous section), you simply add the relevant line somewhere in this file.</p></li>
 </ul>
 <p>When R starts (unless it was launched with <code>--no-environ</code>) it first searches for <code>.Renviron</code> and then <code>.Rprofile</code>, in that order. Although <code>.Renviron</code> is searched for first, we will look at <code>.Rprofile</code> first as it is simpler and for many set-up tasks more frequently useful. Both files can exist in three directories on your computer.</p>
 <div class="rmdwarning">
 <p>
-Modification of R’s startup files should not be taken lightly. This is an advanced topic. If you modify your startup files in the wrong way, it can cause problems. We recommend proceeding with caution and take a conservative approach to modifying your startup files so that your R installation behaves similar to other ‘vanilla’ R installations, aiding reproducibility.
+Modification of R’s startup files should not be taken lightly. This is an advanced topic. If you modify your startup files in the wrong way, it can cause problems: a seemingly innocent call to <code>setwd()</code> in <code>.Rprofile</code>, for example, will break devtools’ <code>build</code> and <code>check</code> functions.
+</p>
+<p>
+Proceed with caution and, if you mess things up, just delete the offending files!
 </p>
 </div>
 </div>
@@ -606,7 +619,7 @@ if(!<span class="kw">file.exists</span>(user_renviron)) <span class="co"># check
 <span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></code></pre></div>
 <div class="rmdtip">
 <p>
-The <strong>pathological</strong> package can help find where <code>.Rprofile</code> and <code>.Renviron</code> files are located on your system, thanks to the <code>os_path()</code> function. The output of <code>example(startup)</code> is also instructive.
+The <strong>pathological</strong> package can help find where <code>.Rprofile</code> and <code>.Renviron</code> files are located on your system, thanks to the <code>os_path()</code> function. The output of <code>example(Startup)</code> is also instructive.
 </p>
 </div>
 <p>The location, contents and uses of each is outlined in more detail below.</p>
@@ -641,8 +654,11 @@ fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <sp
 <div id="setting-options" class="section level4">
 <h4><span class="header-section-number">2.4.5.1</span> Setting options</h4>
 <p>The function <code>options</code>, used above, contains a number of default settings. Typing <code>options()</code> provides a good indication of what be configured. Because <code>options()</code> are often related to personal preference (with few implications for reproducibility), that you will want for many your R sessions, <code>.Rprofile</code> in your home directory or in your project’s folder are sensible places to set them. Other illustrative options are shown below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">show.signif.stars =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p>This changes three default options in a single line.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># With a customised prompt</span>
+<span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">show.signif.stars =</span> <span class="ot">FALSE</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)
+<span class="co"># With a longer prompt and empty &#39;continue&#39; indent (default is &quot;+ &quot;)</span>
+<span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4Geo&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)</code></pre></div>
+<p>The first option changes three default options in a single line.</p>
 <ul>
 <li>The R prompt, from the boring <code>&gt;</code> to the exciting <code>R&gt;</code>.</li>
 <li>The number of digits displayed.</li>
@@ -773,18 +789,24 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
 <li>Intelligent autocompletion of function names, packages and R objects.</li>
 <li>A wide range of keyboard shortcuts.</li>
 <li>Visual display of objects, including a searchable data display table.</li>
-<li>Real-time code checking and error detection.</li>
+<li>Real-time code checking, debugging and error detection.</li>
 <li>Menus to install and update packages.</li>
 <li>Project management and integration with version control.</li>
+<li>Quick display of function source code and help documents.</li>
 </ul>
 <p>The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> As with R itself, the best way to learn about RStudio is by using it. It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.</p>
 <div id="install-rstudio" class="section level3">
 <h3><span class="header-section-number">2.5.1</span> Installing and updating RStudio</h3>
-<p>RStudio can be installed from the RStudio website <a href="https://www.rstudio.com/products/rstudio/download/">rstudio.com</a> and is available for all major operating systems. Updating RStudio is simple: click on <code>Help &gt; Check for Updates</code> in the menu. For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse. RStudio has many keyboard shortcuts that will help with this. To get into good habits early, try accessing the RStudio Update interface without touching the mouse. On Linux and Windows dropdown menus are activated with the <code>Alt</code> button, so the menu item can be found with:</p>
+<p>RStudio is a mature, feature rich and powerful Integrated Development Environment (IDE) optimised for R programming and has become popular among R developers. The Open Source Edition is completely open source (as can be seen from the project’s GitHub rep). It can be installed on all major OSs from the RStudio website <a href="https://www.rstudio.com/products/rstudio/download/">rstudio.com</a>.</p>
+<p>If you already have RStudio and would like to update it, simply click <code>Help &gt; Check for Updates</code> in the menu. For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse. RStudio has many keyboard shortcuts that will help with this. To get into good habits early, try accessing the RStudio Update interface without touching the mouse. On Linux and Windows dropdown menus are activated with the <code>Alt</code> button, so the menu item can be found with:</p>
 <pre><code>Alt+H U</code></pre>
 <p>On Mac it works differently. <code>Cmd+?</code> should activate a search across menu items, allowing the same operation can be achieved with:</p>
 <pre><code>Cmd+? update</code></pre>
-<p><strong>Note:</strong> in RStudio the keyboard shortcuts differ between Linux and Windows versions on one hand and Mac on the other. In this section we generally only use the Windows/Linux shortcut keys for brevity. The Mac equivalent is usually found by simply replacing <code>Ctrl</code> and <code>Alt</code> with the Mac-specific <code>Cmd</code> button.</p>
+<div class="rmdnote">
+<p>
+In RStudio the keyboard shortcuts differ between Linux and Windows versions on one hand and Mac on the other. In this section we generally only use the Windows/Linux shortcut keys for brevity. The Mac equivalent is usually found by simply replacing <code>Ctrl</code> and <code>Alt</code> with the Mac-specific <code>Cmd</code> button.
+</p>
+</div>
 </div>
 <div id="window-pane-layout" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Window pane layout</h3>
@@ -835,7 +857,7 @@ Figure 2.3: The data viewing tab in RStudio.
 <li><p><code>Restore .RData</code>: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the change of getting bugs due to previously created objects.</p></li>
 <li><p>Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling <code>Vim mode</code> makes RStudio act as a (partial) Vim emulator.</p></li>
 <li><p>Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work. This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.</p></li>
-<li><p>Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics, which are also important because feeling comfortable in your programming environment can boost productivity.</p></li>
+<li><p>Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics. Settings such as font type and background color are also important because feeling comfortable in your programming environment can boost productivity. Go to <code>Tools &gt; Global Options</code> to modify these.</p></li>
 </ul>
 </div>
 <div id="autocompletion" class="section level3">
@@ -855,7 +877,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
 <h3><span class="header-section-number">2.5.5</span> Keyboard shortcuts</h3>
 <p>RStudio has many useful shortcuts that can help make your programming more efficient by reducing the need to reach for the mouse and point and click your way around code and RStudio. These can be viewed by using a little known but extremely useful keyboard shortcut (this can also be accessed via the <strong>Tools</strong> menu).</p>
 <pre><code>Alt+Shift+K</code></pre>
-<p>This will display the default shortcuts in RStudio. It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse. The power of these autocompletion capabilities can be further enhanced by setting your own keyboard shortcuts. However, as with setting <code>.Rprofile</code> and <code>.Renviron</code> settings, this risks reducing the portability of your workflow. To set your own RStudio keyboard shortcuts, navigate to <strong>Tools &gt; Modify Keyboard Shortcuts</strong>.</p>
+<p>This will display the default shortcuts in RStudio. It is worth spending time identifying which of these could be useful in your work and practising interacting with RStudio rapidly with minimal reliance on the mouse. The power of these autocompletion capabilities can be further enhanced by setting your own keyboard shortcuts. However, as with setting <code>.Rprofile</code> and <code>.Renviron</code> settings, this risks reducing the portability of your workflow.</p>
 <p>Some more <a href="http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/">useful</a> shortcuts are listed below. There are many more gems to find that could boost your R writing productivity:</p>
 <ul>
 <li><code>Ctrl+Z/Shift+Z</code>: Undo/Redo.</li>
@@ -866,6 +888,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
 <li><code>Alt+Shift+Up/Down</code>: Duplicate the current line up or down.</li>
 <li><code>Ctrl+D</code>: Delete the current line.</li>
 </ul>
+<p>To set your own RStudio keyboard shortcuts, navigate to <strong>Tools &gt; Modify Keyboard Shortcuts</strong>.</p>
 </div>
 <div id="object-display-and-output-table" class="section level3">
 <h3><span class="header-section-number">2.5.6</span> Object display and output table</h3>
@@ -894,14 +917,15 @@ The default settings for autocompletion in RStudio work well. They are intuitive
 <p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
 <p>Another approach to project management is to treat projects as R packages. This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">c</a>)</span>. The <strong>devtools</strong> package help manage R’s quirks, making the process much less painful. If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
 <p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project. As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up. It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
-</div>
-<div id="exercises-5" class="section level3 unnumbered">
-<h3>Exercises</h3>
+<p>Another capability that RStudio has is excellent debugging support. Rather than re-invent the wheel, would like to direct interested readers to the <a href="https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio">RStudio website</a>.</p>
+<div id="exercises-5" class="section level4 unnumbered">
+<h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li><p>Try modifying the look and appearance of your RStudio setup.</p></li>
 <li><p>What is the keyboard shortcut to show the other shortcut? (Hint: it begins with <code>Alt+Shift</code> on Linux and Windows.)</p></li>
 <li><p>Try as many of the shortcuts revealed by the previous step as you like. Write down the ones that you think will save you time, perhaps on a post-it note to go on your computer.</p></li>
 </ol>
+</div>
 </div>
 </div>
 <div id="blas-and-alternative-r-interpreters" class="section level2">
