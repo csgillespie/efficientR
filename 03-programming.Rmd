@@ -316,12 +316,11 @@ To give informative output, use the `message()` function. For example, in the
 **poweRlaw** package, the `message()` function is used to give the user an estimate of
 expected run time. Providing a rough estimate of how long the function takes, allows the user to
 optimise their time. Similar to warnings, messages can be suppressed with
-`suppressMessages`.
+`suppressMessages()`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
-used in `print`/`show` methods, e.g. look at the function definition of the
+used in `print()`/`show()` methods, e.g. look at the function definition of the
 S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
-
 
 ### Exercises {-}
 
@@ -330,7 +329,7 @@ should be part of the error message. Create a function and experiment with this 
 
 ### Invisible returns 
 
-The `invisible` function allows you to return a temporarily invisible copy of an
+The `invisible()` function allows you to return a temporarily invisible copy of an
 object. This is particularly useful for functions that return values which can be
 assigned, but are not printed when they are not assigned. For example suppose we have
 a function that plots the data and fits a straight line
@@ -341,6 +340,7 @@ regression_plot = function(x, y, ...) {
   
   # Fit regression model 
   model = lm(y ~ x)
+
   # Add line of best fit to the plot
   abline(model)
   invisible(model)
@@ -373,7 +373,7 @@ x = 4:6
 c(x)
 c(factor(x))
 ```
-In this case the `c` function is using the underlying integer representation of the
+In this case the `c()` function is using the underlying integer representation of the
 factor. Dealing with the wrong case of behaviour is a common source of inefficiency for
 R users.
 
@@ -408,10 +408,10 @@ boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
 ```
 
 ```{block, type="rmdwarning"}
-Most users interact with factors via the `read.csv` function where character columns
+Most users interact with factors via the `read.csv()` function where character columns
 are automatically converted to factors. This feature can be irritating if our data is
 messy and we want to clean and recode variables. Typically when reading in data via
-`read.csv`, we use the `stringsAsFactors=FALSE` argument. Although this argument can
+`read.csv()`, we use the `stringsAsFactors = FALSE` argument. Although this argument can
 add in the global `options()` list and placed in the `.Rprofile`, this leads to
 non-portable code, so should be avoided.
 ```
