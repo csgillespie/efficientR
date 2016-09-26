@@ -23,18 +23,6 @@ Fortunately, done efficiently, at the outset of your project (rather than half w
 - Working with databases
 - Data processing with **data.table**
 
-## Top 5 tips for efficient data carpentry
-
-1. Give data processing the proper time and attention it needs as it could save hours of frustration in the long run.
-
-1. Tidy your data carefully at the earliest stage of the analysis process, perhaps using functions provided by **tidyr**.
-
-1. Use the `tbl` class defined by the **tibble** package and the default object type of **dplyr**, to make data frames efficient to print and easier to work with.
-
-1. Don't rely on base R for data processing. We recommend **dplyr** for most applications, although **data.table** may be optimal in contexts where speed is critical.
-
-1. Using the ` %>%` 'pipe' operator in combination with **dplyr**'s verbs can help clarify complex data processing workflows, easing the writing of analysis code and communication with others.
-
 ### Prerequisites {-}
 
 This chapter relies on a number of packages for data cleaning and processing - test they are installed on your computer and load them with:
@@ -49,6 +37,14 @@ library("data.table")
 ```
 
 **RSQLite** and **ggmap** are also used in a couple of examples, although they are not central to the chapter's content.
+
+## Top 5 tips for efficient data carpentry
+
+1. Time spent preparing your data at the beginning can save hours of frustration in the long run.
+1. 'Tidy data' provides a concept for organising data and the package **tidyr** provides some functions for this work.
+1. The `data_frame` class defined by the **tibble** package makes datasets efficient to print and easy to work with.
+1. **dplyr** provides fast and intuitive data processing functions; **data.table** has unmatched speed for some data processing application.
+1. The ` %>%` 'pipe' operator can help clarify complex data processing workflows.
 
 ## Efficient data frames with tibble
 
@@ -286,7 +282,7 @@ top_table =
 ```
 
 The results, illustrated in table \@ref(tab:speed), show that the USA has the highest growth and average emissions from the transport sector, followed closely by China.
-The aim of this code chunk is to provide a taster of **dplyr**'s unique syntax, which is described in more detail throughout the duration of this section.
+The aim of this code chunk is not for you to somehow read it and understand it: it is to provide a taster of **dplyr**'s unique syntax, which is described in more detail throughout the duration of this section.
 
 ```{r speed, echo=FALSE}
 knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).")
@@ -394,13 +390,108 @@ for(i in cols_to_change){
 aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
-`filter()` is slightly more felxible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
+`filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
 By avoiding the `$` symbol **dplyr** subsetting than subsetting in base R.
 The first argument is a data frame and
 subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
-Later we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
+In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 
 There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
+
+### Chaining operations
+
+Another interesting feature of **dplyr** is its ability
+to chain operations together. This overcomes one of the
+aesthetic issues with R code: you can end-up with
+very long commands with many functions nested inside each
+other to answer relatively simple questions.
+Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable.
+Here's how you could use the chains to summarize average Gini indexes per decade, for example:
+
+```{r}
+wb_ineq %>% 
+  select(Year, gini) %>% 
+  mutate(decade = floor(Year / 10) * 10) %>% 
+  group_by(decade) %>% 
+  summarise(mean(gini, na.rm = TRUE))
+```
+
+Often the best way to learn is to try and break something, so try running the above commands with different **dplyr** verbs. 
+By way of explanation, this is what happened:
+
+1. Only the columns `Year` and `gini` were selected, using `select()`.
+1. A new variable, `decade` was created, only the decade figures (e.g. 1989 becomes 1980).
+1. This new variable was used to group rows in the data frame with the same decade.
+1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
+
+Let's ask another question to see how **dplyr** chaining workflow can be used to
+answer questions interactively: What the 5 most unequal
+years for countries containing the letter g?
+Here's how chains can help organise the analysis needed to answer this question
+step-by-step:
+
+```{r tidy=FALSE}
+wb_ineq %>% 
+  filter(grepl("g", Country)) %>%
+  group_by(Year) %>%
+  summarise(gini = mean(gini, na.rm  = TRUE)) %>%
+  arrange(desc(gini)) %>%
+  top_n(n = 5)
+```
+
+The above function consists of 6 stages, each of which
+corresponds to a new line and **dplyr** function:
+
+1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
+2. Group the output by year.
+3. Summarise, for each year, the mean Gini index.
+4. Arrange the results by average Gini index
+5. Select only the top 5 most unequal years.
+
+To see why this method is preferable to the nested
+function approach, take a look at the latter.
+Even after indenting properly it looks terrible
+and is almost impossible to understand!
+
+```{r, eval=FALSE, tidy=FALSE}
+top_n(
+  arrange(
+    summarise(
+      group_by(
+        filter(wb_ineq, grepl("g", Country)),
+        Year),
+      gini = mean(gini, na.rm  = TRUE)),
+    desc(gini)),
+  n = 5)
+```
+
+```{r, echo=FALSE}
+# # Removed - should illustrate how to do it in base R if mentioned:
+# Of course, you *could* write code in base R to
+# undertake the above analysis but for many
+# people the **dplyr** approach is the most agreeable to write.
+```
+
+This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
+
+#### Exercises {-}
+
+1. Try running each of the chaining examples above line-by-line, so the first two entries for the first example would look like this:
+
+```{r}
+wb_ineq
+```
+
+followed by:
+
+```{r}
+wb_ineq %>% 
+  select(Year, gini) 
+```
+
+Explain in your own words what changes each time.
+
+2. Use chained **dplyr** functions to answer the following question: In which year did countries without and 'a' in their name have the lowest level of inequality?
 
 ### Data aggregation
 
@@ -474,11 +565,11 @@ summary statistics
 *per country*: 
 
 - the number of rows in each country group
-- standard deviation of gini indices
+- standard deviation of Gini indices
 - median proportion of income earned by the top 10%
-- the number of years in which the gini index was greater than 30
-- the standard deviation of gini index values over 30
-- the range of gini index values reported for each country.
+- the number of years in which the Gini index was greater than 30
+- the standard deviation of Gini index values over 30
+- the range of Gini index values reported for each country.
 
 #### Exercises {-}
 
@@ -488,63 +579,6 @@ summary statistics
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
 3. Test additional **dplyr** 'verbs' on the `wb_ineq` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
-
-### Chaining operations
-
-Another interesting feature of **dplyr** is its ability
-to chain operations together. This overcomes one of the
-aesthetic issues with R code: you can end-up with
-very long commands with many functions nested inside each
-other to answer relatively simple questions.
-
-What, for example were, the 5 most unequal
-years for countries containing the letter g?
-Here's how chains can help organise the analysis needed to answer this question
-step-by-step:
-
-```{r tidy=FALSE}
-wb_ineq %>% 
-  filter(grepl("g", Country)) %>%
-  group_by(Year) %>%
-  summarise(gini = mean(gini, na.rm  = TRUE)) %>%
-  arrange(desc(gini)) %>%
-  top_n(n = 5)
-```
-
-The above function consists of 6 stages, each of which
-corresponds to a new line and **dplyr** function:
-
-1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
-2. Group the output by year.
-3. Summarise, for each year, the mean gini index.
-4. Arrange the results by average gini index
-5. Select only the top 5 most unequal years.
-
-To see why this method is preferable to the nested
-function approach, take a look at the latter.
-Even after indenting properly it looks terrible
-and is almost impossible to understand!
-
-```{r, eval=FALSE, tidy=FALSE}
-top_n(
-  arrange(
-    summarise(
-      group_by(
-        filter(wb_ineq, grepl("g", Country)),
-        Year),
-      gini = mean(gini, na.rm  = TRUE)),
-    desc(gini)),
-  n = 5)
-```
-
-```{r, echo=FALSE}
-# # Removed - should illustrate how to do it in base R if mentioned:
-# Of course, you *could* write code in base R to
-# undertake the above analysis but for many
-# people the **dplyr** approach is the most agreeable to write.
-```
-
-This section has provided only a taster of what is possible **dplyr** and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend *R for Data Science* [@grolemund_r_2016].
 
 ### Non standard evaluation
 
@@ -617,111 +651,21 @@ The above code reduces the number of country names in the `world` dataset by rep
 
 Thus fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that `United States` is represented as `USA` in the `world` dataset, without risking false matches via `agrep`. 
 
-To fix the remaining issues, we simply continued with the same method, using a `for` loop and verifying the results instead of doing all by hand. The code used to match the remaining unmatched countries can be seen on the book's [GitHub page](https://github.com/csgillespie/efficientR/blob/master/05-data-carpentry.Rmd).
-
-```{r co2-clean, echo=FALSE, eval=FALSE}
-i = n[1]
-match_df = tibble(co2_name = n, w_name = NA)
-for(i in n){
-  (fm = agrep(i, w_u, max.distance = 10))
-  (w_um = w_u[fm])
-  match_df$w_name[match_df$co2_name == i] = paste(w_um, collapse = "|")
-  # world$Country[world$Country %in% w_u1] = i
-}
-
-# View(match_df) # check the results: 1, 3 , 14, 16, 17 are right
-i = 3
-for(i in c(1, 3 , 14, 16, 17)){
-  world$Country[grep(match_df$w_name[i], world$Country) ] =
-    match_df$co2_name[i]
-}
-match_df = match_df[-c(1, 3 , 14, 16, 17),]
-
-# manually fix countries with multiple matches
-world$Country[grep("Baham", world$Country)] =
-  c_u[grep("Baham", c_u)]
-world$Country[grep("Democratic Republic of the Congo", world$Country)] =
-  c_u[grep("Congo, Dem. Rep.", c_u)]
-world$Country[grep("Republic of C", world$Country)] =
-  c_u[grep("Congo, R", c_u)]
-world$Country[grep("Ivo", world$Country)] =
-  c_u[grep("Ivo", c_u)]
-world$Country[grep("Gambia", world$Country)] =
-  c_u[grep("Gambia", c_u)]
-world$Country[grep("Macedonia", world$Country)] =
-  c_u[grep("Macedonia", c_u)]
-world$Country[grep("USA", world$Country)] =
-  c_u[grep("United States", c_u)]
-world$Country[grep("UK", world$Country)] =
-  c_u[grep("United Kingdom", c_u)]
-world$Country[grep("North Korea", world$Country)] =
-  c_u[grep("Korea, Dem. Rep. \\(N", c_u)]
-world$Country[grep("South Korea", world$Country)] =
-  c_u[grep("Korea, Rep", c_u)]
-world$Country[grep("Russia", world$Country)] =
-  c_u[grep("Russia", c_u)]
-world$Country[grep("Vincent", world$Country)] =
-  c_u[grep("Vincent", c_u)]
-
-# ghg_ems = ghg_ems[!ghg_ems$Country == "World",]
-
-# save the result as 'm', for match
-c_u = unique(ghg_ems$Country)
-w_u = unique(world$Country)
-m = c_u %in% w_u
-# summary(m)
-n = c_u[!m]
-```
-
-
-There is one more stage that is needed before global CO^2^ emissions can be mapped for any year: the data must be *joined*. The base function `merge` can do this but we strongly recommend using one of the `join` functions from **dplyr**, such as `left_join` (which keeps all rows in the original dataset) and `inner_join` (which keeps only rows with matches in both datasets). This is a very clear case of when **dplyr** is advantageous: `merge()`'s interface is complicated, the code is less readable, and `*_join` functions are faster. `inner_` and `lef_` `join()` methods are illustrated below:
-
-```{r}
-nrow({world_co2 = left_join(world, ghg_ems)})
-nrow(inner_join(world, ghg_ems))
-```
-
-Note that `inner_join` removes rows from the `world` dataset which have no match in `ghg_ems`: if we were to plot the resulting dataset, the continent of Antarctica and a number of countries not represented in the `ghg_ems` dataset would be absent. Figure \@ref(fig:6-1) shows the results of this data carpentry, produced using a modified version of the **ggplot2** code below, were worth the effort.
-
-```{r, eval=FALSE}
-world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
-ggplot(world_co2_2012, aes(long, lat)) +
-  geom_polygon(aes(fill = All, group = group))
-```
-
-```{r 6-1, echo=FALSE, fig.cap="The geographical distribution of carbon dioxide emissions in 2012.", out.width="100%"}
-knitr::include_graphics("figures/f6_1_world_co2.png")
-```
-
-```{r, eval=FALSE, echo=FALSE}
-library("scales")
-world_co2_2012 = filter(world_co2, Year == 2012 | is.na(Year))
-ggplot(world_co2_2012, aes(long, lat, group = group)) +
-  geom_polygon(aes(fill = All)) +
-  geom_path(size = 0.2) +
-  scale_fill_gradient(
-    low = "blue", high = "red", trans = "log",
-    breaks = trans_breaks("log10", function(x) 10^x),
-    labels = trans_format("log10", math_format(10^.x)),
-    name = expression(MtCO[2])) +
-  coord_equal() +
-  theme_nothing(legend = TRUE)
-# ggsave("figures/world_co2.png")
-```
-
 ## Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
 R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
 
-**RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`).
-**RODBC** connects to 'traditional' databases such as MySQL, PostgreSQL, Oracle and SQLite. Since then, the **DBI** package has created a unified structure for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
+**RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`) and nowadays its main use is to provide an R interface to
+SQL Server databases which lacks a **DBI** interface.
+
+The **DBI** package is a unified framework for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen partly as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
 ```{r echo=FALSE, message=FALSE}
 # Set up temporary data base for next section.
 data("ghg_ems", package = "efficient")
 ghg_db = tempfile()
-db = dplyr::src_sqlite(path=ghg_db, create=TRUE)
+db = dplyr::src_sqlite(path = ghg_db, create = TRUE)
 wb_sqlite = dplyr::copy_to(db, ghg_ems, temporary = FALSE)
 ```
 Imagine you have access to a database that contains the `ghg_ems` data set.
@@ -743,11 +687,12 @@ Be sure never to release your password by entering it directly into the command.
 Recently there has been a shift to the 'noSQL' approach for storing large datasets.
 This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages [mongolite](https://cran.r-project.org/web/packages/mongolite/index.html) and [RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html), which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.
 
-MonetDB is a recent alternative to traditional and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
+MonetDB is a recent alternative to relational and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. 
 
-There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it strays too far out of the R ecosystem and into the universe of databases for the purposes of this book. Instead, we direct the interested reader towards further resources on the subject, including:
+There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:
 
+- The website for **[sparklyr](http://spark.rstudio.com/)**, a recent package for efficiently interfacing with the Apache Spark NoSQL stack.
 - [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
 - The `databases` vignette from the **dplyr** package.
 - [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
@@ -763,16 +708,23 @@ ghg_tbl = tbl(ghg_db, "ghg_ems")
 ```
 
 The `ghg_tbl` object can then be queried in a similar way as a standard data frame. For example, suppose we wished to 
-filter by `Country`. Then we use the `filter` function as before
+filter by `Country`. Then we use the `filter` function as before:
+
 ```{r}
 rm_world = ghg_tbl %>%
   filter(Country != "World")
 ```
+
 In the above code, **dplyr** has actually generated the necessary SQL command, which can be examined using `explain(rm_world)`.
-When working with databases, **dplyr** use lazy evaluation. The SQL command associated with `rm_world` hasn't yet been executed, this is why
+When working with databases, **dplyr** uses lazy evaluation: the data is only fetched at the last moment when it's needed. The SQL command associated with `rm_world` hasn't yet been executed, this is why
 `tail(rm_world)` doesn't work. By using lazy evaluation, **dplyr** is more efficient at handling large data structures since it avoids unnecessary copying. 
 When you want your SQL command to be executed, use `collect(rm_world)`.
 
+The final stage when working with databases in R is to disconnect, e.g.:
+
+```{r}
+dbDisconnect(conn = con)
+```
  
 #### Exercises {-}
 
@@ -789,32 +741,42 @@ The next stage is to create an SQLite database to hold the data:
 ```{r}
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
-land_sqlite = copy_to(my_db, land_df, indexes = list("trnsctnuni", "dtoftrnsfr"))
-class(land_sqlite)
+land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price")) 
 ```
+
+What class is the new object `land_sqlite`?
+
+Why did we use the `indexes` argument?
 
 From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
 
 ```{r}
 # Method 1: using sql
-tbl(my_db, sql('SELECT "price", "dtoftrnsfr", "postcode"  FROM land_df'))
-
-# Method 2: using dplyr
-select(land_sqlite, price, dtoftrnsfr, postcode, proprtytyp)
+tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
 ```
 
+How would you erform the same query using `select()`? Try it to see if you get the same result (hint: use backticks for the `old/new` variable name).
+
+```{r, echo=FALSE}
+# Method 2: using dplyr
+select(land_sqlite, price, postcode, `old/new`)
+```
 
 ## Data processing with data.table
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
-tasks^[One
+tasks.^[One
 [question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
 ]
-so it should be stated at the outset that which to use can be a matter of personal preference. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dply** provides a more consistent and flexible interface (e.g. with its interface to databases) so for most purposes we recommend **dplyr**. However, **data.table** has a few features that make it very fast for some operations that it is worth at least being aware of from an efficiency perspective.
+Which is more efficient to some extent depends on personal preferences and what you are used to. 
+Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to data both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
+
+**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, however and has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/)
+(which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
-The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but you do not need to refer to the object name inside the brackets:
+The foundational object class of **data.table** is the `data.table`. Like **dplyr**'s `tbl_df`, **data.table**'s `data.table` objects behave in the same was as the base `data.frame` class. However the **data.table** paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using `[` and `filter()`, mentioned previously, we'll see **data.tables**'s unique approach to subsetting. Like base R **data.table** uses square brackets but (unlike base R but like **dplyr**) uses non-standard evaluation so you need not refer to the object name inside the brackets:
 
 ```{r}
 library("data.table")
@@ -823,9 +785,13 @@ wb_ineq_dt = data.table(wb_ineq_renamed) # convert to data.table class
 aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
-To boost performance, one can set 'keys'. These are
+```{block, type='rmdnote'}
+Note that the square brackets do not need a comma to refer to rows with `data.table` objects: in base R you would write `wb_ineq_renamed[wb_ineq_renamed$Country == "Australia",]`.
+```
+
+To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are
 '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
-which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below).
+which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below, which is synonymous with `list()`).
 
 ```{r}
 setkey(wb_ineq_dt, Country)
