@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 217638 264832 277605 280310 297136 356711   100
-#>  cs_apply(x) 135362 156966 176525 173230 196856 269684   100
-#>    cumsum(x)    583    838   1513   1160   1316  18705   100
+#>    cs_for(x) 214740 263234 277288 274422 289790 500864   100
+#>  cs_apply(x) 132400 160477 179780 174008 191563 444444   100
+#>    cumsum(x)    569    662   1407   1028   1194  13734   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.93    0.02    2.96
+#>   2.850   0.212   3.066
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x38ed4a8>
+#> <bytecode: 0x389cd28>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2925,9 +2925,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  8.87  8.88  8.98   8.91  9.03  9.21     5
-#>  without_select 14.57 14.92 15.25  15.00 15.47 16.29     5
+#>            expr   min    lq mean median   uq  max neval
+#>     with_select  9.52  9.53 11.1   9.74 12.2 14.5     5
+#>  without_select 15.18 15.83 16.2  16.47 16.8 16.8     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4026,7 +4026,7 @@ A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGu
 
 There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:
 
-- The website for **[sparklyr](http://spark.rstudio.com/)**, a recent package for efficiently interfacing with the Apache Spark NoSQL stack.
+- The website for **[sparklyr](http://spark.rstudio.com/)**, a recent package for efficiently interfacing with the Apache Spark stack.
 - [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
 - The `databases` vignette from the **dplyr** package.
 - [Getting started with MongoDB in R](https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html), an introductory vignette on non-relational databases and map reduce from the **mongolite** package.
@@ -4061,8 +4061,6 @@ The final stage when working with databases in R is to disconnect, e.g.:
 
 ```r
 dbDisconnect(conn = con)
-#> Warning in .local(conn, ...): Closing open result set
-#> [1] TRUE
 ```
  
 #### Exercises {-}
@@ -4402,13 +4400,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    3.98    0.42    4.40
+#>   3.902   0.311   4.216
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.196   0.056   0.253
+#>   0.187   0.032   0.219
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4421,7 +4419,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.035   0.219   1.259
+#>    1.03    0.22    1.25
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4561,8 +4559,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00271 0.00388 0.0554 0.00601 0.00659 4.99   100
-#>   ex_df[1, ] 0.76600 0.82975 0.9967 0.85245 0.95821 5.73   100
+#>  ex_mat[1, ] 0.00267 0.00377 0.0537 0.00519 0.00591 4.86   100
+#>   ex_df[1, ] 0.77915 0.85623 1.0074 0.87775 0.93723 6.14   100
 ```
 
 <div class="rmdtip">
@@ -4977,7 +4975,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b3869b730e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b2aadc120e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

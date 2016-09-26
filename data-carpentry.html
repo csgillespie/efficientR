@@ -1162,7 +1162,7 @@ Be sure never to release your password by entering it directly into the command.
 <p>MonetDB is a recent alternative to relational and noSQL approaches which offers substantial efficiency advantages for handling large datasets <span class="citation">(Kersten et al. <a href="#ref-kersten2011researcher">2011</a>)</span>. A tutorial on the <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">MonetDB website</a> provides an excellent introduction to handling databases from within R.</p>
 <p>There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:</p>
 <ul>
-<li>The website for <strong><a href="http://spark.rstudio.com/">sparklyr</a></strong>, a recent package for efficiently interfacing with the Apache Spark NoSQL stack.</li>
+<li>The website for <strong><a href="http://spark.rstudio.com/">sparklyr</a></strong>, a recent package for efficiently interfacing with the Apache Spark stack.</li>
 <li><a href="http://db-engines.com/en/">db-engines.com/en/</a>: a website comparing the relative merits of different databases.</li>
 <li>The <code>databases</code> vignette from the <strong>dplyr</strong> package.</li>
 <li><a href="https://cran.r-project.org/web/packages/mongolite/vignettes/intro.html">Getting started with MongoDB in R</a>, an introductory vignette on non-relational databases and map reduce from the <strong>mongolite</strong> package.</li>
@@ -1178,9 +1178,7 @@ ghg_tbl =<span class="st"> </span><span class="kw">tbl</span>(ghg_db, <span clas
 <span class="st">  </span><span class="kw">filter</span>(Country !=<span class="st"> &quot;World&quot;</span>)</code></pre></div>
 <p>In the above code, <strong>dplyr</strong> has actually generated the necessary SQL command, which can be examined using <code>explain(rm_world)</code>. When working with databases, <strong>dplyr</strong> uses lazy evaluation: the data is only fetched at the last moment when it’s needed. The SQL command associated with <code>rm_world</code> hasn’t yet been executed, this is why <code>tail(rm_world)</code> doesn’t work. By using lazy evaluation, <strong>dplyr</strong> is more efficient at handling large data structures since it avoids unnecessary copying. When you want your SQL command to be executed, use <code>collect(rm_world)</code>.</p>
 <p>The final stage when working with databases in R is to disconnect, e.g.:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(<span class="dt">conn =</span> con)
-<span class="co">#&gt; Warning in .local(conn, ...): Closing open result set</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(<span class="dt">conn =</span> con)</code></pre></div>
 <div id="exercises-15" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database. The first stage is to read-in the data:</p>
