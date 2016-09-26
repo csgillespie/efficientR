@@ -158,7 +158,7 @@ identical(r1, r2)
 ## R version
 
 It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general 
-base R is very conservative about making changes that breaks backwards compatitability. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
+base R is very conservative about making changes that breaks backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
 For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code.
 In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested,
 to ensure stability.
@@ -397,7 +397,7 @@ file.edit(".Rprofile") # edit project specific .Rprofile
 ```
 
 ```{block, file.path, type="rmdwarning"}
-File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path()` and `normalizePath()`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (cannonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
+File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as `C:\\DATA\\data.csv`, as provided by Windows, this will generate the error: `Error: unexpected input in "C:\\"`. To overcome this issue R provides two functions, `file.path()` and `normalizePath()`. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: `file.path("C:", "DATA", "data.csv")`. The latter takes any input string for a file name and outputs a text string that is standard (canonical) for the operating system. `normalizePath("C:/DATA/data.csv")`, for example, outputs `C:\\DATA\\data.csv` on a Windows machine but `C:/DATA/data.csv` on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
 ```
 
 Editing the `.Renviron` file in the same locations will have the same effect.
@@ -464,7 +464,7 @@ options(stringsAsFactors = FALSE)
 ```
 
 To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started.
-The latter two modify *options* used to change R's behavior, first to change the prompt in the console (set to `R> ` by default) and second to ensure that unwanted `factor` variables are not created when `read.csv` and other functions derived from `read.table` are used to load external data into R. Note that simply adding more lines the `.Rprofile` will set more features.
+The latter two modify *options* used to change R's behaviour, first to change the prompt in the console (set to `R> ` by default) and second to ensure that unwanted `factor` variables are not created when `read.csv` and other functions derived from `read.table` are used to load external data into R. Note that simply adding more lines the `.Rprofile` will set more features.
 An important aspect of `.Rprofile` (and `.Renviron`) is that *each line is run once and only once for each R session*.
 That means that the options set within `.Rprofile` can easily be changed during the session.
 The following command run mid-session, for example, will return the default prompt:
@@ -479,8 +479,8 @@ and online resources such as those at [statmethods.net](http://www.statmethods.n
 The help pages for R options (accessible with `?options`) are also worth a read before writing you own `.Rprofile`.
 
 ```{block, continuetip, style='rmdtip'}
-Ever been frustrated by unwanted `+` symbols that prevent copyied and pasted multi-line functions from working?
-These potentially annoying `+`s can be erradicated by adding `options(continue = "  ")` to your `.Rprofile`.
+Ever been frustrated by unwanted `+` symbols that prevent copied and pasted multi-line functions from working?
+These potentially annoying `+`s can be eradicated by adding `options(continue = "  ")` to your `.Rprofile`.
 ```
 
 #### Setting options
@@ -874,11 +874,11 @@ Other options in this area relate more to aesthetics. Settings such as font type
 
 R provides some basic autocompletion functionality.
 Typing the beginning of a function name, for example `rn` (short for `rnorm()`), and hitting `Tab` twice will result in the full function names associated with this text string being printed.
-In this case two options would be displayed: `rnbinom` and `rnorm`, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing `te` in the console in a project which contains a file called `test.R` should result in the full name `"test.R"` being autocompleted.
+In this case two options would be displayed: `rnbinom` and `rnorm`, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing `te` in the console in a project which contains a file called `test.R` should result in the full name `"test.R"` being auto completed.
 RStudio builds on this functionality and takes it to a new level.
 
 ```{block, autocompletion, type='rmdtip'}
-The default settings for autocompletion in RStudio work well. They are intuitive and are likely to work well for many users, especially beginners. However, RStudio's autocompletion options can be modfified, but navigating to **Tools > Global Options > Code > Completion** in RStudio's top level menu.
+The default settings for autocompletion in RStudio work well. They are intuitive and are likely to work well for many users, especially beginners. However, RStudio's autocompletion options can be modified, but navigating to **Tools > Global Options > Code > Completion** in RStudio's top level menu.
 ```
 
 Instead of only auto completing options when `Tab` is pressed, RStudio auto completes them at any point.
@@ -1054,7 +1054,7 @@ local(source("code/02-blas.R", local=TRUE))
 
 The R *language* can be separated from the R *interpreter*. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.
 
-  * [Microsoft R Open](http://www.revolutionanalytics.com/microsoft-r-open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multithreaded mathematics libraries, which can improve performance.
+  * [Microsoft R Open](http://www.revolutionanalytics.com/microsoft-r-open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.
   * [Rho](https://github.com/rho-devel/rho) (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).
 
  * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
