@@ -390,6 +390,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In this chapter we introduce two new packages, <strong>compiler</strong> and <strong>memoise</strong>. The <strong>compiler</strong> package comes with R, so it will already be installed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)
 <span class="kw">library</span>(<span class="st">&quot;memoise&quot;</span>)</code></pre></div>
+<p>We also use the <strong>pryr</strong> and <strong>microbenchmark</strong> packages in the exercises.</p>
 </div>
 <div id="top-5-tips-for-efficient-programming" class="section level2">
 <h2><span class="header-section-number">3.1</span> Top 5 tips for efficient programming</h2>
@@ -558,7 +559,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   5.353   0.035   5.390</span></code></pre></div>
+<span class="co">#&gt;   2.973   0.025   2.998</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -587,7 +588,7 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 <p>When we create a function we often want the function to give efficient feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques of communicating with the user.</p>
 <div id="fatal-errors-stop" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> Fatal errors: <code class="unnumbered">stop()</code></h3>
-<p>Fatal errors are raised by calling the <code>stop()</code>, i.e. execution is terminated. When <code>stop()</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm()</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised. When we need to raise an error, we should do so as quickly as possible; otherwise it’s a waste of resources. Hence, the first few lines of a function perform argument checking.</p>
+<p>Fatal errors are raised by calling the <code>stop()</code>, i.e. execution is terminated. When <code>stop()</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm()</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised. When we need to raise an error, we should do so as quickly as possible; otherwise it’s a waste of resources. Hence, the first few lines of a function typically perform argument checking.</p>
 <p>Suppose we call a function that raises an error. What then? Efficient, robust code <em>catches</em> the error and handles it appropriately. Errors can be caught using <code>try()</code> and <code>tryCatch()</code>. For example,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Suppress the error message</span>
 good =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)
@@ -619,8 +620,8 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 </div>
 <div id="informative-output-message-and-cat" class="section level3">
 <h3><span class="header-section-number">3.3.3</span> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></h3>
-<p>To give informative output, use the <code>message()</code> function. For example, in the <strong>poweRlaw</strong> package, the <code>message()</code> function is used to give the user an estimate of expected run time. Providing a rough estimate of how long the function takes, allows the user to optimise their time. Similar to warnings, messages can be suppressed with <code>suppressMessages</code>.</p>
-<p>Another function used for printing messages is <code>cat()</code>. In general <code>cat()</code> should only be used in <code>print</code>/<code>show</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
+<p>To give informative output, use the <code>message()</code> function. For example, in the <strong>poweRlaw</strong> package, the <code>message()</code> function is used to give the user an estimate of expected run time. Providing a rough estimate of how long the function takes, allows the user to optimise their time. Similar to warnings, messages can be suppressed with <code>suppressMessages()</code>.</p>
+<p>Another function used for printing messages is <code>cat()</code>. In general <code>cat()</code> should only be used in <code>print()</code>/<code>show()</code> methods, e.g. look at the function definition of the S3 print method for <code>difftime</code> objects, <code>getS3method(&quot;print&quot;, &quot;difftime&quot;)</code>.</p>
 </div>
 <div id="exercises-8" class="section level3 unnumbered">
 <h3>Exercises</h3>
@@ -628,13 +629,14 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 </div>
 <div id="invisible-returns" class="section level3">
 <h3><span class="header-section-number">3.3.4</span> Invisible returns</h3>
-<p>The <code>invisible</code> function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line</p>
+<p>The <code>invisible()</code> function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regression_plot =<span class="st"> </span>function(x, y, ...) {
   <span class="co"># Plot and pass additional arguments to default plot method</span>
   <span class="kw">plot</span>(x, y, ...) 
   
   <span class="co"># Fit regression model </span>
   model =<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x)
+
   <span class="co"># Add line of best fit to the plot</span>
   <span class="kw">abline</span>(model)
   <span class="kw">invisible</span>(model)
@@ -653,7 +655,7 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 <span class="co">#&gt; [1] 4 5 6</span>
 <span class="kw">c</span>(<span class="kw">factor</span>(x))
 <span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
-<p>In this case the <code>c</code> function is using the underlying integer representation of the factor. Dealing with the wrong case of behaviour is a common source of inefficiency for R users.</p>
+<p>In this case the <code>c()</code> function is using the underlying integer representation of the factor. Dealing with the wrong case of behaviour is a common source of inefficiency for R users.</p>
 <p>Often categorical variables get stored as <span class="math inline">\(1\)</span>, <span class="math inline">\(2\)</span>, <span class="math inline">\(3\)</span>, <span class="math inline">\(4\)</span>, and <span class="math inline">\(5\)</span>, with associated documentation elsewhere that explains what each number means. This is clearly a pain. Alternatively we store the data as a character vector. While this is fine, the semantics are wrong because it doesn’t convey that this is a categorical variable. It’s not sensible to say that you should <strong>always</strong> or <strong>never</strong> use factors, since factors have both positive and negative features. Instead we need to examine each case individually.</p>
 <p>As a general rule, if your variable has an inherent order, e.g. small vs large, or you have a fixed set of categories, then you should consider using a factor.</p>
 <div id="inherent-order" class="section level3">
@@ -664,7 +666,7 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(y ~<span class="st"> </span><span class="kw">factor</span>(type, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Small&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;Large&quot;</span>)))</code></pre></div>
 <div class="rmdwarning">
 <p>
-Most users interact with factors via the <code>read.csv</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv</code>, we use the <code>stringsAsFactors=FALSE</code> argument. Although this argument can add in the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.
+Most users interact with factors via the <code>read.csv()</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv()</code>, we use the <code>stringsAsFactors = FALSE</code> argument. Although this argument can add in the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.
 </p>
 </div>
 </div>
@@ -691,14 +693,14 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 <li>Each function takes at least two arguments: an object and another function. The function is passed as an argument.</li>
 <li>Every apply function has the dots, <code>...</code>, argument that is used to pass on arguments to the function that is given as an argument.</li>
 </ul>
-<p>Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, we will cover the three main functions, <code>apply</code>, <code>lapply</code>, and <code>sapply</code>. Since the apply functions are covered in most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources at the end of this section.</p>
+<p>Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, we will cover the three main functions, <code>apply()</code>, <code>lapply()</code>, and <code>sapply()</code>. Since the apply functions are covered in most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources at the end of this section.</p>
 <div class="rmdnote">
 <p>
-Most people rarely use the other apply functions. For example, I have only used <code>eapply</code> once. Students in my class uploaded R scripts. Using <code>source</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply</code>. Using separate environments, avoided object name clashes.
+Most people rarely use the other apply functions. For example, I have only used <code>eapply()</code> once. Students in my class uploaded R scripts. Using <code>source()</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply()</code>. Using separate environments, avoided object name clashes.
 </p>
 </div>
 <table>
-<caption><span id="tab:apply-family">Table 3.1: </span>The apply family of functions from base R</caption>
+<caption><span id="tab:apply-family">Table 3.1: </span>The apply family of functions from base R.</caption>
 <thead>
 <tr class="header">
 <th align="left">Function</th>
@@ -800,12 +802,12 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 </div>
 <div id="caching-variables" class="section level2">
 <h2><span class="header-section-number">3.6</span> Caching variables</h2>
-<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>sd(x)</code> in multiple function calls with the object <code>sd_x</code> that is defined once and reused. For example, suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of all the entire data set</p>
+<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>sd(x)</code> in multiple function calls with the object <code>sd_x</code> that is defined once and reused. For example, suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the entire data set</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(x, <span class="dv">2</span>, function(i) <span class="kw">mean</span>(i) /<span class="st"> </span><span class="kw">sd</span>(x))</code></pre></div>
-<p>This is inefficient, since the value of <code>sd(x)</code> is constant recalculating the standard deviation is for early column is unnecessary. Instead, we should evaluate once and store the result</p>
+<p>This is inefficient since the value of <code>sd(x)</code> is constant, recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sd_x =<span class="st"> </span><span class="kw">sd</span>(x)
 <span class="kw">apply</span>(x, <span class="dv">2</span>, function(i) <span class="kw">mean</span>(i) /<span class="st"> </span>sd_x)</code></pre></div>
-<p>If we we compare the two methods on a <span class="math inline">\(100\)</span> row by <span class="math inline">\(1000\)</span> column matrix, the cached version is around 100 times faster (figure <a href="programming.html#fig:3-5">3.3</a>).</p>
+<p>If we compare the two methods on a <span class="math inline">\(100\)</span> row by <span class="math inline">\(1000\)</span> column matrix, the cached version is around <span class="math inline">\(100\)</span> times faster (figure <a href="programming.html#fig:3-5">3.3</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:3-5"></span>
 <img src="_main_files/figure-html/3-5-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
 <p class="caption">
@@ -878,7 +880,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x403eb48&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x4955318&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -896,7 +898,6 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <p>This is clearly a bad function and we should just <code>mean()</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</code></pre></div>
 <p>Then we use the <code>microbenchmark()</code> function to compare the three variants</p>
-<!-- Make n bigger and just copy and paster output -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
 x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="co"># milliseconds</span>
@@ -921,10 +922,12 @@ Figure 3.4: Comparsion of mean functions.
 <p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages()</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Windows users will need Rtools
 <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</code></pre></div>
+<p>Or if we want to avoid altering the <code>.Renviron</code> file, we can specify an additional argument</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type=</span><span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </code></pre></div>
 A final option to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.
 <div class="rmdtip">
 <p>
-I always set the compile level to the maximum value of 3.
+We recommending setting the compile level to the maximum value of 3.
 </p>
 </div>
 
