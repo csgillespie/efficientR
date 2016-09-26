@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 215170 268436 335254 279196 406507 585796   100
-#>  cs_apply(x) 138080 161266 216782 175446 268324 391205   100
-#>    cumsum(x)    516    625   1504   1126   1400  16883   100
+#>    cs_for(x) 220796 271388 283414 284296 302694 362050   100
+#>  cs_apply(x) 141691 158630 177622 172116 199530 270420   100
+#>    cumsum(x)    538    660   1362   1034   1193  13653   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.321   0.027   3.348
+#>   2.882   0.016   2.898
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3f0dff8>
+#> <bytecode: 0x4321598>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2926,8 +2926,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq mean median   uq  max neval
-#>     with_select  9.79  9.91 10.2   10.0 10.5 10.7     5
-#>  without_select 17.31 17.48 17.8   17.6 17.9 18.8     5
+#>     with_select  9.84  9.87 10.1   10.1 10.1 10.8     5
+#>  without_select 16.62 16.71 17.2   17.0 17.7 18.1     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3141,7 +3141,7 @@ There are many words for data processing. You can **clean**, **hack**, **manipul
 
 This metaphor is not accidental. Carpentry is the process of taking rough pieces of wood and working with care, diligence and precision to create a finished product. A carpenter does not hack at the wood at random. He or she will inspect the raw material and select the right tool for the job. In the same way *data carpentry* is the process of taking rough, raw and to some extent randomly arranged input data and creating neatly organised and *tidy* data. Learning the skill of data carpentry early will yield benefits for years to come. "Give me six hours to chop down a tree and I will spend the first four sharpening the axe" as the saying goes.
 
-Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in Chapter 5, can cripple your workflow, working with messy data can lead to project management hell.
+Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in Chapter \@ref(input-output), can cripple your workflow, working with messy data can lead to project management hell.
 
 Fortunately, done efficiently, at the outset of your project (rather than half way through, when it may be too late), and using appropriate tools, this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of book. In it we cover the following topics:
 
@@ -3204,7 +3204,7 @@ The example above illustrates the main differences between the **tibble** and ba
 Other differences can be found in the associated help page - `help("tibble")`.
 
 <div class="rmdnote">
-<p>You can create a tibble data frame row-by-row using the <code>frame_data</code> function.</p>
+<p>You can create a tibble data frame row-by-row using the <code>tribble</code> function.</p>
 </div>
 
 #### Exericse {-}
@@ -4402,13 +4402,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.792   0.472   5.265
+#>   3.881   0.204   4.085
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.301   0.064   0.365
+#>   0.180   0.036   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4421,7 +4421,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.309   0.328   1.636
+#>   0.980   0.144   1.123
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4560,9 +4560,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean median     uq  max neval
-#>  ex_mat[1, ] 0.00489 0.00622 0.0799 0.0103 0.0118 7.06   100
-#>   ex_df[1, ] 1.47973 1.64118 1.8420 1.6677 1.7808 8.73   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00279 0.00371 0.0562 0.00612 0.00666 5.09   100
+#>   ex_df[1, ] 0.75766 0.83126 0.9777 0.85616 0.89074 5.93   100
 ```
 
 <div class="rmdtip">
@@ -4977,7 +4977,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ab8f08a90e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b9ceabed0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

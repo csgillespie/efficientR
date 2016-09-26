@@ -491,13 +491,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.792   0.472   5.265</span>
+<span class="co">#&gt;   3.881   0.204   4.085</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.301   0.064   0.365</span>
+<span class="co">#&gt;   0.180   0.036   0.217</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -505,7 +505,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   1.309   0.328   1.636</span>
+<span class="co">#&gt;   0.980   0.144   1.123</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -572,9 +572,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00489 0.00622 0.0799 0.0103 0.0118 7.06   100</span>
-<span class="co">#&gt;   ex_df[1, ] 1.47973 1.64118 1.8420 1.6677 1.7808 8.73   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00279 0.00371 0.0562 0.00612 0.00666 5.09   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.75766 0.83126 0.9777 0.85616 0.89074 5.93   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
@@ -781,7 +781,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ab8f08a90e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b9ceabed0e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
