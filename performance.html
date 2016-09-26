@@ -279,7 +279,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#converting-factors-to-numerics"><i class="fa fa-check"></i>Converting factors to numerics</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#logical-and-and-or"><i class="fa fa-check"></i>Logical AND and OR</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#row-and-column-operations"><i class="fa fa-check"></i>Row and column operations</a></li>
-<li><a href="performance.html#is.na-and-anyna"><code>is.na</code> and <code>anyNA</code>  </a></li>
+<li><a href="performance.html#is.na-and-anyna"><code>is.na()</code> and <code>anyNA()</code>  </a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#matrices"><i class="fa fa-check"></i>Matrices</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
@@ -295,7 +295,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.6.1" data-path="performance.html"><a href="performance.html#simple-c"><i class="fa fa-check"></i><b>7.6.1</b> A simple C++ function</a></li>
 <li class="chapter" data-level="7.6.2" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.6.2</b> The <code>cppFunction()</code> command</a></li>
 <li class="chapter" data-level="7.6.3" data-path="performance.html"><a href="performance.html#c-types"><i class="fa fa-check"></i><b>7.6.3</b> C++ data types</a></li>
-<li class="chapter" data-level="7.6.4" data-path="performance.html"><a href="performance.html#sourcecpp"><i class="fa fa-check"></i><b>7.6.4</b> The <code>sourceCpp</code> function</a></li>
+<li class="chapter" data-level="7.6.4" data-path="performance.html"><a href="performance.html#sourcecpp"><i class="fa fa-check"></i><b>7.6.4</b> The <code>sourceCpp()</code> function</a></li>
 <li class="chapter" data-level="7.6.5" data-path="performance.html"><a href="performance.html#vectors-and-loops"><i class="fa fa-check"></i><b>7.6.5</b> Vectors and loops</a></li>
 <li class="chapter" data-level="7.6.6" data-path="performance.html"><a href="performance.html#sugar"><i class="fa fa-check"></i><b>7.6.6</b> C++ with sugar on top</a></li>
 <li class="chapter" data-level="7.6.7" data-path="performance.html"><a href="performance.html#rcpp-resources"><i class="fa fa-check"></i><b>7.6.7</b> Rcpp resources</a></li>
@@ -417,8 +417,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="performance-profvis" class="section level2">
 <h2><span class="header-section-number">7.2</span> Code profiling</h2>
 <p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottle neck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
-<p>The <code>Rprof()</code> function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
-<p>Unfortunately <code>Rprof</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof</code>.</p>
+<p>The <code>Rprof()</code> function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof()</code> are stochastic. Each time we run a function R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
+<p>Unfortunately <code>Rprof()</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof()</code>.</p>
 <div id="getting-started-with-profvis" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> Getting started with <strong>profvis</strong></h3>
 <p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movies was made verus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
@@ -438,8 +438,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 Figure 7.1: Output from profvis
 </p>
 </div>
-<p>The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the <code>loess</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess</code> function. Travelling up the function, we see that <code>loess</code> calls <code>simpleLoess</code> which in turn calls <code>.C</code> function.</p>
-<p>The conclusion from this graph is that if optimisation were required, it would make sense to focus on the <code>loess</code> and possibly the <code>order</code> function calls.</p>
+<p>The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the <code>loess()</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess()</code> function. Travelling up the function, we see that <code>loess()</code> calls <code>simpleLoess()</code> which in turn calls <code>.C()</code> function.</p>
+<p>The conclusion from this graph is that if optimisation were required, it would make sense to focus on the <code>loess()</code> and possibly the <code>order()</code> function calls.</p>
 </div>
 <div id="monopoloy" class="section level3">
 <h3><span class="header-section-number">7.2.2</span> Example: Monopoly Simulation</h3>
@@ -491,13 +491,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   6.002   0.312   6.315</span>
+<span class="co">#&gt;   4.027   0.284   4.311</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.313   0.032   0.345</span>
+<span class="co">#&gt;   0.185   0.060   0.245</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -505,27 +505,27 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   1.238   0.168   1.407</span>
+<span class="co">#&gt;   1.113   0.224   1.337</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
 <div id="sorting-and-ordering" class="section level3 unnumbered">
 <h3>Sorting and ordering</h3>
 <p>Sorting a vector is relatively quick; sorting a vector of length <span class="math inline">\(10^7\)</span> takes around <span class="math inline">\(0.01\)</span> seconds. If you only sort a vector once at the top of a script, then don’t worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.</p>
-<p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is the most computationally efficient option for most situations (it is around 20% faster when sorting a large vector of doubles).</p>
+<p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort()</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is the most computationally efficient option for most situations (it is around 20% faster when sorting a large vector of doubles).</p>
 <p>Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the <code>partial</code> argument, i.e. <code>sort(x, partial = 1:10)</code>. For very large vectors, this can give a three fold speed increase.</p>
 </div>
 <div id="reversing-elements" class="section level3 unnumbered">
 <h3>Reversing elements</h3>
-<p>The <code>rev</code> function provides a reversed version of its argument. If you wish to sort in increasing order, <code>sort(x, decreasing = TRUE)</code> is marginally (around 10%) faster than <code>rev(sort(x))</code>.</p>
+<p>The <code>rev()</code> function provides a reversed version of its argument. If you wish to sort in increasing order, <code>sort(x, decreasing = TRUE)</code> is marginally (around 10%) faster than <code>rev(sort(x))</code>.</p>
 </div>
 <div id="which-indices-are-true" class="section level3 unnumbered">
 <h3>Which indices are <code>TRUE</code>  </h3>
-<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then using the efficient <code>which.min</code>/<code>which.max</code> variants can be orders of magnitude faster (see figure <a href="performance.html#fig:7-3">7.3</a>)</p>
+<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which()</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then using the efficient <code>which.min()</code>/<code>which.max()</code> variants can be orders of magnitude faster (see figure <a href="performance.html#fig:7-3">7.3</a>)</p>
 <div class="figure" style="text-align: center"><span id="fig:7-3"></span>
-<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min` with `which`." width="90%" />
+<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="90%" />
 <p class="caption">
-Figure 7.3: Comparison of <code>which.min</code> with <code>which</code>.
+Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 </p>
 </div>
 </div>
@@ -562,8 +562,8 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <p>There are optimised functions for calculating row and columns sums/means, <code>rowSums()</code>, <code>colSums()</code>, <code>rowMeans()</code> and <code>colMeans()</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
 </div>
 <div id="is.na-and-anyna" class="section level3 unnumbered">
-<h3><code>is.na</code> and <code>anyNA</code>  </h3>
-<p>To test whether a vector (or other object) contains missing values we use the <code>is.na</code> function. Often we are interested in whether a vector contains <em>any</em> missing values. In this case, <code>anyNA(x)</code> is more efficient than <code>any(is.na(x))</code>.</p>
+<h3><code>is.na()</code> and <code>anyNA()</code>  </h3>
+<p>To test whether a vector (or other object) contains missing values we use the <code>is.na()</code> function. Often we are interested in whether a vector contains <em>any</em> missing values. In this case, <code>anyNA(x)</code> is more efficient than <code>any(is.na(x))</code>.</p>
 </div>
 <div id="matrices" class="section level3 unnumbered">
 <h3>Matrices</h3>
@@ -572,12 +572,12 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq  mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00307 0.00489 0.083 0.00628 0.00803 7.67   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.79438 0.83016 1.241 1.17962 1.44736 8.95   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min      lq  mean median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00261 0.00377 0.053 0.0062 0.0068 4.73   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.77211 0.85745 1.003 0.8777 0.9622 5.80   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
-Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.
+Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
 </p>
 </div>
 </div>
@@ -632,14 +632,14 @@ pryr::<span class="kw">object_size</span>(m)
 <div id="exercises-16" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
-<li><p>Create a vector <code>x</code>. Benchmark <code>any(is.na(x))</code> against <code>anyNA</code>. Do the results vary with the size of the vector.</p></li>
+<li><p>Create a vector <code>x</code>. Benchmark <code>any(is.na(x))</code> against <code>anyNA()</code>. Do the results vary with the size of the vector.</p></li>
 <li>Examine the following function definitions to give you an idea of how integers are used.
 <ul>
-<li><code>tail.matrix</code></li>
-<li><code>lm</code>.</li>
+<li><code>tail.matrix()</code></li>
+<li><code>lm()</code>.</li>
 </ul></li>
-<li><p>Construct a matrix of integers and a matrix of numerics. Using <code>pryr::object_size</code>, compare the objects.</p></li>
-<li><p>How does the function <code>seq.int</code>, which was used in the <code>tail.matrix</code> function, differ to the standard <code>seq</code> function?</p></li>
+<li><p>Construct a matrix of integers and a matrix of numerics. Using <code>pryr::object_size()</code>, compare the objects.</p></li>
+<li><p>How does the function <code>seq.int()</code>, which was used in the <code>tail.matrix()</code> function, differ to the standard <code>seq()</code> function?</p></li>
 </ol>
 <div class="rmdnote">
 <p>
@@ -656,7 +656,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
 Overall, this revised line is around 25 times faster; most of the speed boost came from switching to a matrix.</li>
-<li>Using <code>rowSums</code> instead of <code>apply</code>. The <code>apply</code> function call is already faster since we’ve switched from a data frame to a matrix (around 3 times). Using <code>rowSums</code> with a matrix, gives a 10 fold speed boost.</li>
+<li>Using <code>rowSums()</code> instead of <code>apply()</code>. The <code>apply()</code> function call is already faster since we’ve switched from a data frame to a matrix (around 3 times). Using <code>rowSums()</code> with a matrix, gives a 10 fold speed boost.</li>
 <li><p>Use <code>&amp;&amp;</code> in the <code>if</code> condition; this is around twice as fast compared to <code>&amp;</code>.</p></li>
 </ul>
 <p>Impressively the refactored code runs 20 times faster than the original code, compare figures <a href="performance.html#fig:7-2">7.2</a> and <a href="performance.html#fig:7-4">7.4</a>, with the main speed boost coming from using a matrix instead of a data frame.</p>
@@ -684,22 +684,22 @@ The value returned by <code>detectCores()</code> turns out to be operating syste
 </div>
 <div id="parallel-versions-of-apply-functions" class="section level3">
 <h3><span class="header-section-number">7.5.1</span> Parallel versions of apply functions</h3>
-<p>The most commonly used parallel applications are parallelised replacements of <code>lapply</code>, <code>sapply</code> and <code>apply</code>. The parallel implementations and their arguments are shown below.</p>
+<p>The most commonly used parallel applications are parallelised replacements of <code>lapply()</code>, <code>sapply()</code> and <code>apply()</code>. The parallel implementations and their arguments are shown below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
 <span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
 <span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
-<p>The key point is that there is very little difference in arguments between <code>parLapply</code> and <code>apply</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster</code> call. This function, amongst other things, specifies the number of processors to use.</p>
+<p>The key point is that there is very little difference in arguments between <code>parLapply()</code> and <code>apply()</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster()</code> call. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
 <div id="example-snakes-and-ladders" class="section level3">
 <h3><span class="header-section-number">7.5.2</span> Example: Snakes and Ladders</h3>
 <p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a></p>
-<p>The following code illustrates how to simulate <code>N</code> games using <code>sapply</code>:</p>
+<p>The following code illustrates how to simulate <code>N</code> games using <code>sapply()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10</span>^<span class="dv">4</span>
 <span class="kw">sapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
 <p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward. Begin by making a cluster object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
 cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</code></pre></div>
-<p>Then simply swap <code>sapply</code> for <code>parSapply</code>:</p>
+<p>Then simply swap <code>sapply()</code> for <code>parSapply()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
 <p>It is important to stop the created clusters, as this can lead to memory leaks,<a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a> as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
@@ -723,10 +723,10 @@ Another common use of <code>on.exit()</code> is with the <code>par()</code> func
 </div>
 <div id="parallel-code-under-linux-os-x" class="section level3">
 <h3><span class="header-section-number">7.5.4</span> Parallel code under Linux &amp; OS X</h3>
-<p>If you are using Linux or OS, then another way of running code in parallel is to use the <code>mclapply</code> and <code>mcmapply</code> functions</p>
+<p>If you are using Linux or OS, then another way of running code in parallel is to use the <code>mclapply()</code> and <code>mcmapply()</code> functions</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This will run on Windows, but will only use 1 core</span>
 <span class="kw">mclapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. The main advantage of <code>mclapply</code> is that you don’t have to start and stop cluster objects. The big disadvantage is that on Windows machines, you are limited to a single core.</p>
+<p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. The main advantage of <code>mclapply()</code> is that you don’t have to start and stop cluster objects. The big disadvantage is that on Windows machines, you are limited to a single core.</p>
 </div>
 </div>
 <div id="rcpp" class="section level2">
@@ -739,7 +739,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 </p>
 </div>
 <p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational task. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easy.</p>
-<p>Although C/Fortran routines can be used using the <code>.Call</code> function this is not recommended: using <code>.Call</code> can be a painful experience. <strong>Rcpp</strong> provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R’s tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.</p>
+<p>Although C/Fortran routines can be used using the <code>.Call()</code> function this is not recommended: using <code>.Call()</code> can be a painful experience. <strong>Rcpp</strong> provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R’s tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.</p>
 <p>C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and provide a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="performance.html#simple-c">7.6.1</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="performance.html#cppfunction">7.6.2</a>. The remainder of the chapter explains C++ data types (Section <a href="performance.html#c-types">7.6.3</a>), illustrates how to source C++ code directly (Section <a href="performance.html#sourcecpp">7.6.4</a>) and explains vectors (Section <a href="performance.html#vectors-and-loops">7.6.5</a>) <strong>Rcpp</strong> sugar (Section <a href="performance.html#sugar">7.6.6</a>) and finally provides guidance on further resources on the subject (Section <a href="performance.html#rcpp-resources">7.6.7</a>).</p>
 <div id="simple-c" class="section level3">
 <h3><span class="header-section-number">7.6.1</span> A simple C++ function</h3>
@@ -766,7 +766,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
   <span class="dt">double</span> value = x + y;
   <span class="kw">return</span> value;
 }</code></pre></div>
-<p>If we were writing a C++ program we would also need another function called <code>main</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
+<p>If we were writing a C++ program we would also need another function called <code>main()</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
 </div>
 <div id="cppfunction" class="section level3">
 <h3><span class="header-section-number">7.6.2</span> The <code>cppFunction()</code> command</h3>
@@ -781,7 +781,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2af20976a0e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b5f06bcc0e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -829,12 +829,12 @@ There is also something called an unsigned int, which goes from <span class="mat
 <p>A pointer object is a variable that points to an area of memory that has been given a name. Pointers are a very powerful, but primitive facility contained in the C++ language. They are very useful since rather than passing large objects around, we pass a pointer to the memory location; rather than pass the house, we just give the address. We won’t use pointers in this chapter, but mention them for completeness. Table <a href="performance.html#tab:cpptypes">7.1</a> gives an overview.</p>
 </div>
 <div id="sourcecpp" class="section level3">
-<h3><span class="header-section-number">7.6.4</span> The <code>sourceCpp</code> function</h3>
-<p>The <code>cppFunction</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp(&quot;path/to/file.cpp&quot;)</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. The <code>include</code> line</p>
+<h3><span class="header-section-number">7.6.4</span> The <code>sourceCpp()</code> function</h3>
+<p>The <code>cppFunction()</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp(&quot;path/to/file.cpp&quot;)</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. The <code>include</code> line</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;Rcpp.h&gt;</span></code></pre></div>
 <p>causes the compiler to replace that lines with the contents of the named source file. This means that we can access the functions defined by <strong>Rcpp</strong>. To access the <strong>Rcpp</strong> functions we would have to type <code>Rcpp::function_1</code>. To avoid typing <code>Rcpp::</code>, we use the namespace facility</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</code></pre></div>
-<p>Now we can just type <code>function_1</code>; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag</p>
+<p>Now we can just type <code>function_1()</code>; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// [[Rcpp::export]]</span></code></pre></div>
 <div class="rmdnote">
 <p>
@@ -862,9 +862,9 @@ Similar to packages and the <code>library()</code> function in R, we access addi
     m =<span class="st"> </span>m +<span class="st"> </span>x[i] /<span class="st"> </span>n
   m
 }</code></pre></div>
-<p>This is a very bad R function; we should just use the base function <code>mean</code> for real world applications. However the purpose of <code>mean_r</code> is to provide a comparison for the C++ version, which we will write in a similar way.</p>
+<p>This is a very bad R function; we should just use the base function <code>mean()</code> for real world applications. However the purpose of <code>mean_r()</code> is to provide a comparison for the C++ version, which we will write in a similar way.</p>
 <p>In this example, we will let <strong>Rcpp</strong> smooth the interface between C++ and R by using the <code>NumericVector</code> data type. This <strong>Rcpp</strong> data type mirrors the R vector object type. Other common classes are: <code>IntegerVector</code>, <code>CharacterVector</code>, and <code>LogicalVector</code>.</p>
-<p>In the C++ version of the mean function, we specify the arguments types: <code>x</code> (<code>NumericVector</code>) and the return value (<code>double</code>). The C++ version of the <code>mean</code> function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer. In general R optimises for reduced development time; C++ optimises for fast execution time. The corresponding C++ function for calculating the mean is</p>
+<p>In the C++ version of the mean function, we specify the arguments types: <code>x</code> (<code>NumericVector</code>) and the return value (<code>double</code>). The C++ version of the <code>mean()</code> function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer. In general R optimises for reduced development time; C++ optimises for fast execution time. The corresponding C++ function for calculating the mean is</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> mean_cpp(NumericVector x) {
   <span class="dt">int</span> i;
   <span class="dt">int</span> n = x.size();
@@ -892,7 +892,7 @@ The above code adds <code>x[i] / n</code> to the value of <code>mean</code>. Oth
 </ol>
 <p>To compare the C++ and R functions, we’ll generate some normal random numbers for the comparison</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</code></pre></div>
-<p>Then call the <code>microbenchmark</code> function (results plotted in figure <a href="performance.html#fig:7-6">7.6</a>).</p>
+<p>Then call the <code>microbenchmark()</code> function (results plotted in figure <a href="performance.html#fig:7-6">7.6</a>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># com_mean_r is the compiled version of mean_r</span>
 z =<span class="st"> </span><span class="kw">microbenchmark</span>(
   <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_cpp</span>(x),
@@ -956,23 +956,23 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">NumericVector res_sugar(NumericVector x, NumericVector y) {
   <span class="kw">return</span> pow(x-y, <span class="dv">2</span>);
 }</code></pre></div>
-<p>In the above C++ code, the <code>pow</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm</code> and <code>pnorm</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
+<p>In the above C++ code, the <code>pow()</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm()</code> and <code>pnorm()</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
 <div id="exercises-18" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
-<li>Construct an R version (using a <code>for</code> loop rather than the vectorised solution), <code>res_r</code> and compare the three function variants.</li>
-<li>In the above example, <code>res_sugar</code> is faster than <code>res_c</code>. Do you know why?</li>
+<li>Construct an R version (using a <code>for</code> loop rather than the vectorised solution), <code>res_r()</code> and compare the three function variants.</li>
+<li>In the above example, <code>res_sugar()</code> is faster than <code>res_c()</code>. Do you know why?</li>
 </ol>
 </div>
 </div>
 <div id="rcpp-resources" class="section level3">
 <h3><span class="header-section-number">7.6.7</span> Rcpp resources</h3>
-<p>The aim of this section was to provide an introduction to <code>Rcpp</code>. One of the selling features of <code>Rcpp</code> is that there is a great deal of documentation available.</p>
+<p>The aim of this section was to provide an introduction to <strong>Rcpp</strong>. One of the selling features of <strong>Rcpp</strong> is that there is a great deal of documentation available.</p>
 <ul>
-<li>The Rcpp <a href="http://www.rcpp.org/">website</a>;</li>
-<li>The original Journal of Statistical Software paper describing <code>Rcpp</code> and the follow-up book <span class="citation">(Eddelbuettel and François <a href="#ref-Eddelbuettel2011">2011</a>; Eddelbuettel <a href="#ref-Eddelbuettel2013">2013</a>)</span>;</li>
-<li><span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a very readable chapter on <code>Rcpp</code> that goes into a bit more detail than this section;</li>
-<li>The <code>Rcpp</code> section on the <a href="https://stackoverflow.com/questions/tagged/rcpp">stackoverflow</a> website. Questions are often answered by the <code>Rcpp</code> authors.</li>
+<li>The <strong>Rcpp</strong> <a href="http://www.rcpp.org/">website</a>;</li>
+<li>The original Journal of Statistical Software paper describing <strong>Rcpp</strong> and the follow-up book <span class="citation">(Eddelbuettel and François <a href="#ref-Eddelbuettel2011">2011</a>; Eddelbuettel <a href="#ref-Eddelbuettel2013">2013</a>)</span>;</li>
+<li><span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a very readable chapter on <strong>Rcpp</strong> that goes into a bit more detail than this section;</li>
+<li>The <strong>Rcpp</strong> section on the <a href="https://stackoverflow.com/questions/tagged/rcpp">stackoverflow</a> website. Questions are often answered by the <strong>Rcpp</strong> authors.</li>
 </ul>
 
 </div>

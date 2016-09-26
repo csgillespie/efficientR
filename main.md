@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 220030 273612 364580 306194 476894 651778   100
-#>  cs_apply(x) 137397 174731 242699 199918 331476 414458   100
-#>    cumsum(x)    486    825   1425    990   1531  15196   100
+#>    cs_for(x) 214235 262008 275552 275981 297720 362448   100
+#>  cs_apply(x) 138938 159933 179581 175061 200168 276183   100
+#>    cumsum(x)    470    590   1318    952   1046  14385   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.349   0.007   3.358
+#>   2.924   0.016   2.941
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4835fd8>
+#> <bytecode: 0x5429078>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2925,9 +2925,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 15.4 15.6 15.7   15.7 15.8 16.1     5
-#>  without_select 24.9 24.9 25.3   25.5 25.6 25.7     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.27  9.28  9.41   9.38  9.47  9.65     5
+#>  without_select 15.26 15.50 15.81  15.68 16.12 16.47     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4252,12 +4252,12 @@ slow code lives. This is the purpose of code profiling.
 
 The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At
 regular time intervals, the profiler stops the R interpreter, records the current
-function call stack, and saves the information to a file. The results from `Rprof` are
+function call stack, and saves the information to a file. The results from `Rprof()` are
 stochastic. Each time we run a function R, the conditions have changed. Hence, each
 time you profile your code, the result will be slightly different.
 
-Unfortunately `Rprof` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
-**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof`.
+Unfortunately `Rprof()` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
+**profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof()`.
 
 ### Getting started with **profvis**
 
@@ -4293,13 +4293,13 @@ in milliseconds and the vertical direction is the call stack).
 </div>
 
 The left hand panel gives the amount of time spent on each line of code. It shows that
-majority of time is spent calculating the `loess` smoothing line. The bottom line of
+majority of time is spent calculating the `loess()` smoothing line. The bottom line of
 the right panel also highlights that most of the execution time is spent on the
-`loess` function. Travelling up the function, we see that `loess` calls `simpleLoess`
-which in turn calls `.C` function.
+`loess()` function. Travelling up the function, we see that `loess()` calls `simpleLoess()`
+which in turn calls `.C()` function.
 
 The conclusion from this graph is that if optimisation were required, it would make
-sense to focus on the `loess` and possibly the `order` function calls.
+sense to focus on the `loess()` and possibly the `order()` function calls.
  
 
 
@@ -4400,13 +4400,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   6.002   0.312   6.315
+#>   4.027   0.284   4.311
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.313   0.032   0.345
+#>   0.185   0.060   0.245
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4419,7 +4419,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.238   0.168   1.407
+#>   1.113   0.224   1.337
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4433,7 +4433,7 @@ in a shiny application, then it can be worthwhile thinking about how to optimise
 operation.
 
 There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
-be specified in the `sort` function; with `radix` being a new addition to R 3.3.
+be specified in the `sort()` function; with `radix` being a new addition to R 3.3.
 Typically the `radix` (the non-default option) is the most computationally efficient option
 for most situations (it is around 
 20% faster when sorting a large vector of doubles).
@@ -4447,19 +4447,19 @@ For very large vectors, this can give a three fold speed increase.
 
 ### Reversing elements {-}
 
-The `rev` function provides a reversed version of its argument. If you wish to sort in
+The `rev()` function provides a reversed version of its argument. If you wish to sort in
 increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
 To determine which index of a vector or array are `TRUE`, we would typically use the
-`which` function. If we want to find the index of just the minimum or maximum value,
-i.e. `which(x == min(x))` then using the efficient `which.min`/`which.max`
+`which()` function. If we want to find the index of just the minimum or maximum value,
+i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()`
 variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min` with `which`." width="90%" />
-<p class="caption">(\#fig:7-3)Comparison of `which.min` with `which`.</p>
+<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="90%" />
+<p class="caption">(\#fig:7-3)Comparison of `which.min()` with `which()`.</p>
 </div>
 
 ###  Converting factors to numerics {-}
@@ -4471,7 +4471,6 @@ convert a factor into its numerical equivalent. The most efficient way of doing 
 ```r
 as.numeric(levels(f))[f]
 ```
-
 
 ### Logical AND and OR {-}
 
@@ -4532,10 +4531,10 @@ There are optimised functions for calculating row and columns sums/means, `rowSu
 `colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.  The package
 **matrixStats** contains many optimised row/col functions.
 
-### `is.na` and `anyNA` \ {-}
+### `is.na()` and `anyNA()` \ {-}
 
 To test whether a vector (or other object) contains missing
-values we use the `is.na` function. Often we are interested in whether a vector
+values we use the `is.na()` function. Often we are interested in whether a vector
 contains _any_ missing values. In this case, `anyNA(x)` is more efficient than
 `any(is.na(x))`.
 
@@ -4558,13 +4557,13 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00307 0.00489 0.083 0.00628 0.00803 7.67   100
-#>   ex_df[1, ] 0.79438 0.83016 1.241 1.17962 1.44736 8.95   100
+#>         expr     min      lq  mean median     uq  max neval
+#>  ex_mat[1, ] 0.00261 0.00377 0.053 0.0062 0.0068 4.73   100
+#>   ex_df[1, ] 0.77211 0.85745 1.003 0.8777 0.9622 5.80   100
 ```
 
 <div class="rmdtip">
-<p>Use the <code>data.matrix</code> function to efficiently convert a data frame into a matrix.</p>
+<p>Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.</p>
 </div>
 
 ### The integer data type {-}
@@ -4672,17 +4671,17 @@ pryr::object_size(m)
 
 #### Exercises {-}
 
-  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA`. Do the results vary with the size of the vector.
+  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA()`. Do the results vary with the size of the vector.
 
   1. Examine the following function definitions to give you an idea of how integers are used.
-    * `tail.matrix`
-    * `lm`. 
+    * `tail.matrix()`
+    * `lm()`. 
 
-  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size`, compare the 
+  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size()`, compare the 
   objects.
   
-  1. How does the function `seq.int`, which was used in the `tail.matrix` function, 
-  differ to the standard `seq` function?
+  1. How does the function `seq.int()`, which was used in the `tail.matrix()` function, 
+  differ to the standard `seq()` function?
 
 <div class="rmdnote">
 <p>A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over 16th of the space (but you can't use <code>NA</code>s).</p>
@@ -4708,8 +4707,8 @@ improvements^[Solutions are available in the **efficient** package vignette.]:
   
     Overall, this revised line is around 25 times faster; most of the speed boost came from
     switching to a matrix.
-  * Using `rowSums` instead of `apply`. The `apply` function call is already faster since we've switched 
-  from a data frame to a matrix (around 3 times). Using `rowSums` with a matrix, gives a 10 fold speed boost.
+  * Using `rowSums()` instead of `apply()`. The `apply()` function call is already faster since we've switched 
+  from a data frame to a matrix (around 3 times). Using `rowSums()` with a matrix, gives a 10 fold speed boost.
   * Use `&&` in the `if` condition; this is around twice as fast compared to `&`.
   
 Impressively the refactored code runs 20 times faster than the original code, compare
@@ -4759,7 +4758,7 @@ no_of_cores = detectCores()
 ### Parallel versions of apply functions
 
 The most commonly used parallel applications are parallelised replacements of
-`lapply`, `sapply` and `apply`. The parallel implementations and their arguments are
+`lapply()`, `sapply()` and `apply()`. The parallel implementations and their arguments are
 shown below.
 
 
@@ -4769,10 +4768,10 @@ parApply(cl = NULL, X, MARGIN, FUN, ...)
 parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) 
 ```
 
-The key point is that there is very little difference in arguments between `parLapply`
-and `apply`, so the barrier to using (this form) of parallel computing is low,
+The key point is that there is very little difference in arguments between `parLapply()`
+and `apply()`, so the barrier to using (this form) of parallel computing is low,
 assuming you are proficient with the apply family of functions. Each function above
-has an argument `cl`, which is created by a `makeCluster` call. This function, amongst
+has an argument `cl`, which is created by a `makeCluster()` call. This function, amongst
 other things, specifies the number of processors to use.
 
 ### Example: Snakes and Ladders
@@ -4783,7 +4782,7 @@ simulates a realisation from model. At the end, we gather up the results. In the
 Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
 after a particularly long and dull game of Snakes and Ladders with his son.]
 
-The following code illustrates how to simulate `N` games using `sapply`:
+The following code illustrates how to simulate `N` games using `sapply()`:
 
 
 ```r
@@ -4800,7 +4799,7 @@ library("parallel")
 cl = makeCluster(4)
 ```
 
-Then simply swap `sapply` for `parSapply`:
+Then simply swap `sapply()` for `parSapply()`:
 
 
 ```r
@@ -4848,7 +4847,7 @@ simulate = function(cores) {
 
 
 If you are using Linux or OS, then another way of running code in parallel is to use 
-the `mclapply` and `mcmapply` functions
+the `mclapply()` and `mcmapply()` functions
 
 ```r
 # This will run on Windows, but will only use 1 core
@@ -4856,7 +4855,7 @@ mclapply(1:N, snakes_ladders)
 ```
 These functions use forking, that is creating a new copy of a process running on the
 CPU. However Windows does not support this low-level functionality in the way that
-Linux does. The main advantage of `mclapply` is that you don't have to start and stop cluster 
+Linux does. The main advantage of `mclapply()` is that you don't have to start and stop cluster 
 objects. The big disadvantage is that on Windows machines, you are limited to a single core.
 
 ## Rcpp
@@ -4877,8 +4876,8 @@ C++ is a modern, fast and very well-supported language with libraries for perfor
 many kinds of computational task. **Rcpp** makes incorporating C++ code into your R
 workflow easy.
 
-Although C/Fortran routines can be used using the `.Call` function this is not
-recommended: using `.Call` can be a painful experience. **Rcpp** provides a friendly
+Although C/Fortran routines can be used using the `.Call()` function this is not
+recommended: using `.Call()` can be a painful experience. **Rcpp** provides a friendly
 API (Application Program Interface) that lets you write high-performance code,
 bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and
 recursive functions.
@@ -4945,7 +4944,7 @@ double add_cpp(double x, double y) {
 }
 ```
 
-If we were writing a C++ program we would also need another function called `main`.
+If we were writing a C++ program we would also need another function called `main()`.
 We would then compile the code to obtain an executable. The executable is platform
 dependent. The beauty of using **Rcpp** is that it makes it very easy to call C++
 functions from R and the user doesn't have to worry about the platform, or compilers
@@ -4975,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2af20976a0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b5f06bcc0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -5019,9 +5018,9 @@ a pointer to the memory location; rather than pass the house, we just give the
 address. We won't use pointers in this chapter, but mention them for completeness.
 Table \@ref(tab:cpptypes) gives an overview.
 
-### The `sourceCpp` function {#sourcecpp}
+### The `sourceCpp()` function {#sourcecpp}
 
-The `cppFunction` is great for getting small examples up and running. But it is better
+The `cppFunction()` is great for getting small examples up and running. But it is better
 practice to put your C++ code in a separate file (with file extension `cpp`) and use
 the function call `sourceCpp("path/to/file.cpp")` to compile them. However we need to
 include a few headers at the top of the file. The first line we add gives us access to
@@ -5044,7 +5043,7 @@ we use the namespace facility
 using namespace Rcpp;
 ```
 
-Now we can just type `function_1`; this is the same concept that R uses for managing
+Now we can just type `function_1()`; this is the same concept that R uses for managing
 function name collisions when loading packages. Above each function we want to
 export/use in R, we add the tag
 
@@ -5097,8 +5096,8 @@ mean_r = function(x) {
 }
 ```
 
-This is a very bad R function; we should just use the base function `mean` for real
-world applications. However the purpose of `mean_r` is to provide a comparison for the
+This is a very bad R function; we should just use the base function `mean()` for real
+world applications. However the purpose of `mean_r()` is to provide a comparison for the
 C++ version, which we will write in a similar way.
 
 In this example, we will let **Rcpp** smooth the interface between C++ and R by using
@@ -5107,7 +5106,7 @@ type. Other common classes are: `IntegerVector`, `CharacterVector`, and
 `LogicalVector`.
 
 In the C++ version of the mean function, we specify the arguments types: `x`
-(`NumericVector`) and the return value (`double`). The C++ version of the `mean`
+(`NumericVector`) and the return value (`double`). The C++ version of the `mean()`
 function is a few lines longer. Almost always, the corresponding C++ version will be,
 possibly much, longer. In general R optimises for reduced development time; C++
 optimises for fast execution time. The corresponding C++ function for calculating the
@@ -5162,7 +5161,7 @@ comparison
 x = rnorm(1e4)
 ```
 
-Then call the `microbenchmark` function (results plotted in figure
+Then call the `microbenchmark()` function (results plotted in figure
 \@ref(fig:7-6)).
 
 
@@ -5261,29 +5260,29 @@ NumericVector res_sugar(NumericVector x, NumericVector y) {
 }
 ```
 
-In the above C++ code, the `pow` function and `x-y` are valid due to **Rcpp** sugar.
+In the above C++ code, the `pow()` function and `x-y` are valid due to **Rcpp** sugar.
 Other functions that are available include the d/q/p/r statistical functions, such as
-`rnorm` and `pnorm`. The sweetened versions aren't usually faster than the C++
+`rnorm()` and `pnorm()`. The sweetened versions aren't usually faster than the C++
 version, but typically there's very little difference between the two. However with
 the sugared variety, the code is shorter and is constantly being improved.
 
 #### Exercises {-}
 
 1. Construct an R version (using a `for` loop rather than the vectorised solution),
-`res_r` and compare the three function variants. 
-1. In the above example, `res_sugar` is faster than `res_c`. Do you know why?
+`res_r()` and compare the three function variants. 
+1. In the above example, `res_sugar()` is faster than `res_c()`. Do you know why?
 
 ### Rcpp resources
 
-The aim of this section was to provide an introduction to `Rcpp`. One of the selling 
-features of `Rcpp` is that there is a great deal of documentation available.
+The aim of this section was to provide an introduction to **Rcpp**. One of the selling 
+features of **Rcpp** is that there is a great deal of documentation available.
 
- * The Rcpp [website](http://www.rcpp.org/);
- * The original Journal of Statistical Software paper describing `Rcpp`
+ * The **Rcpp** [website](http://www.rcpp.org/);
+ * The original Journal of Statistical Software paper describing **Rcpp**
  and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
- * @Wickham2014 provides a very readable chapter on `Rcpp` that goes into a bit more detail than this section;
- * The `Rcpp` section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
- Questions are often answered by the `Rcpp` authors.
+ * @Wickham2014 provides a very readable chapter on **Rcpp** that goes into a bit more detail than this section;
+ * The **Rcpp** section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
+ Questions are often answered by the **Rcpp** authors.
  
 
 
