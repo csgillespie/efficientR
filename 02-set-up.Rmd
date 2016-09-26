@@ -457,15 +457,15 @@ message("Hi Robin, welcome to R")
 # Customise the R prompt that prefixes every command
 # (use " " for a blank prompt)
 options(prompt = "R4geo> ")
-# Don't convert text strings to factors with base read functions
-options(stringsAsFactors = FALSE)
 ```
 
-To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started.
-The latter two modify *options* used to change R's behaviour, first to change the prompt in the console (set to `R> ` by default) and second to ensure that unwanted `factor` variables are not created when `read.csv` and other functions derived from `read.table` are used to load external data into R. Note that simply adding more lines the `.Rprofile` will set more features.
-An important aspect of `.Rprofile` (and `.Renviron`) is that *each line is run once and only once for each R session*.
-That means that the options set within `.Rprofile` can easily be changed during the session.
-The following command run mid-session, for example, will return the default prompt:
+To quickly explain each line of code: the first simply prints a message in the console
+each time a new R session is started. The latter modifies the console prompt in the
+console (set to `> ` by default). Note that simply adding more lines the `.Rprofile`
+will set more features. An important aspect of `.Rprofile` (and `.Renviron`) is that
+*each line is run once and only once for each R session*. That means that the options
+set within `.Rprofile` can easily be changed during the session. The following command
+run mid-session, for example, will return the default prompt:
 
 ```{r}
 options(prompt = "> ")
@@ -495,17 +495,18 @@ options(prompt = "R> ", digits = 4, show.signif.stars = FALSE, continue = "  ")
 options(prompt = "R4Geo> ", digits = 3, continue = "  ")
 ```  
 
-The first option changes three default options in a single line.
+The first option changes four default options in a single line.
 
   * The R prompt, from the boring `>` to the exciting `R>`.
   * The number of digits displayed.
   * Removing the stars after significant $p$-values.
+  * Removing the `+` in multi-line functions.
 
-Try to avoid adding options to the start-up file that make your code non-portable.
-The `stringsAsFactors = FALSE` argument used above, for example,
-to your start-up script has knock-on effects for `read.table` and related functions including `read.csv`, 
-making them convert text strings into characters rather than into factors as is default.
-This may be useful for you, but can make your code less portable, so be warned.
+Try to avoid adding options to the start-up file that make your code non-portable. For
+example, adding `options(stringsAsFactors = FALSE)` to your start-up script has
+knock-on effects for `read.table` and related functions including `read.csv`, making
+them convert text strings into characters rather than into factors as is default. This
+may be useful for you, but can make your code less portable, so be warned.
 
 #### Setting the CRAN mirror
 
