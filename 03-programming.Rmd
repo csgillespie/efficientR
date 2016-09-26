@@ -23,6 +23,8 @@ package comes with R, so it will already be installed.
 library("compiler")
 library("memoise")
 ```
+We also use the **pryr** and **microbenchmark** packages in the exercises.
+
 
 ## Top 5 tips for efficient programming
 
@@ -192,7 +194,6 @@ Writing code this way has a number of benefits.
 As with the general example in section \@ref(general), the slowdown isn't due to
 the `for` loop. Instead, it's because there are many more functions calls.
 
-  
 #### Exercises {-}
 
 1. Time the two methods for calculating the log sum. 
@@ -212,7 +213,7 @@ _Monte Carlo Integration_
 
 1. Initialise: `hits = 0`
 1. __for i in 1:N__
-1. $~~~$ Generate two random numbers, $U_1, U_2$,  between 0 and 1
+1. $~~~$ Generate two random numbers, $U_1, U_2$, between 0 and 1
 1. $~~~$ If $U_2 < U_1^2$, then `hits = hits + 1`
 1. __end for__
 1. Area estimate = `hits/N`
@@ -270,7 +271,7 @@ Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. W
 generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
 the number of observations to return less than $1$, an error is raised. When we need
 to raise an error, we should do so as quickly as possible; otherwise it's a waste of
-resources. Hence, the first few lines of a function perform argument checking.
+resources. Hence, the first few lines of a function typically perform argument checking.
 
 Suppose we call a function that raises an error. What then? Efficient, robust code
 _catches_ the error and handles it appropriately. Errors can be caught using `try()`
@@ -317,12 +318,11 @@ To give informative output, use the `message()` function. For example, in the
 **poweRlaw** package, the `message()` function is used to give the user an estimate of
 expected run time. Providing a rough estimate of how long the function takes, allows the user to
 optimise their time. Similar to warnings, messages can be suppressed with
-`suppressMessages`.
+`suppressMessages()`.
   
 Another function used for printing messages is `cat()`. In general `cat()` should only be
-used in `print`/`show` methods, e.g. look at the function definition of the
+used in `print()`/`show()` methods, e.g. look at the function definition of the
 S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
-
 
 ### Exercises {-}
 
@@ -331,7 +331,7 @@ should be part of the error message. Create a function and experiment with this 
 
 ### Invisible returns 
 
-The `invisible` function allows you to return a temporarily invisible copy of an
+The `invisible()` function allows you to return a temporarily invisible copy of an
 object. This is particularly useful for functions that return values which can be
 assigned, but are not printed when they are not assigned. For example suppose we have
 a function that plots the data and fits a straight line
@@ -342,6 +342,7 @@ regression_plot = function(x, y, ...) {
   
   # Fit regression model 
   model = lm(y ~ x)
+
   # Add line of best fit to the plot
   abline(model)
   invisible(model)
@@ -374,7 +375,7 @@ x = 4:6
 c(x)
 c(factor(x))
 ```
-In this case the `c` function is using the underlying integer representation of the
+In this case the `c()` function is using the underlying integer representation of the
 factor. Dealing with the wrong case of behaviour is a common source of inefficiency for
 R users.
 
@@ -409,10 +410,10 @@ boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
 ```
 
 ```{block, type="rmdwarning"}
-Most users interact with factors via the `read.csv` function where character columns
+Most users interact with factors via the `read.csv()` function where character columns
 are automatically converted to factors. This feature can be irritating if our data is
 messy and we want to clean and recode variables. Typically when reading in data via
-`read.csv`, we use the `stringsAsFactors=FALSE` argument. Although this argument can
+`read.csv()`, we use the `stringsAsFactors = FALSE` argument. Although this argument can
 add in the global `options()` list and placed in the `.Rprofile`, this leads to
 non-portable code, so should be avoided.
 ```
@@ -448,7 +449,6 @@ pryr::object_size(ch)
 pryr::object_size(fac)
 ```
 
-
 ## The apply family
 
 The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
@@ -461,15 +461,15 @@ general, the all apply functions have similar properties:
   given as an argument.
 
 Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, 
-we will cover the three main functions, `apply`, `lapply`, and `sapply`. Since the apply functions are covered in 
+we will cover the three main functions, `apply()`, `lapply()`, and `sapply()`. Since the apply functions are covered in 
 most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources 
 at the end of this section.
 
 ```{block, type="rmdnote"}
-Most people rarely use the other apply functions. For example, I have only used `eapply` 
-once. Students in my class uploaded R scripts. Using `source`, I was able to read
+Most people rarely use the other apply functions. For example, I have only used `eapply()` 
+once. Students in my class uploaded R scripts. Using `source()`, I was able to read
 in the scripts to a separate environment. I then applied a marking scheme to each
-environment using `eapply`. Using separate environments, avoided object name clashes.
+environment using `eapply()`. Using separate environments, avoided object name clashes.
 ```
 
 ```{r apply-family, echo=FALSE}
@@ -482,7 +482,7 @@ dd = tibble::frame_data(
 "`mapply`", "Apply a function to multiple list or vector arguments",
 "`rapply`", "Recursively apply a function to a list",
 "`tapply`", "Apply a function over a ragged array")
-knitr::kable(dd, caption="The apply family of functions from base R", row.names = FALSE)
+knitr::kable(dd, caption="The apply family of functions from base R.", row.names = FALSE)
 ```
 
 The `apply()` function is used to apply a function to the each row or column of a matrix. In many data science
@@ -589,7 +589,7 @@ A straightforward method for speeding up code is to calculate objects once and r
 the value when necessary. This could be as simple with replacing `sd(x)` in multiple
 function calls with the object `sd_x` that is defined once and reused. For example, 
 suppose we wish to normalise each column of a matrix. However, instead of using the
-standard deviation of each column, we will use the standard deviation of all the 
+standard deviation of each column, we will use the standard deviation of the 
 entire data set
 
 ```{r, echo=-1, results="hide"}
@@ -597,16 +597,16 @@ x = matrix(rnorm(100), ncol=10)
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient, since the value of `sd(x)` is constant recalculating the standard
-deviation is for early column is unnecessary. Instead, we should evaluate once and
+This is inefficient since the value of `sd(x)` is constant, recalculating the standard
+deviation for every column is unnecessary. Instead we should evaluate once and
 store the result
 ```{r, results="hide"}
 sd_x = sd(x)
 apply(x, 2, function(i) mean(i) / sd_x)
 ```
 
-If we we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
-version is around 100 times faster (figure \@ref(fig:3-5)).
+If we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
+version is around $100$ times faster (figure \@ref(fig:3-5)).
 
 ```{r, 3-5, fig.keep="last", echo=FALSE, fig.height=4, fig.width=6, fig.cap="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.", fig.align="center", out.width="70%"}
 local(source("code/03-programming_f5.R", local=TRUE))
@@ -753,8 +753,6 @@ cmp_mean_r = cmpfun(mean_r)
 ```
 Then we use the `microbenchmark()` function to compare the three variants
 
-
-<!-- Make n bigger and just copy and paster output -->
 ```{r results="hide", eval=FALSE}
 # Generate some data
 x = rnorm(1000)
@@ -790,10 +788,16 @@ that we install the package from `source`, i.e.
 ## Windows users will need Rtools
 install.packages("ggplot2", type = "source")
 ```
+Or if we want to avoid altering the `.Renviron` file, we can specify an additional
+argument
+```{r eval=FALSE}
+install.packages("ggplot2", type="source", INSTALL_opts = "--byte-compile") 
+```
+
 A final option to use just-in-time (JIT) compilation. The `enableJIT()` function
 disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
 different levels of optimisation. JIT can also be enabled by setting the environment
 variable `R_ENABLE_JIT`, to one of these values.
 ```{block, type="rmdtip"}
-I always set the compile level to the maximum value of 3.
+We recommending setting the compile level to the maximum value of 3.
 ```
