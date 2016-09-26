@@ -589,7 +589,7 @@ A straightforward method for speeding up code is to calculate objects once and r
 the value when necessary. This could be as simple with replacing `sd(x)` in multiple
 function calls with the object `sd_x` that is defined once and reused. For example, 
 suppose we wish to normalise each column of a matrix. However, instead of using the
-standard deviation of each column, we will use the standard deviation of all the 
+standard deviation of each column, we will use the standard deviation of the 
 entire data set
 
 ```{r, echo=-1, results="hide"}
@@ -597,16 +597,16 @@ x = matrix(rnorm(100), ncol=10)
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient, since the value of `sd(x)` is constant recalculating the standard
-deviation is for early column is unnecessary. Instead, we should evaluate once and
+This is inefficient since the value of `sd(x)` is constant, recalculating the standard
+deviation for every column is unnecessary. Instead we should evaluate once and
 store the result
 ```{r, results="hide"}
 sd_x = sd(x)
 apply(x, 2, function(i) mean(i) / sd_x)
 ```
 
-If we we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
-version is around 100 times faster (figure \@ref(fig:3-5)).
+If we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
+version is around $100$ times faster (figure \@ref(fig:3-5)).
 
 ```{r, 3-5, fig.keep="last", echo=FALSE, fig.height=4, fig.width=6, fig.cap="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.", fig.align="center", out.width="70%"}
 local(source("code/03-programming_f5.R", local=TRUE))
