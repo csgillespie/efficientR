@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 211378 262958 299229 276276 298534 646964   100
-#>  cs_apply(x) 139133 164207 204576 178024 202686 422366   100
-#>    cumsum(x)    571    850   1716   1104   1192  43273   100
+#>    cs_for(x) 248145 316292 386893 370505 436382 697258   100
+#>  cs_apply(x) 157610 198157 255241 233324 306013 478394   100
+#>    cumsum(x)    561   1131   1796   1422   2075  18284   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.911   0.131   3.043
+#>   2.828   0.008   2.842
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3cbb928>
+#> <bytecode: 0x48eec88>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2939,8 +2939,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval
-#>     with_select  8.89  9.05  9.07   9.07  9.15  9.17     5
-#>  without_select 14.06 14.75 15.00  14.91 14.96 16.34     5
+#>     with_select  9.52  9.58  9.68   9.71  9.74  9.86     5
+#>  without_select 16.02 16.45 16.57  16.64 16.76 16.98     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4413,13 +4413,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.865   0.236   4.103
+#>   4.293   0.351   4.667
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.193   0.024   0.217
+#>   0.192   0.052   0.244
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4432,7 +4432,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.123   0.144   1.267
+#>   1.065   0.188   1.253
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4571,8 +4571,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00268 0.00383 0.0531 0.00539 0.00635 4.78   100
-#>   ex_df[1, ] 0.74506 0.84419 1.0072 0.86549 0.94360 5.88   100
+#>  ex_mat[1, ] 0.00252 0.00368 0.0565 0.00531 0.00593 5.08   100
+#>   ex_df[1, ] 0.77058 0.87406 1.0894 0.96771 1.10045 6.36   100
 ```
 
 <div class="rmdtip">
@@ -4987,7 +4987,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ad01a5d60e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b9e590670e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
