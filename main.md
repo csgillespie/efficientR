@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 260656 280118 415666 485736 535610 605643   100
-#>  cs_apply(x) 158907 176612 268802 264169 352932 489311   100
-#>    cumsum(x)    555   1026   1800   1289   2022  19874   100
+#>    cs_for(x) 211378 262958 299229 276276 298534 646964   100
+#>  cs_apply(x) 139133 164207 204576 178024 202686 422366   100
+#>    cumsum(x)    571    850   1716   1104   1192  43273   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   5.406   0.023   5.431
+#>   2.911   0.131   3.043
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x43800c8>
+#> <bytecode: 0x3cbb928>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.3 10.3 10.5   10.4 10.7 10.8     5
-#>  without_select 17.4 17.6 18.1   18.0 18.3 18.9     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  8.89  9.05  9.07   9.07  9.15  9.17     5
+#>  without_select 14.06 14.75 15.00  14.91 14.96 16.34     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4413,13 +4413,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.798   0.296   5.095
+#>   3.865   0.236   4.103
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.168   0.064   0.231
+#>   0.193   0.024   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4432,7 +4432,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.147   0.168   1.316
+#>   1.123   0.144   1.267
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4570,9 +4570,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean median     uq  max neval
-#>  ex_mat[1, ] 0.00533 0.00637 0.0832  0.012 0.0165 7.12   100
-#>   ex_df[1, ] 1.36046 1.69309 1.9229  1.757 1.8457 8.68   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00268 0.00383 0.0531 0.00539 0.00635 4.78   100
+#>   ex_df[1, ] 0.74506 0.84419 1.0072 0.86549 0.94360 5.88   100
 ```
 
 <div class="rmdtip">
@@ -4987,7 +4987,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b7422b310e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2ad01a5d60e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6145,10 +6145,8 @@ It is worth discussing the contents of the Usage section in particular, because 
 
 ```
 optim(par, fn, gr = NULL, ...,
-      method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN",
-                 "Brent"),
-      lower = -Inf, upper = Inf,
-      control = list(), hessian = FALSE)
+      method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"),
+      lower = -Inf, upper = Inf, control = list(), hessian = FALSE)
 ```
 
 This contains two pieces of critical information: 1) the *essential* arguments which must be provided for the function to work (`par` and `fn` in this case, as `gr` has a default value) before the `...` symbol; and 2) *optional* arguments that control how the function works (`method`, `lower`, and `hessian` in this case). `...` are optional arguments whose values depend on the other arguments (which will be passed to the function represented by `fn` in this case). Let's see how this works in practice by trying to run `optim()` to find the minimum value of the function $y = x^4 - x^2$:
