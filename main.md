@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 223879 276056 304559 289494 315006 544220   100
-#>  cs_apply(x) 146986 179568 211120 203530 219326 363274   100
-#>    cumsum(x)    639    845   1645   1117   1365  15476   100
+#>    cs_for(x) 260656 280118 415666 485736 535610 605643   100
+#>  cs_apply(x) 158907 176612 268802 264169 352932 489311   100
+#>    cumsum(x)    555   1026   1800   1289   2022  19874   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   5.064   0.036   5.101
+#>   5.406   0.023   5.431
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x504c078>
+#> <bytecode: 0x43800c8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2305,13 +2305,16 @@ difference (figure \@ref(fig:3-4)).
 There are a number of ways to compile code. The easiest is to compile individual
 functions using `cmpfun()`, but this obviously doesn't scale. If you create a package,
 you can automatically compile the package on installation by adding
+
 ```
 ByteCompile: true
 ```
+
 to the `DESCRIPTION` file. Most R packages installed using `install.packages()` are not
 compiled. We can enable (or force) packages to be compiled by starting R with the
 environment variable `R_COMPILE_PKGS` set to a positive integer value and specify
 that we install the package from `source`, i.e.
+
 
 ```r
 ## Windows users will need Rtools
@@ -2319,6 +2322,7 @@ install.packages("ggplot2", type = "source")
 ```
 Or if we want to avoid altering the `.Renviron` file, we can specify an additional
 argument
+
 
 ```r
 install.packages("ggplot2", type="source", INSTALL_opts = "--byte-compile") 
@@ -2328,9 +2332,18 @@ A final option to use just-in-time (JIT) compilation. The `enableJIT()` function
 disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
 different levels of optimisation. JIT can also be enabled by setting the environment
 variable `R_ENABLE_JIT`, to one of these values.
+
 <div class="rmdtip">
 <p>We recommending setting the compile level to the maximum value of 3.</p>
 </div>
+
+The impact of compiling on install will vary from package to package: for packages
+that already have lots of pre-compiled code speed gains will be small [@team2016installation].
+
+<div class="rmdwarning">
+<p>Not all packages work if compiled on installation.</p>
+</div>
+
 
 <!--chapter:end:03-programming.Rmd-->
 
@@ -2926,8 +2939,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.1 10.2 10.4   10.2 10.6 10.9     5
-#>  without_select 17.3 17.8 18.3   18.5 18.7 19.4     5
+#>     with_select 10.3 10.3 10.5   10.4 10.7 10.8     5
+#>  without_select 17.4 17.6 18.1   18.0 18.3 18.9     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4400,13 +4413,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.854   0.212   4.067
+#>   4.798   0.296   5.095
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.180   0.036   0.217
+#>   0.168   0.064   0.231
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4419,7 +4432,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.953   0.168   1.121
+#>   1.147   0.168   1.316
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4557,9 +4570,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean  median     uq  max neval
-#>  ex_mat[1, ] 0.00279 0.00371 0.052 0.00625 0.0069 4.60   100
-#>   ex_df[1, ] 0.76271 0.84647 1.001 0.86302 0.9289 5.95   100
+#>         expr     min      lq   mean median     uq  max neval
+#>  ex_mat[1, ] 0.00533 0.00637 0.0832  0.012 0.0165 7.12   100
+#>   ex_df[1, ] 1.36046 1.69309 1.9229  1.757 1.8457 8.68   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4987,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b2fb7f9e0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b7422b310e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6074,7 +6087,7 @@ To search *all R packages*, including those you have not installed locally, for 
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-322)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
+<p class="caption">(\#fig:unnamed-chunk-323)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
 </div>
 
 ### Finding and using vignettes

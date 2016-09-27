@@ -559,7 +559,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   5.064   0.036   5.101</span></code></pre></div>
+<span class="co">#&gt;   5.406   0.023   5.431</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -880,7 +880,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x504c078&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x43800c8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -924,10 +924,16 @@ Figure 3.4: Comparsion of mean functions.
 <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</code></pre></div>
 <p>Or if we want to avoid altering the <code>.Renviron</code> file, we can specify an additional argument</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type=</span><span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </code></pre></div>
-A final option to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.
+<p>A final option to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
 <div class="rmdtip">
 <p>
 We recommending setting the compile level to the maximum value of 3.
+</p>
+</div>
+<p>The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code speed gains will be small <span class="citation">(Team <a href="#ref-team2016installation">2016</a>)</span>.</p>
+<div class="rmdwarning">
+<p>
+Not all packages work if compiled on installation.
 </p>
 </div>
 
@@ -944,6 +950,9 @@ We recommending setting the compile level to the maximum value of 3.
 </div>
 <div id="ref-grolemund_r_2016">
 <p>Grolemund, G., and H. Wickham. 2016. <em>R for Data Science</em>. O’Reilly Media.</p>
+</div>
+<div id="ref-team2016installation">
+<p>Team, R Core. 2016. “R Installation and Administration.” <em>R Foundation for Statistical Computing</em>. <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html" class="uri">https://cran.r-project.org/doc/manuals/r-release/R-admin.html</a>.</p>
 </div>
 </div>
 <div class="footnotes">
