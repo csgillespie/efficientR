@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-09-26"
+date: "2016-09-27"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 214235 262008 275552 275981 297720 362448   100
-#>  cs_apply(x) 138938 159933 179581 175061 200168 276183   100
-#>    cumsum(x)    470    590   1318    952   1046  14385   100
+#>    cs_for(x) 223879 276056 304559 289494 315006 544220   100
+#>  cs_apply(x) 146986 179568 211120 203530 219326 363274   100
+#>    cumsum(x)    639    845   1645   1117   1365  15476   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.924   0.016   2.941
+#>   5.064   0.036   5.101
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x5429078>
+#> <bytecode: 0x504c078>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2925,9 +2925,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.27  9.28  9.41   9.38  9.47  9.65     5
-#>  without_select 15.26 15.50 15.81  15.68 16.12 16.47     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.1 10.2 10.4   10.2 10.6 10.9     5
+#>  without_select 17.3 17.8 18.3   18.5 18.7 19.4     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4400,13 +4400,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.027   0.284   4.311
+#>   3.854   0.212   4.067
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.185   0.060   0.245
+#>   0.180   0.036   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4419,7 +4419,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.113   0.224   1.337
+#>   0.953   0.168   1.121
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4557,9 +4557,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean median     uq  max neval
-#>  ex_mat[1, ] 0.00261 0.00377 0.053 0.0062 0.0068 4.73   100
-#>   ex_df[1, ] 0.77211 0.85745 1.003 0.8777 0.9622 5.80   100
+#>         expr     min      lq  mean  median     uq  max neval
+#>  ex_mat[1, ] 0.00279 0.00371 0.052 0.00625 0.0069 4.60   100
+#>   ex_df[1, ] 0.76271 0.84647 1.001 0.86302 0.9289 5.95   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b5f06bcc0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b2fb7f9e0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -5997,7 +5997,7 @@ This chapter aims to equip you with concepts, guidance and tips that will accele
 from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's
 help, reading R source code, and use of online material.
 
-### Prerequisties
+### Prerequisties {-}
 
 The only package used in this section is **swirl**
 
