@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-09-27"
+date: "2016-10-01"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 248145 316292 386893 370505 436382 697258   100
-#>  cs_apply(x) 157610 198157 255241 233324 306013 478394   100
-#>    cumsum(x)    561   1131   1796   1422   2075  18284   100
+#>    cs_for(x) 209684 264751 275249 276300 293772 354721   100
+#>  cs_apply(x) 135300 158852 177541 174747 196088 274318   100
+#>    cumsum(x)    467    560   1130    918   1062  15128   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1730,7 +1730,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.828   0.008   2.842
+#>    2.84    0.02    2.86
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2243,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x48eec88>
+#> <bytecode: 0x4013c78>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2356,7 +2356,7 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow {#workflow}
 
-Efficient programming is an important and skill for generating the correct result, on
+Efficient programming is an important skill for generating the correct result, on
 time. Yet coding is only one part of a wider skillset needed for successful outcomes
 for projects involving R programming. Unless your project is to write generic R code
 (i.e. unless you are on the R Core Team), the project will probably transcend the
@@ -2396,14 +2396,14 @@ library("DiagrammeR")
 
 ## A project planning typology
 
-Appropriate project management structures and workflow depend on the *type* of project you are undertaking. The typology below demonstrate the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
+Appropriate project management structures and workflow depend on the *type* of project you are undertaking. The typology below demonstrates the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
 
 - *Data analysis*.  Here you are trying to explore datasets to discover something interesting/answer some questions.  The emphasis is on speed of manipulating your data to generate interest results.  Formality is less important in this type of project.  Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project's success as how they interact with each other.
 - *Package creation*.  Here you want to create code that can be reused across projects, possibly by people whose use case you don't know (if you make it publicly available).  The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important.  Robustness and testing are important in this type of project too.
 - *Reporting and publishing*.  Here you are writing a report or journal paper or book.  The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.
 - *Software applications*.  This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software.  Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.
 
-Based on these observations we recommend thinking about the type of workflow, file structure and project management system suits your projects best. Sometimes it's best not to be prescriptive so we recommend trying different working practices to discover which works best, time permitting.^[The
+Based on these observations we recommend thinking about which type of workflow, file structure and project management system suits your projects best. Sometimes it's best not to be prescriptive so we recommend trying different working practices to discover which works best, time permitting.^[The 
 importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity.
 [Rob Hyndman](http://robjhyndman.com/hyndsight/workflow-in-r/), for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: `load.R`, `clean.R`, `func.R` and `do.R`.
 ]
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.52  9.58  9.68   9.71  9.74  9.86     5
-#>  without_select 16.02 16.45 16.57  16.64 16.76 16.98     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.0 10.0 11.1   10.3 10.6 14.5     5
+#>  without_select 17.3 18.1 20.7   18.2 23.3 26.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4413,13 +4413,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.293   0.351   4.667
+#>   3.969   0.348   4.317
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.192   0.052   0.244
+#>   0.124   0.096   0.220
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4432,7 +4432,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.065   0.188   1.253
+#>   0.991   0.128   1.120
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4571,8 +4571,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00252 0.00368 0.0565 0.00531 0.00593 5.08   100
-#>   ex_df[1, ] 0.77058 0.87406 1.0894 0.96771 1.10045 6.36   100
+#>  ex_mat[1, ] 0.00252 0.00378 0.0554 0.00609 0.00686 4.92   100
+#>   ex_df[1, ] 0.76887 0.85348 1.0175 0.87736 0.96637 6.11   100
 ```
 
 <div class="rmdtip">
@@ -4987,7 +4987,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b9e590670e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2ab58413f0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
