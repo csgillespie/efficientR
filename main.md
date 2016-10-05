@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-01"
+date: "2016-10-05"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 209684 264751 275249 276300 293772 354721   100
-#>  cs_apply(x) 135300 158852 177541 174747 196088 274318   100
-#>    cumsum(x)    467    560   1130    918   1062  15128   100
+#>    cs_for(x) 209588 261071 273059 273504 293848 333898   100
+#>  cs_apply(x) 136427 158092 175801 172820 196580 293470   100
+#>    cumsum(x)    530    600   1200    920   1118  14381   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -543,26 +543,22 @@ This section explains how.
 
 ### Installing R
 
-The method of installing R depends on your operating system.
+The method of installing R varies for Windows, Linux and Mac.
 
 On Windows, a single `.exe` file (hosted at [cran.r-project.org/bin/windows/base/](https://cran.r-project.org/bin/windows/base/)) will install the base R package.
 
 On a Mac, the latest version should be installed by downloading the `.pkg` files hosted at [cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/).
 
-On Linux, R can be installed using package management programs on most distributions.
-On Ubuntu-based systems, for example, installation instructions are kept up-to-date on [CRAN](https://cran.r-project.org/bin/linux/ubuntu/).
-A condensed version of these is as follows: 
+On Linux, the installation method depends on the distribution of Linux installed, althogh the principles are the same. We'll cover how to install R on Debian-based systems, with links at the end for details on other Linux distributions. First stage is to add the CRAN repository, to ensure that the latest version is installed. If you are running Ubuntu 16.04, for example, append the following line to the file `/etc/apt/sources.list`:
 
 
 ```bash
-sudo apt-add-repository https://cran.rstudio.com/bin/linux/ubuntu
+deb http://cran.rstudio.com/bin/linux/ubuntu xenial/
 ```
 
-This command (to be executed in a Linux shell, not R!), which adds the repository to `/etc/apt/sources.list`,
-is recommended as it will automatically keep your operating system updated with the latest version of R.
+`http://cran.rstudio.com` is the mirror (which can be replaced by any listed at [cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)) and `xenial` is the release. See the [Debian](https://cran.r-project.org/bin/linux/debian/) and [Ubuntu](https://cran.r-project.org/bin/linux/ubuntu/) installation pages on CRAN from further details.
 
-In the above code `cran.rstudio.com` is the 'mirror' from which
-`r-base` and other `r-` packages can be installed using the `apt` system.
+Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system.
 The following two commands, for example, would install the base R package (a 'bare-bones' install)
 and the package **rcurl**, which has an external dependency:
 
@@ -571,6 +567,11 @@ and the package **rcurl**, which has an external dependency:
 sudo apt-get install r-cran-base # install base R
 sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
+
+<div class="rmdnote">
+<p><code>apt-cache search &quot;^r-.*&quot; | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-\*</code>.</p>
+</div>
+
 
 Typical output from the second command is illustrate below:
 
@@ -583,9 +584,11 @@ The following NEW packages will be installed
 Need to get 699 kB of archives.
 After this operation, 2,132 kB of additional disk space will be used.
 Do you want to continue? [Y/n] 
+
 ```
 
-Information on how to install R on other Linux distributions is provided on CRAN for [Debian](https://cran.r-project.org/bin/linux/debian/), [Red Hat](https://cran.r-project.org/bin/linux/redhat/) and [SUSE](https://cran.r-project.org/bin/linux/suse/) distributions. Package management software also supports R on other operating systems, as reported in a blog post by [Jason French](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/).
+Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See
+[jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
 
 Once R is installed it should be kept up-to-date.
 
@@ -1730,7 +1733,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.84    0.02    2.86
+#>   2.755   0.012   2.767
 ```
 In contrast a more R-centric approach would be
 
@@ -2243,7 +2246,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4013c78>
+#> <bytecode: 0x5140978>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2938,9 +2941,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.0 10.0 11.1   10.3 10.6 14.5     5
-#>  without_select 17.3 18.1 20.7   18.2 23.3 26.7     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.07  9.11  9.34   9.26  9.48  9.76     5
+#>  without_select 14.65 15.09 15.40  15.20 15.63 16.42     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4413,13 +4416,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.969   0.348   4.317
+#>   4.016   0.212   4.228
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.124   0.096   0.220
+#>   0.197   0.020   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4432,7 +4435,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.991   0.128   1.120
+#>   0.892   0.208   1.103
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4570,9 +4573,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00252 0.00378 0.0554 0.00609 0.00686 4.92   100
-#>   ex_df[1, ] 0.76887 0.85348 1.0175 0.87736 0.96637 6.11   100
+#>         expr    min     lq   mean  median     uq  max neval
+#>  ex_mat[1, ] 0.0027 0.0037 0.0555 0.00617 0.0067 5.01   100
+#>   ex_df[1, ] 0.7382 0.8346 0.9918 0.86075 0.9086 5.96   100
 ```
 
 <div class="rmdtip">
@@ -4987,7 +4990,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ab58413f0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b69b9bb20e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6087,7 +6090,7 @@ To search *all R packages*, including those you have not installed locally, for 
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-323)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
+<p class="caption">(\#fig:unnamed-chunk-324)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
 </div>
 
 ### Finding and using vignettes

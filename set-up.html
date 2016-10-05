@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-10-01">
+<meta name="date" content="2016-10-05">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -473,15 +473,20 @@ Previous R versions can be installed from CRAN’s archive or previous R release
 </div>
 <div id="installing-r" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Installing R</h3>
-<p>The method of installing R depends on your operating system.</p>
+<p>The method of installing R varies for Windows, Linux and Mac.</p>
 <p>On Windows, a single <code>.exe</code> file (hosted at <a href="https://cran.r-project.org/bin/windows/base/">cran.r-project.org/bin/windows/base/</a>) will install the base R package.</p>
 <p>On a Mac, the latest version should be installed by downloading the <code>.pkg</code> files hosted at <a href="https://cran.r-project.org/bin/macosx/">cran.r-project.org/bin/macosx/</a>.</p>
-<p>On Linux, R can be installed using package management programs on most distributions. On Ubuntu-based systems, for example, installation instructions are kept up-to-date on <a href="https://cran.r-project.org/bin/linux/ubuntu/">CRAN</a>. A condensed version of these is as follows:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">sudo</span> apt-add-repository https://cran.rstudio.com/bin/linux/ubuntu</code></pre></div>
-<p>This command (to be executed in a Linux shell, not R!), which adds the repository to <code>/etc/apt/sources.list</code>, is recommended as it will automatically keep your operating system updated with the latest version of R.</p>
-<p>In the above code <code>cran.rstudio.com</code> is the ‘mirror’ from which <code>r-base</code> and other <code>r-</code> packages can be installed using the <code>apt</code> system. The following two commands, for example, would install the base R package (a ‘bare-bones’ install) and the package <strong>rcurl</strong>, which has an external dependency:</p>
+<p>On Linux, the installation method depends on the distribution of Linux installed, althogh the principles are the same. We’ll cover how to install R on Debian-based systems, with links at the end for details on other Linux distributions. First stage is to add the CRAN repository, to ensure that the latest version is installed. If you are running Ubuntu 16.04, for example, append the following line to the file <code>/etc/apt/sources.list</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">deb</span> http://cran.rstudio.com/bin/linux/ubuntu xenial/</code></pre></div>
+<p><code>http://cran.rstudio.com</code> is the mirror (which can be replaced by any listed at <a href="https://cran.r-project.org/mirrors.html">cran.r-project.org/mirrors.html</a>) and <code>xenial</code> is the release. See the <a href="https://cran.r-project.org/bin/linux/debian/">Debian</a> and <a href="https://cran.r-project.org/bin/linux/ubuntu/">Ubuntu</a> installation pages on CRAN from further details.</p>
+<p>Once the appropriate repository has been added and the system updated (e.g. with <code>sudo apt-get update</code>, <code>r-base</code> and other <code>r-</code> packages can be installed using the <code>apt</code> system. The following two commands, for example, would install the base R package (a ‘bare-bones’ install) and the package <strong>rcurl</strong>, which has an external dependency:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">sudo</span> apt-get install r-cran-base <span class="co"># install base R</span>
 <span class="kw">sudo</span> apt-get install r-cran-rcurl <span class="co"># install the rcurl package</span></code></pre></div>
+<div class="rmdnote">
+<p>
+<code>apt-cache search “^r-.*&quot; | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-*</code>.
+</p>
+</div>
 <p>Typical output from the second command is illustrate below:</p>
 <pre><code>The following extra packages will be installed:
   libcurl3-nss
@@ -490,8 +495,9 @@ The following NEW packages will be installed
 0 to upgrade, 2 to newly install, 0 to remove and 16 not to upgrade.
 Need to get 699 kB of archives.
 After this operation, 2,132 kB of additional disk space will be used.
-Do you want to continue? [Y/n] </code></pre>
-<p>Information on how to install R on other Linux distributions is provided on CRAN for <a href="https://cran.r-project.org/bin/linux/debian/">Debian</a>, <a href="https://cran.r-project.org/bin/linux/redhat/">Red Hat</a> and <a href="https://cran.r-project.org/bin/linux/suse/">SUSE</a> distributions. Package management software also supports R on other operating systems, as reported in a blog post by <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">Jason French</a>.</p>
+Do you want to continue? [Y/n] 
+</code></pre>
+<p>Further details are provided at <a href="https://cran.r-project.org/bin/linux/">cran.r-project.org/bin/linux/</a> for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <p>Once R is installed it should be kept up-to-date.</p>
 </div>
 <div id="updating-r" class="section level3">
@@ -750,7 +756,7 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
 <p>To set or unset environment variable for the duration of a session, use the following commands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">&quot;TEST&quot;</span> =<span class="st"> &quot;test-string&quot;</span>) <span class="co"># set an environment variable for the session</span>
 <span class="kw">Sys.unsetenv</span>(<span class="st">&quot;TEST&quot;</span>) <span class="co"># unset it</span></code></pre></div>
-<p>Another common use of <code>.Renviron</code> is to store API keys and authentication tokens that will be available from one session to another.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> A common use case is setting the ‘envvar’ <code>GITHUB_PAT</code>, which will be detected by the <strong>devtools</strong> package via the function <code>github_pat()</code>. To take another example, the following line in <code>.Renviron</code> sets the <code>ZEIT_KEY</code> environment variable which is used in the <strong><a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a></strong> package:</p>
+<p>Another common use of <code>.Renviron</code> is to store API keys and authentication tokens that will be available from one session to another.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> A common use case is setting the ‘envvar’ <code>GITHUB_PAT</code>, which will be detected by the <strong>devtools</strong> package via the function <code>github_pat()</code>. To take another example, the following line in <code>.Renviron</code> sets the <code>ZEIT_KEY</code> environment variable which is used in the <strong><a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a></strong> package:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">ZEIT_KEY=</span>PUT_YOUR_KEY_HERE</code></pre></div>
 <p>You will need to sign-in and start a new R session for the environment variable (accessed by <code>Sys.getenv()</code>) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</code></pre></div>
@@ -789,7 +795,7 @@ hh =<span class="st"> </span>function(d) d[<span class="dv">1</span>:<span class
 <li>Project management and integration with version control.</li>
 <li>Quick display of function source code and help documents.</li>
 </ul>
-<p>The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> As with R itself, the best way to learn about RStudio is by using it. It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.</p>
+<p>The above list of features should make it clear that a well set-up IDE can be as important as a well set-up R installation for becoming an efficient R programmer.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> As with R itself, the best way to learn about RStudio is by using it. It is therefore worth reading through this section in parallel with using RStudio to boost your productivity.</p>
 <div id="install-rstudio" class="section level3">
 <h3><span class="header-section-number">2.5.1</span> Installing and updating RStudio</h3>
 <p>RStudio is a mature, feature rich and powerful Integrated Development Environment (IDE) optimised for R programming and has become popular among R developers. The Open Source Edition is completely open source (as can be seen from the project’s GitHub rep). It can be installed on all major OSs from the RStudio website <a href="https://www.rstudio.com/products/rstudio/download/">rstudio.com</a>.</p>
@@ -866,7 +872,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
 <p>Instead of only auto completing options when <code>Tab</code> is pressed, RStudio auto completes them at any point. Building on the previous example, RStudio’s autocompletion triggers when the first three characters are typed: <code>rno</code>. The same functionality works when only the first characters are typed, followed by <code>Tab</code>: automatic autocompletion does not replace <code>Tab</code> autocompletion but supplements it. Note that in RStudio two more options are provided to the user after entering <code>rn Tab</code> compared with entering the same text into base R’s console described in the previous paragraph: <code>RNGkind</code> and <code>RNGversion</code>. This illustrates that RStudio’s autocompletion functionality is not case sensitive in the same way that R is. This is a good thing because R has no consistent function name style!</p>
 <p>RStudio also has more intelligent autocompletion of objects and file names than R’s built-in command line. To test this functionality, try typing <code>US</code>, followed by the Tab key. After pressing down until <code>USArrests</code> is selected, press Enter so it autocompletes. Finally, typing <code>$</code> should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">USArrests$<span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></code></pre></div>
-<p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form <code>spdf@data$varname</code>.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name. RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>. Another example is RStudio’s ability to find files hidden away in sub-folders. Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>. There are a number of other clever autocompletion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
+<p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form <code>spdf@data$varname</code>.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name. RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>. Another example is RStudio’s ability to find files hidden away in sub-folders. Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>. There are a number of other clever autocompletion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
 </div>
 <div id="keyboard-shortcuts" class="section level3">
 <h3><span class="header-section-number">2.5.5</span> Keyboard shortcuts</h3>
@@ -933,7 +939,7 @@ The default settings for autocompletion in RStudio work well. They are intuitive
 <span class="kw">get_linear_algebra</span>()</code></pre></div>
 <div id="testing-performance-gains-from-blas" class="section level3">
 <h3><span class="header-section-number">2.6.1</span> Testing performance gains from BLAS</h3>
-<p>As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6<sup>th</sup> generation Core i7 processor, before and after OpenBLAS was installed.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p>As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6<sup>th</sup> generation Core i7 processor, before and after OpenBLAS was installed.<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">benchmark_std</span>() <span class="co"># run a suit of tests to test R&#39;s performance</span></code></pre></div>
 <p>It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure <a href="set-up.html#fig:blas-bench">2.4</a>. Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that ‘programming’ benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are now much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.</p>
 <div class="figure" style="text-align: center"><span id="fig:blas-bench"></span>
@@ -987,10 +993,11 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <ol start="1">
 <li id="fn1"><p>All CRAN packages are automatically tested on these systems, in addition to Solaris. R has also been reported to run on more exotic operating systems, including those used in smart phones and game consoles <span class="citation">(Peng <a href="#ref-peng_r_2014">2014</a>)</span>.<a href="set-up.html#fnref1">↩</a></p></li>
 <li id="fn2"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon <a href="#ref-sekhon2006art">2006</a>)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <strong>benchmarkme</strong> package also suggests that running code under the Linux OS is marginally faster.<a href="set-up.html#fnref2">↩</a></p></li>
-<li id="fn3"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette(&quot;api-packages&quot;)</code></a> from the <code>httr</code> package for more on this.<a href="set-up.html#fnref3">↩</a></p></li>
-<li id="fn4"><p>Other open source R IDEs exist, including <a href="https://rkward.kde.org/">RKWard</a>, <a href="http://sourceforge.net/projects/tinn-r/">Tinn-R</a> and <a href="https://www.rforge.net/JGR/">JGR</a>. <a href="https://www.gnu.org/software/emacs/">emacs</a> is another popular software environment. However, it has a very steep learning curve.<a href="set-up.html#fnref4">↩</a></p></li>
-<li id="fn5"><p>‘Slots’ are elements of an object (specifically, S4 objects) analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="set-up.html#fnref5">↩</a></p></li>
-<li id="fn6"><p>OpenBLAS was installed on the computer via <code>sudo apt-get install libopenblas-base</code>, which automatically detected and used by R.<a href="set-up.html#fnref6">↩</a></p></li>
+<li id="fn3"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="set-up.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette(&quot;api-packages&quot;)</code></a> from the <code>httr</code> package for more on this.<a href="set-up.html#fnref4">↩</a></p></li>
+<li id="fn5"><p>Other open source R IDEs exist, including <a href="https://rkward.kde.org/">RKWard</a>, <a href="http://sourceforge.net/projects/tinn-r/">Tinn-R</a> and <a href="https://www.rforge.net/JGR/">JGR</a>. <a href="https://www.gnu.org/software/emacs/">emacs</a> is another popular software environment. However, it has a very steep learning curve.<a href="set-up.html#fnref5">↩</a></p></li>
+<li id="fn6"><p>‘Slots’ are elements of an object (specifically, S4 objects) analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="set-up.html#fnref6">↩</a></p></li>
+<li id="fn7"><p>OpenBLAS was installed on the computer via <code>sudo apt-get install libopenblas-base</code>, which automatically detected and used by R.<a href="set-up.html#fnref7">↩</a></p></li>
 </ol>
 </div>
             </section>
