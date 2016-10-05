@@ -1,21 +1,29 @@
-#save(z, file="extdata/07-rcpp_comparison.RData")
-load("extdata/07-rcpp_comparison.RData")
-source("code/initialise.R")
+library(microbenchmark)
 library(ggplot2)
+source("code/initialise.R")
+# set.seed(1)
+# x = matrix(rnorm(100000), ncol=1000)
+# z = microbenchmark::microbenchmark(
+#   apply(x, 2, function(i) mean(i)/sd(x)), 
+#   {sd_x = sd(x); apply(x, 2, function(i) mean(i)/sd_x)},
+#   times=500, unit="s"
+# )
+#saveRDS(z, "extdata/03-f5.Rds")
 
-z$expr = factor(z$expr, levels=c("mean(x)",  "mean_c(x)", "com_mean_r(x)", "mean_r(x)"))
-z$expr = factor(z$expr, labels=c("Base",  "Rcpp", "Byte compiled R", "Pure R"))
+z = readRDS("extdata/03-f5.Rds")
+plot(z)
+z$time = z$time/10^9
+z$expr = factor(z$expr, labels=c("Standard", "Cached"))
 
-z$time = z$time/10^6
 g = ggplot(z) + 
   geom_violin(aes(expr, time),position=position_dodge(0.9), bg=get_col(3)) + 
   scale_y_continuous(limits=c(10^-3, 10^1), expand=c(0, 0), breaks = 10^(-3:1), 
                      trans="log10", 
                      labels=c(expression(10^-3),expression(10^-2),
                               expression(10^-1),expression(10^0),expression(10^1)))
-
-g1 = g +  labs(title = "Performance Gains with Rcpp", 
-           x = NULL, y = "Elapsed Time (secs)",colour = NULL, fill = NULL) + 
+g
+g1 = g +  labs(title = "Performance Gains with Cached Variables", 
+               x = NULL, y = "Elapsed Time (secs)",colour = NULL, fill = NULL) + 
   theme(panel.grid.major.y = element_line(colour = "gray90"), 
         panel.grid.minor = element_line(colour = NA), 
         panel.grid.major.x = element_line(colour = NA), 

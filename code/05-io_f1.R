@@ -43,7 +43,7 @@ for(i in res$cells){
   sel = res$cells == i
   res$Time[sel] = res$time[sel] / min(res$time[sel])
 }
-res$type = factor(res$exp, labels=c("base", "fread","readr"))
+res$type = factor(res$exp, labels=c("base", "data.table","readr"))
 
 library("ggplot2")
 res$facet_cols = paste("No of columns:", res$cols)
@@ -75,7 +75,7 @@ g1 = g + theme(strip.background = element_rect(fill = "white"),
 labels = tibble::frame_data(
   ~MB, ~Time, ~type, ~facet_cols,
   6, 7, "base", paste("No of columns:", 2),
-  0.18, 1.5, "fread", paste("No of columns:", 2),
+  0.24, 1.5, "data.table", paste("No of columns:", 2),
   0.21, 13, "readr", paste("No of columns:", 2)
 )
 

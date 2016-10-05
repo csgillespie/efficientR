@@ -2,11 +2,11 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double mean_c(NumericVector x){
+double mean_cpp(NumericVector x){
   int i;
   int n = x.size();
   double mean = 0;
-  
+
   for(i=0; i<n; i++){
     mean = mean + x[i]/n;
   }
@@ -14,7 +14,7 @@ double mean_c(NumericVector x){
 }
 
 // [[Rcpp::export]]
-NumericVector res_c(NumericVector x, NumericVector y){
+NumericVector res_cpp(NumericVector x, NumericVector y){
   int i;
   int n = x.size();
   NumericVector residuals(n);

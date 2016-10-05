@@ -1,6 +1,24 @@
 # (APPENDIX) Appendix {-} 
 
-# Package Dependencies 
+# Building the book from source
+
+The complete source of the book is available [online](https://github.com/csgillespie/efficientR). To build the book:
+
+1. Install the latest version of R
+    * If you are using RStudio, make sure that's up-to-date as well
+1. Install the book dependencies.
+    ```{r eval=FALSE}
+    # Make sure you are using the latest version of `devtools`
+    # Older versions do not work.
+    devtools::install_github("csgillespie/efficientR")
+    ```
+1. Clone the efficientR [repository](https://github.com/csgillespie/efficientR)
+  * See the chapter \@ref(collaboration) on Efficient collaboration for an introduction
+  to git and github.
+1. If you are using `RStudio`, open `index.Rmd` and click `Knit`.
+    * Alternatively (for mainly Linux users) you can use the bundled `Makefile`
+
+# Package dependencies 
 
 The book depends on the following packages:
 
@@ -8,8 +26,8 @@ The book depends on the following packages:
 ## Don't generate bib file on travis
 is_travis = Sys.getenv("TRAVIS")
 is_travis = (is_travis == "true")
+pkgs_df = read.csv("extdata/package_list.csv", header=TRUE)
 ```
-
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, eval=(!is_travis)}
 desc = read.dcf("DESCRIPTION")
@@ -26,12 +44,12 @@ pkgs = unique(pkgs)
 
 if(!all(ext_pkgs %in% rownames(installed.packages()))) {
   message("Installing rio and feather")
-  install.packages(ext_pkgs)
+  install.packages(ext_pkgs, repos="https://cran.rstudio.com/")
 }
 
-
+i = 1
 pkgs = pkgs[order(pkgs)]
-pkgs_df = data.frame(Name = pkgs, Title = NA, cite=NA)
+pkgs_df = data.frame(Name = pkgs, Title = NA, cite=NA, version=NA)
 for(i in seq_along(pkgs)){
   f = system.file(package = pkgs[i], "DESCRIPTION")
   # Title is always on 3rd line
@@ -39,12 +57,16 @@ for(i in seq_along(pkgs)){
   title = title[grep("Title: ", title)]
   pkgs_df$Title[i] = gsub("Title: ", "", title)
   pkgs_df$cite[i] = paste0("[@R-", pkgs[i], "]")
+  pkgs_df$version[i] = as.character(packageVersion(pkgs[i]))
 }
 pkgs_df[,2] = paste(pkgs_df[,2], pkgs_df[,3])
 pkgs_df = pkgs_df[,-3]
-knitr::kable(pkgs_df)
+write.csv(pkgs_df, "extdata/package_list.csv", row.names = FALSE)
 knitr::write_bib(pkgs, file="packages.bib")
 ```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(pkgs_df)
+```
 
 # References {-}
