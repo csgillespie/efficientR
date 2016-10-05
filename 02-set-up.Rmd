@@ -186,16 +186,15 @@ On Windows, a single `.exe` file (hosted at [cran.r-project.org/bin/windows/base
 
 On a Mac, the latest version should be installed by downloading the `.pkg` files hosted at [cran.r-project.org/bin/macosx/](https://cran.r-project.org/bin/macosx/).
 
-On Debian-based systems adding the CRAN repository in the format.
-The following bash command will add the repository to `/etc/apt/sources.list`
-and keep your operating system updated with the latest version of R:
+On Linux, the installation method depends on the distribution of Linux installed, althogh the principles are the same. We'll cover how to install R on Debian-based systems, with links at the end for details on other Linux distributions. First stage is to add the CRAN repository, to ensure that the latest version is installed. If you are running Ubuntu 16.04, for example, append the following line to the file `/etc/apt/sources.list`:
 
 ```{r, eval=FALSE, engine='bash'}
-sudo apt-add-repository https://cran.rstudio.com/bin/linux/ubuntu
+deb http://cran.rstudio.com/bin/linux/ubuntu xenial/
 ```
 
-In the above code `cran.rstudio.com` is the 'mirror' from which
-`r-base` and other `r-` packages can be installed using the `apt` system.
+`http://cran.rstudio.com` is the mirror (which can be replaced by any listed at [cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)) and `xenial` is the release. See the [Debian](https://cran.r-project.org/bin/linux/debian/) and [Ubuntu](https://cran.r-project.org/bin/linux/ubuntu/) installation pages on CRAN from further details.
+
+Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system.
 The following two commands, for example, would install the base R package (a 'bare-bones' install)
 and the package **rcurl**, which has an external dependency:
 
@@ -203,6 +202,11 @@ and the package **rcurl**, which has an external dependency:
 sudo apt-get install r-cran-base # install base R
 sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
+
+```{block type='rmdnote'}
+`apt-cache search "^r-.*" | sort` will display all R packages that can be installed from `apt` in Debian-based systems. In Fedora-based systems, the equivalent command is `yum list R-\*`.
+```
+
 
 Typical output from the second command is illustrate below:
 
@@ -218,7 +222,7 @@ Do you want to continue? [Y/n]
 
 ```
 
-R also works on FreeBSD and other Unix-based systems.^[See
+Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See
 [jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
 
 Once R is installed it should be kept up-to-date.
