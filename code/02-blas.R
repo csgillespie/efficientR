@@ -2,7 +2,7 @@ source("code/initialise.R")
 library("ggplot2")
 res_blas = readRDS("extdata/res_rl_blas.Rds")
 res_noblas = readRDS("extdata/res_rl_noblas.Rds")
-res_blas$blas = "Optimised"
+res_blas$blas = "Optimized"
 res_noblas$blas = "Standard"
 res_all = rbind(res_blas, res_noblas)
 res_all$test_group = factor(res_all$test_group)
