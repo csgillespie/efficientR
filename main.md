@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-05"
+date: "2016-10-13"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 209588 261071 273059 273504 293848 333898   100
-#>  cs_apply(x) 136427 158092 175801 172820 196580 293470   100
-#>    cumsum(x)    530    600   1200    920   1118  14381   100
+#>    cs_for(x) 212963 258944 274666 275296 291733 388749   100
+#>  cs_apply(x) 139749 156184 174022 170596 192524 275995   100
+#>    cumsum(x)    574    788   1351   1143   1290  14941   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1733,7 +1733,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.755   0.012   2.767
+#>   2.802   0.007   2.809
 ```
 In contrast a more R-centric approach would be
 
@@ -2246,7 +2246,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x5140978>
+#> <bytecode: 0x50c5918>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2941,9 +2941,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.07  9.11  9.34   9.26  9.48  9.76     5
-#>  without_select 14.65 15.09 15.40  15.20 15.63 16.42     5
+#>            expr   min    lq  mean median   uq  max neval
+#>     with_select  9.53  9.73  9.89   9.89 10.1 10.2     5
+#>  without_select 16.89 17.16 17.38  17.37 17.7 17.8     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4416,13 +4416,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.016   0.212   4.228
+#>   5.800   0.376   6.180
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.197   0.020   0.217
+#>   0.331   0.060   0.391
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4435,7 +4435,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.892   0.208   1.103
+#>   1.041   0.372   1.414
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4573,9 +4573,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr    min     lq   mean  median     uq  max neval
-#>  ex_mat[1, ] 0.0027 0.0037 0.0555 0.00617 0.0067 5.01   100
-#>   ex_df[1, ] 0.7382 0.8346 0.9918 0.86075 0.9086 5.96   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00272 0.00379 0.0529 0.00641 0.00687 4.72   100
+#>   ex_df[1, ] 0.77413 0.84305 1.0067 0.86479 0.93042 6.10   100
 ```
 
 <div class="rmdtip">
@@ -4990,7 +4990,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b69b9bb20e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b6c7190d0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
