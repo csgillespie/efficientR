@@ -24,7 +24,7 @@ text(0, 0.97, "Miss", pos=4, font=1, cex=1.1)
 text(1, 0.03, "Hit", pos=2, font=1, cex=1.1)
 
 
-title("Monte-Carlo Integration", adj=1, 
+title("Monte Carlo Integration", adj=1, 
       cex.main=1, font.main=2, col.main="black")
 
 set.seed(5)
