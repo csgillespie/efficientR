@@ -136,7 +136,7 @@ It is well known that R code can promote *algorithmic efficiency* compared with 
 - R is a functional and object orientated language [@Wickham2014]. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code. 
 - R uses RAM for memory. This may seem obvious but it's worth saying: RAM is much faster than any hard disk system. Compared with databases, R is therefore very fast at common data manipulation, processing and modelling operations. RAM is now cheaper than ever, meaning the potential downside of this feature are further away than ever.
 - R is supported by excellent Integrated Development Environments (IDEs). The environment in which you program can have a huge impact on *programmer efficiency* as it can provide supportting help quickly, allow for interactive plotting, and allow your R projects to be tightly integrated with other aspects of your project such as file management, version management and interactive visualisation systems, as discussed in \@ref(rstudio).
-- R has a strong user community. This boosts efficiency because if you encounter a problem that has not yet been solved, you can simply ask the community. If it is a new, clearly stated and reproducible question asked on a popular forum such as [StackOverflow](http://stackoverflow.com/questions/tagged/r) or an appropriate [R list](**missing-URL**), you are likely to get a response from an accomplished R programmer within minutes. The obvious benefit of this crowd-sourced support system is that the efficiency benefits of the answer will from that moment be available to everyone.
+- R has a strong user community. This boosts efficiency because if you encounter a problem that has not yet been solved, you can simply ask the community. If it is a new, clearly stated and reproducible question asked on a popular forum such as [StackOverflow](http://stackoverflow.com/questions/tagged/r) or an appropriate [R list](https://www.r-project.org/mail.html), you are likely to get a response from an accomplished R programmer within minutes. The obvious benefit of this crowd-sourced support system is that the efficiency benefits of the answer will from that moment be available to everyone.
 
 Efficient R programming is the implementation of efficient programming practices in R. All languages are different, so efficient R code does not look like efficient code in another language. Many packages have been optimised for performance so, for some operations, achieving maximum computational efficiency may simply be a case of selecting the appropriate package and using it correctly. There are many ways to get the same result in R, and some are very slow. Therefore *not* writing slow code should be prioritized over writing fast code.
 
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 215579 259216 286026 275697 295951 518462   100
-#>  cs_apply(x) 137719 157708 179963 174212 193270 366562   100
-#>    cumsum(x)    573    728   1233   1034   1232  14826   100
+#>    cs_for(x) 214245 269844 298092 285518 306438 616846   100
+#>  cs_apply(x) 135603 160442 184405 175939 195642 370916   100
+#>    cumsum(x)    568    676   1338   1064   1234  16097   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   4.418   0.024   4.442
+#>   3.001   0.008   3.010
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x52cd2e8>
+#> <bytecode: 0x5448e48>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2941,8 +2941,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.5 10.6 10.7   10.6 10.7 11.0     5
-#>  without_select 18.0 18.1 18.2   18.2 18.3 18.5     5
+#>     with_select 10.5 10.5 10.9   10.6 11.1 11.8     5
+#>  without_select 17.5 18.1 18.2   18.3 18.6 18.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.003   0.192   4.196
+#>   4.096   0.232   4.338
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.189   0.036   0.226
+#>   0.303   0.040   0.342
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.993   0.124   1.117
+#>   1.000   0.128   1.128
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median    uq  max neval
-#>  ex_mat[1, ] 0.00271 0.00377 0.0572 0.00617 0.007 5.17   100
-#>   ex_df[1, ] 0.75570 0.84163 0.9977 0.86417 0.927 5.94   100
+#>         expr     min      lq  mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00283 0.00377 0.057 0.00635 0.00718 5.12   100
+#>   ex_df[1, ] 0.76006 0.85603 1.020 0.87866 0.92905 6.15   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b54580ef0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b9a54ef70e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
