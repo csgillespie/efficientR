@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-13"
+date: "2016-10-18"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -130,17 +130,17 @@ The issue flagged by Ada of having a 'great variety' of ways to solve a problem 
 
 R's notoriety for being able to solve a problem in multiple different ways has grown with the proliferation of community contributed packages. In this book we focus on the *best* way of solving problems, from an efficiency perspective. Often it is instructive to discover *why* a certain way of doing things is faster than others. However, if your aim is simply to *get stuff done*, you only need to know what is likely to be the most efficient way. In this way R's flexibility can be inefficient: although it is likely easier to find *a* way of solving any given problem in R than other languages, solving the problem with R may make it harder to find *the best* way to solve that problem, as there are so many. This book tackles this issue head-on by recommending what we believe are the most efficient approaches. We hope you trust our views, based on years of R using and teaching, but we also hope that you challenge them at times and test them, with benchmarks, if you suspect there's a better way of doing things (thanks the R's flexibility and ability to interface with other languages there may well be).
 
-It is well known that R code can *algorithmic efficiency* compared with low level languages for certain tasks, especially if was written by someone who doesn't fully understand the language. But it is worth highlighting the numerous ways that R *encourages* and *guides* efficiency, especially programmer efficiency:
+It is well known that R code can promote *algorithmic efficiency* compared with low level languages for certain tasks, especially if was written by someone who doesn't fully understand the language. But it is worth highlighting the numerous ways that R *encourages* and *guides* efficiency, especially programmer efficiency:
 
 - R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, FORTRAN and other language behind the scenes.
 - R is a functional and object orientated language [@Wickham2014]. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code. 
 - R uses RAM for memory. This may seem obvious but it's worth saying: RAM is much faster than any hard disk system. Compared with databases, R is therefore very fast at common data manipulation, processing and modelling operations. RAM is now cheaper than ever, meaning the potential downside of this feature are further away than ever.
 - R is supported by excellent Integrated Development Environments (IDEs). The environment in which you program can have a huge impact on *programmer efficiency* as it can provide supportting help quickly, allow for interactive plotting, and allow your R projects to be tightly integrated with other aspects of your project such as file management, version management and interactive visualisation systems, as discussed in \@ref(rstudio).
-- R has a strong user community. This boosts efficiency because if you encounter a problem that has not yet been solved, you can simply ask the community. If it is a new, clearly stated and reproducible question asked on a popular forum such as [StackOverflow]() or an appropriate [R list](), you are likely to get a response from an accomplished R programmer within minutes. The obvious benefit of this crowd-sourced support system is that the efficiency benefits of the answer will from that moment be available to everyone.
+- R has a strong user community. This boosts efficiency because if you encounter a problem that has not yet been solved, you can simply ask the community. If it is a new, clearly stated and reproducible question asked on a popular forum such as [StackOverflow](http://stackoverflow.com/questions/tagged/r) or an appropriate [R list](**missing-URL**), you are likely to get a response from an accomplished R programmer within minutes. The obvious benefit of this crowd-sourced support system is that the efficiency benefits of the answer will from that moment be available to everyone.
 
 Efficient R programming is the implementation of efficient programming practices in R. All languages are different, so efficient R code does not look like efficient code in another language. Many packages have been optimised for performance so, for some operations, achieving maximum computational efficiency may simply be a case of selecting the appropriate package and using it correctly. There are many ways to get the same result in R, and some are very slow. Therefore *not* writing slow code should be prioritized over writing fast code.
 
-Returning to the analogy of the two cars sketched in the preface, efficient R programming for some use cases can simply mean trading in your old and heavy and gas guzzling hummer function for a lightweight velomobile. The search for optimal performance often has diminishing returns so it is important to find bottlenecks in your code to prioritise work for maximum increases in computational efficiency. Linking back to R's notoriety as a flexible language, efficient R programming can be interpretted as finding a solution that is **fast enough** in terms of *computational efficiency* but **as fast as possible** in terms of *programmer efficiency*. After all, you and your co-workers probably have better and more valuable pasttimes outside work so it is more important for you to get the job done quickly and take the time off for other interesting persuits. 
+Returning to the analogy of the two cars sketched in the preface, efficient R programming for some use cases can simply mean trading in your old and heavy and gas guzzling hummer function for a lightweight velomobile. The search for optimal performance often has diminishing returns so it is important to find bottlenecks in your code to prioritise work for maximum increases in computational efficiency. Linking back to R's notoriety as a flexible language, efficient R programming can be interpretted as finding a solution that is **fast enough** in terms of *computational efficiency* but **as fast as possible** in terms of *programmer efficiency*. After all, you and your co-workers probably have better and more valuable pastimes outside work so it is more important for you to get the job done quickly and take the time off for other interesting persuits. 
 
 ## Why efficiency?
 
@@ -152,7 +152,7 @@ Hundreds of thousands of routes were needed but, to his dismay, code slowed to a
 The solution was simple. A [single commit](https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47) made `line2route()` more than *ten times faster* and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be *essential*. 
 <!-- Add references to the above anecdote if appropriate -->
 
-There are many concepts and skills that are language agnostic. Much of knowledge imparted in this book should be relevant to programming in other languages (and other technical activities beyond programming). There are strong reasons for focussing on efficiency in one language, however: in R simply using replacement functions from a different package can greatly improve efficiency, as discussed in relation to reading in text files Chapter 5. This level of detail, with reproducible examples, would not be possible in a general purpose 'efficient programming' book. Skills for efficient working, that apply beyond R programming, are covered in the next section.
+There are many concepts and skills that are language agnostic. Much of knowledge imparted in this book should be relevant to programming in other languages (and other technical activities beyond programming). There are strong reasons for focussing on efficiency in one language, however in R simply using replacement functions from a different package can greatly improve efficiency, as discussed in relation to reading in text files Chapter \@ref(input-output). This level of detail, with reproducible examples, would not be possible in a general purpose 'efficient programming' book. Skills for efficient working, that apply beyond R programming, are covered in the next section.
 
 ## Cross-transferable skills for efficiency
 
@@ -187,7 +187,7 @@ The concepts of benchmarking and profiling are not R specific. However, they are
 
 Benchmarking and profiling are key to efficient programming, especially in R. Benchmarking is the process of testing the performance of specific operations repeatedly. Profiling involves running many lines of code to find out where bottlenecks lie. Both are vital for understanding efficiency and we use them throughout the book. Their centrality to efficient programming practice means they must be covered in this introductory chapter, despite being seen by many as an intermediate or advance R programming topic.
 
-In some ways benchmarks can be seen as the building blocks of profiles. Profiling can be understood as automatically running many benchmarks, for every line in a script, and comparing the results line-by-line. Because benchmarks are smaller, easier and more modular, we cover them first.
+In some ways benchmarks can be seen as the building blocks of profiles. Profiling can be understood as automatically running many benchmarks, for every line in a script, and comparing the results line-by-line. Because benchmarks are smaller, easier and more modular, we will cover them first.
 
 ### Benchmarking
 
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 212963 258944 274666 275296 291733 388749   100
-#>  cs_apply(x) 139749 156184 174022 170596 192524 275995   100
-#>    cumsum(x)    574    788   1351   1143   1290  14941   100
+#>    cs_for(x) 215579 259216 286026 275697 295951 518462   100
+#>  cs_apply(x) 137719 157708 179963 174212 193270 366562   100
+#>    cumsum(x)    573    728   1233   1034   1232  14826   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -350,7 +350,6 @@ using the **devtools** package:
 
 
 ```r
-# TODO: Update when on CRAN
 devtools::install_github("csgillespie/efficient")
 ```
 
@@ -1733,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.802   0.007   2.809
+#>   4.418   0.024   4.442
 ```
 In contrast a more R-centric approach would be
 
@@ -2246,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x50c5918>
+#> <bytecode: 0x52cd2e8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2941,9 +2940,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.53  9.73  9.89   9.89 10.1 10.2     5
-#>  without_select 16.89 17.16 17.38  17.37 17.7 17.8     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.5 10.6 10.7   10.6 10.7 11.0     5
+#>  without_select 18.0 18.1 18.2   18.2 18.3 18.5     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4416,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   5.800   0.376   6.180
+#>   4.003   0.192   4.196
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.331   0.060   0.391
+#>   0.189   0.036   0.226
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4435,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.041   0.372   1.414
+#>   0.993   0.124   1.117
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4573,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00272 0.00379 0.0529 0.00641 0.00687 4.72   100
-#>   ex_df[1, ] 0.77413 0.84305 1.0067 0.86479 0.93042 6.10   100
+#>         expr     min      lq   mean  median    uq  max neval
+#>  ex_mat[1, ] 0.00271 0.00377 0.0572 0.00617 0.007 5.17   100
+#>   ex_df[1, ] 0.75570 0.84163 0.9977 0.86417 0.927 5.94   100
 ```
 
 <div class="rmdtip">
@@ -4990,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b6c7190d0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b54580ef0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
