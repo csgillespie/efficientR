@@ -47,7 +47,11 @@ library("benchmarkme")
 1. Store API keys in the `.Renviron` file.
 1. Use BLAS if your R number crunching is too slow.
 
-## Operating system
+## Operating system  
+
+Comment - although logical to work from the OS up to the application it might make more sense for this part to sit
+below the section on installing R - as your OS exercise requires R etc to be installed. 
+Personally I think you could actually move the Installing R / Installing R Studio to an appendix - I am assuming that most of your readership should be familiar with these installs / using R and takes away from the 'meat' (value) of the chapter especially as your reference Rstudio tips before the RStudio install section in the update packages section...
 
 R supports all three major operating system (OS) types: Linux, Mac and
 Windows.^[All CRAN packages are automatically tested on these
@@ -115,12 +119,10 @@ process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del`
 #### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
-2. Start an activity monitor then execute the following code chunk.
-In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object
-`X` (see Section \@ref(the-apply-family) for more on the 'apply family' of 
-functions).[The
-reason this works is that a data frame is really a list of vectors, each vector forming a column.
-]
+2. Start an activity monitor then execute the following code chunk in it.
+`lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object
+`X` (see Section \@ref(the-apply-family) for more on the 'apply family' of functions) (The reason this works is that a data frame is really a list of vectors, each vector forming a column).
+
 How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
     ```{r, eval=FALSE}
@@ -141,7 +143,7 @@ How do the system output logs results on your system compare to those presented 
 3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
 4. Bonus question: how would the results change depending on operating system?
 
-```{r timings-tests, echo=FALSE, eval=FALSE}
+```{r timings-tests, echo=FALSE, eval=FALSE} <-- Is this intentionally not echoed? doesn't show in github so people wouldn't know it's there to review...unless they edit the doc...
 system.time(lapply(X, median))
 system.time(parallel::parLapply(X, median))
 identical(r1, r2)
@@ -197,7 +199,7 @@ sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
 
 
-Typical output from the second command is illustrate below:
+Typical output from the second command is illustrated below:
 
 ```
 The following extra packages will be installed:
@@ -226,7 +228,7 @@ However, it is important to keep your R version relatively up-to-date, because:
 - Many R packages only work on recent versions on R.
 
 Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS).
-R release versions have 3 components corresponding to major.minor.patch changes.
+R release versions have 3 components corresponding to major, minor or patch changes.
 Generally 2 or 3 patches are released before the next minor increment - each 'patch' is
 released roughly every 3 months.
 R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
@@ -287,7 +289,7 @@ On Windows the **installr** package helps manage and update R packages with syst
 For example the **Rtools** package for compiling C/C++ code on Window can be installed with the following command:
 
 ```{r, eval=FALSE}
-installr::install.rtools() 
+installr::install.rtools()  <-- should the R in Rtools be capitalised? (I am on a mac so can't check if case sensitive)....
 ```
 
 ### Updating R packages
@@ -319,7 +321,7 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts a couple of files scripts are run default, as documented in `?Startup`.
+Every time R starts a couple of files scripts are run by default, as documented in `?Startup`.
 This section explains how to customise these files, allowing you to save API keys or load frequently used functions.
 Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments.
 If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
