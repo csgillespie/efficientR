@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-10-18">
+<meta name="date" content="2016-10-20">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -439,7 +439,9 @@ The ability to import and use <code>.json</code> data is becoming increasingly c
 <div id="fread" class="section level2">
 <h2><span class="header-section-number">5.3</span> Plain text formats</h2>
 <p>‘Plain text’ data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is <code>.csv</code>, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example below:</p>
-<p>Person, Nationality, Country of Birth Robin, British, England Colin, British, Scotland</p>
+<pre><code>Person, Nationality, Country of Birth
+Robin, British, England
+Colin, British, Scotland</code></pre>
 <p>There is often more than one way to read data into R and <code>.csv</code> files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R’s plain text reading functions such as <code>read.csv()</code>; the <strong>data.table</strong> approach, which uses the function <code>fread()</code>; and the newer <strong>readr</strong> package which provides <code>read_csv()</code> and other <code>read_*()</code> functions such as <code>read_tsv()</code>. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO<sup>2</sup> in the atmosphere over time:</p>
 <div class="rmdwarning">
 <p>
@@ -512,9 +514,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
-<span class="co">#&gt;     with_select 10.5 10.5 10.9   10.6 11.1 11.8     5</span>
-<span class="co">#&gt;  without_select 17.5 18.1 18.2   18.3 18.6 18.7     5</span></code></pre></div>
+<span class="co">#&gt;            expr   min    lq  mean median    uq   max neval</span>
+<span class="co">#&gt;     with_select  9.35  9.35  9.57   9.59  9.76  9.79     5</span>
+<span class="co">#&gt;  without_select 15.79 16.24 16.41  16.34 16.81 16.86     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv()</code> and <code>fread()</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>

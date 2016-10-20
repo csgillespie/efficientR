@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-18"
+date: "2016-10-20"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -173,7 +173,7 @@ The key difference between a touch typist and someone who constantly looks down 
 
 ### Consistent style and code conventions
 
-Getting into the habit of clear and consistent style when writing anything, be it code or poetry, will have benefits in many other projects, programming or non-programming. As outlined in Section \@(coding-style), style is to some extent a personal preference. However, it is worth noting at the outset of the conventions we use, to maximise its readability. Throughout this book we use a consistent set of conventions to refer to code.
+Getting into the habit of clear and consistent style when writing anything, be it code or poetry, will have benefits in many other projects, programming or non-programming. As outlined in Section \@ref(coding-style), style is to some extent a personal preference. However, it is worth noting at the outset of the conventions we use, to maximise its readability. Throughout this book we use a consistent set of conventions to refer to code.
 
   * Package names are in bold, e.g. __dplyr__.
   * Functions are in a code font, followed by parentheses, like `plot()`, or `median()`.
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 214245 269844 298092 285518 306438 616846   100
-#>  cs_apply(x) 135603 160442 184405 175939 195642 370916   100
-#>    cumsum(x)    568    676   1338   1064   1234  16097   100
+#>    cs_for(x) 213102 264962 275795 278260 295067 329455   100
+#>  cs_apply(x) 132430 160550 178326 172990 198952 322599   100
+#>    cumsum(x)    563    669   1155   1018   1148  16350   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.001   0.008   3.010
+#>   2.831   0.007   2.839
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x5448e48>
+#> <bytecode: 0x4894818>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2828,9 +2828,11 @@ capitals = import("https://github.com/mledoze/countries/raw/master/countries.jso
 
 'Plain text' data files are encoded in a format (typically UTF-8) that can be read by humans and computers alike. The great thing about plain text is their simplicity and their ease of use: any programming language can read a plain text file. The most common plain text format is `.csv`, comma-separated values, in which columns are separated by commas and rows are separated by line breaks. This is illustrated in the simple example below:
 
+```
 Person, Nationality, Country of Birth
 Robin, British, England
 Colin, British, Scotland
+```
 
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv()`; the **data.table** approach, which uses the function `fread()`; and the newer **readr** package which provides `read_csv()` and other `read_*()` functions such as `read_tsv()`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
 
@@ -2940,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.5 10.5 10.9   10.6 11.1 11.8     5
-#>  without_select 17.5 18.1 18.2   18.3 18.6 18.7     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.35  9.35  9.57   9.59  9.76  9.79     5
+#>  without_select 15.79 16.24 16.41  16.34 16.81 16.86     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4417,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.096   0.232   4.338
+#>   3.868   0.208   4.079
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.303   0.040   0.342
+#>   0.193   0.025   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4436,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.000   0.128   1.128
+#>   1.364   0.168   1.533
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4574,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00283 0.00377 0.057 0.00635 0.00718 5.12   100
-#>   ex_df[1, ] 0.76006 0.85603 1.020 0.87866 0.92905 6.15   100
+#>         expr     min      lq   mean median     uq  max neval
+#>  ex_mat[1, ] 0.00481 0.00699 0.0911 0.0132 0.0233 7.47   100
+#>   ex_df[1, ] 1.94562 2.02585 2.3799 2.1577 2.4646 9.51   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4991,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b9a54ef70e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b0fd63500e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6089,7 +6091,7 @@ To search *all R packages*, including those you have not installed locally, for 
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-324)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
+<p class="caption">(\#fig:unnamed-chunk-323)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
 </div>
 
 ### Finding and using vignettes
