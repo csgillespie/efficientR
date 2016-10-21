@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-20"
+date: "2016-10-21"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 213102 264962 275795 278260 295067 329455   100
-#>  cs_apply(x) 132430 160550 178326 172990 198952 322599   100
-#>    cumsum(x)    563    669   1155   1018   1148  16350   100
+#>    cs_for(x) 224607 271404 287286 285248 306488 375573   100
+#>  cs_apply(x) 132209 159058 175476 170640 192142 340824   100
+#>    cumsum(x)    469    608   1237    964   1155  14988   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.831   0.007   2.839
+#>   2.963   0.016   2.979
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4894818>
+#> <bytecode: 0x4864888>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.35  9.35  9.57   9.59  9.76  9.79     5
-#>  without_select 15.79 16.24 16.41  16.34 16.81 16.86     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.1 10.4 10.5   10.6 10.6 10.9     5
+#>  without_select 17.6 17.7 17.9   17.9 18.0 18.3     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3067,10 +3067,8 @@ Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/) off
 ## Getting data from the internet {#download}
 
 The code chunk below shows how the functions
-`download.file`^[Since
-R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.
-]
-and `unzip` can be used to download and unzip a dataset from the internet.
+`download.file()` and `unzip()` can be used to download and unzip a dataset from the internet.
+(Since R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.)
 R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data's *provenance*, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the **efficient** package. Using R for basic file management can help create a reproducible workflow, as illustrated below.
 
 
@@ -4417,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.868   0.208   4.079
+#>    3.84    0.28    4.12
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.193   0.025   0.217
+#>   0.187   0.032   0.218
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4436,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.364   0.168   1.533
+#>   1.044   0.148   1.191
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4574,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean median     uq  max neval
-#>  ex_mat[1, ] 0.00481 0.00699 0.0911 0.0132 0.0233 7.47   100
-#>   ex_df[1, ] 1.94562 2.02585 2.3799 2.1577 2.4646 9.51   100
+#>         expr     min     lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00272 0.0037 0.0568 0.00644 0.00705 5.12   100
+#>   ex_df[1, ] 0.74787 0.8522 1.0192 0.88249 0.96970 6.11   100
 ```
 
 <div class="rmdtip">
@@ -4991,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b0fd63500e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b0fc342b0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

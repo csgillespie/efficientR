@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-10-20">
+<meta name="date" content="2016-10-21">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -491,13 +491,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.868   0.208   4.079</span>
+<span class="co">#&gt;    3.84    0.28    4.12</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.193   0.025   0.217</span>
+<span class="co">#&gt;   0.187   0.032   0.218</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -505,7 +505,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   1.364   0.168   1.533</span>
+<span class="co">#&gt;   1.044   0.148   1.191</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -572,9 +572,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean median     uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00481 0.00699 0.0911 0.0132 0.0233 7.47   100</span>
-<span class="co">#&gt;   ex_df[1, ] 1.94562 2.02585 2.3799 2.1577 2.4646 9.51   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00272 0.0037 0.0568 0.00644 0.00705 5.12   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.74787 0.8522 1.0192 0.88249 0.96970 6.11   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -618,7 +618,7 @@ pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span clas
 </div>
 <div id="sparse-matrices" class="section level3 unnumbered">
 <h3>Sparse matrices</h3>
-<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>.</p>
+<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>.</p>
 <p>As an example, suppose we have a large matrix where the diagonal elements are non-zero:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)
 N =<span class="st"> </span><span class="dv">10000</span>
@@ -651,7 +651,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 <div id="example-optimising-the-movie_square-function" class="section level2">
 <h2><span class="header-section-number">7.4</span> Example: Optimising the <code>movie_square()</code> function</h2>
-<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that in our main bottle neck in simulating the game of Monopoly is the <code>movie_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% time calculating row sums, and the remainder on a comparison operations. This piece of code can be optimised fairly easily (will still retaining the same overall structure) by incorporating the following improvements<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a>:</p>
+<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that in our main bottle neck in simulating the game of Monopoly is the <code>movie_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% time calculating row sums, and the remainder on a comparison operations. This piece of code can be optimised fairly easily (will still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>:</p>
 <ul>
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
@@ -692,7 +692,7 @@ The value returned by <code>detectCores()</code> turns out to be operating syste
 </div>
 <div id="example-snakes-and-ladders" class="section level3">
 <h3><span class="header-section-number">7.5.2</span> Example: Snakes and Ladders</h3>
-<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a></p>
+<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a></p>
 <p>The following code illustrates how to simulate <code>N</code> games using <code>sapply()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10</span>^<span class="dv">4</span>
 <span class="kw">sapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
@@ -701,7 +701,7 @@ The value returned by <code>detectCores()</code> turns out to be operating syste
 cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</code></pre></div>
 <p>Then simply swap <code>sapply()</code> for <code>parSapply()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>It is important to stop the created clusters, as this can lead to memory leaks,<a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> as illustrated below:</p>
+<p>It is important to stop the created clusters, as this can lead to memory leaks,<a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a> as illustrated below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
 <p>If we achieved perfect parallelisation and used a four (or more) core, then we would obtain a four-fold speed up (we set <code>makeCluster(4)</code>). However, we rarely get this</p>
 <p>On a multi-processor computer, this can lead to a four-fold speed-up. However, it is rare that we would achieve this optimal speed-up since there always communication between threads.</p>
@@ -781,7 +781,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b0fd63500e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b0fc342b0e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
@@ -1001,11 +1001,11 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="20">
-<li id="fn20"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref20">↩</a></p></li>
-<li id="fn21"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref21">↩</a></p></li>
-<li id="fn22"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref22">↩</a></p></li>
-<li id="fn23"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref23">↩</a></p></li>
+<ol start="19">
+<li id="fn19"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref19">↩</a></p></li>
+<li id="fn20"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref20">↩</a></p></li>
+<li id="fn21"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref21">↩</a></p></li>
+<li id="fn22"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref22">↩</a></p></li>
 </ol>
 </div>
             </section>
