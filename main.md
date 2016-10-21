@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 224607 271404 287286 285248 306488 375573   100
-#>  cs_apply(x) 132209 159058 175476 170640 192142 340824   100
-#>    cumsum(x)    469    608   1237    964   1155  14988   100
+#>    cs_for(x) 210440 266991 278424 280110 299078 352045   100
+#>  cs_apply(x) 134357 156932 176820 172382 200116 273621   100
+#>    cumsum(x)    482    590   1191    924   1070  15089   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.963   0.016   2.979
+#>    3.11    0.02    3.15
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4864888>
+#> <bytecode: 0x37f2608>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.1 10.4 10.5   10.6 10.6 10.9     5
-#>  without_select 17.6 17.7 17.9   17.9 18.0 18.3     5
+#>            expr   min    lq mean median   uq  max neval
+#>     with_select  9.82  9.82 10.4   9.95 10.9 11.5     5
+#>  without_select 16.41 16.83 17.2  17.15 17.3 18.4     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3644,7 +3644,7 @@ aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
 `filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-By avoiding the `$` symbol **dplyr** subsetting than subsetting in base R.
+By avoiding the `$` symbol, **dplyr** makes subsetting code concise and consistent with other **dplyr** functions.
 The first argument is a data frame and
 subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
 In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    3.84    0.28    4.12
+#>   4.639   0.332   4.977
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.187   0.032   0.218
+#>   0.247   0.048   0.296
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.044   0.148   1.191
+#>   1.206   0.204   1.411
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min     lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00272 0.0037 0.0568 0.00644 0.00705 5.12   100
-#>   ex_df[1, ] 0.74787 0.8522 1.0192 0.88249 0.96970 6.11   100
+#>         expr     min      lq   mean  median     uq  max neval
+#>  ex_mat[1, ] 0.00257 0.00551 0.0554 0.00696 0.0102 4.82   100
+#>   ex_df[1, ] 0.75192 0.85224 1.4572 1.55393 1.7967 6.41   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b0fc342b0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b7e4c5110e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
