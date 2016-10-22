@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-21"
+date: "2016-10-22"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 210440 266991 278424 280110 299078 352045   100
-#>  cs_apply(x) 134357 156932 176820 172382 200116 273621   100
-#>    cumsum(x)    482    590   1191    924   1070  15089   100
+#>    cs_for(x) 211731 260060 271651 273208 291268 339294   100
+#>  cs_apply(x) 130351 152982 169960 168739 189748 213944   100
+#>    cumsum(x)    569    694   1176    976   1194   6481   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    3.11    0.02    3.15
+#>    2.65    0.02    2.68
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x37f2608>
+#> <bytecode: 0x4a34608>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq mean median   uq  max neval
-#>     with_select  9.82  9.82 10.4   9.95 10.9 11.5     5
-#>  without_select 16.41 16.83 17.2  17.15 17.3 18.4     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.06  9.51  9.49    9.6  9.63  9.65     5
+#>  without_select 16.20 16.40 17.15   17.6 17.66 17.89     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3327,7 +3327,7 @@ gather(pew)
 ```
 
 
-Table: (\#tab:tpew)First 6 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.
+Table: (\#tab:tpew)First 3 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.
 
 religion    <$10k   $10--20k   $20--30k
 ---------  ------  ---------  ---------
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.639   0.332   4.977
+#>   4.040   0.228   4.273
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.247   0.048   0.296
+#>   0.188   0.027   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.206   0.204   1.411
+#>   1.007   0.199   1.209
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median     uq  max neval
-#>  ex_mat[1, ] 0.00257 0.00551 0.0554 0.00696 0.0102 4.82   100
-#>   ex_df[1, ] 0.75192 0.85224 1.4572 1.55393 1.7967 6.41   100
+#>         expr    min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0027 0.00377 0.0576 0.00614 0.00676 5.22   100
+#>   ex_df[1, ] 0.7453 0.82613 0.9814 0.85032 0.90298 6.05   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b7e4c5110e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2abe49b170e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
