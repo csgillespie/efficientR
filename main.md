@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-22"
+date: "2016-10-28"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 209679 255548 267993 268666 291587 331490   100
-#>  cs_apply(x) 132255 154294 170727 166356 190626 216916   100
-#>    cumsum(x)    472    589   1309    910   1098  17923   100
+#>    cs_for(x) 215870 263838 274047 276104 296762 334752   100
+#>  cs_apply(x) 136116 160598 174811 171246 194886 267232   100
+#>    cumsum(x)    571    701   1282   1013   1212  14909   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.653   0.008   2.661
+#>   2.781   0.004   2.787
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4d1c858>
+#> <bytecode: 0x38c99c8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min   lq  mean median    uq   max neval
-#>     with_select  9.06  9.2  9.23   9.23  9.27  9.41     5
-#>  without_select 14.58 14.9 15.23  15.02 15.12 16.55     5
+#>            expr   min    lq  mean median   uq  max neval
+#>     with_select  9.23  9.52  9.88   9.52 10.3 10.8     5
+#>  without_select 15.88 16.57 16.71  16.84 16.9 17.4     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4279,7 +4279,7 @@ Unfortunately `Rprof()` is not user friendly. For this reason we recommend using
 After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used
 to profile R code. As a simple example, we will use the `movies` data set, which
 contains information on around 60,000 movies. First, we'll select movies that are
-classed as comedies, then plot year the movies was made verus the movie rating, and
+classed as comedies, then plot year the movies was made versus the movie rating, and
 draw a local polynomial regression line to pick out the trend. The main function from
 the **profvis** package is `profvis()`, which profiles the code and creates an
 interactive HTML page of the results. The first argument of `profvis()` is the R
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.771   0.212   3.983
+#>   3.771   0.244   4.018
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.196   0.020   0.215
+#>   0.192   0.024   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.970   0.112   1.085
+#>   0.974   0.140   1.114
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00237 0.00362 0.0561 0.00601 0.00648 5.09   100
-#>   ex_df[1, ] 0.73018 0.82598 0.9769 0.84436 0.90765 5.63   100
+#>         expr    min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0026 0.00363 0.0536 0.00604 0.00659 4.84   100
+#>   ex_df[1, ] 0.7442 0.82348 0.9740 0.84488 0.87872 5.69   100
 ```
 
 <div class="rmdtip">
@@ -4594,7 +4594,7 @@ accurate to around $17$ decimal places.
 </div>
 
 Integers are another numeric data type. Integers primarily exist to be passed to C or
-Fortran code. You do will not need to create integers for most applications. However,
+Fortran code. You do not need to create integers for most applications. However,
 they are occasionally used to optimise sub-setting operations. When we subset a data
 frame or matrix, we are interacting with C code we might be tempted to use integers
 with the purpose of speeding up our code. For example, if we look at the arguments for
@@ -4707,7 +4707,7 @@ pryr::object_size(m)
 Figure \@ref(fig:7-2) shows that in our main bottle neck in simulating the game of
 Monopoly is the `movie_square()` function. Within this function, we spend around 50%
 of the time creating a data frame, 20% time calculating row sums, and the remainder on
-a comparison operations. This piece of code can be optimised fairly easily (will still
+a comparison operations. This piece of code can be optimised fairly easily (while still
 retaining the same overall structure) by incorporating the following
 improvements^[Solutions are available in the **efficient** package vignette.]:
 
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b2e925a20e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2af099f040e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

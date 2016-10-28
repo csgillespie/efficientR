@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-10-22">
+<meta name="date" content="2016-10-28">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -421,7 +421,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Unfortunately <code>Rprof()</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof()</code>.</p>
 <div id="getting-started-with-profvis" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> Getting started with <strong>profvis</strong></h3>
-<p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movies was made verus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
+<p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movies was made versus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
 <span class="kw">profvis</span>({
   <span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span>
@@ -491,13 +491,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.771   0.212   3.983</span>
+<span class="co">#&gt;   3.771   0.244   4.018</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.196   0.020   0.215</span>
+<span class="co">#&gt;   0.192   0.024   0.217</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -505,7 +505,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.970   0.112   1.085</span>
+<span class="co">#&gt;   0.974   0.140   1.114</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -572,9 +572,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00237 0.00362 0.0561 0.00601 0.00648 5.09   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.73018 0.82598 0.9769 0.84436 0.90765 5.63   100</span></code></pre></div>
+<span class="co">#&gt;         expr    min      lq   mean  median      uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.0026 0.00363 0.0536 0.00604 0.00659 4.84   100</span>
+<span class="co">#&gt;   ex_df[1, ] 0.7442 0.82348 0.9740 0.84488 0.87872 5.69   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -589,7 +589,7 @@ Use the <code>data.matrix()</code> function to efficiently convert a data frame 
 When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
-<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do will not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the <code>head</code> function</p>
+<p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the <code>head</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
 <span class="co">#&gt; function (x, n = 6L, ...) </span>
 <span class="co">#&gt; NULL</span></code></pre></div>
@@ -651,7 +651,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 <div id="example-optimising-the-movie_square-function" class="section level2">
 <h2><span class="header-section-number">7.4</span> Example: Optimising the <code>movie_square()</code> function</h2>
-<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that in our main bottle neck in simulating the game of Monopoly is the <code>movie_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% time calculating row sums, and the remainder on a comparison operations. This piece of code can be optimised fairly easily (will still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>:</p>
+<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that in our main bottle neck in simulating the game of Monopoly is the <code>movie_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% time calculating row sums, and the remainder on a comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>:</p>
 <ul>
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
@@ -781,7 +781,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b2e925a20e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2af099f040e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
