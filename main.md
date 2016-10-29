@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-28"
+date: "2016-10-29"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -311,11 +311,11 @@ cs_apply = function(x){
 
 # Method 3: cumsum (1 line, not shown)
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
-#> Unit: nanoseconds
-#>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 215870 263838 274047 276104 296762 334752   100
-#>  cs_apply(x) 136116 160598 174811 171246 194886 267232   100
-#>    cumsum(x)    571    701   1282   1013   1212  14909   100
+#> Unit: microseconds
+#>         expr    min     lq  mean median     uq max neval
+#>    cs_for(x) 466.08 500.17 519.3 520.24 536.44 580   100
+#>  cs_apply(x) 287.25 324.81 344.3 342.49 358.25 411   100
+#>    cumsum(x)   1.01   1.25   2.3   1.97   2.27  18   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.781   0.004   2.787
+#>   5.097   0.034   5.132
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x38c99c8>
+#> <bytecode: 0x474e9a8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.23  9.52  9.88   9.52 10.3 10.8     5
-#>  without_select 15.88 16.57 16.71  16.84 16.9 17.4     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.7 11.0 14.2   15.1 17.1 17.2     5
+#>  without_select 19.3 19.3 22.4   20.5 25.6 27.2     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4143,9 +4143,9 @@ tasks.^[One
 [question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
 ]
 Which is more efficient to some extent depends on personal preferences and what you are used to. 
-Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to data both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
+Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
 
-**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, however and has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/)
+**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/)
 (which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.771   0.244   4.018
+#>   5.710   0.389   6.099
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.192   0.024   0.217
+#>   0.291   0.048   0.340
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.974   0.140   1.114
+#>   1.312   0.188   1.500
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr    min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.0026 0.00363 0.0536 0.00604 0.00659 4.84   100
-#>   ex_df[1, ] 0.7442 0.82348 0.9740 0.84488 0.87872 5.69   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00301 0.00476 0.0586 0.00696 0.00937 5.08   100
+#>   ex_df[1, ] 0.78243 0.84973 1.3386 0.92197 1.76516 7.94   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2af099f040e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b08fd6e60e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
