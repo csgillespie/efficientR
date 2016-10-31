@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-10-29"
+date: "2016-10-31"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -116,7 +116,7 @@ $$
 \eta = \frac{W}{Q}
 $$
 
-How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is *algorithmic efficiency*: how quickly the *computer* can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote by Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing:
+How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is *algorithmic efficiency*: how quickly the *computer* can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote by Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing [@lovelace1842translator]:
 
 > In almost every computation a great variety of arrangements for the succession of the processes is possible, and various considerations must influence the selections amongst them for the purposes of a calculating engine. One essential object is to choose that arrangement which shall tend to reduce to a minimum the time necessary for completing the calculation.
 
@@ -311,11 +311,11 @@ cs_apply = function(x){
 
 # Method 3: cumsum (1 line, not shown)
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
-#> Unit: microseconds
-#>         expr    min     lq  mean median     uq max neval
-#>    cs_for(x) 466.08 500.17 519.3 520.24 536.44 580   100
-#>  cs_apply(x) 287.25 324.81 344.3 342.49 358.25 411   100
-#>    cumsum(x)   1.01   1.25   2.3   1.97   2.27  18   100
+#> Unit: nanoseconds
+#>         expr    min     lq   mean median     uq    max neval
+#>    cs_for(x) 212093 266315 279970 280339 296224 494975   100
+#>  cs_apply(x) 130635 159167 180599 175046 194912 396325   100
+#>    cumsum(x)    562    872   1527   1163   1409  15326   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -992,7 +992,7 @@ nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
 
 Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
-Shortening long function names for interactive (but not reproducible code writing).
+Shortening long function names for interactive (but not reproducible code writing) is another option for using `.Rprofile` to increase efficiency.
 If you frequently use `View()`, for example, you may be able to save time by referring to it
 in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   5.097   0.034   5.132
+#>   2.894   0.032   2.926
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x474e9a8>
+#> <bytecode: 0x3ed6d68>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.7 11.0 14.2   15.1 17.1 17.2     5
-#>  without_select 19.3 19.3 22.4   20.5 25.6 27.2     5
+#>            expr   min    lq mean median    uq   max neval
+#>     with_select  8.96  9.09  9.2   9.27  9.33  9.34     5
+#>  without_select 14.16 14.99 15.6  15.86 15.89 17.06     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   5.710   0.389   6.099
+#>   4.563   0.235   4.847
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.291   0.048   0.340
+#>   0.188   0.028   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.312   0.188   1.500
+#>   1.032   0.195   1.269
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4573,8 +4573,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00301 0.00476 0.0586 0.00696 0.00937 5.08   100
-#>   ex_df[1, ] 0.78243 0.84973 1.3386 0.92197 1.76516 7.94   100
+#>  ex_mat[1, ] 0.00269 0.00373 0.0538 0.00522 0.00567 4.90   100
+#>   ex_df[1, ] 0.74612 0.82937 0.9782 0.84890 0.89252 5.83   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b08fd6e60e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b2ffefff0e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

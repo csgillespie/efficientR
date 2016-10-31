@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-10-29">
+<meta name="date" content="2016-10-31">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -425,7 +425,7 @@ Another early port of call should be the CRAN website. The <a href="https://cran
 <p><span class="math display">\[
 \eta = \frac{W}{Q}
 \]</span></p>
-<p>How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is <em>algorithmic efficiency</em>: how quickly the <em>computer</em> can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote by Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing:</p>
+<p>How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is <em>algorithmic efficiency</em>: how quickly the <em>computer</em> can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote by Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing <span class="citation">(Lovelace <a href="#ref-lovelace1842translator">1842</a>)</span>:</p>
 <blockquote>
 <p>In almost every computation a great variety of arrangements for the succession of the processes is possible, and various considerations must influence the selections amongst them for the purposes of a calculating engine. One essential object is to choose that arrangement which shall tend to reduce to a minimum the time necessary for completing the calculation.</p>
 </blockquote>
@@ -574,11 +574,11 @@ cs_apply =<span class="st"> </span>function(x){
 
 <span class="co"># Method 3: cumsum (1 line, not shown)</span>
 <span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))
-<span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;         expr    min     lq  mean median     uq max neval</span>
-<span class="co">#&gt;    cs_for(x) 466.08 500.17 519.3 520.24 536.44 580   100</span>
-<span class="co">#&gt;  cs_apply(x) 287.25 324.81 344.3 342.49 358.25 411   100</span>
-<span class="co">#&gt;    cumsum(x)   1.01   1.25   2.3   1.97   2.27  18   100</span></code></pre></div>
+<span class="co">#&gt; Unit: nanoseconds</span>
+<span class="co">#&gt;         expr    min     lq   mean median     uq    max neval</span>
+<span class="co">#&gt;    cs_for(x) 212093 266315 279970 280339 296224 494975   100</span>
+<span class="co">#&gt;  cs_apply(x) 130635 159167 180599 175046 194912 396325   100</span>
+<span class="co">#&gt;    cumsum(x)    562    872   1527   1163   1409  15326   100</span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Which method is fastest and how many times faster is it?</p></li>
 <li><p>Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument <code>neval = 1</code> so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the <em>relative</em> time difference increase or decrease? By how much?</p></li>
@@ -617,6 +617,9 @@ cs_apply =<span class="st"> </span>function(x){
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-lovelace1842translator">
+<p>Lovelace, Ada Countess. 1842. “Translators Notes to an Article on Babbages Analytical Engine.” <em>Scientific Memoirs</em> 3: 691–731.</p>
+</div>
 <div id="ref-Wickham2014">
 <p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
 </div>
