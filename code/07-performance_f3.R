@@ -29,13 +29,13 @@ plot(dd[,1], dd[,3]/dd[,2], log="xy",
      pch=21, xlim=c(9, 10^4), ylim=c(1, 10^2), 
      axes=FALSE, frame=FALSE, 
      ylab="Relative speed of 'which.min' compared to 'which'", xlab="Vector length",
-     bg="steelblue")
-abline(h=10^(0:2), lty=3, col="grey80")
-abline(h=c(2, 5, 20, 50), lty=3, col="grey90")
+     bg="steelblue", panel.first = {abline(h=10^(0:2), lty=1, col="grey90");
+       abline(h=c(2, 5, 20, 50), lty=1, col="grey90")})
 
 
-axis(2, tick=FALSE)
-axis(1, at = 10^(1:4), labels=c(expression(10^1),expression(10^2),expression(10^3),expression(10^4)), tick=F)
+axis(2, tick=FALSE,  col.axis="grey50", cex.axis = 0.8)
+axis(1, at = 10^(1:4), labels=c(expression(10^1),expression(10^2),expression(10^3),expression(10^4)), tick=F,
+     col.axis="grey50", cex.axis = 0.8)
 
 
 

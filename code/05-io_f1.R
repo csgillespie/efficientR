@@ -75,7 +75,7 @@ g1 = g + theme(strip.background = element_rect(fill = "white"),
 labels = tibble::frame_data(
   ~MB, ~Time, ~type, ~facet_cols,
   6, 7, "base", paste("No of columns:", 2),
-  0.24, 1.5, "data.table", paste("No of columns:", 2),
+  0.28, 1.5, "data.table", paste("No of columns:", 2),
   0.21, 13, "readr", paste("No of columns:", 2)
 )
 

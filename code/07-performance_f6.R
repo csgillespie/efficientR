@@ -14,8 +14,8 @@ g = ggplot(z) +
                      labels=c(expression(10^-3),expression(10^-2),
                               expression(10^-1),expression(10^0),expression(10^1)))
 
-g1 = g +  labs(title = "Performance Gains with Rcpp",
-           x = NULL, y = "Elapsed Time (secs)",colour = NULL, fill = NULL) +
+g1 = g +  labs(title = "Performance gains with Rcpp",
+           x = NULL, y = "Elapsed time (secs)",colour = NULL, fill = NULL) +
   theme(panel.grid.major.y = element_line(colour = "gray90"),
         panel.grid.minor = element_line(colour = NA),
         panel.grid.major.x = element_line(colour = NA),
