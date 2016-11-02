@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 221938 264532 294525 283708 309878 501846   100
-#>  cs_apply(x) 138284 165758 183309 174017 197340 364055   100
-#>    cumsum(x)    476    827   1499   1048   1227  16003   100
+#>    cs_for(x) 215604 260829 274801 271229 290260 445623   100
+#>  cs_apply(x) 132154 157014 176009 170266 191793 363996   100
+#>    cumsum(x)    579    766   1304   1059   1198  14804   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.184   0.008   3.192
+#>   2.802   0.016   2.819
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4fc1d68>
+#> <bytecode: 0x4816588>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2485,7 +2485,7 @@ A project plan can take many forms, including a short document, a Gantt chart
 (see Figure \@ref(fig:4-2) or simply a clear vision of the project's steps in mind.
 
 <div class="figure" style="text-align: center">
-<img src="figures/f4_2_DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development." width="80%" />
+<img src="figures/f4_2_DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development." width="70%" />
 <p class="caption">(\#fig:4-2)A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development.</p>
 </div>
 
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.55  9.81  9.96   9.87 10.2 10.4     5
-#>  without_select 15.13 15.69 16.19  16.40 16.7 17.0     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 16.4 16.7 16.8     17 17.0 17.1     5
+#>  without_select 26.2 26.8 26.9     27 27.1 27.5     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.970   0.304   4.274
+#>   4.513   0.264   4.778
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.144   0.084   0.228
+#>   0.270   0.040   0.311
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.051   0.192   1.243
+#>    1.04    0.16    1.20
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4473,7 +4473,7 @@ i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()`
 variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="90%" />
+<img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="70%" />
 <p class="caption">(\#fig:7-3)Comparison of `which.min()` with `which()`.</p>
 </div>
 
@@ -4573,8 +4573,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00267 0.00369 0.0565 0.00597 0.00668 5.12   100
-#>   ex_df[1, ] 0.73423 0.82338 0.9768 0.84430 0.87897 5.94   100
+#>  ex_mat[1, ] 0.00277 0.00392 0.0587 0.00632 0.00714 5.22   100
+#>   ex_df[1, ] 0.81310 0.85283 1.2294 0.90280 1.25550 8.22   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b406b39d0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b6758ee80e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
