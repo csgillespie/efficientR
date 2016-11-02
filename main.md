@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 215604 260829 274801 271229 290260 445623   100
-#>  cs_apply(x) 132154 157014 176009 170266 191793 363996   100
-#>    cumsum(x)    579    766   1304   1059   1198  14804   100
+#>    cs_for(x) 214439 266971 278433 277579 299184 367860   100
+#>  cs_apply(x) 135198 164464 181378 177716 194713 357465   100
+#>    cumsum(x)    574    676   1341   1056   1256  16395   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1456,8 +1456,8 @@ substantial speed boost. This demonstrates that the speed-up you can expect from
 depends heavily on the type of computations you are undertaking.
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/blas-bench-1.png" alt="Performance gains obtained changing the underlying BLAS library (tests from `benchmark\_std()`)." width="70%" />
-<p class="caption">(\#fig:blas-bench)Performance gains obtained changing the underlying BLAS library (tests from `benchmark\_std()`).</p>
+<img src="_main_files/figure-html/blas-bench-1.png" alt="Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`)." width="70%" />
+<p class="caption">(\#fig:blas-bench)Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).</p>
 </div>
 
 ### Other interpreters
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.802   0.016   2.819
+#>   3.248   0.008   3.256
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x4816588>
+#> <bytecode: 0x52d2bb8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2713,7 +2713,7 @@ Furthermore dynamic documents written in R Markdown can compile into a range of 
 
 A strict approach to project management and workflow is treating your projects as R packages. This approach has advantages and limitations. The major risk with treating a project as a package is that the package is quite a strict way of organising work. Packages are suited for code intensive projects where code documentation is important. An intermediate approach is to use a 'dummy package' that includes a `DESCRIPTION` file in the root directory telling users of the project which packages must be installed for the code to work. This book is based on a dummy package so that we can easily keep the dependencies up-to-date (see the book's [DESCRIPTION](https://github.com/csgillespie/efficientR/blob/master/DESCRIPTION) file online for an insight into how this works).
 
-Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the **devools** package, which is highly recommended for anyone attempting to write an R package.
+Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the **devtools** package, which is highly recommended for anyone attempting to write an R package.
 
 The number of essential elements of R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
 
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 16.4 16.7 16.8     17 17.0 17.1     5
-#>  without_select 26.2 26.8 26.9     27 27.1 27.5     5
+#>            expr  min lq mean median   uq  max neval
+#>     with_select 16.4 17 17.0   17.2 17.2 17.4     5
+#>  without_select 27.7 28 28.1   28.2 28.2 28.6     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.513   0.264   4.778
+#>   4.879   0.276   5.156
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.270   0.040   0.311
+#>   0.123   0.096   0.218
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    1.04    0.16    1.20
+#>   1.088   0.148   1.236
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00277 0.00392 0.0587 0.00632 0.00714 5.22   100
-#>   ex_df[1, ] 0.81310 0.85283 1.2294 0.90280 1.25550 8.22   100
+#>         expr    min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0027 0.00384 0.0555 0.00662 0.00736 4.93   100
+#>   ex_df[1, ] 0.7650 0.84248 1.0000 0.86550 0.91346 5.87   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b6758ee80e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2adb013b80e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6398,36 +6398,37 @@ The book depends on the following packages:
 
 
 
-Name                   Title                                                                     version 
----------------------  ------------------------------------------------------------------------  --------
-assertive.reflection   Assertions for Checking the State of R [@R-assertive.reflection]          0.0.3   
-benchmarkme            Crowd Sourced System Benchmarks [@R-benchmarkme]                          0.3.0   
-bookdown               Authoring Books with R Markdown [@R-bookdown]                             0.1     
-cranlogs               Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]              2.1.0   
-data.table             Extension of Data.frame [@R-data.table]                                   1.9.6   
-devtools               Tools to Make Developing R Packages Easier [@R-devtools]                  1.12.0  
-DiagrammeR             Create Graph Diagrams and Flowcharts Using R [@R-DiagrammeR]              0.8.4   
-dplyr                  A Grammar of Data Manipulation [@R-dplyr]                                 0.5.0   
-drat                   Drat R Archive Template [@R-drat]                                         0.1.1   
-efficient              Becoming an Efficient R Programmer [@R-efficient]                         0.1.1   
-feather                R Bindings to the Feather 'API' [@R-feather]                              0.3.0   
-formatR                Format R Code Automatically [@R-formatR]                                  1.4     
-fortunes               R Fortunes [@R-fortunes]                                                  1.5.3   
-geosphere              Spherical Trigonometry [@R-geosphere]                                     1.5.5   
-ggmap                  Spatial Visualization with ggplot2 [@R-ggmap]                             2.6.1   
-ggplot2                An Implementation of the Grammar of Graphics [@R-ggplot2]                 2.1.0   
-ggplot2movies          Movies Data [@R-ggplot2movies]                                            0.0.1   
-knitr                  A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]   1.14    
-lubridate              Make Dealing with Dates a Little Easier [@R-lubridate]                    1.5.6   
-microbenchmark         Accurate Timing Functions [@R-microbenchmark]                             1.4.2.1 
-profvis                Interactive Visualizations for Profiling R Code [@R-profvis]              0.3.2   
-pryr                   Tools for Computing on the Language [@R-pryr]                             0.1.2   
-Rcpp                   Seamless R and C++ Integration [@R-Rcpp]                                  0.12.7  
-readr                  Read Tabular Data [@R-readr]                                              1.0.0   
-rio                    A Swiss-Army Knife for Data I/O [@R-rio]                                  0.4.12  
-RSQLite                SQLite Interface for R [@R-RSQLite]                                       1.0.0   
-tibble                 Simple Data Frames [@R-tibble]                                            1.2     
-tidyr                  Easily Tidy Data with `spread()` and `gather()` Functions [@R-tidyr]      0.6.0   
+Name                   Title                                                                     version    
+---------------------  ------------------------------------------------------------------------  -----------
+assertive.reflection   Assertions for Checking the State of R [@R-assertive.reflection]          0.0.3      
+benchmarkme            Crowd Sourced System Benchmarks [@R-benchmarkme]                          0.3.0      
+bookdown               Authoring Books with R Markdown [@R-bookdown]                             0.1        
+cranlogs               Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]              2.1.0      
+data.table             Extension of Data.frame [@R-data.table]                                   1.9.6      
+devtools               Tools to Make Developing R Packages Easier [@R-devtools]                  1.12.0     
+DiagrammeR             Create Graph Diagrams and Flowcharts Using R [@R-DiagrammeR]              0.8.4      
+dplyr                  A Grammar of Data Manipulation [@R-dplyr]                                 0.5.0      
+drat                   Drat R Archive Template [@R-drat]                                         0.1.2      
+efficient              Becoming an Efficient R Programmer [@R-efficient]                         0.1.1      
+feather                R Bindings to the Feather 'API' [@R-feather]                              0.3.0      
+formatR                Format R Code Automatically [@R-formatR]                                  1.4        
+fortunes               R Fortunes [@R-fortunes]                                                  1.5.3      
+geosphere              Spherical Trigonometry [@R-geosphere]                                     1.5.5      
+ggmap                  Spatial Visualization with ggplot2 [@R-ggmap]                             2.6.1      
+ggplot2                An Implementation of the Grammar of Graphics [@R-ggplot2]                 2.1.0      
+ggplot2movies          Movies Data [@R-ggplot2movies]                                            0.0.1      
+knitr                  A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]   1.14       
+lubridate              Make Dealing with Dates a Little Easier [@R-lubridate]                    1.6.0      
+microbenchmark         Accurate Timing Functions [@R-microbenchmark]                             1.4.2.1    
+profvis                Interactive Visualizations for Profiling R Code [@R-profvis]              0.3.2.9000 
+pryr                   Tools for Computing on the Language [@R-pryr]                             0.1.2      
+Rcpp                   Seamless R and C++ Integration [@R-Rcpp]                                  0.12.7     
+readr                  Read Tabular Data [@R-readr]                                              1.0.0      
+rio                    A Swiss-Army Knife for Data I/O [@R-rio]                                  0.4.16     
+RSQLite                SQLite Interface for R [@R-RSQLite]                                       1.0.0      
+swirl                  Learn R, in R [@R-swirl]                                                  2.4.2      
+tibble                 Simple Data Frames [@R-tibble]                                            1.2        
+tidyr                  Easily Tidy Data with `spread()` and `gather()` Functions [@R-tidyr]      0.6.0      
 
 # References {-}
 
