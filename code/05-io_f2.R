@@ -119,7 +119,7 @@ g1 = g + theme(strip.background = element_rect(fill = "white"),
 g1
 labels = tibble::frame_data(
   ~MB, ~time, ~file_type, ~type,
-  0.0075, 0.97, "base", "File size",
+  0.01, 0.97, "base", "File size",
   0.012, 0.85, "feather", "File size",
   0.01, 0.37, "rds", "File size"
 )
