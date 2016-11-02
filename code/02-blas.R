@@ -12,7 +12,7 @@ g = ggplot(res_all) + geom_violin(aes(test_group, elapsed, fill = blas),position
 
 
 g1 = g + labs(title = "Performance gains with BLAS", 
-          x = "Benchmark", y = "Elapsed Time",colour = NULL, fill = NULL) + 
+          x = "Benchmark", y = "Elapsed time",colour = NULL, fill = NULL) + 
   theme(panel.grid.major.y = element_line(colour = "gray90"), 
     panel.grid.minor = element_line(colour = NA), 
     panel.grid.major.x = element_line(colour = NA), 
