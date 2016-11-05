@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-11-02"
+date: "2016-11-05"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -313,9 +313,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 213621 267010 285238 280758 304642 572058   100
-#>  cs_apply(x) 137122 162328 187052 177308 201198 386711   100
-#>    cumsum(x)    482    591   1227    970   1096  17633   100
+#>    cs_for(x) 214472 256862 269740 270502 285437 335441   100
+#>  cs_apply(x) 138108 156069 173598 172094 190640 258731   100
+#>    cumsum(x)    577    687   1199    956   1154  14288   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1732,7 +1732,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.924   0.004   2.929
+#>   2.767   0.007   2.781
 ```
 In contrast a more R-centric approach would be
 
@@ -2245,7 +2245,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x40a5ba8>
+#> <bytecode: 0x3851d98>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2942,9 +2942,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.5 10.6 10.8   10.8 10.8 11.1     5
-#>  without_select 18.0 18.1 18.2   18.1 18.2 18.5     5
+#>            expr   min    lq  mean median    uq  max neval
+#>     with_select  9.86  9.92  9.96   9.93  9.96 10.1     5
+#>  without_select 16.83 16.89 17.07  16.93 16.96 17.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4336,7 +4336,8 @@ code is around 100 lines long. In order for **profvis** to fully profile the cod
 
 
 ```r
-devtools::install_github("csgillespie/efficient", args="--with-keep.source")
+devtools::install_github("csgillespie/efficient",
+                         args = "--with-keep.source")
 ```
 
 The function can then be profiled via the following code, which results in figure \@ref(fig:7-2). 
@@ -4415,13 +4416,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.924   0.208   4.132
+#>   3.954   0.232   4.187
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.223   0.032   0.255
+#>   0.128   0.088   0.217
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4435,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    1.08    0.14    1.22
+#>   0.926   0.171   1.103
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4573,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00293 0.00378 0.0525 0.00666 0.00747 4.64   100
-#>   ex_df[1, ] 0.74514 0.83855 0.9909 0.85786 0.91264 5.89   100
+#>         expr     min      lq   mean median      uq  max neval
+#>  ex_mat[1, ] 0.00278 0.00378 0.0554  0.006 0.00656 4.98   100
+#>   ex_df[1, ] 0.75022 0.83389 1.0076  0.853 0.90993 5.68   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4990,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b574e8c20e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2aedd44270e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6391,7 +6392,19 @@ The complete source of the book is available [online](https://github.com/csgille
 
 # Package dependencies 
 
-The book depends on the following packages:
+The book uses datasets stored in the **efficient** GitHub package, which can be installed (after **devtools** has been installed) as follows:
+
+
+```r
+devtools::install_github("csgillespie/efficient",
+                         args = "--with-keep.source")
+#> Using GitHub PAT from envvar GITHUB_PAT
+#> Skipping install of 'efficient' from a github remote, the SHA1 (9db6adeb) has not changed since last install.
+#>   Use `force = TRUE` to force installation
+```
+
+
+The book depends on the following CRAN packages:
 
 
 
