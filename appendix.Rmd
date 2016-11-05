@@ -18,7 +18,7 @@ The complete source of the book is available [online](https://github.com/csgille
 1. If you are using `RStudio`, open `index.Rmd` and click `Knit`.
     * Alternatively (for mainly Linux users) you can use the bundled `Makefile`
 
-# Package dependencies 
+## Package dependencies 
 
 The book uses datasets stored in the **efficient** GitHub package, which can be installed (after **devtools** has been installed) as follows:
 
@@ -47,8 +47,11 @@ pkgs = strsplit(pkgs, ",")[[1]]
 pkgs = gsub(" ", "", pkgs)
 pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
 ext_pkgs = c("rio", "feather")  # issues installing on travis
-pkgs = c(pkgs, ext_pkgs)
-pkgs = unique(pkgs)
+to_install = !pkgs %in% rownames(installed.packages())
+
+if(sum(to_install) > 0){
+  install.packages(pkgs[to_install])
+}
 
 if(!all(ext_pkgs %in% rownames(installed.packages()))) {
   message("Installing rio and feather")
