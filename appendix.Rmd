@@ -51,11 +51,11 @@ pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
 ext_pkgs = c("rio", "feather")  # issues installing on travis
 to_install = !pkgs %in% rownames(installed.packages())
 
-if(sum(to_install) > 0 & !is_travis){
+if(sum(to_install) > 0){
   install.packages(pkgs[to_install])
 }
 
-if(!all(ext_pkgs %in% rownames(installed.packages())) & !is_travis) {
+if(!all(ext_pkgs %in% rownames(installed.packages()))) {
   message("Installing rio and feather")
   install.packages(ext_pkgs, repos="https://cran.rstudio.com/")
 }
