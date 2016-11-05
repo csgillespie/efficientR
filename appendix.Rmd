@@ -7,11 +7,13 @@ The complete source of the book is available [online](https://github.com/csgille
 1. Install the latest version of R
     * If you are using RStudio, make sure that's up-to-date as well
 1. Install the book dependencies.
+
     ```{r eval=FALSE}
     # Make sure you are using the latest version of `devtools`
     # Older versions do not work.
     devtools::install_github("csgillespie/efficientR")
     ```
+    
 1. Clone the efficientR [repository](https://github.com/csgillespie/efficientR)
   * See the chapter \@ref(collaboration) on Efficient collaboration for an introduction
   to git and github.
@@ -49,11 +51,11 @@ pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
 ext_pkgs = c("rio", "feather")  # issues installing on travis
 to_install = !pkgs %in% rownames(installed.packages())
 
-if(sum(to_install) > 0){
+if(sum(to_install) > 0 & !is_travis){
   install.packages(pkgs[to_install])
 }
 
-if(!all(ext_pkgs %in% rownames(installed.packages()))) {
+if(!all(ext_pkgs %in% rownames(installed.packages())) & !is_travis) {
   message("Installing rio and feather")
   install.packages(ext_pkgs, repos="https://cran.rstudio.com/")
 }
