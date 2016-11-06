@@ -7,26 +7,28 @@ The complete source of the book is available [online](https://github.com/csgille
 1. Install the latest version of R
     * If you are using RStudio, make sure that's up-to-date as well
 1. Install the book dependencies.
+
     ```{r eval=FALSE}
     # Make sure you are using the latest version of `devtools`
     # Older versions do not work.
     devtools::install_github("csgillespie/efficientR")
     ```
+    
 1. Clone the efficientR [repository](https://github.com/csgillespie/efficientR)
   * See the chapter \@ref(collaboration) on Efficient collaboration for an introduction
   to git and github.
 1. If you are using `RStudio`, open `index.Rmd` and click `Knit`.
     * Alternatively (for mainly Linux users) you can use the bundled `Makefile`
 
-# Package dependencies 
+## Package dependencies 
 
 The book uses datasets stored in the **efficient** GitHub package, which can be installed (after **devtools** has been installed) as follows:
 
 ```{r}
+# Installs package dependencies shown below
 devtools::install_github("csgillespie/efficient",
                          args = "--with-keep.source")
 ```
-
 
 The book depends on the following CRAN packages:
 
@@ -47,8 +49,11 @@ pkgs = strsplit(pkgs, ",")[[1]]
 pkgs = gsub(" ", "", pkgs)
 pkgs = gsub("\\(.*)", "", pkgs) # Remove versions from packages
 ext_pkgs = c("rio", "feather")  # issues installing on travis
-pkgs = c(pkgs, ext_pkgs)
-pkgs = unique(pkgs)
+to_install = !pkgs %in% rownames(installed.packages())
+
+if(sum(to_install) > 0){
+  install.packages(pkgs[to_install])
+}
 
 if(!all(ext_pkgs %in% rownames(installed.packages()))) {
   message("Installing rio and feather")
@@ -56,8 +61,9 @@ if(!all(ext_pkgs %in% rownames(installed.packages()))) {
 }
 
 i = 1
+pkgs = c(pkgs, ext_pkgs)
 pkgs = pkgs[order(pkgs)]
-pkgs_df = data.frame(Name = pkgs, Title = NA, cite=NA, version=NA)
+pkgs_df = data.frame(Name = pkgs, Title = NA, cite = NA, version = NA)
 for(i in seq_along(pkgs)){
   f = system.file(package = pkgs[i], "DESCRIPTION")
   # Title is always on 3rd line
