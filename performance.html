@@ -26,7 +26,7 @@
 <meta name="author" content="Colin Gillespie">
 <meta name="author" content="Robin Lovelace">
 
-<meta name="date" content="2016-11-05">
+<meta name="date" content="2016-11-06">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -358,8 +358,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.6" data-path="learning.html"><a href="learning.html#spread-the-knowledge"><i class="fa fa-check"></i><b>10.6</b> Spread the knowledge</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html"><i class="fa fa-check"></i><b>A</b> Building the book from source</a></li>
-<li class="chapter" data-level="B" data-path="package-dependencies.html"><a href="package-dependencies.html"><i class="fa fa-check"></i><b>B</b> Package dependencies</a></li>
+<li class="chapter" data-level="A" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html"><i class="fa fa-check"></i><b>A</b> Building the book from source</a><ul>
+<li class="chapter" data-level="A.1" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html#package-dependencies"><i class="fa fa-check"></i><b>A.1</b> Package dependencies</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
@@ -492,13 +493,13 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.954   0.232   4.187</span>
+<span class="co">#&gt;   3.796   0.212   4.008</span>
 <span class="kw">system.time</span>({
   result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
   result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.128   0.088   0.217</span>
+<span class="co">#&gt;   0.163   0.052   0.214</span>
 <span class="kw">identical</span>(result1, result2)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implantation (although is still around 3 times slower than the hard-coded solution):</p>
@@ -506,7 +507,7 @@ if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
   result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
 })
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.926   0.171   1.103</span>
+<span class="co">#&gt;   1.026   0.163   1.203</span>
 <span class="kw">identical</span>(result1, result3)
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 </div>
@@ -573,9 +574,9 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min      lq   mean median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00278 0.00378 0.0554  0.006 0.00656 4.98   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.75022 0.83389 1.0076  0.853 0.90993 5.68   100</span></code></pre></div>
+<span class="co">#&gt;         expr     min     lq   mean median     uq  max neval</span>
+<span class="co">#&gt;  ex_mat[1, ] 0.00499 0.0061 0.0923 0.0101 0.0108 8.25   100</span>
+<span class="co">#&gt;   ex_df[1, ] 1.56918 1.7442 1.9746 1.7838 1.8637 9.91   100</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -782,7 +783,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
 <span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2aedd44270e0&gt;, x, y)</span></code></pre></div>
+<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2b197a4060e0&gt;, x, y)</span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
 <span class="co">#&gt; [1] 3</span></code></pre></div>
