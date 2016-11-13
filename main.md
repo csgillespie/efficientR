@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 216353 271864 285380 289900 298567 386370   100
-#>  cs_apply(x) 140897 175548 189010 192694 200968 329505   100
-#>    cumsum(x)    473    625   1297    952   1110  17402   100
+#>    cs_for(x) 218159 263068 274611 271392 292704 367801   100
+#>  cs_apply(x) 136415 162616 177375 171691 193202 288657   100
+#>    cumsum(x)    554    722   1356   1013   1139  18369   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1667,7 +1667,7 @@ $\log(x)$
 ```r
 log_sum = 0
 for(i in 1:length(x))
-  log_sum = logsum + log(x[i])
+  log_sum = log_sum + log(x[i])
 ```
 
 <div class="rmdwarning">
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.98    0.02    3.00
+#>   2.960   0.052   3.011
 ```
 In contrast a more R-centric approach would be
 
@@ -2244,7 +2244,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3c00c10>
+#> <bytecode: 0x52c8cd0>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2941,9 +2941,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.73  9.82  9.92   9.82 10.1 10.1     5
-#>  without_select 16.56 16.92 17.04  16.98 17.2 17.5     5
+#>            expr   min    lq mean median   uq  max neval
+#>     with_select  9.55  9.62 10.1   10.1 10.5 10.5     5
+#>  without_select 15.61 15.89 16.5   16.7 17.0 17.1     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4415,13 +4415,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.872   0.284   4.158
+#>    4.22    1.74    5.96
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.200   0.020   0.218
+#>   0.196   0.232   0.427
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4434,7 +4434,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.944   0.204   1.150
+#>    1.06    1.06    2.11
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4572,9 +4572,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr   min      lq  mean  median      uq  max neval
-#>  ex_mat[1, ] 0.003 0.00378 0.058 0.00626 0.00715 5.22   100
-#>   ex_df[1, ] 0.835 0.87437 1.040 0.89171 1.03394 6.24   100
+#>         expr   min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.003 0.00396 0.0613 0.00641 0.00682 5.54   100
+#>   ex_df[1, ] 0.796 0.83069 1.0077 0.85193 0.93423 6.41   100
 ```
 
 <div class="rmdtip">
@@ -4989,7 +4989,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b801c28c0e0>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2ad0c0ed00e0>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6401,8 +6401,15 @@ The book uses datasets stored in the **efficient** GitHub package, which can be 
 devtools::install_github("csgillespie/efficient",
                          args = "--with-keep.source")
 #> Using GitHub PAT from envvar GITHUB_PAT
-#> Skipping install of 'efficient' from a github remote, the SHA1 (fb6a3e19) has not changed since last install.
-#>   Use `force = TRUE` to force installation
+#> Downloading GitHub repo csgillespie/efficient@master
+#> from URL https://api.github.com/repos/csgillespie/efficient/zipball/master
+#> Installing efficient
+#> '/home/travis/R-bin/lib/R/bin/R' --no-site-file --no-environ --no-save  \
+#>   --no-restore --quiet CMD INSTALL  \
+#>   '/tmp/Rtmp93zCuk/devtools1d5677f4484f/csgillespie-efficient-e974561'  \
+#>   --library='/home/travis/R/Library' --install-tests --with-keep.source
+#> 
+#> Reloading installed efficient
 ```
 
 The book depends on the following CRAN packages:
