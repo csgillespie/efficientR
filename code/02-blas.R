@@ -22,7 +22,7 @@ g1 = g + labs(title = "Performance gains with BLAS",
     legend.background = element_rect(fill = NA), 
     legend.position = c(0.93, 0.92), 
     axis.ticks.x = element_line(linetype = "blank")) + 
-  scale_fill_manual(values=c(get_col(2), get_col(3)))
+  scale_fill_manual(values=c(get_col(2), get_col(9)))
 
 g1 = g1 + scale_y_continuous(limits=c(0,12), expand = c(0, 0))
 print(g1)
