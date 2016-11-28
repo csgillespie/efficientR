@@ -739,7 +739,7 @@ data(land_df, package="efficient")
 
 The next stage is to create an SQLite database to hold the data:
 
-```{r}
+```{r, eval=FALSE}
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
 land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price")) 
@@ -751,14 +751,24 @@ Why did we use the `indexes` argument?
 
 From the above code we can see that we have created a `tbl`. This can be accessed using **dplyr** in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard **dplyr** verbs on the table.
 
-```{r}
+```{r, eval=FALSE}
 # Method 1: using sql
 tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
+#> Source:   query [?? x 3]
+#> Database: sqlite 3.8.6 [land.sqlite3]
+#> 
+#>    price postcode `old/new`
+#>    <int>    <chr>     <chr>
+#> 1  84000  CW9 5EU         N
+#> 2 123500 TR13 8JH         N
+#> 3 217950 PL33 9DL         N
+#> 4 147000 EX39 5XT         N
+#> # ... with more rows
 ```
 
 How would you erform the same query using `select()`? Try it to see if you get the same result (hint: use backticks for the `old/new` variable name).
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 # Method 2: using dplyr
 select(land_sqlite, price, postcode, `old/new`)
 ```
