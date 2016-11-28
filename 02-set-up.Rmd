@@ -68,7 +68,7 @@ Sys.info()
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
 
 ```{block, assertive.reflection, type='rmdtip'}
-The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*()` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_windows()` will cause an error. The package can also test for IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability()` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code()`). These functions can be useful for running code that designed only to run on one type of set-up.
+The **assertive.reflection** package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The `assert_*()` functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system `assert_is_linux()` will run silently, whereas `assert_is_windows()` will cause an error. The package can also test for the IDE you are using (e.g. `assert_is_rstudio()`), the capabilities of R (`assert_r_has_libcurl_capability()` etc.), and what OS tools are available (e.g. `assert_r_can_compile_code()`). These functions can be useful for running code that is designed only to run on one type of set-up.
 ```
 
 ### Operating system and resource monitoring
@@ -83,9 +83,9 @@ supported these results with slightly faster
 run times for certain benchmarks on Ubuntu than Mac systems. The data from the **benchmarkme** package
 also suggests that running code under the Linux OS is marginally faster.
 ]
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)) OS-related issue to consider is external dependencies: programs that R packages depend on.
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)), another OS-related issue to consider is external dependencies: programs that R packages depend on.
 Sometimes external package dependencies must be installed manually (i.e. not using `install.packages()`).
-This is especially common Unix-based systems (Linux and Mac).
+This is especially common with Unix-based systems (Linux and Mac).
 On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
 Resource monitoring is the process of checking the status of key OS variables.
@@ -95,14 +95,14 @@ Alongside R profiling functions such as **profvis** (see Section \@ref(performan
 
 CPU resource allocated over time is another common OS variable that is worth monitoring.
 A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)),
-and whether there there is spare CPU capacity on the OS that could be harnessed by parallel code.
+and whether there is spare CPU capacity on the OS that could be harnessed by parallel code.
 
 ```{r 2-1, echo=FALSE, fig.cap="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.", out.width="100%"}
 knitr::include_graphics("figures/f2_1_sysmon.png")
 ```
 
 System monitoring is a complex topic that spills over into system administration and
-server management. Fortunately there are many tools designed to ease monitoring all major operating systems.
+server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
 
 - On Linux, the shell command `top` displays key resource use figures for most
 distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively.
@@ -121,7 +121,7 @@ In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a fun
 functions).[The
 reason this works is that a data frame is really a list of vectors, each vector forming a column.
 ]
-How do the system output logs results on your system compare to those presented in Figure \@ref(fig:2-1)? 
+How do the system output logs (results) on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
     ```{r, eval=FALSE}
     # Note: uses 2+ GB RAM and several seconds or more depending on hardware
@@ -156,8 +156,8 @@ identical(r1, r2)
 ## R version
 
 It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general 
-base R is very conservative about making changes that breaks backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
-For most use cases it we recommend always using the most up-to-date version of R and packages, so you have the latest code.
+base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
+For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code.
 In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested,
 to ensure stability.
 Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich.
@@ -197,7 +197,7 @@ sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
 
 
-Typical output from the second command is illustrate below:
+Typical output from the second command is illustrated below:
 
 ```
 The following extra packages will be installed:
@@ -276,7 +276,7 @@ Storing package names in a character vector object such as `pkgs` is also useful
 Some packages have external dependencies (i.e. they call libraries outside R).
 On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`.
 This will ensure the necessary dependencies are installed and setup correctly alongside the R package.
-On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be search for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
+On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be searched for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
 
 ```{r, engine='bash', eval = FALSE}
 apt-cache search r-cran- # search for available cran Debian packages
@@ -284,7 +284,7 @@ sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies
 ```
 
 On Windows the **installr** package helps manage and update R packages with system-level dependencies.
-For example the **Rtools** package for compiling C/C++ code on Window can be installed with the following command:
+For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
 
 ```{r, eval=FALSE}
 installr::install.rtools() 
@@ -319,7 +319,7 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts a couple of files scripts are run default, as documented in `?Startup`.
+Every time R starts a couple of file scripts are run by default, as documented in `?Startup`.
 This section explains how to customise these files, allowing you to save API keys or load frequently used functions.
 Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments.
 If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
@@ -379,7 +379,7 @@ Files in three folders are important in this process:
 
 - `R_HOME`, the directory in which R is installed. The `etc` sub-directory can contain start-up files read early on in the start-up process. Find out where your `R_HOME` is with the `R.home()` command.
 
-- `HOME`, the user's home directory. Typically this is `/home/username` on Unix machines or `C:\Users\username` on Windows (since Windows 7). Ask R where your home directory with, `Sys.getenv("HOME")`.
+- `HOME`, the user's home directory. Typically this is `/home/username` on Unix machines or `C:\Users\username` on Windows (since Windows 7). Ask R where your home directory is with, `Sys.getenv("HOME")`.
 
 - R's current working directory. This is reported by `getwd()`.
 
