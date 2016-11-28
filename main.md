@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 235062 255542 302592 312496 335904 420269   100
-#>  cs_apply(x) 155133 186364 208288 207344 222632 359537   100
-#>    cumsum(x)    464    794   1419    978   1224  20020   100
+#>    cs_for(x) 215590 235972 283228 291139 321838 365403   100
+#>  cs_apply(x) 137960 156700 181291 178209 205023 309993   100
+#>    cumsum(x)    557    720   1324   1036   1190  17824   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    3.05    0.06    3.12
+#>   2.880   0.064   2.942
 ```
 In contrast a more R-centric approach would be
 
@@ -2244,7 +2244,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x41cd918>
+#> <bytecode: 0x38a6ac8>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2941,9 +2941,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.6 10.6 11.0   11.0 11.2 11.8     5
-#>  without_select 17.8 17.8 18.3   17.9 18.2 20.0     5
+#>            expr   min    lq mean median   uq   max neval
+#>     with_select  9.19  9.23  9.4   9.29  9.4  9.87     5
+#>  without_select 14.67 14.67 15.4  14.99 15.7 16.76     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4403,13 +4403,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    4.08    0.56    4.66
+#>   4.016   0.556   4.577
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.192   0.072   0.263
+#>   0.204   0.064   0.269
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4422,7 +4422,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.784   0.264   1.052
+#>   0.772   0.300   1.070
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4560,9 +4560,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00257 0.00387 0.0658 0.00644 0.00695 6.01   100
-#>   ex_df[1, ] 0.75054 0.85066 1.0338 0.86919 0.92171 6.30   100
+#>         expr     min     lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00257 0.0039 0.0789 0.00649 0.00704 7.25   100
+#>   ex_df[1, ] 0.74627 0.8572 1.0478 0.87728 0.94007 7.01   100
 ```
 
 <div class="rmdtip">
@@ -4977,7 +4977,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b3728942220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2acdeacc6220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6388,9 +6388,6 @@ The book uses datasets stored in the **efficient** GitHub package, which can be 
 # Installs package dependencies shown below
 devtools::install_github("csgillespie/efficient",
                          args = "--with-keep.source")
-#> Using GitHub PAT from envvar GITHUB_PAT
-#> Skipping install of 'efficient' from a github remote, the SHA1 (d2c39e80) has not changed since last install.
-#>   Use `force = TRUE` to force installation
 ```
 
 The book depends on the following CRAN packages:
