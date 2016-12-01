@@ -27,7 +27,7 @@
 <meta name="author" content="Robin Lovelace">
 
 
-<meta name="date" content="2016-11-30">
+<meta name="date" content="2016-12-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -555,7 +555,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">500000</span>
 <span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   3.256   0.048   3.307</span></code></pre></div>
+<span class="co">#&gt;   3.000   0.028   3.026</span></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monte_carlo_vec =<span class="st"> </span>function(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)^<span class="dv">2</span> &gt;<span class="st"> </span><span class="kw">runif</span>(N))/N</code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -581,10 +581,10 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 </div>
 <div id="communicating-with-the-user" class="section level2">
 <h2><span class="header-section-number">3.3</span> Communicating with the user</h2>
-<p>When we create a function we often want the function to give efficient feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques of communicating with the user.</p>
+<p>When we create a function we often want the function to give efficient feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques for communicating with the user.</p>
 <div id="fatal-errors-stop" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> Fatal errors: <code class="unnumbered">stop()</code></h3>
-<p>Fatal errors are raised by calling the <code>stop()</code>, i.e. execution is terminated. When <code>stop()</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm()</code> the first argument is the sample size,<code>n</code>. If the number of observations to return less than <span class="math inline">\(1\)</span>, an error is raised. When we need to raise an error, we should do so as quickly as possible; otherwise it’s a waste of resources. Hence, the first few lines of a function typically perform argument checking.</p>
+<p>Fatal errors are raised by calling the <code>stop()</code>, i.e. execution is terminated. When <code>stop()</code> is called, there is no way for a function to continue. For instance, when we generate random numbers using <code>rnorm()</code> the first argument is the sample size,<code>n</code>. If the number of observations to return is less than <span class="math inline">\(1\)</span>, an error is raised. When we need to raise an error, we should do so as quickly as possible; otherwise it’s a waste of resources. Hence, the first few lines of a function typically perform argument checking.</p>
 <p>Suppose we call a function that raises an error. What then? Efficient, robust code <em>catches</em> the error and handles it appropriately. Errors can be caught using <code>try()</code> and <code>tryCatch()</code>. For example,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Suppress the error message</span>
 good =<span class="st"> </span><span class="kw">try</span>(<span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>, <span class="dt">silent =</span> <span class="ot">TRUE</span>)
@@ -684,12 +684,12 @@ fac_m =<span class="st"> </span><span class="kw">factor</span>(m, <span class="d
 </div>
 <div id="the-apply-family" class="section level2">
 <h2><span class="header-section-number">3.5</span> The apply family</h2>
-<p>The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in <a href="programming.html#tab:apply-family">3.1</a>, with a short description. In general, the all apply functions have similar properties:</p>
+<p>The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in <a href="programming.html#tab:apply-family">3.1</a>, with a short description. In general, all the apply functions have similar properties:</p>
 <ul>
 <li>Each function takes at least two arguments: an object and another function. The function is passed as an argument.</li>
 <li>Every apply function has the dots, <code>...</code>, argument that is used to pass on arguments to the function that is given as an argument.</li>
 </ul>
-<p>Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, we will cover the three main functions, <code>apply()</code>, <code>lapply()</code>, and <code>sapply()</code>. Since the apply functions are covered in most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources at the end of this section.</p>
+<p>Using apply functions when possible, can lead to more succinct and idiomatic R code. In this section, we will cover the three main functions, <code>apply()</code>, <code>lapply()</code>, and <code>sapply()</code>. Since the apply functions are covered in most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources at the end of this section.</p>
 <div class="rmdnote">
 <p>
 Most people rarely use the other apply functions. For example, I have only used <code>eapply()</code> once. Students in my class uploaded R scripts. Using <code>source()</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply()</code>. Using separate environments, avoided object name clashes.
@@ -734,7 +734,7 @@ Most people rarely use the other apply functions. For example, I have only used 
 </tr>
 </tbody>
 </table>
-<p>The <code>apply()</code> function is used to apply a function to the each row or column of a matrix. In many data science problems, this is a common task. For example, to calculate the standard deviation of the row we have</p>
+<p>The <code>apply()</code> function is used to apply a function to each row or column of a matrix. In many data science problems, this is a common task. For example, to calculate the standard deviation of the rows we have</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
 <span class="co"># MARGIN=1: corresponds to rows</span>
 row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</code></pre></div>
@@ -743,10 +743,10 @@ row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span cla
 <p>Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the <code>na.rm</code> argument to the <code>sd</code> function, we have</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>The <code>apply()</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
-<p>The <code>lapply()</code> function is similar to <code>apply()</code>; the main differences are the input types are vectors or lists and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply()</code> and <code>vapply()</code> are similar to <code>lapply()</code>, but the return type is not necessary a list.</p>
+<p>The <code>lapply()</code> function is similar to <code>apply()</code>; with the key difference being that the input type is a vector or list and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply()</code> and <code>vapply()</code> are similar to <code>lapply()</code>, but the return type is not necessary a list.</p>
 <div id="example-the-movies-data-set" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Example: the movies data set</h3>
-<p>The internet movie <a href="http://imdb.com/">database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon. The <strong>ggplot2movies</strong> package contains about sixty thousand movies stored as a data frame</p>
+<p>The internet movie <a href="http://imdb.com/">database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon. The <strong>ggplot2movies</strong> package contains about sixty thousand movies stored as a data frame</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>)</code></pre></div>
 <p>Movies are rated between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span> by fans. Columns <span class="math inline">\(7\)</span> to <span class="math inline">\(16\)</span> of the <code>movies</code> data set gives the percentage of voters for a particular rating.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ratings =<span class="st"> </span>movies[, <span class="dv">7</span>:<span class="dv">16</span>]</code></pre></div>
@@ -769,7 +769,7 @@ Figure 3.2: Movie voting preferences.
 </div>
 <div id="type-consistency" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Type consistency</h3>
-<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all of base R functions follow this idiom. For example the functions <code>sapply()</code> and <code>[.data.frame()</code> aren’t type consistent</p>
+<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example the functions <code>sapply()</code> and <code>[.data.frame()</code> aren’t type consistent</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span>:<span class="dv">5</span>])
 zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()
 <span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span>
@@ -782,7 +782,7 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 <p>Almost every R book has a section on the apply function. Below, we’ve given the resources we feel are most helpful.</p>
 <ul>
 <li>Each function has a number of examples in the associated help page. You can directly access the examples using the <code>example()</code> function, e.g. to run the <code>apply()</code> examples, use <code>example(&quot;apply&quot;)</code>.</li>
-<li>There is a very detailed Stackoverflow <a href="http://stackoverflow.com/q/3505701/203420">answer</a> description when, where and how to use each of the functions.</li>
+<li>There is a very detailed StackOverflow <a href="http://stackoverflow.com/q/3505701/203420">answer</a> which describes when, where and how to use each of the functions.</li>
 <li>In a similar vein, Neil Saunders has a nice blog <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">post</a> giving an overview of the functions.</li>
 <li>The apply functions are an example of functional programming. Chapter 16 of <em>R for data Science</em> describes the interplay between loops and functional programming in more detail <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span>, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
 </ul>
@@ -798,9 +798,9 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 </div>
 <div id="caching-variables" class="section level2">
 <h2><span class="header-section-number">3.6</span> Caching variables</h2>
-<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple with replacing <code>sd(x)</code> in multiple function calls with the object <code>sd_x</code> that is defined once and reused. For example, suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the entire data set</p>
+<p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing <code>sd(x)</code> in multiple function calls with the object <code>sd_x</code> that is defined once and reused. For example, suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the entire data set</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(x, <span class="dv">2</span>, function(i) <span class="kw">mean</span>(i) /<span class="st"> </span><span class="kw">sd</span>(x))</code></pre></div>
-<p>This is inefficient since the value of <code>sd(x)</code> is constant, recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result</p>
+<p>This is inefficient since the value of <code>sd(x)</code> is constant and thus recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sd_x =<span class="st"> </span><span class="kw">sd</span>(x)
 <span class="kw">apply</span>(x, <span class="dv">2</span>, function(i) <span class="kw">mean</span>(i) /<span class="st"> </span>sd_x)</code></pre></div>
 <p>If we compare the two methods on a <span class="math inline">\(100\)</span> row by <span class="math inline">\(1000\)</span> column matrix, the cached version is around <span class="math inline">\(100\)</span> times faster (figure <a href="programming.html#fig:3-5">3.3</a>).</p>
@@ -810,8 +810,8 @@ two_cols[, <span class="dv">1</span>]            <span class="co"># an integer v
 Figure 3.3: Performance gains obtained from caching the standard deviation in a <span class="math inline">\(100\)</span> by <span class="math inline">\(1000\)</span> matrix.
 </p>
 </div>
-<p>A more advanced form of caching is to use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
-<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit regression line to data. The user can remove points and refit the line. An example function would be</p>
+<p>A more advanced form of caching is to use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us to easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
+<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Argument indicates row to remove</span>
 plot_mpg =<span class="st"> </span>function(row_to_remove) {
   <span class="kw">data</span>(mpg, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)
@@ -838,7 +838,7 @@ plot_mpg =<span class="st"> </span>function(row_to_remove) {
 The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation"><span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span> for a detailed introduction.
 </p>
 </div>
-<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in <code>.GlobalEnv</code>. One of the environments associated with a function is known as the enclosing environment, that is, where was the function created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function closure</p>
+<p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in <code>.GlobalEnv</code>. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function closure</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># &lt;&lt;- assigns values to the parent environment</span>
 stop_watch =<span class="st"> </span>function() {
   start_time =<span class="st"> </span>stop_time =<span class="st"> </span><span class="ot">NULL</span>
@@ -859,7 +859,7 @@ watch =<span class="st"> </span><span class="kw">stop_watch</span>()</code></pre
 <h4>Exercise</h4>
 <ol style="list-style-type: decimal">
 <li>Write a stop-watch function <strong>without</strong> using function closures.</li>
-<li>Many stop-watches have the ability to measure not only your overall time but also you individual laps. Add a <code>lap()</code> function to the <code>stop_watch()</code> function that will record individual times, while still keeping track of the overall time.</li>
+<li>Many stop-watches have the ability to measure not only your overall time but also your individual laps. Add a <code>lap()</code> function to the <code>stop_watch()</code> function that will record individual times, while still keeping track of the overall time.</li>
 </ol>
 <div class="rmdnote">
 <p>
@@ -876,7 +876,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)
 <span class="co">#&gt; function (x, ...) </span>
 <span class="co">#&gt; UseMethod(&quot;mean&quot;)</span>
-<span class="co">#&gt; &lt;bytecode: 0x35cd908&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x3d570c0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -891,7 +891,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
     m =<span class="st"> </span>m +<span class="st"> </span>x[i] /<span class="st"> </span>n
   m
 }</code></pre></div>
-<p>This is clearly a bad function and we should just <code>mean()</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
+<p>This is clearly a bad function and we should just use the <code>mean()</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</code></pre></div>
 <p>Then we use the <code>microbenchmark()</code> function to compare the three variants</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate some data</span>
@@ -905,9 +905,9 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000<
 <span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></code></pre></div>
 <p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean()</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:3-4">3.4</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:3-4"></span>
-<img src="_main_files/figure-html/3-4-1.png" alt="Comparsion of mean functions." width="70%" />
+<img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
 <p class="caption">
-Figure 3.4: Comparsion of mean functions.
+Figure 3.4: Comparison of mean functions.
 </p>
 </div>
 </div>
@@ -920,10 +920,10 @@ Figure 3.4: Comparsion of mean functions.
 <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</code></pre></div>
 <p>Or if we want to avoid altering the <code>.Renviron</code> file, we can specify an additional argument</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </code></pre></div>
-<p>A final option to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
+<p>A final option is to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
 <div class="rmdtip">
 <p>
-We recommending setting the compile level to the maximum value of 3.
+We recommend setting the compile level to the maximum value of 3.
 </p>
 </div>
 <p>The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code speed gains will be small <span class="citation">(R Core Team <a href="#ref-team2016installation">2016</a>)</span>.</p>

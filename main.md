@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-11-30"
+date: "2016-12-01"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 222420 247283 416805 305720 611760 703470   100
-#>  cs_apply(x) 143407 172298 279548 186270 418964 498937   100
-#>    cumsum(x)    459    608   1752   1062   1908  22184   100
+#>    cs_for(x) 226030 253210 287778 293401 312736 394031   100
+#>  cs_apply(x) 140732 172044 190560 191898 206232 368891   100
+#>    cumsum(x)    552    754   1300   1028   1175  19001   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.256   0.048   3.307
+#>   3.000   0.028   3.026
 ```
 In contrast a more R-centric approach would be
 
@@ -1761,14 +1761,14 @@ the number of darts, i.e. the size of `N`, that is used
 
 When we create a function we often want the function to give efficient feedback on the
 current state. For example, are there missing arguments or has a numerical calculation
-failed. There are three main techniques of communicating with the user.
+failed. There are three main techniques for communicating with the user.
 
 ### Fatal errors: `stop()` {-}
 
 Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When
 `stop()` is called, there is no way for a function to continue. For instance, when we
 generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
-the number of observations to return less than $1$, an error is raised. When we need
+the number of observations to return is less than $1$, an error is raised. When we need
 to raise an error, we should do so as quickly as possible; otherwise it's a waste of
 resources. Hence, the first few lines of a function typically perform argument checking.
 
@@ -1958,13 +1958,13 @@ each object.
 The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
 each element of an object. For example, you can apply a function to each row or column of a matrix.
 A list of available functions is given in \@ref(tab:apply-family), with a short description. In
-general, the all apply functions have similar properties:
+general, all the apply functions have similar properties:
 
   * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
   * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is
   given as an argument.
 
-Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, 
+Using apply functions when possible, can lead to more succinct and idiomatic R code. In this section, 
 we will cover the three main functions, `apply()`, `lapply()`, and `sapply()`. Since the apply functions are covered in 
 most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources 
 at the end of this section.
@@ -1986,8 +1986,8 @@ Function   Description
 `rapply`   Recursively apply a function to a list                
 `tapply`   Apply a function over a ragged array                  
 
-The `apply()` function is used to apply a function to the each row or column of a matrix. In many data science
-problems, this is a common task. For example, to calculate the standard deviation of the row we have
+The `apply()` function is used to apply a function to each row or column of a matrix. In many data science
+problems, this is a common task. For example, to calculate the standard deviation of the rows we have
 
 ```r
 data("ex_mat", package="efficient")
@@ -2002,7 +2002,7 @@ So to calculate the column standard deviations, the second argument is changed t
 ```r
 col_med = apply(ex_mat, 2, sd)
 ```
-Additional arguments can be passed to the function that is to be applied to the data. For  example, 
+Additional arguments can be passed to the function that is to be applied to the data. For example, 
 to pass the `na.rm` argument to the `sd` function, we have
 
 ```r
@@ -2011,14 +2011,12 @@ row_sd = apply(ex_mat, 1, sd, na.rm = TRUE)
 The `apply()` function also works on higher dimensional arrays; a one dimensional array is a vector, 
 a two dimensional array is a matrix.
 
-The `lapply()` function is similar to `apply()`; the main differences are the input types are vectors or lists and the return type is
-a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply()` and `vapply()` are similar
-to `lapply()`, but the return type is not necessary a list.
+The `lapply()` function is similar to `apply()`; with the key difference being that the input type is a vector or list and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply()` and `vapply()` are similar to `lapply()`, but the return type is not necessary a list.
 
 ### Example: the movies data set
 
 The internet movie [database](http://imdb.com/) is a website that collects movie data supplied 
-by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon.
+by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon.
 The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
 
 
@@ -2061,7 +2059,7 @@ Rating a movie $7$ is also a popular choice (search the web for "most popular nu
 ### Type consistency
 
 When programming it is helpful if the return value from a function always takes the
-same form. Unfortunately, not all of base R functions follow this idiom. For example
+same form. Unfortunately, not all base R functions follow this idiom. For example
 the functions `sapply()` and `[.data.frame()` aren't type consistent
 
 ```r
@@ -2085,8 +2083,8 @@ most helpful.
   * Each function has a number of examples in the associated help page. You can directly 
   access the examples using the `example()` function, e.g. to run the `apply()` examples, use
   `example("apply")`.
-  * There is a very detailed Stackoverflow [answer](http://stackoverflow.com/q/3505701/203420)
-  description when, where and how to use each of the functions.
+  * There is a very detailed StackOverflow [answer](http://stackoverflow.com/q/3505701/203420)
+  which describes when, where and how to use each of the functions.
   * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/)
   giving an overview of the functions.
   * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes 
@@ -2103,7 +2101,7 @@ the `drop` argument.
 ## Caching variables
 
 A straightforward method for speeding up code is to calculate objects once and reuse
-the value when necessary. This could be as simple with replacing `sd(x)` in multiple
+the value when necessary. This could be as simple as replacing `sd(x)` in multiple
 function calls with the object `sd_x` that is defined once and reused. For example, 
 suppose we wish to normalise each column of a matrix. However, instead of using the
 standard deviation of each column, we will use the standard deviation of the 
@@ -2114,7 +2112,7 @@ entire data set
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient since the value of `sd(x)` is constant, recalculating the standard
+This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard
 deviation for every column is unnecessary. Instead we should evaluate once and
 store the result
 
@@ -2134,14 +2132,14 @@ version is around $100$ times faster (figure \@ref(fig:3-5)).
 A more advanced form of caching is to use the **memoise** package. If a function is
 called multiple times with the same input, it may be possible to speed things up by
 keeping a cache of known answers that it can retrieve. The **memoise** package allows
-us easily store the value of function call and returns the cached result when the
+us to easily store the value of function call and returns the cached result when the
 function is called again with the same arguments. This package trades off memory
 versus speed, since the memoised function stores all previous inputs and outputs. To
 cache a function, we simply pass the function to the **memoise** function.
 
 The classic memoise example is the factorial function. Another example is to limit use
 to a web resource. For example, suppose we are developing a shiny (an interactive
-graphic) application where the user can fit regression line to data. The user can
+graphic) application where the user can fit a regression line to data. The user can
 remove points and refit the line. An example function would be
 
 
@@ -2182,7 +2180,7 @@ object that contains functions bound to the environment the closure was created 
 Technically all functions in R have this property, but we use the term function
 closure to denote functions where the environment is not in `.GlobalEnv`. One of the
 environments associated with a function is known as the enclosing environment, that
-is, where was the function created. This allows us to store values between function calls.
+is, where the function was created. This allows us to store values between function calls.
 Suppose we want to create a stop-watch type function. This is easily achieved with a function 
 closure
 
@@ -2219,7 +2217,7 @@ programming tools for writing concise code.
 #### Exercise {-}
 
 1. Write a stop-watch function __without__ using function closures.
-1. Many stop-watches have the ability to measure not only your overall time but also you
+1. Many stop-watches have the ability to measure not only your overall time but also your
 individual laps. Add a `lap()` function to the `stop_watch()` function that will record
 individual times, while still keeping track of the overall time.
 
@@ -2244,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x35cd908>
+#> <bytecode: 0x3d570c0>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2272,7 +2270,7 @@ mean_r = function(x) {
   m
 }
 ```
-This is clearly a bad function and we should just `mean()` function, but it's a useful
+This is clearly a bad function and we should just use the `mean()` function, but it's a useful
 comparison. Compiling the function is straightforward
 
 ```r
@@ -2297,8 +2295,8 @@ course the native `mean()` function is faster, but compiling does make a signifi
 difference (figure \@ref(fig:3-4)).
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/3-4-1.png" alt="Comparsion of mean functions." width="70%" />
-<p class="caption">(\#fig:3-4)Comparsion of mean functions.</p>
+<img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
+<p class="caption">(\#fig:3-4)Comparison of mean functions.</p>
 </div>
 
 ### Compiling code
@@ -2329,13 +2327,13 @@ argument
 install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile") 
 ```
 
-A final option to use just-in-time (JIT) compilation. The `enableJIT()` function
+A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function
 disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
 different levels of optimisation. JIT can also be enabled by setting the environment
 variable `R_ENABLE_JIT`, to one of these values.
 
 <div class="rmdtip">
-<p>We recommending setting the compile level to the maximum value of 3.</p>
+<p>We recommend setting the compile level to the maximum value of 3.</p>
 </div>
 
 The impact of compiling on install will vary from package to package: for packages
@@ -2941,9 +2939,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.4 10.5 10.7   10.5 10.9 11.2     5
-#>  without_select 18.9 19.0 19.2   19.3 19.3 19.5     5
+#>            expr   min    lq mean median   uq  max neval
+#>     with_select  9.43  9.44 10.2   10.2 10.6 11.1     5
+#>  without_select 17.08 17.53 18.8   18.0 18.1 23.3     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4403,13 +4401,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.372   0.612   4.984
+#>    4.37    0.78    5.15
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.212   0.104   0.315
+#>   0.224   0.056   0.281
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4422,7 +4420,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    1.04    0.38    1.42
+#>   0.804   0.292   1.098
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4560,9 +4558,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min     lq   mean  median     uq  max neval
-#>  ex_mat[1, ] 0.00345 0.0066 0.0756 0.00998 0.0137 6.43   100
-#>   ex_df[1, ] 1.00446 1.5945 1.8079 1.66796 1.8178 6.97   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00251 0.00398 0.0604 0.00654 0.00709 5.48   100
+#>   ex_df[1, ] 0.78966 0.89334 1.0755 0.92043 0.96727 6.40   100
 ```
 
 <div class="rmdtip">
@@ -4977,7 +4975,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b6cb0d36220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b1217205220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
