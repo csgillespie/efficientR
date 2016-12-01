@@ -262,14 +262,14 @@ the number of darts, i.e. the size of `N`, that is used
 
 When we create a function we often want the function to give efficient feedback on the
 current state. For example, are there missing arguments or has a numerical calculation
-failed. There are three main techniques of communicating with the user.
+failed. There are three main techniques for communicating with the user.
 
 ### Fatal errors: `stop()` {-}
 
 Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When
 `stop()` is called, there is no way for a function to continue. For instance, when we
 generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
-the number of observations to return less than $1$, an error is raised. When we need
+the number of observations to return is less than $1$, an error is raised. When we need
 to raise an error, we should do so as quickly as possible; otherwise it's a waste of
 resources. Hence, the first few lines of a function typically perform argument checking.
 
@@ -454,13 +454,13 @@ pryr::object_size(fac)
 The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
 each element of an object. For example, you can apply a function to each row or column of a matrix.
 A list of available functions is given in \@ref(tab:apply-family), with a short description. In
-general, the all apply functions have similar properties:
+general, all the apply functions have similar properties:
 
   * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
   * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is
   given as an argument.
 
-Using apply functions when possible, can lead to shorter, more succinct idiomatic R code. In this section, 
+Using apply functions when possible, can lead to more succinct and idiomatic R code. In this section, 
 we will cover the three main functions, `apply()`, `lapply()`, and `sapply()`. Since the apply functions are covered in 
 most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources 
 at the end of this section.
@@ -485,8 +485,8 @@ dd = tibble::frame_data(
 knitr::kable(dd, caption="The apply family of functions from base R.", row.names = FALSE)
 ```
 
-The `apply()` function is used to apply a function to the each row or column of a matrix. In many data science
-problems, this is a common task. For example, to calculate the standard deviation of the row we have
+The `apply()` function is used to apply a function to each row or column of a matrix. In many data science
+problems, this is a common task. For example, to calculate the standard deviation of the rows we have
 ```{r, results="hide"}
 data("ex_mat", package="efficient")
 # MARGIN=1: corresponds to rows
@@ -499,7 +499,7 @@ So to calculate the column standard deviations, the second argument is changed t
 ```{r, results="hide"}
 col_med = apply(ex_mat, 2, sd)
 ```
-Additional arguments can be passed to the function that is to be applied to the data. For  example, 
+Additional arguments can be passed to the function that is to be applied to the data. For example, 
 to pass the `na.rm` argument to the `sd` function, we have
 ```{r}
 row_sd = apply(ex_mat, 1, sd, na.rm = TRUE)
@@ -507,14 +507,12 @@ row_sd = apply(ex_mat, 1, sd, na.rm = TRUE)
 The `apply()` function also works on higher dimensional arrays; a one dimensional array is a vector, 
 a two dimensional array is a matrix.
 
-The `lapply()` function is similar to `apply()`; the main differences are the input types are vectors or lists and the return type is
-a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply()` and `vapply()` are similar
-to `lapply()`, but the return type is not necessary a list.
+The `lapply()` function is similar to `apply()`; with the key difference being that the input type is a vector or list and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply()` and `vapply()` are similar to `lapply()`, but the return type is not necessary a list.
 
 ### Example: the movies data set
 
 The internet movie [database](http://imdb.com/) is a website that collects movie data supplied 
-by studios and fans. It is one of the largest movies databases on the web and is maintain by Amazon.
+by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon.
 The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
 
 ```{r}
@@ -545,7 +543,7 @@ Rating a movie $7$ is also a popular choice (search the web for "most popular nu
 ### Type consistency
 
 When programming it is helpful if the return value from a function always takes the
-same form. Unfortunately, not all of base R functions follow this idiom. For example
+same form. Unfortunately, not all base R functions follow this idiom. For example
 the functions `sapply()` and `[.data.frame()` aren't type consistent
 ```{r, results="hide"}
 two_cols = data.frame(x = 1:5, y = letters[1:5])
@@ -568,8 +566,8 @@ most helpful.
   * Each function has a number of examples in the associated help page. You can directly 
   access the examples using the `example()` function, e.g. to run the `apply()` examples, use
   `example("apply")`.
-  * There is a very detailed Stackoverflow [answer](http://stackoverflow.com/q/3505701/203420)
-  description when, where and how to use each of the functions.
+  * There is a very detailed StackOverflow [answer](http://stackoverflow.com/q/3505701/203420)
+  which describes when, where and how to use each of the functions.
   * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/)
   giving an overview of the functions.
   * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes 
@@ -586,7 +584,7 @@ the `drop` argument.
 ## Caching variables
 
 A straightforward method for speeding up code is to calculate objects once and reuse
-the value when necessary. This could be as simple with replacing `sd(x)` in multiple
+the value when necessary. This could be as simple as replacing `sd(x)` in multiple
 function calls with the object `sd_x` that is defined once and reused. For example, 
 suppose we wish to normalise each column of a matrix. However, instead of using the
 standard deviation of each column, we will use the standard deviation of the 
@@ -597,7 +595,7 @@ x = matrix(rnorm(100), ncol=10)
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient since the value of `sd(x)` is constant, recalculating the standard
+This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard
 deviation for every column is unnecessary. Instead we should evaluate once and
 store the result
 ```{r, results="hide"}
@@ -615,14 +613,14 @@ local(source("code/03-programming_f5.R", local=TRUE))
 A more advanced form of caching is to use the **memoise** package. If a function is
 called multiple times with the same input, it may be possible to speed things up by
 keeping a cache of known answers that it can retrieve. The **memoise** package allows
-us easily store the value of function call and returns the cached result when the
+us to easily store the value of function call and returns the cached result when the
 function is called again with the same arguments. This package trades off memory
 versus speed, since the memoised function stores all previous inputs and outputs. To
 cache a function, we simply pass the function to the **memoise** function.
 
 The classic memoise example is the factorial function. Another example is to limit use
 to a web resource. For example, suppose we are developing a shiny (an interactive
-graphic) application where the user can fit regression line to data. The user can
+graphic) application where the user can fit a regression line to data. The user can
 remove points and refit the line. An example function would be
 
 ```{r}
@@ -662,7 +660,7 @@ object that contains functions bound to the environment the closure was created 
 Technically all functions in R have this property, but we use the term function
 closure to denote functions where the environment is not in `.GlobalEnv`. One of the
 environments associated with a function is known as the enclosing environment, that
-is, where was the function created. This allows us to store values between function calls.
+is, where the function was created. This allows us to store values between function calls.
 Suppose we want to create a stop-watch type function. This is easily achieved with a function 
 closure
 
@@ -696,7 +694,7 @@ programming tools for writing concise code.
 #### Exercise {-}
 
 1. Write a stop-watch function __without__ using function closures.
-1. Many stop-watches have the ability to measure not only your overall time but also you
+1. Many stop-watches have the ability to measure not only your overall time but also your
 individual laps. Add a `lap()` function to the `stop_watch()` function that will record
 individual times, while still keeping track of the overall time.
 
@@ -746,7 +744,7 @@ mean_r = function(x) {
   m
 }
 ```
-This is clearly a bad function and we should just `mean()` function, but it's a useful
+This is clearly a bad function and we should just use the `mean()` function, but it's a useful
 comparison. Compiling the function is straightforward
 ```{r}
 cmp_mean_r = cmpfun(mean_r)
@@ -768,7 +766,7 @@ The compiled function is around seven times faster than the uncompiled function.
 course the native `mean()` function is faster, but compiling does make a significant
 difference (figure \@ref(fig:3-4)).
 
-```{r 3-4, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparsion of mean functions.", eval=TRUE, fig.align="center", out.width="70%"}
+```{r 3-4, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparison of mean functions.", eval=TRUE, fig.align="center", out.width="70%"}
 local(source("code/03-programming_f4.R", local=TRUE))
 ```
 
@@ -798,13 +796,13 @@ argument
 install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile") 
 ```
 
-A final option to use just-in-time (JIT) compilation. The `enableJIT()` function
+A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function
 disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
 different levels of optimisation. JIT can also be enabled by setting the environment
 variable `R_ENABLE_JIT`, to one of these values.
 
 ```{block, type="rmdtip"}
-We recommending setting the compile level to the maximum value of 3.
+We recommend setting the compile level to the maximum value of 3.
 ```
 
 The impact of compiling on install will vary from package to package: for packages
