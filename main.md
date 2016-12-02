@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-01"
+date: "2016-12-02"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 226030 253210 287778 293401 312736 394031   100
-#>  cs_apply(x) 140732 172044 190560 191898 206232 368891   100
-#>    cumsum(x)    552    754   1300   1028   1175  19001   100
+#>    cs_for(x) 224152 252212 296069 296212 328071 436342   100
+#>  cs_apply(x) 133960 173938 195478 193768 215962 322789   100
+#>    cumsum(x)    478    658   1348   1018   1208  16757   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.000   0.028   3.026
+#>   2.768   0.016   2.785
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3d570c0>
+#> <bytecode: 0x340e848>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2366,7 +2366,7 @@ industrial feel: "The sequence of industrial, administrative, or other processes
 through which a piece of work passes from initiation to completion." ] To some extent
 workflow is about personal preferences. Everyone's mind works differently so the most
 appropriate workflow varies from person to person and from one project to the next.
-Project management practices will also vary depending the scale and type of the
+Project management practices will also vary depending on the scale and type of the
 project: it's a big topic but can usefully be condensed in 5 top tips.
 
 ### Prerequisites {-}
@@ -2397,7 +2397,7 @@ library("DiagrammeR")
 
 Appropriate project management structures and workflow depend on the *type* of project you are undertaking. The typology below demonstrates the links between project type and project management requirements.^[Thanks to Richard Cotton for suggesting this typology.]
 
-- *Data analysis*.  Here you are trying to explore datasets to discover something interesting/answer some questions.  The emphasis is on speed of manipulating your data to generate interest results.  Formality is less important in this type of project.  Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project's success as how they interact with each other.
+- *Data analysis*.  Here you are trying to explore datasets to discover something interesting/answer some questions.  The emphasis is on speed of manipulating your data to generate interesting results.  Formality is less important in this type of project.  Sometimes this analysis project may only be part of a larger project (the data may have to be created in a lab, for example). How the data analysts interact with the rest of the team may be as important for the project's success as how they interact with each other.
 - *Package creation*.  Here you want to create code that can be reused across projects, possibly by people whose use case you don't know (if you make it publicly available).  The emphasis in this case will be on clarity of user interface and documentation, meaning style and code review are important.  Robustness and testing are important in this type of project too.
 - *Reporting and publishing*.  Here you are writing a report or journal paper or book.  The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.
 - *Software applications*.  This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software.  Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.
@@ -2421,11 +2421,11 @@ It builds on the concept of an R/RStudio *project*, introduced in Chapter \@ref(
 ## Project planning and management
 
 Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: "smart preparation minimizes work" [@berkun2005art].
-Although search engines are useful for identifying the appropriate strategy, trail-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly *inefficient*.
+Although search engines are useful for identifying the appropriate strategy, trial-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly *inefficient*.
 
-Strategic thinking especially important during a project's inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project's entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: *technical debt*. This has been defined as "not quite  right  code  which  we  postpone making it right" [@kruchten2012technical]. Dozens of academic papers have been written on the subject but, from the perspective of *beginning* a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring.
+Strategic thinking is especially important during a project's inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project's entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: *technical debt*. This has been defined as "not quite  right  code  which  we  postpone making it right" [@kruchten2012technical]. Dozens of academic papers have been written on the subject but, from the perspective of *beginning* a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring.
 
-To minimise technical debt at the outset, the best place to start may be with a pen and paper and an open mind. Sketching out your ideas and deciding precisely what you want to do, free from the constraints of a particular piece of technology, can be rewarding exercise before you begin.
+To minimise technical debt at the outset, the best place to start may be with a pen and paper and an open mind. Sketching out your ideas and deciding precisely what you want to do, free from the constraints of a particular piece of technology, can be a rewarding exercise before you begin.
 Project planning and 'visioning' can be a creative process not always well-suited to the linear logic of computing, despite recent advances in project management software, some of which are outlined in the bullet points below.
 
 Scale can loosely be defined as the number of people working on a project. It should be considered at the outset because the importance of project management increases exponentially with the number of people involved. 
@@ -2463,11 +2463,11 @@ Breaking a large project into smaller chunks is highly recommended, making huge,
 <p class="caption">(\#fig:4-1)Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK2000.</p>
 </div>
 
-The tasks that a project should be split into will depend the nature of the work and the phases illustrated in Figure \@ref(fig:4-1) represent a rough starting point, not a template and the 'programming' phase will usually need to be split into at least 'data tidying', 'processing', and 'visualisation'.
+The tasks that a project should be split into will depend on the nature of the work and the phases illustrated in Figure \@ref(fig:4-1) represent a rough starting point, not a template and the 'programming' phase will usually need to be split into at least 'data tidying', 'processing', and 'visualisation'.
 
 ### Making your workflow SMART {#smart}
 
-A more rigorous (but potentially onerous) way to project plan is to divide the work into a series of objectives and tracking their progress throughout the project's duration.
+A more rigorous (but potentially onerous) way to project plan is to divide the work into a series of objectives and track their progress throughout the project's duration.
 One way to check if an objective is appropriate for action and review is by using the SMART criteria.
 
 - Specific: is the objective clearly defined and self-contained?
@@ -2479,7 +2479,7 @@ One way to check if an objective is appropriate for action and review is by usin
 If the answer to each of these questions is 'yes', the task is likely to be suitable to include in the project's plan.
 Note that this does not mean all project plans need to be uniform.
 A project plan can take many forms, including a short document, a Gantt chart
-(see Figure \@ref(fig:4-2) or simply a clear vision of the project's steps in mind.
+(see Figure \@ref(fig:4-2)) or simply a clear vision of the project's steps in mind.
 
 <div class="figure" style="text-align: center">
 <img src="figures/f4_2_DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development." width="70%" />
@@ -2525,7 +2525,7 @@ for more detailed documentation.
 
 1. Run the [code chunk](#DiagrammeR) at the end of this section to see the output.
 
-1. Bonus exercise: modify this code to create a basic Gantt chart of an R project you are working on.
+1. Bonus exercise: modify this code to create a basic Gantt chart for an R project you are working on.
 
 ## Package selection
 
@@ -2535,7 +2535,7 @@ When a more appropriate alternative is available this waste can be prevented by 
 There are many poor packages on CRAN and much duplication so it's easy to go wrong.
 Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
 
-Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don't have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively that the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is *packaged* in functions behind the scenes.
+Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don't have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively than the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is *packaged* in functions behind the scenes.
 
 Let's take an example. Imagine for a project you would like to find the distance between sets of points (origins, `o` and destinations, `d`) on the Earth's surface. Background reading shows that a good approximation of 'great circle' distance, which accounts for the curvature of the Earth, can be made by using the Haversine formula, which you duly implement, involving much trial and error:
 
@@ -2578,7 +2578,7 @@ The difference between the hard-coded method and the package method is striking.
 
 ### Searching for R packages
 
-Building on the example above, how can on find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere** package in the second result (a [hardcoded implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
+Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere** package in the second result (a [hardcoded implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
 
 Beyond Google, there are also several sites for searching for packages and functions.
 [rdocumentation.org](http://www.rdocumentation.org/) provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for `haversine` in the Description field yielded 10 results from 8 packages: R has at least *8* implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:
@@ -2597,7 +2597,7 @@ An additional factor has been the growth in collaboration and peer review in pac
 
 Performance, stability and ease of use should be high on the priority list when choosing which package to use.
 Another more subtle factor is that some packages work better together than others.
-The 'R package ecosystem' is composed of interrelated package.
+The 'R package ecosystem' is composed of interrelated packages.
 Knowing something of these inter-dependencies can help select a 'package suite' when the project demands a number of diverse yet interrelated programming tasks.
 The 'tidyverse', for example, contains many interrelated packages that work well together, such as **readr**, **tidyr**, and **dplyr**.^[An excellent overview of the 'tidyverse', formerly now as the 'hadleyverse' and its benefits is available from [barryrowlingson.github.io/hadleyverse](https://barryrowlingson.github.io/hadleyverse).]
 These may be used together to read-in, tidy and then process the data, as outlined in the subsequent sections.
@@ -2611,11 +2611,11 @@ However, the following criteria should provide a good indication of whether a pa
 The most recent of these at the time of writing was **ggplot2** 2.1.0:
 reaching 1 or 2 in the first digit of package versions is usually an indication from the package author that the package has reached a high level of stability.
 
-- **Is it actively developed?** It is a good sign if packages are frequently updated. A frequently updated package will have its latest version 'published' recently on CRAN. The CRAN package page for **ggplot2**, for example, said `Published: 2016-03-01`, less than a six months old at the time of writing.
+- **Is it actively developed?** It is a good sign if packages are frequently updated. A frequently updated package will have its latest version 'published' recently on CRAN. The CRAN package page for **ggplot2**, for example, said `Published: 2016-03-01`, less than six months old at the time of writing.
 
 - **Is it well documented?** This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. `?ggplot`), try the examples (e.g. `example(ggplot)`) and search for package vignettes (e.g. `vignette(package = "ggplot2")`).
 
-- **Is it well used?** This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google's. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely visible GitHub. At the time of writing a search for [**ggplot2**](https://github.com/search?utf8=%E2%9C%93&q=ggplot2) on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
+- **Is it well used?** This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google's. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely be visible on GitHub. At the time of writing a search for [**ggplot2**](https://github.com/search?utf8=%E2%9C%93&q=ggplot2) on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
 Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, **ggplot2** scores extremely well in this measure, with over 5000 hits).
 
 An article in [simplystats](http://simplystatistics.org/2015/11/06/how-i-decide-when-to-trust-an-r-package/) discusses this issue with reference to the proliferation of GitHub packages (those that are not available on CRAN). In this context well-regarded and experienced package creators and 'indirect data' such as amount of GitHub activity are also highlighted as reasons to trust a package.
@@ -2641,7 +2641,7 @@ The final stage in a typical project workflow is publication. Although it's the 
 
 Whether the final output is a report containing graphics produced by R, an online platform for exploring results or well-documented code that colleagues can use to improve their workflow, starting it early is a good plan. In every case the programming principles of reproducibility, modularity and DRY (don't repeat yourself) will make your publications faster to write, easier to maintain and more useful to others.
 
-Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. There is a wealth of material on each of these online. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.
+Instead of attempting a comprehensive treatment of the topic we will touch briefly on a couple of ways of documenting your work in R: dynamic reports and R packages. A wealth of online resources exists on each of these; to avoid duplication of effort the focus is on documentation from a workflow efficiency perspective.
 
 ### Dynamic documents with R Markdown
 
@@ -2667,7 +2667,7 @@ efficient unless you can quickly redo it. Documenting your code inside dynamic
 documents in this way ensures that analysis can be quickly re-run.
 
 <div class="rmdnote">
-<p>This note briefly explains R Markdown for the un-initiated. R markdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. R Markdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. R Markdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML, LaTeX. This book was written in R Markdown.</p>
+<p>This note briefly explains R Markdown for the un-initiated. R markdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. R Markdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. R Markdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML and LaTeX. This book was written in R Markdown.</p>
 </div>
 
 In an R Markdown document, results are generated *on the fly* by including 'code
@@ -2696,7 +2696,7 @@ modify code chunks. To create a chunk while editing a `.Rmd` file, for example, 
 enter `Ctrl/Cmd+Alt+I` on Windows or Linux or select the option from the Code drop down
 menu.
 
-Once your document has compiled it should appear on your screen into the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
+Once your document has compiled it should appear on your screen in the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the [rpubs](https://rpubs.com) website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).
 Assuming you have an RStudio account, clicking the 'Publish' button at the top of the html output window will instantly publish your work online, with a minimum of effort, enabling fast and efficient communication with many collaborators and the public.
 
@@ -2710,7 +2710,7 @@ Furthermore dynamic documents written in R Markdown can compile into a range of 
 
 A strict approach to project management and workflow is treating your projects as R packages. This approach has advantages and limitations. The major risk with treating a project as a package is that the package is quite a strict way of organising work. Packages are suited for code intensive projects where code documentation is important. An intermediate approach is to use a 'dummy package' that includes a `DESCRIPTION` file in the root directory telling users of the project which packages must be installed for the code to work. This book is based on a dummy package so that we can easily keep the dependencies up-to-date (see the book's [DESCRIPTION](https://github.com/csgillespie/efficientR/blob/master/DESCRIPTION) file online for an insight into how this works).
 
-Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the **devtools** package, which is highly recommended for anyone attempting to write an R package.
+Creating packages is good practice in terms of learning to correctly document your code, store example data, and even (via vignettes) ensure reproducibility. But it can take a lot of extra time so should not be taken lightly. This approach to R workflow is appropriate for managing complex projects which repeatedly use the same routines which can be converted into functions. Creating project packages can provide a foundation for generalising your code for use by others, e.g. via publication on GitHub or CRAN. And R package development has been made much easier in recent years by the development of the **devtools** package, which is highly recommended for anyone attempting to write an R package.
 
 The number of essential elements of R packages differentiate them from other R projects. Three of these are outlined below from an efficiency perspective.
 
@@ -2939,9 +2939,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq mean median   uq  max neval
-#>     with_select  9.43  9.44 10.2   10.2 10.6 11.1     5
-#>  without_select 17.08 17.53 18.8   18.0 18.1 23.3     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.06  9.06  9.27    9.1  9.24  9.87     5
+#>  without_select 13.89 14.22 15.60   14.7 15.30 19.91     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4401,13 +4401,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    4.37    0.78    5.15
+#>   3.996   0.604   4.611
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.224   0.056   0.281
+#>   0.180   0.084   0.264
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4420,7 +4420,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.804   0.292   1.098
+#>   0.772   0.276   1.047
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4558,9 +4558,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00251 0.00398 0.0604 0.00654 0.00709 5.48   100
-#>   ex_df[1, ] 0.78966 0.89334 1.0755 0.92043 0.96727 6.40   100
+#>         expr    min      lq   mean median      uq  max neval
+#>  ex_mat[1, ] 0.0024 0.00376 0.0581 0.0064 0.00697 5.24   100
+#>   ex_df[1, ] 0.7703 0.86787 1.0411 0.8873 0.92864 6.46   100
 ```
 
 <div class="rmdtip">
@@ -4975,7 +4975,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b1217205220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2adbe599e220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
