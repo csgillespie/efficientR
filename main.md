@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 213972 239970 278806 282983 309384 359417   100
-#>  cs_apply(x) 163039 180165 199373 193718 219794 299856   100
-#>    cumsum(x)    464    555   1124    926   1102  14637   100
+#>    cs_for(x) 222820 238947 288272 302470 317946 388593   100
+#>  cs_apply(x) 138037 166490 188892 193088 203140 357587   100
+#>    cumsum(x)    559    767   1338   1006   1236  17381   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.94    0.10    3.06
+#>   2.848   0.076   2.922
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3997d58>
+#> <bytecode: 0x399a570>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.12  9.23  9.54   9.26  9.7 10.4     5
-#>  without_select 13.45 13.50 15.09  15.35 15.8 17.3     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  8.94  8.96  9.18   9.08  9.35  9.55     5
+#>  without_select 14.77 14.97 15.39  15.23 15.40 16.58     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3153,7 +3153,7 @@ This metaphor is not accidental. Carpentry is the process of taking rough pieces
 
 Data processing is a critical stage in any project involving any datasets from external sources, i.e. most real world applications. In the same way that *technical debt*, discussed in Chapter \@ref(input-output), can cripple your workflow, working with messy data can lead to project management hell.
 
-Fortunately, done efficiently, at the outset of your project (rather than half way through, when it may be too late), and using appropriate tools, this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of book. In it we cover the following topics:
+Fortunately, done efficiently, at the outset of your project (rather than half way through, when it may be too late), and using appropriate tools, this data processing stage can be highly rewarding. More importantly from an efficiency perspective, working with clean data will be beneficial for every subsequent stage of your R project. So, for data intensive applications, this could be the most important chapter of the book. In it we cover the following topics:
 
 - Tidying data with **tidyr**
 - Processing data with **dplyr**
@@ -3181,7 +3181,7 @@ library("data.table")
 1. Time spent preparing your data at the beginning can save hours of frustration in the long run.
 1. 'Tidy data' provides a concept for organising data and the package **tidyr** provides some functions for this work.
 1. The `data_frame` class defined by the **tibble** package makes datasets efficient to print and easy to work with.
-1. **dplyr** provides fast and intuitive data processing functions; **data.table** has unmatched speed for some data processing application.
+1. **dplyr** provides fast and intuitive data processing functions; **data.table** has unmatched speed for some data processing applications.
 1. The ` %>%` 'pipe' operator can help clarify complex data processing workflows.
 
 ## Efficient data frames with tibble
@@ -3209,7 +3209,7 @@ The example above illustrates the main differences between the **tibble** and ba
 
  - When printed, the tibble diff reports the class of each variable. `data.frame` objects do not. 
  - Character vectors are not coerced into factors when they are incorporated into a `tbl_df`, as can be seen by the `<chr>` heading between the variable name and the second column. By contrast, `data.frame()` coerces characters into factors which can cause problems further down the line.
- - When printing a tibble diff to screen, only the first ten rows are displayed. The number columns printed depends on the window size.
+ - When printing a tibble diff to screen, only the first ten rows are displayed. The number of columns printed depends on the window size.
 
 Other differences can be found in the associated help page - `help("tibble")`.
 
@@ -3260,7 +3260,7 @@ They have different dimensions, but they contain precisely the same information.
 Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
 According to the concept of 'tidy data', the long form is correct.
 Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-Because R is a vector-based language, tidy data also has efficiency advantaged: it's often faster to operate on few long columns than many short ones.
+Because R is a vector-based language, tidy data also has efficiency advantages: it's often faster to operate on few long columns than many short ones.
 Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data.
 Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be
 able to transfer between wide (or otherwise 'untidy') and tidy formats.
@@ -3303,10 +3303,10 @@ pewt[c(1:3, 50),]
 The above code demonstrates the three arguments that `gather()` requires:
 
 1. `data`, a data frame in which column names will become row values.
-1. `key`, the name of the categorical variable into which the column names in the original datasets are converted .
+1. `key`, the name of the categorical variable into which the column names in the original datasets are converted.
 1. `value`, the name of cell value columns.
 
-As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this columns are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
+As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this column are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
 
 
 ```r
@@ -3347,7 +3347,7 @@ Buddhist   $20--30k       30
 
 ### Split joint variables with `separate()`
 
-Splitting means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-15` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the `separate()` function, as illustrated in the Tables \@ref(tab:to-separate) and \@ref(tab:separated) and in the code chunk below. See `?separate` for more information on this function. 
+Splitting means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. `m0-10` and `f0-10` to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the `separate()` function, as illustrated in the Tables \@ref(tab:to-separate) and \@ref(tab:separated) and in the code chunk below. See `?separate` for more information on this function. 
 
 
 ```r
@@ -3391,7 +3391,7 @@ Usually it is more efficient to use the non-standard evaluation version of varia
 
 Regular expressions (commonly known as regex) is a language for describing and manipulating text strings. There are books on the subject, and several good tutorials on regex in R [e.g. @sanchez_handling_2013], so we'll just scratch the surface of the topic, and provide a taster of what is possible. Regex is a deep topic. However, knowing the basics can save a huge amount of time from a data tidying perspective, by automating the cleaning of messy strings.
 
-In this section we teach both **stringr** and base R ways of doing pattern matching. The former provides easy to remember function names and consistency. The latter is useful to know as you'll find lots of base R regex code in other people code as **stringr** is relatively new and not installed by default. The foundational regex operation is to detect whether or not a particular text string exists in an element or not which is done with `grepl()` and `str_detect()` in base R and **stringr** respectively: 
+In this section we teach both **stringr** and base R ways of doing pattern matching. The former provides easy to remember function names and consistency. The latter is useful to know as you'll find lots of base R regex code in other peoples code as **stringr** is relatively new and not installed by default. The foundational regex operation is to detect whether or not a particular text string exists in an element or not which is done with `grepl()` and `str_detect()` in base R and **stringr** respectively: 
 
 
 ```r
@@ -3408,7 +3408,7 @@ str_detect(string = x, pattern = "9")
 <p>Note: <strong>stringr</strong> does not include a direct replacement for <code>grep()</code>. You can use <code>which(str_detect())</code> instead.</p>
 </div>
 
-Notice that `str_detect()` begins with `str_`. This is a common feature of **stringr** functions: they all do. This can be efficient because if you want to do some regex work, you just need to type `str_` and then hit Tab to see a list of all the options. The various base R regex function names, by contrast, are to remember, including `regmatches()`, `strsplit()` and `gsub()`. The **stringr** equivalents have more intuitive names that relate to the intention of the functions: `str_match_all()`, `str_split()` and `str_replace_all()`, respectively.
+Notice that `str_detect()` begins with `str_`. This is a common feature of **stringr** functions: they all do. This can be efficient because if you want to do some regex work, you just need to type `str_` and then hit Tab to see a list of all the options. The various base R regex function names, by contrast, are harder to remember, including `regmatches()`, `strsplit()` and `gsub()`. The **stringr** equivalents have more intuitive names that relate to the intention of the functions: `str_match_all()`, `str_split()` and `str_replace_all()`, respectively.
 
 There is much else to say on the topic but rather than repeat what has been said elsewhere, we feel it is more efficient to direct the interested reader towards existing excellent resources for learning regex in R. We recommend reading, in order:
 
@@ -3480,13 +3480,13 @@ str_extract(strings, pattern = "[A-z]+")
 
 After tidying your data, the next stage is generally data processing. This includes the creation of new data, for example a new column that is some function of existing columns, or data analysis, the process of asking directed questions of the data and exporting the results in a user-readable form.
 
-Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data frame pliers'. **dplyr** has a number of advantages over base R and **data.table** approaches to data processing:
+Following the advice in Section \@ref(package-selection), we have carefully selected an appropriate package for these tasks: **dplyr**, which roughly means 'data frame pliers'. **dplyr** has a number of advantages over the base R and **data.table** approaches to data processing:
 
 - **dplyr** is fast to run (due to its C++ backend) and intuitive to type
 - **dplyr** works well with tidy data, as described above
 - **dplyr** works well with databases, providing efficiency gains on large datasets
 
-Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning)). It has small number of intuitively named functions, or 'verbs'. These were partly inspired by SQL, one of the longest established languages for data analysis, which combines multiple simple functions (such as `SELECT` and `WHERE`, roughly analogous to `dplyr::select()` and `dplyr::filter()`) to create powerful analysis workflows. Likewise, **dplyr** functions were designed to be used together to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
+Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning)). It has a small number of intuitively named functions, or 'verbs'. These were partly inspired by SQL, one of the longest established languages for data analysis, which combines multiple simple functions (such as `SELECT` and `WHERE`, roughly analogous to `dplyr::select()` and `dplyr::filter()`) to create powerful analysis workflows. Likewise, **dplyr** functions were designed to be used together to solve a wide range of data processing challenges (see Table \@ref(tab:verbs)).
 
 
 Table: (\#tab:verbs)dplyr verb functions.
@@ -3677,12 +3677,12 @@ Often the best way to learn is to try and break something, so try running the ab
 By way of explanation, this is what happened:
 
 1. Only the columns `Year` and `gini` were selected, using `select()`.
-1. A new variable, `decade` was created, only the decade figures (e.g. 1989 becomes 1980).
+1. A new variable, `decade` was created, to show only the decade figures (e.g. 1989 becomes 1980).
 1. This new variable was used to group rows in the data frame with the same decade.
 1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
 
-Let's ask another question to see how **dplyr** chaining workflow can be used to
-answer questions interactively: What the 5 most unequal
+Let's ask another question to see how the **dplyr** chaining workflow can be used to
+answer questions interactively: What are the 5 most unequal
 years for countries containing the letter g?
 Here's how chains can help organise the analysis needed to answer this question
 step-by-step:
@@ -3772,7 +3772,7 @@ wb_ineq %>%
 
 Explain in your own words what changes each time.
 
-2. Use chained **dplyr** functions to answer the following question: In which year did countries without and 'a' in their name have the lowest level of inequality?
+2. Use chained **dplyr** functions to answer the following question: In which year did countries without an 'a' in their name have the lowest level of inequality?
 
 ### Data aggregation
 
@@ -3825,7 +3825,7 @@ group_by(ghg_ems, Country) %>%
 ```
 
 <div class="rmdnote">
-<p>The example above relates to a wider programming: how much work should one function do? The work could have been done with a single <code>aggregate()</code> call. However, the <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should &quot;do one thing well&quot;, which is how <strong>dplyr</strong>'s functions were designed. Shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing.</p>
+<p>The example above relates to a wider programming issue: how much work should one function do? The work could have been done with a single <code>aggregate()</code> call. However, the <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should &quot;do one thing well&quot;, which is how <strong>dplyr</strong>'s functions were designed. Shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing.</p>
 </div>
 
 To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
@@ -3897,7 +3897,7 @@ summary statistics
 
 The final thing to say about **dplyr** does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. `Country` rather than `"Country"`). This is called non-standard evaluation (NSE) (see `vignette("nse")`). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.
 
-This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `gather()` function, used above:
+This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation which requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `group_by()` and `summarise()` functions:
 
 
 ```r
@@ -3978,7 +3978,7 @@ This comparison exercise has been fruitful: most of the countries in the `co2` d
 #> [19] "United States"              "World"
 ```
 
-It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help find which countries *do* match, as illustrated the first non-matching country below:
+It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as 'Gambia, The' and the United States clearly should have matches. *Fuzzy matching* can help find which countries *do* match, as illustrated with the first non-matching country below:
 
 
 ```r
@@ -3988,7 +3988,7 @@ unmatched_world_selection = agrep(pattern = unmatched_country, unique_countries_
 unmatched_world_countries = unique_countries_world[unmatched_world_selection]
 ```
 
-What just happened? We verified that first unmatching country in the `ghg_ems` dataset was not in the `world` country names. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10`. The results show that the country `Antigua & Barbuda` from the `ghg_ems` data matches *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
+What just happened? We verified that the first unmatching country in the `ghg_ems` dataset was not in the `world` country names. So we used the more powerful `agrep` to search for fuzzy matches (with the `max.distance` argument set to `10`. The results show that the country `Antigua & Barbuda` from the `ghg_ems` data matches *two* countries in the `world` dataset. We can update the names in the dataset we are joining to accordingly:
 
 
 ```r
@@ -4003,10 +4003,10 @@ Thus fuzzy matching is still a laborious process that must be complemented by hu
 ## Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
-R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in the README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
 
 **RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`) and nowadays its main use is to provide an R interface to
-SQL Server databases which lacks a **DBI** interface.
+SQL Server databases which lack a **DBI** interface.
 
 The **DBI** package is a unified framework for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen partly as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
@@ -4022,7 +4022,7 @@ dbListTables(con)
 rs = dbSendQuery(con, "SELECT * FROM `ghg_ems` WHERE (`Country` != 'World')")
 df_head = dbFetch(rs, n = 6) # extract first 6 row
 ```
-The above code chunk shows how the function `dbConnect` connects to an external database, in this case a MySQL database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
+The above code chunk shows how the function `dbConnect` connects to an external database, in this case a SQLite database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
 
 <div class="rmdtip">
 <p>Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in <code>.Renviron</code>, described in Chapter 2. Assuming you had saved your password as the environment variable <code>PSWRD</code>, you could enter <code>pwd = Sys.getenv(&quot;PSWRD&quot;)</code> to minimise the risk of exposing your password through accidentally releasing the code or your session history.</p>
@@ -4034,7 +4034,7 @@ This is illustrated by the emergence and uptake of software such as MongoDB and 
 MonetDB is a recent alternative to relational and noSQL approaches which offers substantial efficiency advantages for handling large datasets [@kersten2011researcher].
 A tutorial on the [MonetDB website](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R) provides an excellent introduction to handling databases from within R. 
 
-There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:
+There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major implications for efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:
 
 - The website for **[sparklyr](http://spark.rstudio.com/)**, a recent package for efficiently interfacing with the Apache Spark stack.
 - [db-engines.com/en/](http://db-engines.com/en/): a website comparing the relative merits of different databases.
@@ -4052,7 +4052,7 @@ ghg_db = src_sqlite(ghg_db)
 ghg_tbl = tbl(ghg_db, "ghg_ems")
 ```
 
-The `ghg_tbl` object can then be queried in a similar way as a standard data frame. For example, suppose we wished to 
+The `ghg_tbl` object can then be queried in a similar way to a standard data frame. For example, suppose we wish to 
 filter by `Country`. Then we use the `filter` function as before:
 
 
@@ -4115,7 +4115,7 @@ tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
 #> # ... with more rows
 ```
 
-How would you erform the same query using `select()`? Try it to see if you get the same result (hint: use backticks for the `old/new` variable name).
+How would you perform the same query using `select()`? Try it to see if you get the same result (hint: use backticks for the `old/new` variable name).
 
 
 
@@ -4123,7 +4123,7 @@ How would you erform the same query using `select()`? Try it to see if you get t
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
 tasks.^[One
-[question](http://stackoverflow.com/questions/21435339) on the stackoverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
+[question](http://stackoverflow.com/questions/21435339) on the StackOverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
 ]
 Which is more efficient to some extent depends on personal preferences and what you are used to. 
 Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
@@ -4149,7 +4149,7 @@ aus3a = wb_ineq_dt[Country == "Australia"]
 
 To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are
 '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
-which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax below, which is synonymous with `list()`).
+which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
 
 
 ```r
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.084   0.528   4.614
+#>   3.956   0.436   4.393
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.188   0.084   0.270
+#>   0.200   0.060   0.262
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.808   0.256   1.065
+#>   0.736   0.304   1.037
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean median      uq  max neval
-#>  ex_mat[1, ] 0.00298 0.00409 0.059 0.0069 0.00766 5.25   100
-#>   ex_df[1, ] 0.78263 0.88099 1.230 0.9202 1.22981 6.51   100
+#>         expr     min      lq   mean median      uq  max neval
+#>  ex_mat[1, ] 0.00279 0.00386 0.0547 0.0064 0.00684 4.90   100
+#>   ex_df[1, ] 0.73682 0.83711 0.9976 0.8637 0.89695 5.93   100
 ```
 
 <div class="rmdtip">
@@ -4973,7 +4973,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b19749fd220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b118784a220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
