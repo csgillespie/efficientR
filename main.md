@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-02"
+date: "2016-12-04"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 224152 252212 296069 296212 328071 436342   100
-#>  cs_apply(x) 133960 173938 195478 193768 215962 322789   100
-#>    cumsum(x)    478    658   1348   1018   1208  16757   100
+#>    cs_for(x) 213972 239970 278806 282983 309384 359417   100
+#>  cs_apply(x) 163039 180165 199373 193718 219794 299856   100
+#>    cumsum(x)    464    555   1124    926   1102  14637   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.768   0.016   2.785
+#>    2.94    0.10    3.06
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x340e848>
+#> <bytecode: 0x3997d58>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2739,9 +2739,9 @@ knit: "bookdown::preview_chapter"
 
 This chapter explains how to efficiently read and write data in R. Input/output (I/O) is the technical term for reading and writing data: the process of getting information into a particular computer system (in this case R) and then exporting it to the 'outside world' again (in this case as a file format that other software can read). Data I/O will be needed on projects where data comes from, or goes to, external sources. However, the majority of R resources and documentation start with the optimistic assumption that your data has already been loaded, ignoring the fact that importing datasets into R, and exporting them to the world outside the R ecosystem, can be a time-consuming and frustrating process. Tricky, slow or ultimately unsuccessful data I/O can cripple efficiency right at the outset of a project. Conversely, reading and writing your data efficiently will make your R projects more likely to succeed in the outside world.
 
-The first section introduce **rio**, a 'meta package' for efficiently reading and writing data in a range of file formats. **rio** requires only two intuitive functions for data I/O, making it efficient to learn and use. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
+The first section introduces **rio**, a 'meta package' for efficiently reading and writing data in a range of file formats. **rio** requires only two intuitive functions for data I/O, making it efficient to learn and use. Next we explore in more detail efficient functions for reading in files stored in common *plain text* file formats from the **readr** and **data.table** packages. Binary formats, which can dramatically reduce file sizes and read/write times, are covered next.
 
-With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue, making section \@ref(download), on downloading and importing data from the web, important for 'future-proofing' you I/O skills. The benchmarks in this chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. 
+With the accelerating digital revolution and growth in open data, an increasing proportion of the world's data can be downloaded from the internet. This trend is set to continue, making section \@ref(download), on downloading and importing data from the web, important for 'future-proofing' your I/O skills. The benchmarks in this chapter demonstrate that choice of file format and packages for data I/O can have a huge impact on computational efficiency. 
 
 Before reading in a single line of data, it is worth considering a general principle for reproducible data management: never modify raw data files. Raw data should be seen as read-only, and contain information about its provenance. Keeping the original file name and commenting on its origin are a couple of ways to improve reproducibility, even when the data are not publicly available.
 
@@ -2750,7 +2750,7 @@ Before reading in a single line of data, it is worth considering a general princ
 R can read data from a variety of sources. We begin by discussing the generic package **rio** that 
 handles a wide variety of data types. Special attention is paid to CSV files, which leads to 
 the **readr** and **data.table** packages. The relatively new package **feather** is
-introduced as binary file format, that has cross-language support.
+introduced as a binary file format, that has cross-language support.
 
 ```r
 library("rio")
@@ -2774,13 +2774,13 @@ library("WDI")
 
 1. Use `import()` from the **rio** package to efficiently import data from a wide range of formats, avoiding the hassle of loading format-specific libraries.
 
-1. Use **readr** or **data.table** equivalents of `read.table()` to efficiently import large text files.
+1. Use the **readr** or **data.table** equivalents of `read.table()` to efficiently import large text files.
 
 1. Use `file.size()` and `object.size()` to keep track of the size of files and R objects and take action if they get too big.
 
 ## Versatile data import with rio
 
-**rio** is a 'A Swiss-Army Knife for Data I/O'. **rio** provides easy-to-use and computationally efficient functions for importing and exporting tabular data in a range of file formats. As stated in the package's [vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html), **rio** aims to "simplify the process of importing data into R and exporting data from R." The vignette goes on to to explain how many of the functions for data I/O described in R's [Data Import/Export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) are out of date (for example referring to **WriteXLS** but not the more recent **readxl** package) and difficult to learn.
+**rio** is a 'A Swiss-Army Knife for Data I/O'. **rio** provides easy-to-use and computationally efficient functions for importing and exporting tabular data in a range of file formats. As stated in the package's [vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html), **rio** aims to "simplify the process of importing data into R and exporting data from R." The vignette goes on to explain how many of the functions for data I/O described in R's [Data Import/Export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) are out of date (for example referring to **WriteXLS** but not the more recent **readxl** package) and difficult to learn.
 
 This is why **rio** is covered at the outset of this chapter: if you just want to get data into R, with a minimum of time learning new functions, there is a fair chance that **rio** can help, for many common file formats. At the time of writing, these include `.csv`, `.feather`, `.json`, `.dta`, `.xls`, `.xlsx` and Google Sheets (see the package's [github page](https://github.com/leeper/rio) for up-to-date information). Below we illustrate the key **rio** functions of `import()` and `export()`:
 
@@ -2817,7 +2817,7 @@ capitals = import("https://github.com/mledoze/countries/raw/master/countries.jso
     file.remove("voc_voyages.xlsx")
     ```
 
-2. Try saving the the `voyages` data frames into 3 other file formats of your choosing (see `vignette("rio")` for supported formats). Try opening these in external programs. Which file formats are more portable?
+2. Try saving the `voyages` data frames into 3 other file formats of your choosing (see `vignette("rio")` for supported formats). Try opening these in external programs. Which file formats are more portable?
 
 3. As a bonus exercise, create a simple benchmark to compare the write times for the different file formats used to complete the previous exercise. Which is fastest? Which is the most space efficient?
 
@@ -2855,9 +2855,9 @@ df_co2_readr = data.table::fread("extdata/co2.csv")
 <p>Note that a function 'derived from' another in this context means that it calls another function. The functions such as <code>read.csv()</code> and <code>read.delim()</code> in fact are <em>wrappers</em> around <code>read.table()</code>. This can be seen in the source code of <code>read.csv()</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = &quot;,&quot;)</code>.</p>
 </div>
 
-Although this section is focussed on reading text files, it demonstrate the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantages of addition package dependency (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that *require* a certain package to load in R: the **readstata13** package, for example, was developed solely to read in `.dta` files generated by versions of Stata 13 and above.
+Although this section is focussed on reading text files, it demonstrates the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantage of additional package dependencies (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that *require* a certain package to load in R: the **readstata13** package, for example, was developed solely to read in `.dta` files generated by versions of Stata 13 and above.
 
-Figure \@ref(fig:5-1) demonstrates that the relative performance gains of the **data.table** and **readr** approaches increase with data size, especially so for data with many rows. Below around $1$ MB `read.csv()` is actually *faster* than `read_csv()` while `fread` is much faster than both, although these savings are likely to be inconsequential for such small datasets.
+Figure \@ref(fig:5-1) demonstrates that the relative performance gains of the **data.table** and **readr** approaches increase with data size, especially for data with many rows. Below around $1$ MB `read.csv()` is actually *faster* than `read_csv()` while `fread` is much faster than both, although these savings are likely to be inconsequential for such small datasets.
 
 For files beyond $100$ MB in size `fread()` and `read_csv()` can be expected to be around *5 times faster* than `read.csv()`. This efficiency gain may be inconsequential for a one-off file of $100$ MB running on a fast computer (which still takes less than a minute with `read.csv()`), but could represent an important speed-up if you frequently load large text files. 
 
@@ -2876,13 +2876,12 @@ made significantly faster by pre-specifying the column types at the outset (see 
 read.csv(file_name, colClasses = c("numeric", "numeric"))
 ```
 
-In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how **readr**, **data.table** and base R approaches handle unexpected values. Figure \@ref(fig:5-1) highlights 
-that as the dataset size increases, the benefit of switching to `fread()` and (eventually) to `read_csv()` . For a small ($1$MB) dataset: 
+In some cases with R programming there is a trade-off between speed and robustness. This is illustrated below with reference to differences in how the **readr**, **data.table** and base R approaches handle unexpected values. Figure \@ref(fig:5-1) highlights the benefit of switching to `fread()` and (eventually) to `read_csv()` as the dataset size increases. For a small ($1$MB) dataset: 
 `fread()` is around $5$ times faster than base R.
 
 ### Differences between `fread()` and `read_csv()`
 
-The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table with lists Dutch shipping expeditions by their date of departure.
+The file `voc_voyages` was taken from a dataset on Dutch naval expeditions used with permission from the CWI Database Architectures Group. The data is described more fully at [monetdb.org](https://www.monetdb.org/Documentation/UserGuide/MonetDB-R). From this dataset we primarily use the 'voyages' table which lists Dutch shipping expeditions by their date of departure.
 
 
 ```r
@@ -2912,7 +2911,7 @@ voyages_readr = readr::read_tsv(fname)
 #> 4403 cape_arrival   date like  2-01-01
 #> 4592 cape_departure date like  8-05-17
 ```
-a warning is raised regarding  row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
+a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
 
 ```r
@@ -2930,7 +2929,7 @@ Reading the file using **data.table**
 voyages_dt = data.table::fread(fname)
 ```
 
-generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread()` automatically converts any columns it thought of as numeric into characters. An additional feature of `fread` is that it can read-in a selection of the columns, either by their index or name, using the `select` argument. This is illustrated below by reading in only half (the first 11) columns from the voyages dataset and comparing the result with `fread()`'ing all the columns in.
+generates 5 warning messages stating that columns 2, 4, 9, 10 and 11 were `Bumped to type character on data row ...`, with the offending rows printed in place of `...`. Instead of changing the offending values to `NA`, as **readr** does for the `built` column (9), `fread()` automatically converts any columns it thought of as numeric into characters. An additional feature of `fread` is that it can read-in a selection of the columns, either by their index or name, using the `select` argument. This is illustrated below by reading in only half of the columns (the first 11) from the voyages dataset and comparing the result with `fread()`'ing all the columns in.
 
 
 ```r
@@ -2939,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.06  9.06  9.27    9.1  9.24  9.87     5
-#>  without_select 13.89 14.22 15.60   14.7 15.30 19.91     5
+#>            expr   min    lq  mean median   uq  max neval
+#>     with_select  9.12  9.23  9.54   9.26  9.7 10.4     5
+#>  without_select 13.45 13.50 15.09  15.35 15.8 17.3     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -2959,31 +2958,31 @@ Table \@ref(tab:colclasses) shows 4 main similarities and differences between th
 
 - For uniform data such as the 'number' variable in Table \@ref(tab:colclasses), all reading methods yield the same result (integer in this case).
 
-- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `TRUE`) whereas `fread()` and `read_csv()` functions return characters.
+- For columns that are obviously characters such as 'boatname', the base method results in factors (unless `stringsAsFactors` is set to `FALSE`) whereas `fread()` and `read_csv()` functions return characters.
 
 - For columns in which the first 1000 rows are of one type but which contain anomalies, such as 'built' and 'departure_data' in the shipping example, `fread()` coerces the result to characters.
-`read_csv()` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`. This is illustrated in \@ref(tab:colclasses), where `read_tsv()` produces a `numeric` class for the 'built' variable, ignoring the non numeric text in row 2841.
+`read_csv()` and siblings, by contrast, keep the class that is correct for the first 1000 rows and sets the anomalous records to `NA`. This is illustrated in \@ref(tab:colclasses), where `read_tsv()` produces a `numeric` class for the 'built' variable, ignoring the non-numeric text in row 2841.
 
 - `read_*()` functions generate objects of class `tbl_df`, an extension of the `data.frame` class, as discussed in Section  \@ref(dplyr). `fread()` generates objects of class `data.table()`. These can be used as standard data frames but differ subtly in their behaviour.
 
 An additional difference is that `read_csv()` creates data frames of class `tbl_df`, *and* the `data.frame`. This makes no practical difference, unless the **tibble** package is loaded, as described in section \@ref(efficient-data-frames-with-tibble) in the next chapter.
 
-The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
+The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities for your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
 
 
 ### Preprocessing text outside R
 
 There are circumstances when datasets become too large to read directly into R.
-Reading in a $4$ GB text file using the functions tested above, for example, consumes all available RAM on an $16$ GB machine. To overcome this limitation, external *stream processing* tools can be used to preprocess large text files.
-The following command, using the Linux command line 'shell' (or Windows based Linux shell emulator [Cygwin](https://cygwin.com/install.html)) command `split`, for example, will break a large multi GB file many one GB chunks, each of which is more manageable for R:
+Reading in a $4$ GB text file using the functions tested above, for example, consumes all available RAM on a $16$ GB machine. To overcome this limitation, external *stream processing* tools can be used to preprocess large text files.
+The following command, using the Linux command line 'shell' (or Windows based Linux shell emulator [Cygwin](https://cygwin.com/install.html)) command `split`, for example, will break a large multi GB file into many chunks, each of which is more manageable for R:
 
 
 ```bash
 split -b100m bigfile.csv
 ```
 
-The result is a series of files, set to 100 MB each with the `-b100m` argument in the above code. By default these will be called `xaa`, `xab` and which could be read in *one chunk at a time* (e.g. using `read.csv()`, `fread()` or `read_csv()`, described in the previous section) without crashing most modern computers.
+The result is a series of files, set to 100 MB each with the `-b100m` argument in the above code. By default these will be called `xaa`, `xab` and can be read in *one chunk at a time* (e.g. using `read.csv()`, `fread()` or `read_csv()`, described in the previous section) without crashing most modern computers.
 
 Splitting a large file into individual chunks may allow it to be read into R.
 This is not an efficient way to import large datasets, however, because it results in a non-random sample of the data this way.
@@ -2995,11 +2994,11 @@ There are limitations to plain text files. Even the trusty CSV format is "restri
 Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
 portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
-Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
+Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
 
 ### Native binary formats: Rdata or Rds?
 
-`.Rds` and `.RData` are R's native binary file formats. These formats are optimised for speed and compression ratios. But what is the difference between them? The follow code chunk demonstrates the key difference between them:
+`.Rds` and `.RData` are R's native binary file formats. These formats are optimised for speed and compression ratios. But what is the difference between them? The following code chunk demonstrates the key difference between them:
 
 
 ```r
@@ -3019,7 +3018,7 @@ Using `saveRDS()` is good practice because it forces you to specify object names
 
 ### The feather file format
 
-Feather was developed as collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
+Feather was developed as a collaboration between R and Python developers to create a fast, light and language agnostic format for storing data frames. The code chunk below shows how it can be used to save and then re-load the `df_co2` dataset loaded previously in both R and Python:
 
 
 ```r
@@ -3031,23 +3030,22 @@ df_co2_feather = read_feather("extdata/co2.feather")
 
 ```python
 import feather
-import feather
 path = 'data/co2.feather'
 df_co2_feather = feather.read_dataframe(path)
 ```
 
 ### Benchmarking binary file formats
 
-We know that binary formats are advantageous from space and read/write time perspectives, but how much so? The benchmarks in this section, based large matrices containing random numbers, are designed to help answer this question. Figure \@ref(fig:5-2) shows that the *relative* efficiency gains of feather and Rds formats, compared with base CSV. From left to right, figure \@ref(fig:5-2) shows benefits in terms of file size, read times, and write times.
+We know that binary formats are advantageous from space and read/write time perspectives, but how much so? The benchmarks in this section, based on large matrices containing random numbers, are designed to help answer this question. Figure \@ref(fig:5-2) shows the *relative* efficiency gains of the feather and Rds formats, compared with base CSV. From left to right, figure \@ref(fig:5-2) shows benefits in terms of file size, read times, and write times.
 
-In terms of write times, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.
+In terms of file size, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/5-2-1.png" alt="Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather(). " width="90%" />
 <p class="caption">(\#fig:5-2)Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather(). </p>
 </div>
 
-The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, data download time and bandwidth usage perspectives. But how does each method compare from a computational efficiency perceptive? The read and write times for each file format are illustrated in the middle and right hand panels of \@ref(fig:5-2).
+The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, reduce data download time and bandwidth usage. But how does each method compare from a computational efficiency perspective? The read and write times for each file format are illustrated in the middle and right hand panels of \@ref(fig:5-2).
 
 The results show that file size is not a reliable predictor of data read and write times. This is due to the computational overheads of compression. Although feather files occupied more disc space, they were roughly equivalent in terms of read times: the functions `read_feather()` and `readRDS()` were consistently around 10 times faster than `read.csv()`. In terms of write times, feather excels: `write_feather()` was around 10 times faster than `write.csv()`, whereas `saveRDS()` was only around 1.2 times faster. 
 
@@ -3066,7 +3064,7 @@ Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/) off
 The code chunk below shows how the functions
 `download.file()` and `unzip()` can be used to download and unzip a dataset from the internet.
 (Since R 3.2.3 the base function `download.file()` can be used to download from secure (`https://`) connections on any operating system.)
-R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact help with documentation, enhancing understanding of the data's *provenance*, so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the **efficient** package. Using R for basic file management can help create a reproducible workflow, as illustrated below.
+R can automate processes that are often performed manually, e.g. through the graphical user interface of a web browser, with potential advantages for reproducibility and programmer efficiency. The result is data stored neatly in the `data` directory ready to be imported. Note we deliberately kept the file name intact, enhancing understanding of the data's *provenance* so future users can quickly find out where the data came from. Note also that part of the dataset is stored in the **efficient** package. Using R for basic file management can help create a reproducible workflow, as illustrated below.
 
 
 ```r
@@ -3076,7 +3074,7 @@ unzip("voc_tsvs.zip", exdir = "data") # unzip files
 file.remove("voc_tsvs.zip") # tidy up by removing the zip file
 ```
 
-This workflow equally applies to downloading and loading single files. Note that one could make the code more concise by entering replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO^2^. Note that this dataset is also available from the **datasets** package.
+This workflow applies equally to downloading and loading single files. Note that one could make the code more concise by replacing the second line with `df = read.csv(url)`. However, we recommend downloading the file to disk so that if for some reason it fails (e.g. if you would like to skip the first few lines), you don't have to keep downloading the file over and over again. The code below downloads and loads data on atmospheric concentrations of CO^2^. Note that this dataset is also available from the **datasets** package.
 
 
 ```r
@@ -3086,7 +3084,7 @@ df_co2 = read_csv("extdata/co2.csv")
 ```
 
 There are now many R packages to assist with the download and import of data. The organisation [rOpenSci](https://ropensci.org/) supports a number of these.
-The example below illustrates this using the WDI package (not supported by rOpenSci) to accesses World Bank data on CO2 emissions in the transport sector:
+The example below illustrates this using the WDI package (not supported by rOpenSci) to access World Bank data on CO2 emissions in the transport sector:
 
 
 ```r
@@ -3110,7 +3108,7 @@ The **RCurl** package focuses on lower-level support and is particularly useful 
 
 Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command `data(package = "package_name")` will show the datasets in a package. Datasets provided by **dplyr**, for example, can be viewed with `data(package = "dplyr")`.
 
-Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located with the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file()` outputs file paths associated with specific packages. To see all the external files within the **readr** package, for example, one could use the following command:
+Raw data (i.e. data which has not been converted into R's native `.Rds` format) is usually located within the sub-folder `extdata` in R (which corresponds to `inst/extdata` when developing packages. The function `system.file()` outputs file paths associated with specific packages. To see all the external files within the **readr** package, for example, one could use the following command:
 
 
 ```r
@@ -4401,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.996   0.604   4.611
+#>   4.084   0.528   4.614
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.180   0.084   0.264
+#>   0.188   0.084   0.270
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4420,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.772   0.276   1.047
+#>   0.808   0.256   1.065
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4558,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr    min      lq   mean median      uq  max neval
-#>  ex_mat[1, ] 0.0024 0.00376 0.0581 0.0064 0.00697 5.24   100
-#>   ex_df[1, ] 0.7703 0.86787 1.0411 0.8873 0.92864 6.46   100
+#>         expr     min      lq  mean median      uq  max neval
+#>  ex_mat[1, ] 0.00298 0.00409 0.059 0.0069 0.00766 5.25   100
+#>   ex_df[1, ] 0.78263 0.88099 1.230 0.9202 1.22981 6.51   100
 ```
 
 <div class="rmdtip">
@@ -4975,7 +4973,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2adbe599e220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b19749fd220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
