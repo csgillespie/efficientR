@@ -302,7 +302,7 @@ local(source("code/07-performance_f3.R", local=TRUE))
 ###  Converting factors to numerics {-}
 
 A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is
+convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:
 
 ```{r, echo=2, results="hide"}
 f = factor(10:100)
@@ -352,7 +352,7 @@ x < 0.4 || x > 0.6
 ### Row and column operations {-}
 
 In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculation the column or row sums. The `apply()`
+set. For example, we might want to calculate the column or row sums. The `apply()`
 function makes this type of operation straightforward.
 ```{r eval=FALSE}
 # Second argument: 1 -> rows. 2 -> columns
@@ -409,7 +409,7 @@ give you the true value of `y` (to 17 decimal places).
 Integers are another numeric data type. Integers primarily exist to be passed to C or
 Fortran code. You do not need to create integers for most applications. However,
 they are occasionally used to optimise sub-setting operations. When we subset a data
-frame or matrix, we are interacting with C code we might be tempted to use integers
+frame or matrix, we are interacting with C code so we might be tempted to use integers
 with the purpose of speeding up our code. For example, if we look at the arguments for
 the `head` function
 
@@ -438,7 +438,7 @@ In general, if you are worried about shaving microseconds off your R code run ti
 probably consider switching to another language.
 
 Integers are more space efficient. 
-The code below compares size of a integer vector to a standard numeric vector:
+The code below compares the size of an integer vector to a standard numeric vector:
 
 ```{r}
 pryr::object_size(1:10000)
@@ -486,7 +486,7 @@ pryr::object_size(m)
 
 #### Exercises {-}
 
-  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA()`. Do the results vary with the size of the vector.
+  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA()`. Do the results vary with the size of the vector?
 
   1. Examine the following function definitions to give you an idea of how integers are used.
     * `tail.matrix()`
@@ -500,16 +500,16 @@ pryr::object_size(m)
 
 ```{block, type="rmdnote"}
 A related memory saving idea is to replace `logical` vectors
-with vectors from the **bit** package which take up just over 16th of the space
+with vectors from the **bit** package which take up just over a 16th of the space
 (but you can't use `NA`s).
 ```
 
 ## Example: Optimising  the `movie_square()` function
 
-Figure \@ref(fig:7-2) shows that in our main bottle neck in simulating the game of
+Figure \@ref(fig:7-2) shows that our main bottleneck in simulating the game of
 Monopoly is the `movie_square()` function. Within this function, we spend around 50%
-of the time creating a data frame, 20% time calculating row sums, and the remainder on
-a comparison operations. This piece of code can be optimised fairly easily (while still
+of the time creating a data frame, 20% of the time calculating row sums, and the remainder on
+comparison operations. This piece of code can be optimised fairly easily (while still
 retaining the same overall structure) by incorporating the following
 improvements^[Solutions are available in the **efficient** package vignette.]:
 
@@ -561,10 +561,10 @@ and when they are needed. Implement and time this solution.
 
 ## Parallel computing {#performance-parallel}
 
-This section provides a brief foray into the word of parallel computing. It only looks
+This section provides a brief foray into the world of parallel computing. It only looks
 at methods for parallel computing on 'shared memory systems'. This simply means
 computers in which multiple central processor unit (CPU) cores can access the same
-block, i.e. most laptops and desktops sold worldwide. This section provides flavour of
+block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of
 what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
 
 The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed
@@ -604,7 +604,7 @@ other things, specifies the number of processors to use.
 ### Example: Snakes and Ladders
 
 Parallel computing is ideal for Monte-Carlo simulations. Each core independently
-simulates a realisation from model. At the end, we gather up the results. In the
+simulates a realisation from the model. At the end, we gather up the results. In the
 **efficient** package, there is a function that simulates a single game of Snakes and
 Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
 after a particularly long and dull game of Snakes and Ladders with his son.]
@@ -632,17 +632,18 @@ Then simply swap `sapply()` for `parSapply()`:
 parSapply(cl, 1:N, snakes_ladders)
 ```
 
-It is important to stop the created clusters, as this can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] as illustrated below:
+Not stopping the clusters can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] so it is important to stop the created clusters as illustrated below:
 
 ```{r eval=FALSE}
 stopCluster(cl)
 ```
 
-If we achieved perfect parallelisation and used a four (or more) core, then we would
-obtain a four-fold speed up (we set `makeCluster(4)`). However, we rarely get this 
+ and used a four (or more) core, then we would
+obtain a four-fold speed up (we set `makeCluster(4)`). 
 
-On a multi-processor computer, this can lead to a four-fold speed-up. However, it is
-rare that we would achieve this optimal speed-up since there always communication
+On a multi-processor computer with four (or more) cores, if we achieved perfect 
+parallelisation this could lead to a four-fold speed-up. However, it is rare 
+that we would achieve this optimal speed-up since there is always communication
 between threads.
 
 ### Exit functions with care
@@ -653,7 +654,7 @@ function ends as the results of an error and so `stopCluster()` is omitted.
 
 The `on.exit()` function handles this problem with the minimum of fuss; regardless of
 how the function ends, `on.exit()` is always called. In the context of parallel
-programming we will have something similar to
+programming we will have something similar to:
 ```{r}
 simulate = function(cores) {
   cl = makeCluster(cores)
@@ -700,7 +701,7 @@ local(source("code/07-performance_f5.R", local=TRUE))
 ```
 
 C++ is a modern, fast and very well-supported language with libraries for performing
-many kinds of computational task. **Rcpp** makes incorporating C++ code into your R
+many kinds of computational tasks. **Rcpp** makes incorporating C++ code into your R
 workflow easy.
 
 Although C/Fortran routines can be used using the `.Call()` function this is not
@@ -710,14 +711,14 @@ bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and
 recursive functions.
 
 C++ is a powerful programming language about which entire books have been written.
-This section therefore is focussed on getting started and provide a flavour of what is
+This section therefore is focussed on getting started and providing a flavour of what is
 possible. It is structured as follows. After ensuring that your computer is set-up for
 **Rcpp**, we proceed by creating a simple C++ function, to show how C++ compares with
 R (Section \@ref(simple-c)). This is converted into an R function using
 `cppFunction()` in Section \@ref(cppfunction). The remainder of the chapter explains
 C++ data types (Section \@ref(c-types)), illustrates how to source C++ code directly
-(Section \@ref(sourcecpp)) and explains vectors (Section \@ref(vectors-and-loops))
-**Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
+(Section \@ref(sourcecpp)), explains vectors (Section \@ref(vectors-and-loops))
+and **Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
 resources on the subject (Section \@ref(rcpp-resources)).
 
 
@@ -739,7 +740,7 @@ code from the course R package:
 efficient::test_rcpp()
 ```
 
-A C++ function is similar to an R function: you pass a set of inputs to function, some
+A C++ function is similar to an R function: you pass a set of inputs to the function, some
 code is run, a single object is returned. However there are some key differences.
 
 1. In the C++ function each line must be terminated with `;` In R, we use `;` only when we have multiple statements on the same line.
@@ -756,7 +757,7 @@ be a simple one line affair:
 add_r = function(x, y) x + y
 ```
 
-In C++ it is a bit more long winded
+In C++ it is a bit more long winded:
 
 ```{Rcpp eval=FALSE, tidy=FALSE}
 /* Return type double
@@ -811,7 +812,7 @@ The most basic type of variable is an integer, `int`. An `int` variable can stor
 value in the range $-32768$ to $+32767$. To store floating point numbers, there are
 single precision numbers, `float` and double precision numbers, `double`. A `double`
 takes twice as much memory as a `float` (in general, we should always work with double
-precision numbers unless we have a compiling reason to switch to floats). For
+precision numbers unless we have a compelling reason to switch to floats). For
 __single__ characters, we use the `char` data type.
 
 ```{block, type="rmdnote"}
@@ -887,8 +888,8 @@ double add_cpp(double x, double y) {
 
 There are two main benefits with putting your C++ functions in separate files. First,
 we have the benefit of syntax highlighting (RStudio has great support for C++
-editing). Second, it's easier to make syntax errors when the switching between R and
-C++ in the same file. To save space we we'll omit the headers for the remainder of
+editing). Second, it's easier to make syntax errors when switching between R and
+C++ in the same file. To save space we'll omit the headers for the remainder of
 the chapter.
 
 ### Vectors and loops
@@ -924,7 +925,7 @@ In the C++ version of the mean function, we specify the arguments types: `x`
 function is a few lines longer. Almost always, the corresponding C++ version will be,
 possibly much, longer. In general R optimises for reduced development time; C++
 optimises for fast execution time. The corresponding C++ function for calculating the
-mean is
+mean is:
 
 ```{Rcpp eval=FALSE}
 double mean_cpp(NumericVector x) {
@@ -964,7 +965,7 @@ The above code adds `x[i] / n` to the value of `mean`. Other similar operators a
 1. A C++ vector starts at `0` **not** `1`
 
 To compare the C++ and R functions, we'll generate some normal random numbers for the
-comparison
+comparison:
 
 ```{r}
 x = rnorm(1e4)
@@ -995,7 +996,7 @@ local(source("code/07-performance_f6.R", local=TRUE))
 
 #### Exercises {-}
 
-Consider the following piece of code
+Consider the following piece of code:
 
 ```{Rcpp eval=FALSE, tidy=FALSE}
 double test1() {
@@ -1019,7 +1020,7 @@ Each vector type has a corresponding matrix equivalent: `NumericMatrix`,
 `IntegerMatrix`, `CharacterMatrix` and `LogicalMatrix`. We use these types in a
 similar way to how we used `NumericVector`'s. The main differences are:
 
- * When we initialise, we need specify the number of rows and columns
+ * When we initialise, we need to specify the number of rows and columns
     ```{Rcpp, eval=FALSE}
     // 10 rows, 5 columns
     NumericMatrix mat(10, 5);
@@ -1084,7 +1085,7 @@ features of **Rcpp** is that there is a great deal of documentation available.
  * The original Journal of Statistical Software paper describing **Rcpp**
  and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
  * @Wickham2014 provides a very readable chapter on **Rcpp** that goes into a bit more detail than this section;
- * The **Rcpp** section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
+ * The **Rcpp** section on the [StackOverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
  Questions are often answered by the **Rcpp** authors.
  
 
