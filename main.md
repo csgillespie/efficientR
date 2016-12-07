@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-04"
+date: "2016-12-07"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 222820 238947 288272 302470 317946 388593   100
-#>  cs_apply(x) 138037 166490 188892 193088 203140 357587   100
-#>    cumsum(x)    559    767   1338   1006   1236  17381   100
+#>    cs_for(x) 218596 235059 292405 291669 323529 548771   100
+#>  cs_apply(x) 139597 156496 187423 178942 201299 343520   100
+#>    cumsum(x)    493    799   1341   1091   1260  18706   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.848   0.076   2.922
+#>   3.072   0.012   3.086
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x399a570>
+#> <bytecode: 0x3823f50>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2939,8 +2939,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval
-#>     with_select  8.94  8.96  9.18   9.08  9.35  9.55     5
-#>  without_select 14.77 14.97 15.39  15.23 15.40 16.58     5
+#>     with_select  8.67  8.79  8.89   8.88  8.96  9.15     5
+#>  without_select 13.49 13.81 14.96  14.15 14.67 18.70     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4179,15 +4179,15 @@ knit: "bookdown::preview_chapter"
 
 
 
-# Efficient optimization {#performance}
+# Efficient optimisation {#performance}
 
 [Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a legendary American
 computer scientist who developed a number of the key algorithms that we use today (see for 
 example `?Random`).
-On the subject of optimization he give this advice.
+On the subject of optimisation he gives this advice:
 
 > The real problem is that programmers have spent far too much time worrying about
-efficiency in the wrong places and at the wrong times; premature optimization is the
+efficiency in the wrong places and at the wrong times; premature optimisation is the
 root of all evil (or at least most of it) in programming.
 
 Knuth's point is that it is easy to undertake code optimisation inefficiently.
@@ -4207,12 +4207,12 @@ In this chapter we assume that you already have well-developed code that is matu
 conceptually and has been tried and tested. Now you want to optimize this code, but
 not prematurely. The chapter is organised as follows. First we begin with general
 hints and tips about optimising base R code. Code profiling can identify key
-bottlenecks in the code in need of optimization, and this is covered in the next
+bottlenecks in the code in need of optimisation, and this is covered in the next
 section. Section \@ref(performance-parallel) discusses how parallel code can overcome
 efficiency bottlenecks for some problems. The final section explains how `Rcpp` can be
-used to efficiently incorporating C++ code into an R analysis.
+used to efficiently incorporate C++ code into an R analysis.
 
-### Prerequistes {-}
+### Prerequisites {-}
 
 In this chapter, some of the examples require a working C++ compiler. The installation
 method depends on your operating system:
@@ -4232,7 +4232,7 @@ library("Rcpp")
 
 ## Top 5 tips for efficient performance
 
-  1. Before you start to optimise you code, ensure you know where the bottleneck lies; use
+  1. Before you start to optimise your code, ensure you know where the bottleneck lies; use
   a code profiler.
   1. If the data in your data frame is all of the same type, consider converting it
   to a matrix for a speed boost.
@@ -4243,7 +4243,7 @@ library("Rcpp")
 ## Code profiling {#performance-profvis}
 
 Often you will have working code, but simply want it to run faster. In some cases it's
-obvious where the bottle neck lies. Sometimes you will guess, relying on intuition. A
+obvious where the bottleneck lies. Sometimes you will guess, relying on intuition. A
 drawback of this is that you could be wrong, and waste time optimising the wrong piece
 of code. To make slow code run faster, it is first important to determine where the
 slow code lives. This is the purpose of code profiling.
@@ -4251,7 +4251,7 @@ slow code lives. This is the purpose of code profiling.
 The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At
 regular time intervals, the profiler stops the R interpreter, records the current
 function call stack, and saves the information to a file. The results from `Rprof()` are
-stochastic. Each time we run a function R, the conditions have changed. Hence, each
+stochastic. Each time we run a function in R, the conditions have changed. Hence, each
 time you profile your code, the result will be slightly different.
 
 Unfortunately `Rprof()` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
@@ -4262,7 +4262,7 @@ Unfortunately `Rprof()` is not user friendly. For this reason we recommend using
 After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used
 to profile R code. As a simple example, we will use the `movies` data set, which
 contains information on around 60,000 movies. First, we'll select movies that are
-classed as comedies, then plot year the movies was made versus the movie rating, and
+classed as comedies, then plot year the movie was made versus the movie rating, and
 draw a local polynomial regression line to pick out the trend. The main function from
 the **profvis** package is `profvis()`, which profiles the code and creates an
 interactive HTML page of the results. The first argument of `profvis()` is the R
@@ -4390,7 +4390,7 @@ if(mark >= 40) {
 ```
 is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
-An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable, than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
+An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
 
 
 ```r
@@ -4399,18 +4399,18 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.956   0.436   4.393
+#>    4.04    0.40    4.44
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.200   0.060   0.262
+#>   0.188   0.064   0.253
 identical(result1, result2)
 #> [1] TRUE
 ```
 
-There is talk on the [R-devel email](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html) list of speeding up `ifelse()` in base R. A simple solution is to use the `if_else()` function from **dplyr**, although, as discussed in the [same thread](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html), it cannot replace `ifelse()` in all situations. For our exam result test example, `if_else()` works fine and is much faster than base R's implantation (although is still around 3 times slower than the hard-coded solution):
+There is talk on the [R-devel email](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html) list of speeding up `ifelse()` in base R. A simple solution is to use the `if_else()` function from **dplyr**, although, as discussed in the [same thread](http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html), it cannot replace `ifelse()` in all situations. For our exam result test example, `if_else()` works fine and is much faster than base R's implementation (although it is still around 3 times slower than the hard-coded solution):
 
 
 ```r
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.736   0.304   1.037
+#>   0.792   0.340   1.134
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4447,7 +4447,7 @@ For very large vectors, this can give a three fold speed increase.
 ### Reversing elements {-}
 
 The `rev()` function provides a reversed version of its argument. If you wish to sort in
-increasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
+decreasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
@@ -4464,7 +4464,7 @@ variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 ###  Converting factors to numerics {-}
 
 A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is
+convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:
 
 
 ```r
@@ -4519,7 +4519,7 @@ x < 0.4 || x > 0.6
 ### Row and column operations {-}
 
 In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculation the column or row sums. The `apply()`
+set. For example, we might want to calculate the column or row sums. The `apply()`
 function makes this type of operation straightforward.
 
 ```r
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean median      uq  max neval
-#>  ex_mat[1, ] 0.00279 0.00386 0.0547 0.0064 0.00684 4.90   100
-#>   ex_df[1, ] 0.73682 0.83711 0.9976 0.8637 0.89695 5.93   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00265 0.00381 0.0597 0.00651 0.00712 5.36   100
+#>   ex_df[1, ] 0.78701 0.86207 1.0765 0.92165 1.03148 5.90   100
 ```
 
 <div class="rmdtip">
@@ -4580,7 +4580,7 @@ accurate to around $17$ decimal places.
 Integers are another numeric data type. Integers primarily exist to be passed to C or
 Fortran code. You do not need to create integers for most applications. However,
 they are occasionally used to optimise sub-setting operations. When we subset a data
-frame or matrix, we are interacting with C code we might be tempted to use integers
+frame or matrix, we are interacting with C code so we might be tempted to use integers
 with the purpose of speeding up our code. For example, if we look at the arguments for
 the `head` function
 
@@ -4613,7 +4613,7 @@ In general, if you are worried about shaving microseconds off your R code run ti
 probably consider switching to another language.
 
 Integers are more space efficient. 
-The code below compares size of a integer vector to a standard numeric vector:
+The code below compares the size of an integer vector to a standard numeric vector:
 
 
 ```r
@@ -4670,7 +4670,7 @@ pryr::object_size(m)
 
 #### Exercises {-}
 
-  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA()`. Do the results vary with the size of the vector.
+  1. Create a vector `x`. Benchmark `any(is.na(x))` against `anyNA()`. Do the results vary with the size of the vector?
 
   1. Examine the following function definitions to give you an idea of how integers are used.
     * `tail.matrix()`
@@ -4683,15 +4683,15 @@ pryr::object_size(m)
   differ to the standard `seq()` function?
 
 <div class="rmdnote">
-<p>A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over 16th of the space (but you can't use <code>NA</code>s).</p>
+<p>A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over a 16th of the space (but you can't use <code>NA</code>s).</p>
 </div>
 
 ## Example: Optimising  the `movie_square()` function
 
-Figure \@ref(fig:7-2) shows that in our main bottle neck in simulating the game of
+Figure \@ref(fig:7-2) shows that our main bottleneck in simulating the game of
 Monopoly is the `movie_square()` function. Within this function, we spend around 50%
-of the time creating a data frame, 20% time calculating row sums, and the remainder on
-a comparison operations. This piece of code can be optimised fairly easily (while still
+of the time creating a data frame, 20% of the time calculating row sums, and the remainder on
+comparison operations. This piece of code can be optimised fairly easily (while still
 retaining the same overall structure) by incorporating the following
 improvements^[Solutions are available in the **efficient** package vignette.]:
 
@@ -4733,10 +4733,10 @@ and when they are needed. Implement and time this solution.
 
 ## Parallel computing {#performance-parallel}
 
-This section provides a brief foray into the word of parallel computing. It only looks
+This section provides a brief foray into the world of parallel computing. It only looks
 at methods for parallel computing on 'shared memory systems'. This simply means
 computers in which multiple central processor unit (CPU) cores can access the same
-block, i.e. most laptops and desktops sold worldwide. This section provides flavour of
+block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of
 what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
 
 The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed
@@ -4776,7 +4776,7 @@ other things, specifies the number of processors to use.
 ### Example: Snakes and Ladders
 
 Parallel computing is ideal for Monte-Carlo simulations. Each core independently
-simulates a realisation from model. At the end, we gather up the results. In the
+simulates a realisation from the model. At the end, we gather up the results. In the
 **efficient** package, there is a function that simulates a single game of Snakes and
 Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
 after a particularly long and dull game of Snakes and Ladders with his son.]
@@ -4805,18 +4805,19 @@ Then simply swap `sapply()` for `parSapply()`:
 parSapply(cl, 1:N, snakes_ladders)
 ```
 
-It is important to stop the created clusters, as this can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] as illustrated below:
+Not stopping the clusters can lead to memory leaks,^[See [github.com/npct/pct-shiny/issues/292](https://github.com/npct/pct-shiny/issues/292) for a real world example of the dangers of not stopping created cores.] so it is important to stop the created clusters as illustrated below:
 
 
 ```r
 stopCluster(cl)
 ```
 
-If we achieved perfect parallelisation and used a four (or more) core, then we would
-obtain a four-fold speed up (we set `makeCluster(4)`). However, we rarely get this 
+ and used a four (or more) core, then we would
+obtain a four-fold speed up (we set `makeCluster(4)`). 
 
-On a multi-processor computer, this can lead to a four-fold speed-up. However, it is
-rare that we would achieve this optimal speed-up since there always communication
+On a multi-processor computer with four (or more) cores, if we achieved perfect 
+parallelisation this could lead to a four-fold speed-up. However, it is rare 
+that we would achieve this optimal speed-up since there is always communication
 between threads.
 
 ### Exit functions with care
@@ -4827,7 +4828,7 @@ function ends as the results of an error and so `stopCluster()` is omitted.
 
 The `on.exit()` function handles this problem with the minimum of fuss; regardless of
 how the function ends, `on.exit()` is always called. In the context of parallel
-programming we will have something similar to
+programming we will have something similar to:
 
 ```r
 simulate = function(cores) {
@@ -4872,7 +4873,7 @@ C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of t
 </div>
 
 C++ is a modern, fast and very well-supported language with libraries for performing
-many kinds of computational task. **Rcpp** makes incorporating C++ code into your R
+many kinds of computational tasks. **Rcpp** makes incorporating C++ code into your R
 workflow easy.
 
 Although C/Fortran routines can be used using the `.Call()` function this is not
@@ -4882,14 +4883,14 @@ bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and
 recursive functions.
 
 C++ is a powerful programming language about which entire books have been written.
-This section therefore is focussed on getting started and provide a flavour of what is
+This section therefore is focussed on getting started and providing a flavour of what is
 possible. It is structured as follows. After ensuring that your computer is set-up for
 **Rcpp**, we proceed by creating a simple C++ function, to show how C++ compares with
 R (Section \@ref(simple-c)). This is converted into an R function using
 `cppFunction()` in Section \@ref(cppfunction). The remainder of the chapter explains
 C++ data types (Section \@ref(c-types)), illustrates how to source C++ code directly
-(Section \@ref(sourcecpp)) and explains vectors (Section \@ref(vectors-and-loops))
-**Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
+(Section \@ref(sourcecpp)), explains vectors (Section \@ref(vectors-and-loops))
+and **Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
 resources on the subject (Section \@ref(rcpp-resources)).
 
 
@@ -4912,7 +4913,7 @@ code from the course R package:
 efficient::test_rcpp()
 ```
 
-A C++ function is similar to an R function: you pass a set of inputs to function, some
+A C++ function is similar to an R function: you pass a set of inputs to the function, some
 code is run, a single object is returned. However there are some key differences.
 
 1. In the C++ function each line must be terminated with `;` In R, we use `;` only when we have multiple statements on the same line.
@@ -4930,7 +4931,7 @@ be a simple one line affair:
 add_r = function(x, y) x + y
 ```
 
-In C++ it is a bit more long winded
+In C++ it is a bit more long winded:
 
 
 ```cpp
@@ -4973,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b118784a220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b58853aa220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -4992,7 +4993,7 @@ The most basic type of variable is an integer, `int`. An `int` variable can stor
 value in the range $-32768$ to $+32767$. To store floating point numbers, there are
 single precision numbers, `float` and double precision numbers, `double`. A `double`
 takes twice as much memory as a `float` (in general, we should always work with double
-precision numbers unless we have a compiling reason to switch to floats). For
+precision numbers unless we have a compelling reason to switch to floats). For
 __single__ characters, we use the `char` data type.
 
 <div class="rmdnote">
@@ -5071,8 +5072,8 @@ double add_cpp(double x, double y) {
 
 There are two main benefits with putting your C++ functions in separate files. First,
 we have the benefit of syntax highlighting (RStudio has great support for C++
-editing). Second, it's easier to make syntax errors when the switching between R and
-C++ in the same file. To save space we we'll omit the headers for the remainder of
+editing). Second, it's easier to make syntax errors when switching between R and
+C++ in the same file. To save space we'll omit the headers for the remainder of
 the chapter.
 
 ### Vectors and loops
@@ -5109,7 +5110,7 @@ In the C++ version of the mean function, we specify the arguments types: `x`
 function is a few lines longer. Almost always, the corresponding C++ version will be,
 possibly much, longer. In general R optimises for reduced development time; C++
 optimises for fast execution time. The corresponding C++ function for calculating the
-mean is
+mean is:
 
 
 ```cpp
@@ -5153,7 +5154,7 @@ The above code adds `x[i] / n` to the value of `mean`. Other similar operators a
 1. A C++ vector starts at `0` **not** `1`
 
 To compare the C++ and R functions, we'll generate some normal random numbers for the
-comparison
+comparison:
 
 
 ```r
@@ -5186,7 +5187,7 @@ accuracy.
 
 #### Exercises {-}
 
-Consider the following piece of code
+Consider the following piece of code:
 
 
 ```cpp
@@ -5211,7 +5212,7 @@ Each vector type has a corresponding matrix equivalent: `NumericMatrix`,
 `IntegerMatrix`, `CharacterMatrix` and `LogicalMatrix`. We use these types in a
 similar way to how we used `NumericVector`'s. The main differences are:
 
- * When we initialise, we need specify the number of rows and columns
+ * When we initialise, we need to specify the number of rows and columns
     
     ```cpp
     // 10 rows, 5 columns
@@ -5280,7 +5281,7 @@ features of **Rcpp** is that there is a great deal of documentation available.
  * The original Journal of Statistical Software paper describing **Rcpp**
  and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
  * @Wickham2014 provides a very readable chapter on **Rcpp** that goes into a bit more detail than this section;
- * The **Rcpp** section on the [stackoverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
+ * The **Rcpp** section on the [StackOverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
  Questions are often answered by the **Rcpp** authors.
  
 
@@ -5306,7 +5307,7 @@ This is because everything is loaded in RAM. Of course, having a more powerful
 computer costs money. The goal is to help you decide whether the benefits of
 upgrading your hardware are worth that extra cost.
 
-We'll begin this chapter with an background section on computer storage and 
+We'll begin this chapter with a background section on computer storage and 
 memory and how it is measured. Then we consider individual computer components, 
 before concluding with renting machines in the cloud.
 
@@ -5326,7 +5327,7 @@ library("benchmarkme")
 1. If possible, add more RAM.
 1. Double check that you have installed a $64$-bit version of R.
 1. Cloud computing is a cost effective way of obtaining more compute power.
-1. A solid state drives typically won't have much impact on the speed of your R code, 
+1. A solid state drive typically won't have much impact on the speed of your R code, 
   but will increase your overall productivity since I/0 is much faster.
 
 ## Background: what is a byte?
@@ -5367,11 +5368,11 @@ $2^{50}$ | 	pebi  | 	Pi | 	Petabinary:  | $(2^{10})^5$	 |  Peta: $(10^3)^5$
 Table 8.2: Data conversion table. Credit: [http://physics.nist.gov/cuu/Units/binary.html](http://physics.nist.gov/cuu/Units/binary.html)
 
 Even though there is now an agreed standard for discussing memory, that doesn't mean that everyone follows it.
-Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufactors follow the SI standard!
+Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!
 
 ## Random access memory: RAM {#ram}
 
-Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analysis.
+Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.
 
 Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
@@ -5411,7 +5412,7 @@ we have managed to create an object that is three times larger than the original
 <p>A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
 </div>
 
-Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
+Another benefit of increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
 
 
 ```r
@@ -5425,7 +5426,7 @@ benchmarkme::get_ram()
 <p class="caption">(\#fig:8-1)Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org</p>
 </div>
 
-It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the mother board spaces (see figure \@ref(fig:8-1) for example).
+It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure \@ref(fig:8-1) for example).
 However it is common that all slots are already taken. This means that to upgrade your computer's memory, some or all of the DIMMs will have to be removed. To go from $8$GB to $16$GB, for example, you may have to discard the two $4$GB RAM cards and replace them with two $8$GB cards. Increasing your laptop/desktop from $4$GB to $16$GB or $32$GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,
 
 
@@ -5458,7 +5459,7 @@ R's origins on computers with limited resources helps explain its efficiency at 
 
 The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.
 
-1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?
+1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer have?
 2. Using your preferred search engine, how much does it cost to double the amount of available RAM on your system? 
 
 ## Hard drives: HDD vs SSD
@@ -5521,7 +5522,7 @@ These exercises aim to condense the previous section into the key points.
 
 The central processing unit (CPU), or the processor, is the brains of a computer. The
 CPU is responsible for performing numerical calculations. The faster the processor,
-the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency
+the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency
 with which the CPU executes instructions. The faster the clock speed, the more
 instructions a CPU can execute in a section. CPU clock speed for a single CPU has been
 fairly static in the last couple of years, hovering around 3.4GHz (see figure
