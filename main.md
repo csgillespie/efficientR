@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 218596 235059 292405 291669 323529 548771   100
-#>  cs_apply(x) 139597 156496 187423 178942 201299 343520   100
-#>    cumsum(x)    493    799   1341   1091   1260  18706   100
+#>    cs_for(x) 231184 256200 300139 306600 325434 463947   100
+#>  cs_apply(x) 137146 176928 196413 196970 208827 342302   100
+#>    cumsum(x)    464    650   1216    977   1153  19622   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.072   0.012   3.086
+#>   2.872   0.024   2.899
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3823f50>
+#> <bytecode: 0x2d9af50>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2939,8 +2939,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval
-#>     with_select  8.67  8.79  8.89   8.88  8.96  9.15     5
-#>  without_select 13.49 13.81 14.96  14.15 14.67 18.70     5
+#>     with_select  8.93  8.94  9.15   9.09  9.16  9.61     5
+#>  without_select 15.17 15.20 15.46  15.22 15.42 16.31     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    4.04    0.40    4.44
+#>   4.188   0.264   4.452
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.188   0.064   0.253
+#>   0.192   0.028   0.219
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.792   0.340   1.134
+#>   0.748   0.132   0.881
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4557,8 +4557,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00265 0.00381 0.0597 0.00651 0.00712 5.36   100
-#>   ex_df[1, ] 0.78701 0.86207 1.0765 0.92165 1.03148 5.90   100
+#>  ex_mat[1, ] 0.00261 0.00367 0.0606 0.00621 0.00662 5.54   100
+#>   ex_df[1, ] 0.76415 0.85890 1.0362 0.87849 0.92863 6.32   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b58853aa220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2ad8c7cae220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -5307,7 +5307,7 @@ This is because everything is loaded in RAM. Of course, having a more powerful
 computer costs money. The goal is to help you decide whether the benefits of
 upgrading your hardware are worth that extra cost.
 
-We'll begin this chapter with a background section on computer storage and 
+We'll begin this chapter with an background section on computer storage and 
 memory and how it is measured. Then we consider individual computer components, 
 before concluding with renting machines in the cloud.
 
@@ -5327,7 +5327,7 @@ library("benchmarkme")
 1. If possible, add more RAM.
 1. Double check that you have installed a $64$-bit version of R.
 1. Cloud computing is a cost effective way of obtaining more compute power.
-1. A solid state drive typically won't have much impact on the speed of your R code, 
+1. A solid state drives typically won't have much impact on the speed of your R code, 
   but will increase your overall productivity since I/0 is much faster.
 
 ## Background: what is a byte?
@@ -5368,11 +5368,11 @@ $2^{50}$ | 	pebi  | 	Pi | 	Petabinary:  | $(2^{10})^5$	 |  Peta: $(10^3)^5$
 Table 8.2: Data conversion table. Credit: [http://physics.nist.gov/cuu/Units/binary.html](http://physics.nist.gov/cuu/Units/binary.html)
 
 Even though there is now an agreed standard for discussing memory, that doesn't mean that everyone follows it.
-Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!
+Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufactors follow the SI standard!
 
 ## Random access memory: RAM {#ram}
 
-Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.
+Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analysis.
 
 Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
@@ -5412,7 +5412,7 @@ we have managed to create an object that is three times larger than the original
 <p>A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
 </div>
 
-Another benefit of increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
+Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
 
 
 ```r
@@ -5426,7 +5426,7 @@ benchmarkme::get_ram()
 <p class="caption">(\#fig:8-1)Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org</p>
 </div>
 
-It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure \@ref(fig:8-1) for example).
+It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the mother board spaces (see figure \@ref(fig:8-1) for example).
 However it is common that all slots are already taken. This means that to upgrade your computer's memory, some or all of the DIMMs will have to be removed. To go from $8$GB to $16$GB, for example, you may have to discard the two $4$GB RAM cards and replace them with two $8$GB cards. Increasing your laptop/desktop from $4$GB to $16$GB or $32$GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,
 
 
@@ -5459,7 +5459,7 @@ R's origins on computers with limited resources helps explain its efficiency at 
 
 The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.
 
-1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer have?
+1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?
 2. Using your preferred search engine, how much does it cost to double the amount of available RAM on your system? 
 
 ## Hard drives: HDD vs SSD
@@ -5522,7 +5522,7 @@ These exercises aim to condense the previous section into the key points.
 
 The central processing unit (CPU), or the processor, is the brains of a computer. The
 CPU is responsible for performing numerical calculations. The faster the processor,
-the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency
+the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency
 with which the CPU executes instructions. The faster the clock speed, the more
 instructions a CPU can execute in a section. CPU clock speed for a single CPU has been
 fairly static in the last couple of years, hovering around 3.4GHz (see figure

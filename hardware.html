@@ -381,7 +381,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">8</span> Efficient hardware</h1>
 <p>This chapter is odd for a book on R programming. It contains very little code, and yet the chapter has the potential to speed up your algorithms by orders of magnitude. This chapter considers the impact that your computer has on your time.</p>
 <p>Your hardware is crucial. It will not only determine how <em>fast</em> you can solve your problem, but also whether you can even tackle the problem of interest. This is because everything is loaded in RAM. Of course, having a more powerful computer costs money. The goal is to help you decide whether the benefits of upgrading your hardware are worth that extra cost.</p>
-<p>We’ll begin this chapter with a background section on computer storage and memory and how it is measured. Then we consider individual computer components, before concluding with renting machines in the cloud.</p>
+<p>We’ll begin this chapter with an background section on computer storage and memory and how it is measured. Then we consider individual computer components, before concluding with renting machines in the cloud.</p>
 <div id="prerequisites-7" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter will focus on assessing your hardware and the benefit of upgrading. We will use the <strong>benchmarkme</strong> package to quantify the effect of changing your CPU.</p>
@@ -394,7 +394,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>If possible, add more RAM.</li>
 <li>Double check that you have installed a <span class="math inline">\(64\)</span>-bit version of R.</li>
 <li>Cloud computing is a cost effective way of obtaining more compute power.</li>
-<li>A solid state drive typically won’t have much impact on the speed of your R code, but will increase your overall productivity since I/0 is much faster.</li>
+<li>A solid state drives typically won’t have much impact on the speed of your R code, but will increase your overall productivity since I/0 is much faster.</li>
 </ol>
 </div>
 <div id="background-what-is-a-byte" class="section level2">
@@ -496,11 +496,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 <p>Table 8.2: Data conversion table. Credit: <a href="http://physics.nist.gov/cuu/Units/binary.html" class="uri">http://physics.nist.gov/cuu/Units/binary.html</a></p>
-<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it. Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!</p>
+<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it. Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B. Typically RAM is specified in kibibytes, but hard drive manufactors follow the SI standard!</p>
 </div>
 <div id="ram" class="section level2">
 <h2><span class="header-section-number">8.3</span> Random access memory: RAM</h2>
-<p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.</p>
+<p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analysis.</p>
 <p>Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)
 <span class="co">#&gt;         Murder Assault UrbanPop Rape</span>
@@ -525,7 +525,7 @@ The distance object <code>d</code> is actually a vector that contains the distan
 A rough rule of thumb is that your RAM should be three times the size of your data set.
 </p>
 </div>
-<p>Another benefit of increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the <strong>benchmarkme</strong> package</p>
+<p>Another benefit of having increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the <strong>benchmarkme</strong> package</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">benchmarkme::<span class="kw">get_ram</span>()
 <span class="co">#&gt; 16.3 GB</span></code></pre></div>
 <!-- https://en.wikipedia.org/wiki/DIMM -->
@@ -535,7 +535,7 @@ A rough rule of thumb is that your RAM should be three times the size of your da
 Figure 8.1: Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org
 </p>
 </div>
-<p>It is sometimes possible to increase your computer’s RAM. On a computer motherboard there are typically <span class="math inline">\(2\)</span> to <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure <a href="hardware.html#fig:8-1">8.1</a> for example). However it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the DIMMs will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from <span class="math inline">\(4\)</span>GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
+<p>It is sometimes possible to increase your computer’s RAM. On a computer motherboard there are typically <span class="math inline">\(2\)</span> to <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the mother board spaces (see figure <a href="hardware.html#fig:8-1">8.1</a> for example). However it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the DIMMs will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from <span class="math inline">\(4\)</span>GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; RAM is cheap and thinking hurts.</span>
@@ -555,7 +555,7 @@ Figure 8.1: Three DIMM slots on a computer motherboard used for increasing the a
 <h4>Exercises</h4>
 <p>The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.</p>
 <ol style="list-style-type: decimal">
-<li>R loads everything into memory, i.e. your computers RAM. How much RAM does your computer have?</li>
+<li>R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?</li>
 <li>Using your preferred search engine, how much does it cost to double the amount of available RAM on your system?</li>
 </ol>
 </div>
@@ -605,7 +605,7 @@ If you are using an OS version from the last five years, it is unlikely to be <s
 </div>
 <div id="central-processing-unit-cpu" class="section level2">
 <h2><span class="header-section-number">8.6</span> Central processing unit (CPU)</h2>
-<p>The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure <a href="hardware.html#fig:8-3">8.3</a>).</p>
+<p>The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure <a href="hardware.html#fig:8-3">8.3</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:8-3"></span>
 <img src="_main_files/figure-html/8-3-1.png" alt="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed." width="70%" />
 <p class="caption">
