@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-07"
+date: "2016-12-09"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 231184 256200 300139 306600 325434 463947   100
-#>  cs_apply(x) 137146 176928 196413 196970 208827 342302   100
-#>    cumsum(x)    464    650   1216    977   1153  19622   100
+#>    cs_for(x) 218342 253804 296131 309537 324798 393778   100
+#>  cs_apply(x) 134697 173407 191751 195754 206488 349510   100
+#>    cumsum(x)    555    790   1350   1037   1248  15433   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.872   0.024   2.899
+#>   3.124   0.028   3.150
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x2d9af50>
+#> <bytecode: 0x38944d0>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2939,8 +2939,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval
-#>     with_select  8.93  8.94  9.15   9.09  9.16  9.61     5
-#>  without_select 15.17 15.20 15.46  15.22 15.42 16.31     5
+#>     with_select  9.07  9.14  9.25   9.18  9.27  9.58     5
+#>  without_select 13.99 14.13 15.35  14.16 16.14 18.34     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.188   0.264   4.452
+#>   4.004   0.504   4.507
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.192   0.028   0.219
+#>   0.196   0.068   0.265
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.748   0.132   0.881
+#>   0.808   0.252   1.061
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00261 0.00367 0.0606 0.00621 0.00662 5.54   100
-#>   ex_df[1, ] 0.76415 0.85890 1.0362 0.87849 0.92863 6.32   100
+#>         expr     min      lq  mean  median     uq  max neval
+#>  ex_mat[1, ] 0.00241 0.00376 0.058 0.00632 0.0068 5.25   100
+#>   ex_df[1, ] 0.75163 0.85065 1.031 0.87177 0.9450 6.57   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ad8c7cae220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b1ab7c6e220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -5307,7 +5307,7 @@ This is because everything is loaded in RAM. Of course, having a more powerful
 computer costs money. The goal is to help you decide whether the benefits of
 upgrading your hardware are worth that extra cost.
 
-We'll begin this chapter with an background section on computer storage and 
+We'll begin this chapter with a background section on computer storage and 
 memory and how it is measured. Then we consider individual computer components, 
 before concluding with renting machines in the cloud.
 
@@ -5327,7 +5327,7 @@ library("benchmarkme")
 1. If possible, add more RAM.
 1. Double check that you have installed a $64$-bit version of R.
 1. Cloud computing is a cost effective way of obtaining more compute power.
-1. A solid state drives typically won't have much impact on the speed of your R code, 
+1. A solid state drive typically won't have much impact on the speed of your R code, 
   but will increase your overall productivity since I/0 is much faster.
 
 ## Background: what is a byte?
@@ -5368,11 +5368,11 @@ $2^{50}$ | 	pebi  | 	Pi | 	Petabinary:  | $(2^{10})^5$	 |  Peta: $(10^3)^5$
 Table 8.2: Data conversion table. Credit: [http://physics.nist.gov/cuu/Units/binary.html](http://physics.nist.gov/cuu/Units/binary.html)
 
 Even though there is now an agreed standard for discussing memory, that doesn't mean that everyone follows it.
-Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufactors follow the SI standard!
+Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing the capacity of a $1.44$MB floppy disk is a mixture, $1\text{MB} = 10^3 \times 2^{10}$B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!
 
 ## Random access memory: RAM {#ram}
 
-Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analysis.
+Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.
 
 Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
@@ -5412,7 +5412,7 @@ we have managed to create an object that is three times larger than the original
 <p>A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
 </div>
 
-Another benefit of having increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
+Another benefit of increasing the amount of onboard RAM is that the 'garbage collector', a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the **benchmarkme** package
 
 
 ```r
@@ -5426,7 +5426,7 @@ benchmarkme::get_ram()
 <p class="caption">(\#fig:8-1)Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org</p>
 </div>
 
-It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the mother board spaces (see figure \@ref(fig:8-1) for example).
+It is sometimes possible to increase your computer's RAM. On a computer motherboard there are typically $2$ to $4$ RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure \@ref(fig:8-1) for example).
 However it is common that all slots are already taken. This means that to upgrade your computer's memory, some or all of the DIMMs will have to be removed. To go from $8$GB to $16$GB, for example, you may have to discard the two $4$GB RAM cards and replace them with two $8$GB cards. Increasing your laptop/desktop from $4$GB to $16$GB or $32$GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,
 
 
@@ -5459,7 +5459,7 @@ R's origins on computers with limited resources helps explain its efficiency at 
 
 The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.
 
-1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer you have?
+1. R loads everything into memory, i.e. your computers RAM. How much RAM does your computer have?
 2. Using your preferred search engine, how much does it cost to double the amount of available RAM on your system? 
 
 ## Hard drives: HDD vs SSD
@@ -5522,7 +5522,7 @@ These exercises aim to condense the previous section into the key points.
 
 The central processing unit (CPU), or the processor, is the brains of a computer. The
 CPU is responsible for performing numerical calculations. The faster the processor,
-the faster R will run. The clock speed (or clock rate, measured in hertz) is frequency
+the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency
 with which the CPU executes instructions. The faster the clock speed, the more
 instructions a CPU can execute in a section. CPU clock speed for a single CPU has been
 fairly static in the last couple of years, hovering around 3.4GHz (see figure
@@ -5731,14 +5731,14 @@ The example above illustrates that comments are more useful if they provide cont
 >
 > * Lewis Carroll - Through the Looking Glass, Chapter 6.
 
-It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called `x`, `xx`, `xxx` etc. The code would run fine. However, it would be hard for other people, and a future you, to figure our what was going on, especially when you got to the object `xxxxxxxxxx`!
+It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called `x`, `xx`, `xxx` etc. The code would run fine. However, it would be hard for other people, and a future you, to figure out what was going on, especially when you got to the object `xxxxxxxxxx`!
 
-For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names^[One notable exception are packages in Bioconductor, where variable names are `camelCase`. In this case, you should match the existing style.]. Unless you are creating an S3 object, avoid using a `.` in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
+For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names^[One notable exception are packages in Bioconductor, where variable names are `camelCase`. In this case, you should match the existing style.]. Unless you are creating an S3 object, avoid using a `.` in the name (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
 
-In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
+In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should be last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
 
 <div class="rmdwarning">
-<p>It's tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code></p>
+<p>It's tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.</p>
 </div>
 
 While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
@@ -5818,7 +5818,7 @@ else {
 
 Typing this straight into R will result in an error. 
 An opening curly brace, `{` should not go on its own line and 
-should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside a curly braces should be indented (and RStudio will enforce this rule), as shown below.
+should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
 
 
 ```r
@@ -5846,7 +5846,7 @@ The version control system we recommend is Git, a command-line application creat
 
 Commits are the basic units of version control. Keep your commits 'atomic': each one should only do one thing. Document your work with clear and concise commit messages, use the present tense, e.g.: 'Add analysis functions'.
 
-Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you mush 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in figure \@ref(fig:9-1). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
+Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you must 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in figure \@ref(fig:9-1). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
 [GitHub's help pages](https://help.github.com/).]
 
 <div class="figure" style="text-align: center">
@@ -5856,7 +5856,7 @@ Committing code only updates the files on your 'local' branch. To update the fil
 
 ### Git integration in RStudio
 
-How to enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed *and* RStudio can find it. You need a working installation of Git (e.g. installed through `apt-get install git` Ubuntu/Debian or via [GitHub Desktop](https://help.github.com/desktop/guides/getting-started/installing-github-desktop/) for Mac and Windows). RStudio can be linked to your Git installation via Tools > Global Options, in the Git/SVN tab. This tab also provides a [link](https://support.rstudio.com/hc/en-us/articles/200532077) to a help page on RStudio/Git.
+How can you enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed *and* RStudio can find it. You need a working installation of Git (e.g. installed through `apt-get install git` Ubuntu/Debian or via [GitHub Desktop](https://help.github.com/desktop/guides/getting-started/installing-github-desktop/) for Mac and Windows). RStudio can be linked to your Git installation via Tools > Global Options, in the Git/SVN tab. This tab also provides a [link](https://support.rstudio.com/hc/en-us/articles/200532077) to a help page on RStudio/Git.
 
 Once Git has been linked to your RStudio installation, it can be used to track changes in a new project by selecting `Create a git repository` when creating a new project. The tab illustrated in figure \@ref(fig:9-1) will appear, allowing functionality for interacting with Git via RStudio.
 
@@ -5886,18 +5886,18 @@ Note that `csgillespie` is the GitHub user and `benchmarkme` is the package name
 
 ### Branches, forks, pulls and clones
 
-Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and GitHub for the useR".
+Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and GitHub for the useR".
 
-Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
+Branches are distinct versions of your repository. Git allows you to jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
 
 
 ```bash
 git checkout -b test
 ```
 
-This is equivalent of entering two commands: `git branch test` to create the branch and then `git checkout test` to *checkout* that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure \@ref(fig:9-1): see the `master` text followed by a down arrow. Clicking on this will allow you to select other branches.
+This is the equivalent of entering two commands: `git branch test` to create the branch and then `git checkout test` to *checkout* that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure \@ref(fig:9-1): see the `master` text followed by a down arrow. Clicking on this will allow you to select other branches.
 
-Forks are like branches but they exist on other people's computers. You can fork a repository on GitHub easily, as described on the site's [help pages](https://help.github.com/articles/fork-a-repo/). If you want an exact copy of this repository (including the commit history) you can *clone* this fork to your computer using the command `git clone` or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective than cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a *pull request*. Note: if you don't need the project's entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).
+Forks are like branches but they exist on other people's computers. You can fork a repository on GitHub easily, as described on the site's [help pages](https://help.github.com/articles/fork-a-repo/). If you want an exact copy of this repository (including the commit history) you can *clone* this fork to your computer using the command `git clone` or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective compared to cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a *pull request*. Note: if you don't need the project's entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).
 
 A pull request (PR) is a mechanism on GitHub by which your code can be added to an existing project. One of the most useful features of a PR from a collaboration perspective is that it provides an opportunity for others to comment on your code, line by line, before it gets merged. This is all done online on GitHub, as discussed in [GitHub's online help](https://help.github.com/articles/merging-a-pull-request/). Following feedback, you may want to refactor code, written by you or others.
 
@@ -5913,8 +5913,8 @@ questions such as
 
  * Is the code correct and properly documented?
  * Could the code be improved?
- * Does the code conform to existing style guidelines.
- * Are there any automated tests? If so, are they sufficient.
+ * Does the code conform to existing style guidelines?
+ * Are there any automated tests? If so, are they sufficient?
 
 A good code review shares knowledge and best practice. 
 
@@ -5927,7 +5927,7 @@ Regardless of the review method being employed, there a number of points to reme
 First, as with all forms of feedback, be constructive. Rather than pointing out flaws,
 give suggested improvements. Closely related is give praise when appropriate. Second,
 if you are reviewing a piece of code set a time frame or the number of lines of code
-you will review. For example, you will spend one hour review a piece of code, or a
+you will review. For example, you will spend one hour reviewing a piece of code, or a
 maximum of 400 lines. Third, a code review should be performed before the code
 is merged into a larger code base; fix mistakes as soon as possible.
 
@@ -5936,8 +5936,8 @@ Practically, there isn't anyone nearby to review their code. However there is st
 the option of an _unoffical_ code review. For example, if you have hosted code on an
 online repository such as GitHub, users will naturally give feedback on our code
 (especially if you make it clear that you welcome feedback). Another good place is
-Stackoverflow (covered in detail in chapter \@ref(learning)). This site allows you to
-post answers to other users questions. When you post an answer, if you code is
+StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to
+post answers to other users questions. When you post an answer, if your code is
 unclear, this will be flagged in comments below your answer.
 
 
