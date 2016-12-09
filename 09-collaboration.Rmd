@@ -150,15 +150,15 @@ The example above illustrates that comments are more useful if they provide cont
 >
 > * Lewis Carroll - Through the Looking Glass, Chapter 6.
 
-It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called `x`, `xx`, `xxx` etc. The code would run fine. However, it would be hard for other people, and a future you, to figure our what was going on, especially when you got to the object `xxxxxxxxxx`!
+It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called `x`, `xx`, `xxx` etc. The code would run fine. However, it would be hard for other people, and a future you, to figure out what was going on, especially when you got to the object `xxxxxxxxxx`!
 
-For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names^[One notable exception are packages in Bioconductor, where variable names are `camelCase`. In this case, you should match the existing style.]. Unless you are creating an S3 object, avoid using a `.` in the name, (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
+For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where `x` could be acceptable). Following discussion in [@ba_aa_ath_state_2012] and elsewhere, suggest an `underscore_separated` style for function and object names^[One notable exception are packages in Bioconductor, where variable names are `camelCase`. In this case, you should match the existing style.]. Unless you are creating an S3 object, avoid using a `.` in the name (this will help avoid confusing Python programmers!). Names should be concise yet meaningful. 
 
-In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
+In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should be last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
 
 ```{block type="rmdwarning"}
 It's tempting to use `T`/`F` as shortcuts. But it is easy to accidentally redefine these variables, e.g. `F = 10`.
-R raises an error if you try to redefine `TRUE`/`FALSE`
+R raises an error if you try to redefine `TRUE`/`FALSE`.
 ```
 
 While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
@@ -234,7 +234,7 @@ else {
 
 Typing this straight into R will result in an error. 
 An opening curly brace, `{` should not go on its own line and 
-should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside a curly braces should be indented (and RStudio will enforce this rule), as shown below.
+should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
 
 ```{r, results="hide"}
 # Good style
@@ -261,7 +261,7 @@ The version control system we recommend is Git, a command-line application creat
 
 Commits are the basic units of version control. Keep your commits 'atomic': each one should only do one thing. Document your work with clear and concise commit messages, use the present tense, e.g.: 'Add analysis functions'.
 
-Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you mush 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in figure \@ref(fig:9-1). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
+Committing code only updates the files on your 'local' branch. To update the files stored on a remote server (e.g. on GitHub), you must 'push' the commit. This can be done using `git push` from a shell or using the green up arrow in RStudio, illustrated in figure \@ref(fig:9-1). The blue down arrow will 'pull' the latest version of the repository from the remote.^[For a more detailed account of this process, see
 [GitHub's help pages](https://help.github.com/).]
 
 ```{r 9-1, fig.cap="The Git tab in RStudio", echo=FALSE, out.width="70%"}
@@ -270,7 +270,7 @@ knitr::include_graphics("figures/f9_1_rstudio-git.png")
 
 ### Git integration in RStudio
 
-How to enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed *and* RStudio can find it. You need a working installation of Git (e.g. installed through `apt-get install git` Ubuntu/Debian or via [GitHub Desktop](https://help.github.com/desktop/guides/getting-started/installing-github-desktop/) for Mac and Windows). RStudio can be linked to your Git installation via Tools > Global Options, in the Git/SVN tab. This tab also provides a [link](https://support.rstudio.com/hc/en-us/articles/200532077) to a help page on RStudio/Git.
+How can you enable this functionality on your installation of RStudio? RStudio can be a GUI Git only if Git has been installed *and* RStudio can find it. You need a working installation of Git (e.g. installed through `apt-get install git` Ubuntu/Debian or via [GitHub Desktop](https://help.github.com/desktop/guides/getting-started/installing-github-desktop/) for Mac and Windows). RStudio can be linked to your Git installation via Tools > Global Options, in the Git/SVN tab. This tab also provides a [link](https://support.rstudio.com/hc/en-us/articles/200532077) to a help page on RStudio/Git.
 
 Once Git has been linked to your RStudio installation, it can be used to track changes in a new project by selecting `Create a git repository` when creating a new project. The tab illustrated in figure \@ref(fig:9-1) will appear, allowing functionality for interacting with Git via RStudio.
 
@@ -298,17 +298,17 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 
 ### Branches, forks, pulls and clones
 
-Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend the Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and GitHub for the useR".
+Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git's powerful functionality, we recommend Jenny Byran's [book](http://happygitwithr.com/), "Happy Git and GitHub for the useR".
 
-Branches are distinct versions of your repository. Git allows you jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
+Branches are distinct versions of your repository. Git allows you to jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:
 
 ```{r, engine='bash', eval=FALSE}
 git checkout -b test
 ```
 
-This is equivalent of entering two commands: `git branch test` to create the branch and then `git checkout test` to *checkout* that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure \@ref(fig:9-1): see the `master` text followed by a down arrow. Clicking on this will allow you to select other branches.
+This is the equivalent of entering two commands: `git branch test` to create the branch and then `git checkout test` to *checkout* that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure \@ref(fig:9-1): see the `master` text followed by a down arrow. Clicking on this will allow you to select other branches.
 
-Forks are like branches but they exist on other people's computers. You can fork a repository on GitHub easily, as described on the site's [help pages](https://help.github.com/articles/fork-a-repo/). If you want an exact copy of this repository (including the commit history) you can *clone* this fork to your computer using the command `git clone` or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective than cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a *pull request*. Note: if you don't need the project's entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).
+Forks are like branches but they exist on other people's computers. You can fork a repository on GitHub easily, as described on the site's [help pages](https://help.github.com/articles/fork-a-repo/). If you want an exact copy of this repository (including the commit history) you can *clone* this fork to your computer using the command `git clone` or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective compared to cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a *pull request*. Note: if you don't need the project's entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).
 
 A pull request (PR) is a mechanism on GitHub by which your code can be added to an existing project. One of the most useful features of a PR from a collaboration perspective is that it provides an opportunity for others to comment on your code, line by line, before it gets merged. This is all done online on GitHub, as discussed in [GitHub's online help](https://help.github.com/articles/merging-a-pull-request/). Following feedback, you may want to refactor code, written by you or others.
 
@@ -328,8 +328,8 @@ questions such as
 
  * Is the code correct and properly documented?
  * Could the code be improved?
- * Does the code conform to existing style guidelines.
- * Are there any automated tests? If so, are they sufficient.
+ * Does the code conform to existing style guidelines?
+ * Are there any automated tests? If so, are they sufficient?
 
 A good code review shares knowledge and best practice. 
 
@@ -342,7 +342,7 @@ Regardless of the review method being employed, there a number of points to reme
 First, as with all forms of feedback, be constructive. Rather than pointing out flaws,
 give suggested improvements. Closely related is give praise when appropriate. Second,
 if you are reviewing a piece of code set a time frame or the number of lines of code
-you will review. For example, you will spend one hour review a piece of code, or a
+you will review. For example, you will spend one hour reviewing a piece of code, or a
 maximum of 400 lines. Third, a code review should be performed before the code
 is merged into a larger code base; fix mistakes as soon as possible.
 
@@ -351,8 +351,8 @@ Practically, there isn't anyone nearby to review their code. However there is st
 the option of an _unoffical_ code review. For example, if you have hosted code on an
 online repository such as GitHub, users will naturally give feedback on our code
 (especially if you make it clear that you welcome feedback). Another good place is
-Stackoverflow (covered in detail in chapter \@ref(learning)). This site allows you to
-post answers to other users questions. When you post an answer, if you code is
+StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to
+post answers to other users questions. When you post an answer, if your code is
 unclear, this will be flagged in comments below your answer.
 
 
