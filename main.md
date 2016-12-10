@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-09"
+date: "2016-12-10"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 218342 253804 296131 309537 324798 393778   100
-#>  cs_apply(x) 134697 173407 191751 195754 206488 349510   100
-#>    cumsum(x)    555    790   1350   1037   1248  15433   100
+#>    cs_for(x) 214504 234388 279051 295824 305576 393316   100
+#>  cs_apply(x) 140460 165008 190244 194412 206993 315459   100
+#>    cumsum(x)    467    850   1304   1049   1238  14340   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   3.124   0.028   3.150
+#>   2.896   0.032   2.928
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x38944d0>
+#> <bytecode: 0x3d73d10>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.07  9.14  9.25   9.18  9.27  9.58     5
-#>  without_select 13.99 14.13 15.35  14.16 16.14 18.34     5
+#>            expr   min    lq  mean median   uq  max neval
+#>     with_select  9.41  9.58  9.79   9.66 10.1 10.2     5
+#>  without_select 15.33 15.89 16.04  15.92 16.5 16.6     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.004   0.504   4.507
+#>   3.956   0.728   4.685
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.196   0.068   0.265
+#>   0.176   0.088   0.263
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.808   0.252   1.061
+#>   0.820   0.396   1.218
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean  median     uq  max neval
-#>  ex_mat[1, ] 0.00241 0.00376 0.058 0.00632 0.0068 5.25   100
-#>   ex_df[1, ] 0.75163 0.85065 1.031 0.87177 0.9450 6.57   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00233 0.00386 0.0568 0.00641 0.00699 5.13   100
+#>   ex_df[1, ] 0.76545 0.86084 1.0372 0.88779 0.93388 5.96   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b1ab7c6e220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b740ff84220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
@@ -6020,7 +6020,7 @@ library("swirl")
 
 Sometimes the best place to look for help is within R itself. Using R's help has 3 main advantages from an efficiency perspective: 1) it's faster to query R from inside your IDE than to switch context and search for help on a different platform (e.g. the internet which has countless distractions); 2) it works offline; 3) learning to read R's documentation (and source code) is a powerful skill in itself that will improve your R programming.
 
-The main disadvantage of R's internal help is that it is terse and in some cases sparse. Do not expect to *always* be able to find the answer in R so be prepared to look elsewhere for more detailed help and context. From a learning perspective becoming acquainted with R's documentation is often better than finding out the solution from a different source: it was written by developers, largely for developers. Therefore with R documentation you learn about function *from the horses mouth*. R help also sometimes sheds light on a function's history, e.g. through references to academic papers.
+The main disadvantage of R's internal help is that it is terse and in some cases sparse. Do not expect to *always* be able to find the answer in R so be prepared to look elsewhere for more detailed help and context. From a learning perspective becoming acquainted with R's documentation is often better than finding out the solution from a different source: it was written by developers, largely for developers. Therefore with R documentation you learn about a function *from the horses mouth*. R help also sometimes sheds light on a function's history, e.g. through references to academic papers.
 
 As you look to learn about a topic or function in R, it is likely that you will have a search strategy of your own, ranging from broad to narrow:
 
@@ -6029,7 +6029,7 @@ As you look to learn about a topic or function in R, it is likely that you will 
 1. Getting help on a specific *function*.
 1. Looking into the *source code*.
 
-In many cases you may already have researched stages 1 and 2. Often you can stop and 3 and simply use the function without worrying exactly how it works. In every case, it is useful to be aware of this hierarchical approach to learning from R's internal help, so you can start with the 'Big Picture' (and avoid going down a misguided route early on) and then quickly focus in on the functions that are most related to your task. To illustrate this approach in action, imagine that you are interested in a specific topic: optimisation. The remainder of this section will work through the stages 1 to 4 outlined above as if we wanted to find out more about this topic, with occasional diversions from this topic to see how specific help functions work in more detail. The final method of learning from R's internal resources covered in this section is **swirl**, a package for interactive learning that we cover last.
+In many cases you may already have researched stages 1 and 2. Often you can stop at 3 and simply use the function without worrying exactly how it works. In every case, it is useful to be aware of this hierarchical approach to learning from R's internal help, so you can start with the 'Big Picture' (and avoid going down a misguided route early on) and then quickly focus in on the functions that are most related to your task. To illustrate this approach in action, imagine that you are interested in a specific topic: optimisation. The remainder of this section will work through the stages 1 to 4 outlined above as if we wanted to find out more about this topic, with occasional diversions from this topic to see how specific help functions work in more detail. The final method of learning from R's internal resources covered in this section is **swirl**, a package for interactive learning that we cover last.
 
 ### Searching R for topics
 
@@ -6059,7 +6059,7 @@ This can be very useful when you know that a function exists in a specific packa
 help.search(pattern = "optimisation|optimization", fields = c("title", "concept"), package = "stats")
 ```
 
-Another function for searching R is `apropos()`. It prints to the console any R objects (including 'hidden' functions, those beginning with `.` and datasets) whose name matches a give text string. Because it does not search R's documentation, it tends to return fewer results than `help.search()`. Its use and typical outputs can be seen from a couple of examples below:
+Another function for searching R is `apropos()`. It prints to the console any R objects (including 'hidden' functions, those beginning with `.` and datasets) whose name matches a given text string. Because it does not search R's documentation, it tends to return fewer results than `help.search()`. Its use and typical outputs can be seen from a couple of examples below:
 
 
 ```r
@@ -6070,7 +6070,7 @@ apropos("lm")[1:6] # show only first six results
 #> [4] ".__C__generalMatrix"  ".__C__glm"            ".__C__glm.null"
 ```
 
-To search *all R packages*, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take an example, if you are looking for a package for geospatial data analysis, you could do worse than enter the text string `geo` as an argument into package installation function (for example `install.packages(geo)`) and hitting `Tab` when the cursor is between the `o` and the `)` in the example. The resulting options are are shown in the figure below: selecting one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.
+To search *all R packages*, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take an example, if you are looking for a package for geospatial data analysis, you could do worse than to enter the text string `geo` as an argument into the package installation function (for example `install.packages(geo)`) and hitting `Tab` when the cursor is between the `o` and the `)` in the example. The resulting options are shown in the figure below: selecting one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
@@ -6125,7 +6125,7 @@ The help for `optim()` is typical, in that it has a title (General-purpose Optim
 The Description is usually just a sentence or two for explaining what it does. Usage shows the arguments that the function needs to work. And Arguments describes what kind of objects the function expects. Longer sections typically include Details and Examples, which provide some context and provide (usually reproducible) examples of how the function can be used, respectively. The typically short Value, References and See Also sections facilitate efficient learning by explaining what the output means, where you can find academic literature on the subject, and which functions are related.
 
 `optim()` is a mature and heavily used function so it has a long help page: you'll probably be thankful to learn that not all help pages are this long!
-With so much potentially overwhelming information in a single help page, the placement of the short, dense sections at the beginning is efficient because it means can understand the fundamentals of a function in few words.
+With so much potentially overwhelming information in a single help page, the placement of the short, dense sections at the beginning is efficient because it means you can understand the fundamentals of a function in few words.
 Learning how to read and quickly interpret such help pages will greatly help your ability to learn R. Take some time to study the help for `optim()` in detail.
 
 It is worth discussing the contents of the Usage section in particular, because this contains information that may not be immediately obvious:
@@ -6167,7 +6167,7 @@ The results show that the minimum value of `fn(x)` is found when `x = 0.707..` (
 From the help pages, we could guess that providing the function call without specifying `par` (i.e. `optim(fn = fn)`) would fail, which indeed it does. 
 
 The most _helpful_
-section is often is the Examples. These lie at the bottom the help page and show precisely
+section is often the Examples. These lie at the bottom of the help page and show precisely
 how the function works. You can either copy and paste the code, or actually run the
 example code using the `example` command (it is well worth running these examples due to the graphics produced):
 
@@ -6184,9 +6184,9 @@ Another useful section in the help file is `See Also:`. In the `optim()` help pa
 
 ### Reading R source code
 
-R is open source. This means that we view the underlying source code and examine any
+R is open source. This means that we can view the underlying source code and examine any
 function. Of course the code is complex, and diving straight into the source code
-won't help that much. However, watching to the github R source code
+won't help that much. However, watching the GitHub R source code
 [mirror](https://github.com/wch/r-source/) will allow you to monitor small changes
 that occur. This gives a nice entry point into a complex code base. Likewise, examining
 the source of small functions, such as `NCOL` is informative, e.g.
@@ -6196,7 +6196,7 @@ the source of small functions, such as `NCOL` is informative, e.g.
 <p>Subscribing to the R NEWS <a href="https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/">blog</a> is an easy way of keeping track of future changes.</p>
 </div>
 
-Many R packages are developed in the open on github or r-forge. Select a few well
+Many R packages are developed in the open on GitHub or R-Forge. Select a few well
 known packages and examine their source. A good package to start with is
 **[drat](https://github.com/eddelbuettel/drat)**. This is a relatively simple package
 developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It
@@ -6230,7 +6230,7 @@ describing new R packages, as well as general programming hints. Similarly, the
 articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a
 strong R bias. Publications in these journals are generally of very high quality and have been rigorously peer reviewed. However, they may be rather technical for R novices.
 
-The wider community provides a much larger body of information, of more variable quality, than the official R resources. The [Contributed Documentation](https://cran.r-project.org/other-docs.html) page on R's home page contains a dozens of tutorials and other resources on a wide range of topics. Some of these are excellent, although many are not kept up-to-date. An excellent resource for browsing R help pages online is provided by [rdocumentation.org](http://www.rdocumentation.org).
+The wider community provides a much larger body of information, of more variable quality, than the official R resources. The [Contributed Documentation](https://cran.r-project.org/other-docs.html) page on R's home page contains dozens of tutorials and other resources on a wide range of topics. Some of these are excellent, although many are not kept up-to-date. An excellent resource for browsing R help pages online is provided by [rdocumentation.org](http://www.rdocumentation.org).
 
 Lower grade but more frequently released information can be found on the 'blogosphere'. Central to this is  [R-bloggers](http://www.r-bloggers.com/),
 a blog aggregator of content contributed by bloggers who write about R (in English).
@@ -6255,7 +6255,7 @@ voted up or down. Users of Stackoverflow earn reputation points when their quest
 answer is up-voted. Anyone (with enough reputation) can edit a question or answer.
 This helps the content remain relevant.
 
-Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using `r-faq`, a few question that often crop up. 
+Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using `r-faq`, a few questions that often crop up. 
 
 ### Mailing lists and groups.
 
@@ -6270,7 +6270,7 @@ list, read the relevant mailing archive and check that your message is appropria
 ## Asking a question
 
 A great way to get specific help on a difficult topic is to ask for help.
-However, asking a good question is not easy. Three common mistakes, and ways to avoid them, outlined below:
+However, asking a good question is not easy. Three common mistakes, and ways to avoid them, are outlined below:
 
 1. Asking a question that has already been asked: ensure you've properly searched for the answer before posting.
 2. The answer to the question can be found in R's help: make sure you've properly read the relevant help pages before asking.
@@ -6297,7 +6297,7 @@ example_df = data.frame(x = rnorm(4), y = rnorm(4), z = sample(LETTERS, 4))
 ```
 
 Note the call to `set.seed` ensures anyone who runs the code will get the same
-random number stream. Alternatively, you use one of the many data sets that come with R - `library(help = "datasets")`. 
+random number stream. Alternatively, you can use one of the many data sets that come with R - `library(help = "datasets")`. 
 
 If creating an example data set isn't possible, then use `dput` on your actual data set. This
 will create an ASCII text representation of the object that will enable anyone to recreate
@@ -6316,18 +6316,18 @@ dput(example_df)
 ### Minimal example {-}
 
 What you should not do, is simply copy and paste your entire function into your question.
-It's unlikely that your entire function doesn't work, so just simplify it the bare minimum. 
+It's unlikely that your entire function doesn't work, so just simplify it to the bare minimum. 
 The aim is to target your actual issue. 
 Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem.
-Before asking your question, can you run you code in a clean R environment and reproduce your error?
+Before asking your question, can you run your code in a clean R environment and reproduce your error?
 
 ## Learning in depth
 
-In the age of the internet and social media, many people feel lucky if they have time out to go for a walk, let alone sit down to read a book. However it is undeniable that leaning R *in depth* is a time consuming activity. Reading a book or a large tutorial (and completing the practical examples contained within) may not be the most efficient way to solve a particular problem in the short term, but it can be one of the best ways to learn R programming properly, especially in the long-run.
+In the age of the internet and social media, many people feel lucky if they have time out to go for a walk, let alone sit down to read a book. However it is undeniable that learning R *in depth* is a time consuming activity. Reading a book or a large tutorial (and completing the practical examples contained within) may not be the most efficient way to solve a particular problem in the short term, but it can be one of the best ways to learn R programming properly, especially in the long-run.
 
 In depth learning differs from shallow, incremental learning because rather than discovering how a specific function works, you find out how systems of functions work together. To take a metaphor from civil engineering, in depth learning is about building strong foundations, on which a wide range of buildings can be constructed. In depth learning can be highly efficient in the long run because it will pay back over many years, regardless of the domain-specific problem you want to use R to tackle. Shallow learning, to continue the metaphor, is more like erecting many temporary structures: they can solve a specific problem in the short term but they will not be durable. Flimsy dwellings can be swept away. Shallow memories can be forgotten.
 
-Having established that time spent 'deep learning' can, counter-intuitively, be efficient, it is worth thinking about how to deep learn. This varies from person to person. It does not involve passively absorbing sacred information transmitted year after year by the 'R gods'. It is an active, participatory process. To ensure that memories are rapidly actionable you must 'learn by doing'. Learning from a cohesive, systematic and relatively comprehensive resource will help you to see the many interconnections between the different elements of R programming and how they can be combined efficient work.
+Having established that time spent 'deep learning' can, counter-intuitively, be efficient, it is worth thinking about how to deep learn. This varies from person to person. It does not involve passively absorbing sacred information transmitted year after year by the 'R gods'. It is an active, participatory process. To ensure that memories are rapidly actionable you must 'learn by doing'. Learning from a cohesive, systematic and relatively comprehensive resource will help you to see the many interconnections between the different elements of R programming and how they can be combined for efficient work.
 
 There are a number of such resources, including this book. Although the understandable tendency will be to use it incrementally, dipping in and out of different sections when different problems arise, we also recommend reading it systematically to see how the different elements of efficiency fit together. It is likely that as you work progressively through this book, in parallel with solving real world problems, you will realise that the solution is not to have the 'right' resource at hand but to be able to use the tools provided by R efficiently. Once you hit this level of proficiency, you should have the confidence to address most problems encountered from first principles. Over time, your 'first port of call' should move away from Google and even R's internal help to simply giving it a try: informed trial and error, intelligent experimentation, can be the best approach to both learning and solving problems quickly, once you are equipped with the tools to do so. That's why this is the last section in the book.
 
@@ -6344,9 +6344,9 @@ The final thing to say on the topic of efficient learning relates to the [old](h
 
 > **by teaching we learn**.
 
-This means that passing on information is one of the best ways to consolidate your learning It was largely by helping others to learn R that we became proficient R users.
+This means that passing on information is one of the best ways to consolidate your learning. It was largely by helping others to learn R that we became proficient R users.
 
-Demand for R skills is growing, so there are many opportunities to teach R. Whether it's helping your colleague to use `apply()`, or writing a blog post on solving certain problems in R, teaching others R is can be a rewarding experience. Furthermore, spreading the knowledge can be efficient: it will improving your own understanding of the language and benefit the entire community, providing a positive feedback to the movement towards open source software in data-driven computing.
+Demand for R skills is growing, so there are many opportunities to teach R. Whether it's helping your colleague to use `apply()`, or writing a blog post on solving certain problems in R, teaching others R can be a rewarding experience. Furthermore, spreading the knowledge can be efficient: it will improve your own understanding of the language and benefit the entire community, providing a positive feedback to the movement towards open source software in data-driven computing.
 
 Assuming you have completed reading the book, the only remaining thing to say is well done: you are now an efficient R programmer. We hope you direct your new found skills towards the greater good and pass on the wisdom to others along the way.
 
