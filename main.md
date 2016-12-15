@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-10"
+date: "2016-12-15"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 214504 234388 279051 295824 305576 393316   100
-#>  cs_apply(x) 140460 165008 190244 194412 206993 315459   100
-#>    cumsum(x)    467    850   1304   1049   1238  14340   100
+#>    cs_for(x) 216900 239094 277494 283841 304164 362782   100
+#>  cs_apply(x) 141360 164109 185164 183502 205008 321753   100
+#>    cumsum(x)    601    804   1366   1106   1244  18224   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.896   0.032   2.928
+#>   2.796   0.028   2.828
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3d73d10>
+#> <bytecode: 0x3d56b98>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2499,7 +2499,7 @@ please refer to [stackoverflow.com/questions/3550341](http://stackoverflow.com/q
 
 - [**DiagrammeR**](http://rich-iannone.github.io/DiagrammeR/), a new package for creating network graphs and other schematic diagrams in R. This package provides an R interface to simple flow-chart file formats such as [mermaid](https://github.com/knsv/mermaid) and [GraphViz](https://github.com/ellson/graphviz).
 
-The small example below (which provides the basis for creating charts like Figure \@ref(fig:4-2) illustrates how **DiagrammeR** can take simple text inputs to create informative up-to-date Gantt charts.
+The small example below (which provides the basis for creating charts like Figure \@ref(fig:4-2)) illustrates how **DiagrammeR** can take simple text inputs to create informative up-to-date Gantt charts.
 Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives.
 
 
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median   uq  max neval
-#>     with_select  9.41  9.58  9.79   9.66 10.1 10.2     5
-#>  without_select 15.33 15.89 16.04  15.92 16.5 16.6     5
+#>            expr   min    lq mean median    uq   max neval
+#>     with_select  9.05  9.05  9.2   9.13  9.18  9.59     5
+#>  without_select 13.92 13.98 14.8  14.60 14.91 16.46     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   3.956   0.728   4.685
+#>    3.92    0.56    4.48
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.176   0.088   0.263
+#>   0.200   0.064   0.265
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.820   0.396   1.218
+#>   0.788   0.272   1.059
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00233 0.00386 0.0568 0.00641 0.00699 5.13   100
-#>   ex_df[1, ] 0.76545 0.86084 1.0372 0.88779 0.93388 5.96   100
+#>         expr     min     lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00271 0.0039 0.0583 0.00653 0.00699 5.24   100
+#>   ex_df[1, ] 0.76644 0.8576 1.0333 0.88179 0.92826 6.31   100
 ```
 
 <div class="rmdtip">
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b740ff84220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2ab03d0d3220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
