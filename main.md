@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2016-12-15"
+date: "2017-02-07"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -312,9 +312,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 216900 239094 277494 283841 304164 362782   100
-#>  cs_apply(x) 141360 164109 185164 183502 205008 321753   100
-#>    cumsum(x)    601    804   1366   1106   1244  18224   100
+#>    cs_for(x) 206368 230989 275836 288434 301876 432569   100
+#>  cs_apply(x) 134725 165901 187549 190176 205924 333353   100
+#>    cumsum(x)    544    664   1311    959   1062  18971   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1450,7 +1450,7 @@ It was found that the installation of OpenBLAS led to a 2-fold speed-up (from ar
 as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests
 are highly dependent on the particularities of each computer. However, it clearly
 shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci
-numbers) are now much faster, whereas matrix calculations and functions receive a
+numbers) are not much faster, whereas matrix calculations and functions receive a
 substantial speed boost. This demonstrates that the speed-up you can expect from BLAS
 depends heavily on the type of computations you are undertaking.
 
@@ -1731,7 +1731,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.796   0.028   2.828
+#>   2.904   0.036   2.938
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2242,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3d56b98>
+#> <bytecode: 0x404fad0>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2938,9 +2938,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq mean median    uq   max neval
-#>     with_select  9.05  9.05  9.2   9.13  9.18  9.59     5
-#>  without_select 13.92 13.98 14.8  14.60 14.91 16.46     5
+#>            expr  min    lq  mean median    uq   max neval
+#>     with_select  9.1  9.13  9.36   9.48  9.51  9.59     5
+#>  without_select 14.1 14.25 14.86  14.41 14.70 16.79     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4399,13 +4399,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    3.92    0.56    4.48
+#>   4.052   0.536   4.586
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.200   0.064   0.265
+#>   0.200   0.068   0.268
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4418,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.788   0.272   1.059
+#>   0.792   0.280   1.073
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4556,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min     lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00271 0.0039 0.0583 0.00653 0.00699 5.24   100
-#>   ex_df[1, ] 0.76644 0.8576 1.0333 0.88179 0.92826 6.31   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00264 0.00379 0.0569 0.00634 0.00696 5.14   100
+#>   ex_df[1, ] 0.82196 0.86123 1.0045 0.87990 0.91814 6.27   100
 ```
 
 <div class="rmdtip">
@@ -4898,7 +4898,7 @@ resources on the subject (Section \@ref(rcpp-resources)).
 
 To write and compile C++ functions, you need a working C++ compiler (see the
 Prerequiste section at the beginning of this chapter). The code in this chapter was
-generated using version 0.12.8 of **Rcpp**. 
+generated using version 0.12.9.2 of **Rcpp**. 
 
 **Rcpp** is well documented, as illustrated by the number of vignettes on the package's
 [CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its
@@ -4974,7 +4974,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ab03d0d3220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b53e2ca5220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 
