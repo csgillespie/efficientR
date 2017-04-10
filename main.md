@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2017-02-07"
+date: "2017-04-10"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -22,6 +22,8 @@ url: 'https\://csgillespie.github.io/efficientR/'
 <img src="figures/f0_web.png" width="33%" style="display: block; margin: auto;" />
 
 This is the [online version](https://csgillespie.github.io/efficientR/) of the O'Reilly book: [Efficient R programming](http://shop.oreilly.com/product/0636920047995.do). Pull requests and general comments are welcome.
+
+Get a hard copy from: [Amazon (UK)](https://alexa.design/2pmrqBj), [Amazon (USA)](https://alexa.design/2pmfpf4), [O'Reilly](http://shop.oreilly.com/product/0636920047995.do)
 
 ## Authors {-}
 
@@ -312,9 +314,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 214785 238920 274809 279972 301076 370810   100
-#>  cs_apply(x) 138517 161619 183420 179296 206183 317739   100
-#>    cumsum(x)    556    721   1332   1007   1146  18455   100
+#>    cs_for(x) 209334 229410 264952 271579 289032 352576   100
+#>  cs_apply(x) 135218 157458 177074 173170 192503 330816   100
+#>    cumsum(x)    460    604   1162    902   1044  23172   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1731,7 +1733,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.87    0.04    2.91
+#>   3.076   0.048   3.121
 ```
 In contrast a more R-centric approach would be
 
@@ -2242,7 +2244,7 @@ into byte-code. This is illustrated by the base function `mean()`:
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x48f6150>
+#> <bytecode: 0x368be88>
 #> <environment: namespace:base>
 ```
 The third line contains the `bytecode` of the function. This means that the
@@ -2907,9 +2909,9 @@ voyages_readr = readr::read_tsv(fname)
 #> )
 #> See spec(...) for full column specifications.
 #> Warning: 2 parsing failures.
-#>  row            col   expected  actual
-#> 4403 cape_arrival   date like  2-01-01
-#> 4592 cape_departure date like  8-05-17
+#>  row            col   expected  actual                                                       file
+#> 4403 cape_arrival   date like  2-01-01 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 4592 cape_departure date like  8-05-17 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
 ```
 a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
@@ -2938,9 +2940,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min   lq  mean median    uq   max neval
-#>     with_select  9.06  9.2  9.24   9.24  9.32  9.38     5
-#>  without_select 13.83 14.2 14.71  14.30 14.84 16.43     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.7 10.8 10.9   10.9 10.9 11.1     5
+#>  without_select 17.6 17.6 17.8   17.9 17.9 18.0     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3113,9 +3115,9 @@ Raw data (i.e. data which has not been converted into R's native `.Rds` format) 
 
 ```r
 list.files(system.file("extdata", package = "readr"))
-#> [1] "challenge.csv"     "compound.log"      "epa78.txt"        
-#> [4] "example.log"       "fwf-sample.txt"    "massey-rating.txt"
-#> [7] "mtcars.csv"        "mtcars.csv.bz2"    "mtcars.csv.zip"
+#> [1] "challenge.csv"     "epa78.txt"         "example.log"      
+#> [4] "fwf-sample.txt"    "massey-rating.txt" "mtcars.csv"       
+#> [7] "mtcars.csv.bz2"    "mtcars.csv.zip"
 ```
 
 Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
@@ -4399,13 +4401,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    4.04    0.52    4.57
+#>   4.384   0.524   4.907
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.212   0.056   0.268
+#>   0.188   0.088   0.275
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4418,7 +4420,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>    0.78    0.30    1.08
+#>   1.088   0.288   1.378
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4556,9 +4558,9 @@ slower than a matrix, as illustrated below:
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min     lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00327 0.0041 0.0638 0.00694 0.00781 5.73   100
-#>   ex_df[1, ] 0.86370 0.9034 1.1053 0.94520 1.06915 6.37   100
+#>         expr     min      lq  mean median      uq  max neval
+#>  ex_mat[1, ] 0.00275 0.00387 0.057 0.0068 0.00743 5.06   100
+#>   ex_df[1, ] 0.81497 0.84904 0.981 0.8669 0.91373 6.34   100
 ```
 
 <div class="rmdtip">
@@ -4898,7 +4900,7 @@ resources on the subject (Section \@ref(rcpp-resources)).
 
 To write and compile C++ functions, you need a working C++ compiler (see the
 Prerequiste section at the beginning of this chapter). The code in this chapter was
-generated using version 0.12.9.2 of **Rcpp**. 
+generated using version 0.12.10 of **Rcpp**. 
 
 **Rcpp** is well documented, as illustrated by the number of vignettes on the package's
 [CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its
@@ -4974,7 +4976,7 @@ function
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2b1127674220>, x, y)
+#> .Primitive(".Call")(<pointer: 0x2b0d98b13220>, x, y)
 ```
 and can call the `add_cpp()` function in the usual way
 

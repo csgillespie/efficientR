@@ -27,7 +27,7 @@
 <meta name="author" content="Robin Lovelace">
 
 
-<meta name="date" content="2017-02-07">
+<meta name="date" content="2017-04-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -492,9 +492,9 @@ voyages_base =<span class="st"> </span><span class="kw">read.delim</span>(fname)
 <span class="co">#&gt; )</span>
 <span class="co">#&gt; See spec(...) for full column specifications.</span>
 <span class="co">#&gt; Warning: 2 parsing failures.</span>
-<span class="co">#&gt;  row            col   expected  actual</span>
-<span class="co">#&gt; 4403 cape_arrival   date like  2-01-01</span>
-<span class="co">#&gt; 4592 cape_departure date like  8-05-17</span></code></pre></div>
+<span class="co">#&gt;  row            col   expected  actual                                                       file</span>
+<span class="co">#&gt; 4403 cape_arrival   date like  2-01-01 &#39;/home/travis/R/Library/efficient/extdata/voc_voyages.tsv&#39;</span>
+<span class="co">#&gt; 4592 cape_departure date like  8-05-17 &#39;/home/travis/R/Library/efficient/extdata/voc_voyages.tsv&#39;</span></code></pre></div>
 <p>a warning is raised regarding row 2841 in the <code>built</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first <span class="math inline">\(1000\)</span> rows, rather than all rows, as base <code>read.*()</code> functions do. Printing the offending element</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voyages_base$built[<span class="dv">2841</span>] <span class="co"># a factor.</span>
 <span class="co">#&gt; [1] 1721-01-01</span>
@@ -510,9 +510,9 @@ voyages_dt =<span class="st"> </span>data.table::<span class="kw">fread</span>(f
   <span class="dt">without_select =</span> data.table::<span class="kw">fread</span>(fname)
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;            expr   min   lq  mean median    uq   max neval</span>
-<span class="co">#&gt;     with_select  9.06  9.2  9.24   9.24  9.32  9.38     5</span>
-<span class="co">#&gt;  without_select 13.83 14.2 14.71  14.30 14.84 16.43     5</span></code></pre></div>
+<span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span>
+<span class="co">#&gt;     with_select 10.7 10.8 10.9   10.9 10.9 11.1     5</span>
+<span class="co">#&gt;  without_select 17.6 17.6 17.8   17.9 17.9 18.0     5</span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv()</code> and <code>fread()</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -640,9 +640,9 @@ co2_transport =<span class="st"> </span><span class="kw">WDI</span>(<span class=
 <p>Most well documented packages provide some example data for you to play with. This can help demonstrate use cases in specific domains, that uses a particular data format. The command <code>data(package = &quot;package_name&quot;)</code> will show the datasets in a package. Datasets provided by <strong>dplyr</strong>, for example, can be viewed with <code>data(package = &quot;dplyr&quot;)</code>.</p>
 <p>Raw data (i.e. data which has not been converted into R’s native <code>.Rds</code> format) is usually located within the sub-folder <code>extdata</code> in R (which corresponds to <code>inst/extdata</code> when developing packages. The function <code>system.file()</code> outputs file paths associated with specific packages. To see all the external files within the <strong>readr</strong> package, for example, one could use the following command:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>))
-<span class="co">#&gt; [1] &quot;challenge.csv&quot;     &quot;compound.log&quot;      &quot;epa78.txt&quot;        </span>
-<span class="co">#&gt; [4] &quot;example.log&quot;       &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot;</span>
-<span class="co">#&gt; [7] &quot;mtcars.csv&quot;        &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
+<span class="co">#&gt; [1] &quot;challenge.csv&quot;     &quot;epa78.txt&quot;         &quot;example.log&quot;      </span>
+<span class="co">#&gt; [4] &quot;fwf-sample.txt&quot;    &quot;massey-rating.txt&quot; &quot;mtcars.csv&quot;       </span>
+<span class="co">#&gt; [7] &quot;mtcars.csv.bz2&quot;    &quot;mtcars.csv.zip&quot;</span></code></pre></div>
 <p>Further, to ‘look around’ to see what files are stored in a particular package, one could type the following, taking advantage of RStudio’s intellisense file completion capabilities (using copy and paste to enter the file path):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">&quot;readr&quot;</span>)
 <span class="co">#&gt; [1] &quot;/home/robin/R/x86_64-pc-linux-gnu-library/3.3/readr&quot;</span></code></pre></div>
