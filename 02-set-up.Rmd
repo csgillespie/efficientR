@@ -9,19 +9,9 @@ data("USArrests", package="datasets")
 
 # Efficient set-up {#set-up}
 
-An efficient computer set-up is analogous to a well-tuned vehicle.
-Its components work in harmony. It is well-serviced.
-It's fast!
+An efficient computer set-up is analogous to a well-tuned vehicle. Its components work in harmony. It is well-serviced. It's fast!
 
-This chapter describes the set-up that will enable
-a productive workflow.
-It explores how the operating system,
-R version, startup files and IDE can make your R work faster.
-Understanding and at times changing these set-up options can have many knock-on benefits.
-That's why we cover them at this early stage (hardware is covered in the next [chapter](#programming)). 
-By the end of this chapter you should understand how to set-up your computer
-and R installation for optimal efficiency.
-It covers the following topics:
+This chapter describes the set-up that will enable a productive workflow. It explores how the operating system, R version, startup files and IDE can make your R work faster. Understanding and at times changing these set-up options can have many knock-on benefits. That's why we cover them at this early stage (hardware is covered in the next [chapter](#programming)).  By the end of this chapter you should understand how to set-up your computer and R installation for optimal efficiency. It covers the following topics:
 
 - R and the operating systems: system monitoring on Linux, Mac and Windows
 - R version: how to keep your base R installation and packages up-to-date
@@ -49,13 +39,7 @@ library("benchmarkme")
 
 ## Operating system
 
-R supports all three major operating system (OS) types: Linux, Mac and
-Windows.^[All CRAN packages are automatically tested on these
-systems, in addition to Solaris. R has also been reported to run on more exotic
-operating systems, including those used in smart phones and game consoles [@peng_r_2014].]
-R is platform-independent, although there are some OS-specific quirks,
-e.g. in relation to file path
-notation (see Section \@ref(location)).
+R supports all three major operating system (OS) types: Linux, Mac and Windows.^[All CRAN packages are automatically tested on these systems, in addition to Solaris. R has also been reported to run on more exotic operating systems, including those used in smart phones and game consoles [@peng_r_2014].] R is platform-independent, although there are some OS-specific quirks, e.g. in relation to file path notation (see Section \@ref(location)).
 
 Basic OS-specific information can be queried from within R using `Sys.info()`:
 
@@ -73,53 +57,29 @@ The **assertive.reflection** package can be used to report additional informatio
 
 ### Operating system and resource monitoring
 
-Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking
-conducted for a presentation "R on Different Platforms" at useR 2006
-found that R was marginally faster on Windows than Linux set-ups.
-Similar results were reported in an academic paper, with R completing
-statistical analyses faster on a Linux than Mac OS's [@sekhon2006art].
-In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html)
-supported these results with slightly faster
-run times for certain benchmarks on Ubuntu than Mac systems. The data from the **benchmarkme** package
-also suggests that running code under the Linux OS is marginally faster.
+Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking conducted for a presentation "R on Different Platforms" at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS's [@sekhon2006art]. In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html) supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the **benchmarkme** package also suggests that running code under the Linux OS is marginally faster.
 ]
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)), another OS-related issue to consider is external dependencies: programs that R packages depend on.
-Sometimes external package dependencies must be installed manually (i.e. not using `install.packages()`).
-This is especially common with Unix-based systems (Linux and Mac).
-On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)), another OS-related issue to consider is external dependencies: programs that R packages depend on. Sometimes external package dependencies must be installed manually (i.e. not using `install.packages()`). This is especially common with Unix-based systems (Linux and Mac). On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
-Resource monitoring is the process of checking the status of key OS variables.
-For computationally intensive work, it is sensible to monitor system resources in this way.
-Resource monitoring can help identify computational bottlenecks.
-Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter \@ref(programming)).
+Resource monitoring is the process of checking the status of key OS variables. For computationally intensive work, it is sensible to monitor system resources in this way. Resource monitoring can help identify computational bottlenecks. Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter \@ref(programming)).
 
-CPU resource allocated over time is another common OS variable that is worth monitoring.
-A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)),
-and whether there is spare CPU capacity on the OS that could be harnessed by parallel code.
+CPU resource allocated over time is another common OS variable that is worth monitoring. A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)), and whether there is spare CPU capacity on the OS that could be harnessed by parallel code.
 
 ```{r 2-1, echo=FALSE, fig.cap="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.", out.width="100%"}
 knitr::include_graphics("figures/f2_1_sysmon.png")
 ```
 
-System monitoring is a complex topic that spills over into system administration and
-server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
+System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
 
-- On Linux, the shell command `top` displays key resource use figures for most
-distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively.
-A number of options such as `nethogs` monitor internet usage.
-- On Mac the **Activity Monitor** provides similar functionality. This can be initiated
-from the Utilities folder in Launchpad.
-- On Windows the **Task Manager** provides key information on RAM and CPU use by
-process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
+- On Linux, the shell command `top` displays key resource use figures for most distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as `nethogs` monitor internet usage.
+- On Mac the **Activity Monitor** provides similar functionality. This can be initiated from the Utilities folder in Launchpad.
+- On Windows the **Task Manager** provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
 
 #### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
-2. Start an activity monitor then execute the following code chunk.
-In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object
-`X` (see Section \@ref(the-apply-family) for more on the 'apply family' of 
-functions).[The
-reason this works is that a data frame is really a list of vectors, each vector forming a column.
+
+2. Start an activity monitor then execute the following code chunk. In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object `X` (see Section \@ref(the-apply-family) for more on the 'apply family' of functions).[The reason this works is that a data frame is really a list of vectors, each vector forming a column.
 ]
 How do the system output logs (results) on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
@@ -137,8 +97,8 @@ How do the system output logs (results) on your system compare to those presente
 `mclapply` only works in parallel on Mac and Linux. In Chapter 7 you'll learn about an equivalent function `parLapply()` that works in parallel on Windows. 
 ```
 
-
 3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
+
 4. Bonus question: how would the results change depending on operating system?
 
 ```{r timings-tests, echo=FALSE, eval=FALSE}
@@ -155,13 +115,7 @@ identical(r1, r2)
 
 ## R version
 
-It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general 
-base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
-For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code.
-In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested,
-to ensure stability.
-Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich.
-This section explains how.
+It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package.  For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
 
 ```{block, packrat, type='rmdtip'}
 Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at [cran.r-project.org/bin/](https://cran.r-project.org/bin/). To download binary versions for Ubuntu 'Wily', for example, see [cran.r-project.org/bin/linux/ubuntu/wily/](https://cran.r-project.org/bin/linux/ubuntu/wily/). To 'pin' specific versions of R packages you can use the **packrat** package. For more on pinning R versions and R packages see articles on RStudio's website [Using-Different-Versions-of-R](https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R) and [rstudio.github.io/packrat/](https://rstudio.github.io/packrat/).
@@ -183,9 +137,7 @@ deb http://cran.rstudio.com/bin/linux/ubuntu xenial/
 
 `http://cran.rstudio.com` is the mirror (which can be replaced by any listed at [cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)) and `xenial` is the release. See the [Debian](https://cran.r-project.org/bin/linux/debian/) and [Ubuntu](https://cran.r-project.org/bin/linux/ubuntu/) installation pages on CRAN from further details.
 
-Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system.
-The following two commands, for example, would install the base R package (a 'bare-bones' install)
-and the package **rcurl**, which has an external dependency:
+Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system. The following two commands, for example, would install the base R package (a 'bare-bones' install) and the package **rcurl**, which has an external dependency:
 
 ```{r, eval=FALSE, engine='bash'}
 sudo apt-get install r-cran-base # install base R
@@ -211,25 +163,19 @@ Do you want to continue? [Y/n]
 
 ```
 
-Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See
-[jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
+Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See [jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
 
 Once R is installed it should be kept up-to-date.
 
 ### Updating R
 
-R is a mature and stable language so well-written code in base R should work on most versions.
-However, it is important to keep your R version relatively up-to-date, because:
+R is a mature and stable language so well-written code in base R should work on most versions. However, it is important to keep your R version relatively up-to-date, because:
 
 - Bug fixes are introduced in each version, making errors less likely;
 - Performance enhancements are made from one version to the next, meaning your code may run faster in later versions;
 - Many R packages only work on recent versions on R.
 
-Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS).
-R release versions have 3 components corresponding to major.minor.patch changes.
-Generally 2 or 3 patches are released before the next minor increment - each 'patch' is
-released roughly every 3 months.
-R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
+Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS). R release versions have 3 components corresponding to major.minor.patch changes. Generally 2 or 3 patches are released before the next minor increment - each 'patch' is released roughly every 3 months. R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
 
  - On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with `apt-get upgrade`.
  - On Mac, the latest version should be installed by the user from the `.pkg` files mentioned above.
@@ -244,27 +190,22 @@ For information about changes to expect in the next version, you can subscribe t
 
 ### Installing R packages
 
-Large projects may need several packages to be installed.
-In this case, the required packages can be installed at once.
-Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:
+Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:
 
 ```{r, eval=FALSE}
 pkgs = c("raster", "leaflet", "rgeos") # package names
 install.packages(pkgs)
 ```
 
-In the above code all the required packages are installed with two not three lines, reducing typing.
-Note that we can now re-use the `pkgs` object to load them all:
+In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the `pkgs` object to load them all:
 
 ```{r, eval=FALSE}
 inst = lapply(pkgs, library, character.only = TRUE) # load them
 ```
 
-In the above code `library(pkgs[i])` is executed for every package stored in the text string vector.
-We use `library` here instead of `require` because the former produces an error if the package is not available.
+In the above code `library(pkgs[i])` is executed for every package stored in the text string vector. We use `library` here instead of `require` because the former produces an error if the package is not available.
 
-Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
-Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
+Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code. Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
 <!-- To provide another example, we can update only the packages named in `pkgs` with the following command: -->
 
 <!-- ```{r, eval=FALSE} -->
@@ -273,18 +214,14 @@ Storing package names in a character vector object such as `pkgs` is also useful
 
 ### Installing R packages with dependencies {#deps}
 
-Some packages have external dependencies (i.e. they call libraries outside R).
-On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`.
-This will ensure the necessary dependencies are installed and setup correctly alongside the R package.
-On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be searched for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
+Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be searched for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
 
 ```{r, engine='bash', eval = FALSE}
 apt-cache search r-cran- # search for available cran Debian packages
 sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies)
 ```
 
-On Windows the **installr** package helps manage and update R packages with system-level dependencies.
-For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
+On Windows the **installr** package helps manage and update R packages with system-level dependencies. For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
 
 ```{r, eval=FALSE}
 installr::install.rtools() 
@@ -299,18 +236,13 @@ This can be done *for all packages* with:
 update.packages() # update installed CRAN packages
 ```
 
-The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system.
-This is generally desirable as
-updating dozens of large packages can consume a large proportion of available system resources.
+The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system. This is generally desirable as updating dozens of large packages can consume a large proportion of available system resources.
 
 ```{block, update-rprofile, type='rmdtip'}
-To update packages automatically, you can add the line `update.packages(ask = FALSE)` to your
-`.Rprofile` startup file (see the next section for more on `.Rprofile`). Thanks to Richard Cotton for this tip.
+To update packages automatically, you can add the line `update.packages(ask = FALSE)` to your `.Rprofile` startup file (see the next section for more on `.Rprofile`). Thanks to Richard Cotton for this tip.
 ```
 
-An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates.
-Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
-Next (after the exercises) we take a look at how to configure R using start-up files. 
+An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates. Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio). Next (after the exercises) we take a look at how to configure R using start-up files. 
 
 #### Exercises {-}
 
@@ -319,10 +251,7 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts a couple of file scripts are run by default, as documented in `?Startup`.
-This section explains how to customise these files, allowing you to save API keys or load frequently used functions.
-Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments.
-If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
+Every time R starts a couple of file scripts are run by default, as documented in `?Startup`. This section explains how to customise these files, allowing you to save API keys or load frequently used functions. Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments. If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
 
 ```{block, rstudio-tip, type='rmdtip'}
 Some of R's startup arguments can be controlled interactively in RStudio. See the online help file [Customizing RStudio](https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio) for more on this.
@@ -339,9 +268,7 @@ The following are particularly important:
 
 - `--no-save` tells R not to ask the user if they want to save objects saved in RAM when the session is ended with `q()`.
 
-Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit.
-R's default setting of loading data from the last session automatically is potentially problematic in this context.
-See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
+Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit. R's default setting of loading data from the last session automatically is potentially problematic in this context. See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
 
 ```{block type='rmdtip'}
 A concise way to load a 'vanilla' version of R, with all of the above options enabled is with an option of the same name: 
@@ -370,10 +297,7 @@ Proceed with caution and, if you mess things up, just delete the offending files
 
 ### The location of startup files {#location}
 
-Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session.
-Note also that these files should only be changed with caution and if you know what you are doing.
-This is because they can make your R version behave differently to other R installations,
-potentially reducing the reproducibility of your code.
+Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session. Note also that these files should only be changed with caution and if you know what you are doing. This is because they can make your R version behave differently to other R installations, potentially reducing the reproducibility of your code.
 
 Files in three folders are important in this process:
 
@@ -386,7 +310,7 @@ Files in three folders are important in this process:
 It is important to know the location of the `.Rprofile` and `.Renviron` set-up files that are being used out of these three options.
 R only uses one `.Rprofile` and one `.Renviron` in any session: if you have a `.Rprofile` file in your current project, R will ignore `.Rprofile` in `R_HOME` and `HOME`.
 Likewise, `.Rprofile` in `HOME` overrides `.Rprofile` in `R_HOME`. 
-The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files.
+The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files. 
 
 To create a project-specific start-up script, simply create a `.Rprofile` file in the project's root directory and start adding R code, e.g. via `file.edit(".Rprofile")`.
 Remember that this will make `.Rprofile` in the home directory be ignored.
@@ -417,11 +341,7 @@ The location, contents and uses of each is outlined in more detail below.
 
 ### The `.Rprofile` file {#rprofile}
 
-By default, R looks for and runs `.Rprofile` files in the three locations described above, in a specific order.
-`.Rprofile` files are simply R scripts that run each time R runs and
-they can be found within `R_HOME`, `HOME` and the project's home directory, found with `getwd()`.
-To check if you have a site-wide `.Rprofile`,
-which will run for all users on start-up, run:
+By default, R looks for and runs `.Rprofile` files in the three locations described above, in a specific order. `.Rprofile` files are simply R scripts that run each time R runs and they can be found within `R_HOME`, `HOME` and the project's home directory, found with `getwd()`. To check if you have a site-wide `.Rprofile`, which will run for all users on start-up, run:
 
 ```{r, eval=FALSE}
 site_path = R.home(component = "home")
@@ -429,10 +349,7 @@ fname = file.path(site_path, "etc", "Rprofile.site")
 file.exists(fname)
 ```
 
-The above code checks for the presence of
-`Rprofile.site` in that directory.
-As outlined above, the `.Rprofile` located in your home directory is user-specific.
-Again, we can test whether this file exists using 
+The above code checks for the presence of `Rprofile.site` in that directory. As outlined above, the `.Rprofile` located in your home directory is user-specific. Again, we can test whether this file exists using 
 
 ```{r, eval=FALSE}
 file.exists("~/.Rprofile")
@@ -458,34 +375,21 @@ message("Hi Robin, welcome to R")
 options(prompt = "R4geo> ")
 ```
 
-To quickly explain each line of code: the first simply prints a message in the console
-each time a new R session is started. The latter modifies the console prompt in the
-console (set to `> ` by default). Note that simply adding more lines to the `.Rprofile`
-will set more features. An important aspect of `.Rprofile` (and `.Renviron`) is that
-*each line is run once and only once for each R session*. That means that the options
-set within `.Rprofile` can easily be changed during the session. The following command
-run mid-session, for example, will return the default prompt:
+To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started. The latter modifies the console prompt in the console (set to `> ` by default). Note that simply adding more lines to the `.Rprofile` will set more features. An important aspect of `.Rprofile` (and `.Renviron`) is that *each line is run once and only once for each R session*. That means that the options set within `.Rprofile` can easily be changed during the session. The following command run mid-session, for example, will return the default prompt:
 
 ```{r}
 options(prompt = "> ")
 ```
 
-More details on these, and other potentially useful `.Rprofile` options are described subsequently.
-For more suggestions of useful startup settings, see Examples in `help("Startup")`
-and online resources such as those at [statmethods.net](http://www.statmethods.net/interface/customizing.html).
-The help pages for R options (accessible with `?options`) are also worth a read before writing your own `.Rprofile`.
+More details on these, and other potentially useful `.Rprofile` options are described subsequently. For more suggestions of useful startup settings, see Examples in `help("Startup")` and online resources such as those at [statmethods.net](http://www.statmethods.net/interface/customizing.html). The help pages for R options (accessible with `?options`) are also worth a read before writing your own `.Rprofile`.
 
 ```{block, continuetip, style='rmdtip'}
-Ever been frustrated by unwanted `+` symbols that prevent copied and pasted multi-line functions from working?
-These potentially annoying `+`s can be eradicated by adding `options(continue = "  ")` to your `.Rprofile`.
+Ever been frustrated by unwanted `+` symbols that prevent copied and pasted multi-line functions from working? These potentially annoying `+`s can be eradicated by adding `options(continue = "  ")` to your `.Rprofile`.
 ```
 
 #### Setting options
 
-The function `options`, used above, contains a number of default settings.
-Typing `options()` provides a good indication of what can be configured.
-Since `options()` are often related to personal preferences (with few implications for reproducibility), that you will want for many of your R sessions, `.Rprofile` in your home directory or in your project's folder are sensible places to set them.
-Other illustrative options are shown below:
+The function `options`, used above, contains a number of default settings. Typing `options()` provides a good indication of what can be configured. Since `options()` are often related to personal preferences (with few implications for reproducibility), that you will want for many of your R sessions, `.Rprofile` in your home directory or in your project's folder are sensible places to set them. Other illustrative options are shown below:
 
 ```{r, eval=FALSE}
 # With a customised prompt
@@ -501,16 +405,11 @@ The first option changes four default options in a single line.
   * Removing the stars after significant $p$-values.
   * Removing the `+` in multi-line functions.
 
-Try to avoid adding options to the start-up file that make your code non-portable. For
-example, adding `options(stringsAsFactors = FALSE)` to your start-up script has
-knock-on effects for `read.table` and related functions including `read.csv`, making
-them convert text strings into characters rather than into factors as is default. This
-may be useful for you, but can make your code less portable, so be warned.
+Try to avoid adding options to the start-up file that make your code non-portable. For example, adding `options(stringsAsFactors = FALSE)` to your start-up script has knock-on effects for `read.table` and related functions including `read.csv`, making them convert text strings into characters rather than into factors as is default. This may be useful for you, but can make your code less portable, so be warned.
 
 #### Setting the CRAN mirror
 
-To avoid setting the CRAN mirror each time you run
-`install.packages()` you can permanently set the mirror in your `.Rprofile`.
+To avoid setting the CRAN mirror each time you run `install.packages()` you can permanently set the mirror in your `.Rprofile`.
 
 ```{r, eval=FALSE}
 # `local` creates a new, empty environment
@@ -522,16 +421,11 @@ local({
 })
 ```
   
-The RStudio mirror is a virtual machine run by Amazon's 
-EC2 service, and it syncs with the main CRAN mirror in Austria once per day. 
-Since RStudio is using Amazon's CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn't need to travel very far, and is therefore fast to download.
+The RStudio mirror is a virtual machine run by Amazon's EC2 service, and it syncs with the main CRAN mirror in Austria once per day.  Since RStudio is using Amazon's CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn't need to travel very far, and is therefore fast to download.
 
 #### The **fortunes** package
 
-This section illustrates the power of `.Rprofile` customisation with reference to a
-package that was developed for fun. The code below could easily be altered to
-automatically connect to a database, or ensure that the latest packages have been
-downloaded.
+This section illustrates the power of `.Rprofile` customisation with reference to apackage that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.
 
 The **fortunes** package contains a number of memorable quotes that the community has collected over many years, called R fortunes. Each fortune has a number. To get fortune number $50$, for example, enter
 
@@ -546,21 +440,13 @@ if(interactive())
   try(fortunes::fortune(), silent = TRUE)
 ```
 
-The `interactive()` function tests whether R is being used interactively in a terminal.
-The `fortune()` function is called within `try()`. If the **fortunes** package is not
-available, we avoid raising an error and move on. By using `::` we avoid adding the
-**fortunes** package to our list of attached packages.
+The `interactive()` function tests whether R is being used interactively in a terminal. The `fortune()` function is called within `try()`. If the **fortunes** package is not available, we avoid raising an error and move on. By using `::` we avoid adding the **fortunes** package to our list of attached packages.
 
 ```{block, type="rmdtip"}
-Typing `search()`, gives the list of attached packages. By using `fortunes::fortune()`
-we avoid adding the **fortunes** package to that list.
+Typing `search()`, gives the list of attached packages. By using `fortunes::fortune()` we avoid adding the **fortunes** package to that list.
 ```
 
-The function `.Last()`, if it exists in the `.Rprofile`, is always run 
-at the end of the session.
-We can use it to install the **fortunes** package if needed. To load
-the package, we use `require()`, since if the package isn't installed, the `require()` function
-returns `FALSE` and raises a warning.
+The function `.Last()`, if it exists in the `.Rprofile`, is always run at the end of the session. We can use it to install the **fortunes** package if needed. To load the package, we use `require()`, since if the package isn't installed, the `require()` function returns `FALSE` and raises a warning.
 
 ```{r, eval=FALSE}  
 .Last = function() {
@@ -596,8 +482,7 @@ nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
 Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
 Shortening long function names for interactive (but not reproducible code writing) is another option for using `.Rprofile` to increase efficiency.
-If you frequently use `View()`, for example, you may be able to save time by referring to it
-in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
+If you frequently use `View()`, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
 ```{r, eval=FALSE}
 v = utils::View
@@ -613,20 +498,15 @@ setwd("R")
 
 #### Creating hidden environments with .Rprofile
 
-Beyond making your code less portable, another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space:
-when you run the `ls()` command, your `.Rprofile` functions will appear.
-Also if you run `rm(list = ls())`, your functions will be deleted. 
-One neat trick to overcome this issue is to use hidden objects and environments. When an object
-name starts with `.`, by default it doesn't appear in the output of the
-`ls()` function
+Beyond making your code less portable, another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space: 
+when you run the `ls()` command, your `.Rprofile` functions will appear. Also if you run `rm(list = ls())`, your functions will be deleted. One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with `.`, by default it doesn't appear in the output of the `ls()` function
 
 ```{r}
 .obj = 1
 ".obj" %in% ls()
 ```
 
-This concept also works with environments. In the `.Rprofile` file
-we can create a _hidden_ environment
+This concept also works with environments. In the `.Rprofile` file we can create a _hidden_ environment
 
 ```{r}
 .env = new.env()
@@ -638,8 +518,7 @@ and then add functions to this environment
 .env$ht = function(d, n = 6) rbind(head(d, n), tail(d, n))
 ```
 
-At the end of the `.Rprofile` file, we use
-`attach`, which makes it possible to refer to objects in the environment by their names alone.
+At the end of the `.Rprofile` file, we use `attach`, which makes it possible to refer to objects in the environment by their names alone.
 
 ```{r message=FALSE}
 attach(.env)
@@ -651,10 +530,8 @@ attach(.env)
   
 ### The `.Renviron` file {#renviron}
 
-The `.Renviron` file is used to store system variables. It follows a similar
-start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
-local versions. A typical use of the `.Renviron` file is to
-specify the `R_LIBS` path, which determines where new packages are installed:
+The `.Renviron` file is used to store system variables. It follows a similar start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for local versions. A typical use of the `.Renviron` file is to specify the `R_LIBS` path, which determines where new packages are installed:
+
 ```{r, engine='bash', eval=FALSE}
 # Linux
 R_LIBS=~/R/library
@@ -668,12 +545,7 @@ The location of this directory can be referred back to subsequently as follows:
 Sys.getenv("R_LIBS_USER")
 ```
 
-All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments.
-Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`.
-`HOME`, for example, which can be seen with `Sys.getenv("HOME")`, is
-taken from the operating system's list of environment variables.
-A list of the most important environment variables that can affect R's behaviour is documented in the
-little known help page `help("environment variables")`.
+All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments. Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`. `HOME`, for example, which can be seen with `Sys.getenv("HOME")`, is taken from the operating system's list of environment variables. A list of the most important environment variables that can affect R's behaviour is documented in the little known help page `help("environment variables")`.
 
 To set or unset an environment variable for the duration of a session, use the following commands:
 
@@ -682,70 +554,47 @@ Sys.setenv("TEST" = "test-string") # set an environment variable for the session
 Sys.unsetenv("TEST") # unset it
 ```
 
-Another common use of `.Renviron` is to store API keys and authentication tokens that will be available
-from one session to another.^[See
-[`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)
-from the `httr` package for more on
-this.]
-A common use case is setting the 'envvar' `GITHUB_PAT`, which will be detected by the **devtools** package
-via the function `github_pat()`.
-To take another example, the following line in `.Renviron`
-sets the `ZEIT_KEY` environment variable which is used in the
-**[diezeit](https://cran.r-project.org/web/packages/diezeit/)** package:
+Another common use of `.Renviron` is to store API keys and authentication tokens that will be available from one session to another.^[See [`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html) from the `httr` package for more on this.]
+A common use case is setting the 'envvar' `GITHUB_PAT`, which will be detected by the **devtools** package via the function `github_pat()`. To take another example, the following line in `.Renviron` sets the `ZEIT_KEY` environment variable which is used in the **[diezeit](https://cran.r-project.org/web/packages/diezeit/)** package:
 
 ```{r, engine='bash', eval=FALSE}
 ZEIT_KEY=PUT_YOUR_KEY_HERE
 ```
 
-You will need to sign-in and start a new R session for the environment variable
-(accessed by `Sys.getenv()`) to be visible. To test if the example API key has been
-successfully added as an environment variable, run the following:
+You will need to sign-in and start a new R session for the environment variable (accessed by `Sys.getenv()`) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:
 
 ```{r, eval=FALSE}
 Sys.getenv("ZEIT_KEY")
 ```
 
-Use of the `.Renviron` file for storing settings such as library paths and API keys is
-efficient because it reduces the need to update your settings for every R session.
-Furthermore, the same `.Renviron` file will work across different platforms so keep it
-stored safely.
+Use of the `.Renviron` file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session. Furthermore, the same `.Renviron` file will work across different platforms so keep it stored safely.
 
 #### Example `.Renviron` file
 
-My `.Renviron` file has grown over the years. I often switch between my desktop and
-laptop computers, so to maintain a consistent working environment, I have the same
-`.Renviron` file on all of my machines. As well as containing an `R_LIBS` entry and
-some API keys, my `.Renviron` has a few other lines:
+My `.Renviron` file has grown over the years. I often switch between my desktop and laptop computers, so to maintain a consistent working environment, I have the same `.Renviron` file on all of my machines. As well as containing an `R_LIBS` entry and some API keys, my `.Renviron` has a few other lines:
 
-  * `TMPDIR=/data/R_tmp/`. When R is running, it creates temporary copies. On my work
-    machine, the default directory is a network drive. 
+  * `TMPDIR=/data/R_tmp/`. When R is running, it creates temporary copies. On my work machine, the default directory is a network drive. 
   
   * `R_COMPILE_PKGS=3`. Byte compile all packages (covered in Chapter \@ref(programming)).
   
-  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to 
-    look for packages. My University has a site-wide directory that contains out of date 
-    packages. I want to avoiding using this directory.
+  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoiding using this directory.
 
-  * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the 
-    packages to load. Note I don't load the `datasets` package, but I ensure that 
-    `methods` is always loaded. Due to historical reasons, 
-    the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
+  * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the packages to load. Note I don't load the `datasets` package, but I ensure that `methods` is always loaded. Due to historical reasons, the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
 
 #### Exercises {-}
 
-1. What are the three locations where the startup files are stored? Where are these
-locations on your computer?
+1. What are the three locations where the startup files are stored? Where are these locations on your computer?
 
 2. For each location, does a `.Rprofile` or `.Renviron` file exist?
+
 3. Create a `.Rprofile` file in your current working directory that prints the message `Happy efficient R programming` each time you start R at this location.
+
 4. What happens to the startup files in `R_HOME` if you create them in `HOME` or local project directories? 
 
 ## RStudio {#rstudio}
 
 RStudio is an Integrated Development Environment (IDE) for R.
-It makes life easy for R users and developers with its intuitive and flexible interface.
-RStudio encourages good programming practice.
-Through its wide range of features RStudio can help make you a more efficient and productive R programmer. RStudio can, for example, greatly reduce the amount of time spent remembering and typing function names thanks to intelligent autocompletion.
+It makes life easy for R users and developers with its intuitive and flexible interface. RStudio encourages good programming practice. Through its wide range of features RStudio can help make you a more efficient and productive R programmer. RStudio can, for example, greatly reduce the amount of time spent remembering and typing function names thanks to intelligent autocompletion.
 Some of the most important features of RStudio include:
 
 - Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.
@@ -777,8 +626,7 @@ Alt+H U
 ```
 
 On Mac it works differently.
-`Cmd+?` should activate a search across menu items,
-allowing the same operation can be achieved with:
+`Cmd+?` should activate a search across menu items, allowing the same operation can be achieved with:
 
 ```
 Cmd+? update
@@ -816,6 +664,7 @@ Test out the multi-panel RStudio workflow by following the steps below:
 1. Create a new folder for the input data using the **Files pane**.
 
 2. Type in `downl` in the **Source pane** and hit `Enter` to make the function `download.file()` autocomplete. Then type `"`, which will autocomplete to `""`, paste the URL of a file to download (e.g. `https://www.census.gov/2010census/csv/pop_change.csv`) and a file name (e.g. `pop_change.csv`).
+
 3. Execute the full command with `Ctrl-Enter`:
 
     ```{r, eval=FALSE}
@@ -855,17 +704,13 @@ Most of these are self-explanatory but it is worth mentioning a few that can boo
 
 - R version settings allow RStudio to 'point' to different R versions/interpreters, which may be faster for some projects.
 
-- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make
-starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this 
-reason we recommend you untick this box.
+- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this reason we recommend you untick this box.
 
 - Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling `Vim mode` makes RStudio act as a (partial) Vim emulator.
 
-- Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work.
-This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.
+- Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work. This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.
 
-- Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen.
-Other options in this area relate more to aesthetics. Settings such as font type and background color are also important because feeling comfortable in your programming environment can boost productivity. Go to `Tools > Global Options` to modify these.
+- Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics. Settings such as font type and background color are also important because feeling comfortable in your programming environment can boost productivity. Go to `Tools > Global Options` to modify these.
 
 ```{r, echo=FALSE}
 # TODO say which 'subsequent chapter' above
@@ -985,11 +830,7 @@ project/
 Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are 'first class citizens' within the project's design, each with their own folder.
 
 Another approach to project management is to treat projects as R packages.
-This is not recommended for most use cases, as it places restrictions on where you can put files.
-However, if the aim is *code development and sharing*, creating a small R package may be the way forward, even
-if you never intend to submit it on CRAN.
-Creating R packages is easier than ever before, as documented in [@cotton_learning_2013] and, more recently [@Wickham_2015].
-The **devtools** package helps manage R's quirks, making the process much less painful.
+This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is *code development and sharing*, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in [@cotton_learning_2013] and, more recently [@Wickham_2015]. The **devtools** package helps manage R's quirks, making the process much less painful.
 If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using `devtools::install_github("username/projectname")`, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.
 
 Note that a `set-up.R` or even a `.Rprofile` file in the project's root directory enable project-specific settings to be loaded each time people work on the project.
@@ -1020,8 +861,7 @@ This should therefore be seen as an advanced section: if you are not interested 
 Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.
 
 The two open source alternative BLAS libraries are [ATLAS](http://math-atlas.sourceforge.net/) and [OpenBLAS](https://github.com/xianyi/OpenBLAS). The [Intel MKL](https://software.intel.com/en-us/intel-mkl) is another implementation,
-designed for Intel processors by Intel and used in Revolution R
-(described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching your BLAS library, linear algebra operations can run several times faster than with the base BLAS routines. 
+designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching your BLAS library, linear algebra operations can run several times faster than with the base BLAS routines. 
 
 If you use macOS or Linux, you can check whether you have a BLAS library setting with the following function, from **benchmarkme**:
 
@@ -1038,14 +878,7 @@ As an illustrative test of the performance gains offered by BLAS, the following 
 res = benchmark_std() # run a suit of tests to test R's performance
 ```
 
-It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around
-150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests,
-as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests
-are highly dependent on the particularities of each computer. However, it clearly
-shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci
-numbers) are not much faster, whereas matrix calculations and functions receive a
-substantial speed boost. This demonstrates that the speed-up you can expect from BLAS
-depends heavily on the type of computations you are undertaking.
+It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are not much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
 
 (ref:blas-bench) Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).
 

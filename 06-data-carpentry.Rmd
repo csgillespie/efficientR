@@ -52,10 +52,9 @@ library("data.table")
 **tibble** is a package that defines a new data frame class for R, the `tbl_df`. These 'tibble diffs' (as their inventor [suggests](https://github.com/hadley/tibble) they should be pronounced) are like the base class `data.frame`, but with more user friendly printing, subsetting, and factor handling.
 
 ```{block, type="rmdnote"}
-A tibble data frame is an S3 object with three classes, `tbl_df`, `tbl`, and `data.frame`. Since 
-the object has the `data.frame` tag, this means that if a `tbl_df` or `tbl` method isn't available, 
-the object will be passed on to the appropriate `data.frame` function.
+A tibble data frame is an S3 object with three classes, `tbl_df`, `tbl`, and `data.frame`. Since the object has the `data.frame` tag, this means that if a `tbl_df` or `tbl` method isn't available,  the object will be passed on to the appropriate `data.frame` function.
 ```
+
 To create a tibble data frame, we use `tibble` function
 
 ```{r}
@@ -104,15 +103,7 @@ data(pew) # see ?pew - dataset from the efficient package
 pew[1:3, 1:4] # take a look at the data
 ```
 
-Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively.
-They have different dimensions, but they contain precisely the same information.
-Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
-According to the concept of 'tidy data', the long form is correct.
-Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-Because R is a vector-based language, tidy data also has efficiency advantages: it's often faster to operate on few long columns than many short ones.
-Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data.
-Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be
-able to transfer between wide (or otherwise 'untidy') and tidy formats.
+Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively. They have different dimensions, but they contain precisely the same information. Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt). According to the concept of 'tidy data', the long form is correct. Note that 'correct' here is used in the context of data analysis and graphical visualisation. Because R is a vector-based language, tidy data also has efficiency advantages: it's often faster to operate on few long columns than many short ones. Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data. Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be able to transfer between wide (or otherwise 'untidy') and tidy formats.
 
 Tidy data has the following characteristics [@Wickham_2014]:
 
@@ -296,9 +287,7 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 data(wb_ineq)
 ```
 
-**dplyr** is a large package and can be seen as
-a language in its own right. Following the 'walk before you run' principle,
-we'll start simple, by filtering and aggregating rows.
+**dplyr** is a large package and can be seen as a language in its own right. Following the 'walk before you run' principle, we'll start simple, by filtering and aggregating rows.
 
 ### Renaming columns
 
@@ -391,23 +380,13 @@ for(i in cols_to_change){
 aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
-`filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-By avoiding the `$` symbol, **dplyr** makes subsetting code concise and consistent with other **dplyr** functions.
-The first argument is a data frame and
-subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
-In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
+`filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.] By avoiding the `$` symbol, **dplyr** makes subsetting code concise and consistent with other **dplyr** functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**. In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 
 There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
 
 ### Chaining operations
 
-Another interesting feature of **dplyr** is its ability
-to chain operations together. This overcomes one of the
-aesthetic issues with R code: you can end-up with
-very long commands with many functions nested inside each
-other to answer relatively simple questions.
-Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable.
-Here's how you could use the chains to summarize average Gini indexes per decade, for example:
+Another interesting feature of **dplyr** is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end-up with very long commands with many functions nested inside each other to answer relatively simple questions. Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable. Here's how you could use the chains to summarize average Gini indexes per decade, for example:
 
 ```{r}
 wb_ineq %>% 
@@ -425,11 +404,7 @@ By way of explanation, this is what happened:
 1. This new variable was used to group rows in the data frame with the same decade.
 1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
 
-Let's ask another question to see how the **dplyr** chaining workflow can be used to
-answer questions interactively: What are the 5 most unequal
-years for countries containing the letter g?
-Here's how chains can help organise the analysis needed to answer this question
-step-by-step:
+Let's ask another question to see how the **dplyr** chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here's how chains can help organise the analysis needed to answer this question step-by-step:
 
 ```{r tidy=FALSE}
 wb_ineq %>% 
@@ -440,8 +415,7 @@ wb_ineq %>%
   top_n(n = 5)
 ```
 
-The above function consists of 6 stages, each of which
-corresponds to a new line and **dplyr** function:
+The above function consists of 6 stages, each of which corresponds to a new line and **dplyr** function:
 
 1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
 2. Group the output by year.
@@ -449,10 +423,7 @@ corresponds to a new line and **dplyr** function:
 4. Arrange the results by average Gini index
 5. Select only the top 5 most unequal years.
 
-To see why this method is preferable to the nested
-function approach, take a look at the latter.
-Even after indenting properly it looks terrible
-and is almost impossible to understand!
+To see why this method is preferable to the nested function approach, take a look at the latter. Even after indenting properly it looks terrible and is almost impossible to understand!
 
 ```{r, eval=FALSE, tidy=FALSE}
 top_n(
@@ -559,11 +530,7 @@ summarise(countries,
   )
 ```
 
-To showcase the power of `summarise` used on
-a `grouped_df`, the
-above code reports a wide range of customised
-summary statistics
-*per country*: 
+To showcase the power of `summarise` used on a `grouped_df`, the above code reports a wide range of customised summary statistics *per country*: 
 
 - the number of rows in each country group
 - standard deviation of Gini indices
@@ -776,14 +743,11 @@ select(land_sqlite, price, postcode, `old/new`)
 ## Data processing with data.table
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
-tasks.^[One
-[question](http://stackoverflow.com/questions/21435339) on the StackOverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
-]
+tasks.^[One [question](http://stackoverflow.com/questions/21435339) on the StackOverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.]
 Which is more efficient to some extent depends on personal preferences and what you are used to. 
 Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
 
-**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/)
-(which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
+**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/) (which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
@@ -800,9 +764,7 @@ aus3a = wb_ineq_dt[Country == "Australia"]
 Note that the square brackets do not need a comma to refer to rows with `data.table` objects: in base R you would write `wb_ineq_renamed[wb_ineq_renamed$Country == "Australia",]`.
 ```
 
-To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are
-'[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
-which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
+To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)' which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
 
 ```{r}
 setkey(wb_ineq_dt, Country)

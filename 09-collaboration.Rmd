@@ -48,10 +48,8 @@ most programmers agree on, such as:
 - Be concise, clear and consistent.
 
 Good coding style will make you more efficient even if you are the only person who reads it.
-When your code is read by multiple readers or you are developing code with
-co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by
-[Google](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml), [Hadley Whickham](http://adv-r.had.co.nz/Style.html) and
-[Richie Cotton](https://4dpiecharts.com/r-code-style-guide/).
+When your code is read by multiple readers or you are developing code with co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by
+[Google](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml), [Hadley Whickham](http://adv-r.had.co.nz/Style.html) and [Richie Cotton](https://4dpiecharts.com/r-code-style-guide/).
 The style followed in this book is based on a combination of Hadley Wickham's guide and our own preferences (we follow Yihui Xie in preferring `=` to `<-` for assignment, for example).
 
 In-line with the principle of automation (automate any task that can save time by automating), the easiest way to improve your code is to ask your computer to do it, using RStudio.
@@ -101,16 +99,11 @@ Normalise.r
 load data.R
 ```
 
-Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides
-more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed 
-to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.
+Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed  to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.
 
 ### Loading packages
 
-Library function calls should be at the top of your script. When loading an essential package, 
-use `library` instead of `require` since a missing package will then raise an error. If a package isn't essential, 
-use `require` and appropriately capture the warning raised. 
-Package names should be surrounded with speech marks. 
+Library function calls should be at the top of your script. When loading an essential package,  use `library` instead of `require` since a missing package will then raise an error. If a package isn't essential,  use `require` and appropriately capture the warning raised.  Package names should be surrounded with speech marks. 
 
 ```{r messages=FALSE}
 # Good
@@ -119,9 +112,7 @@ library("dplyr")
 library(dplyr)
 ```
 
-Avoid listing every package you may need, instead just include the packages you actually use. If you find
-that you are loading many packages, consider putting all packages in a file called `packages.R` and using
-`source` appropriately. 
+Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading many packages, consider putting all packages in a file called `packages.R` and using `source` appropriately. 
 
 ### Commenting
 
@@ -167,8 +158,7 @@ Where possible, avoid using names of existing functions.
 
 ### Example package
 
-The `lubridate` package is a good example of a package that has a consistent naming system, 
-to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
+The `lubridate` package is a good example of a package that has a consistent naming system,  to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
 
 ```{r results="hide", message=FALSE}
 library("lubridate")
@@ -179,23 +169,16 @@ mdy("01-02-2012")
 
 ### Assignment
 
-The two most common ways of assigning objects to values in R is with `<-` and `=`. 
-In most (but not all) contexts, they can be used interchangeably. Regardless of which operator
-you prefer, consistency is key, particularly when working in a 
-group. In this book we use the `=` operator for assignment, as it's faster to type and more consistent with other languages.
+The two most common ways of assigning objects to values in R is with `<-` and `=`.  In most (but not all) contexts, they can be used interchangeably. Regardless of which operator you prefer, consistency is key, particularly when working in a  group. In this book we use the `=` operator for assignment, as it's faster to type and more consistent with other languages.
 
-The one place where a difference occurs is during function calls. Consider the following 
-piece of code used for timing random number generation
+The one place where a difference occurs is during function calls. Consider the following  piece of code used for timing random number generation
 
 ```{r eval=FALSE, results="hide"}
 system.time(expr1 <- rnorm(10e5))
 system.time(expr2 = rnorm(10e5)) # error
 ```
 
-The first lines will run correctly __and__ create a variable called `expr1`.
-The second line will raise an error. When we use `=` in a function call, it changes from an 
-_assignment_ operator to an _argument passing_ operator. For further information about
-assignment, see `?assignOps`.
+The first lines will run correctly __and__ create a variable called `expr1`. The second line will raise an error. When we use `=` in a function call, it changes from an  _assignment_ operator to an _argument passing_ operator. For further information about assignment, see `?assignOps`.
 
 ### Spacing
 
@@ -232,9 +215,7 @@ else {
   x}
 ```
 
-Typing this straight into R will result in an error. 
-An opening curly brace, `{` should not go on its own line and 
-should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
+Typing this straight into R will result in an error.  An opening curly brace, `{` should not go on its own line and  should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
 
 ```{r, results="hide"}
 # Good style
@@ -321,10 +302,7 @@ A pull request (PR) is a mechanism on GitHub by which your code can be added to 
 
 ## Code review {#code-review}
 
-What is a code review?^[This section is being written with small teams in mind. Larger
-teams should consult a more detailed text on code review.] Simply when we have
-finished working on a piece of code, a colleague reviews our work and considers
-questions such as
+What is a code review?^[This section is being written with small teams in mind. Larger teams should consult a more detailed text on code review.] Simply when we have finished working on a piece of code, a colleague reviews our work and considers questions such as
 
  * Is the code correct and properly documented?
  * Could the code be improved?
@@ -333,57 +311,9 @@ questions such as
 
 A good code review shares knowledge and best practice. 
 
-A lightweight code review can take a variety of forms. For example, it could be 
-as simple as emailing round some code for comments, or "over the shoulder", where
-someone literally looks over your shoulder while coding. More formal techniques
-include paired programming where two developers work side by side on the same project.
+A lightweight code review can take a variety of forms. For example, it could be  as simple as emailing round some code for comments, or "over the shoulder", where someone literally looks over your shoulder while coding. More formal techniques include paired programming where two developers work side by side on the same project.
 
-Regardless of the review method being employed, there a number of points to remember.
-First, as with all forms of feedback, be constructive. Rather than pointing out flaws,
-give suggested improvements. Closely related is give praise when appropriate. Second,
-if you are reviewing a piece of code set a time frame or the number of lines of code
-you will review. For example, you will spend one hour reviewing a piece of code, or a
-maximum of 400 lines. Third, a code review should be performed before the code
-is merged into a larger code base; fix mistakes as soon as possible.
+Regardless of the review method being employed, there a number of points to remember. First, as with all forms of feedback, be constructive. Rather than pointing out flaws, give suggested improvements. Closely related is give praise when appropriate. Second, if you are reviewing a piece of code set a time frame or the number of lines of code you will review. For example, you will spend one hour reviewing a piece of code, or a maximum of 400 lines. Third, a code review should be performed before the code is merged into a larger code base; fix mistakes as soon as possible.
 
-Many R users don't work in team or group; instead they work by themselves.
-Practically, there isn't anyone nearby to review their code. However there is still
-the option of an _unoffical_ code review. For example, if you have hosted code on an
-online repository such as GitHub, users will naturally give feedback on our code
-(especially if you make it clear that you welcome feedback). Another good place is
-StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to
-post answers to other users questions. When you post an answer, if your code is
-unclear, this will be flagged in comments below your answer.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Many R users don't work in team or group; instead they work by themselves. Practically, there isn't anyone nearby to review their code. However there is still the option of an _unoffical_ code review. For example, if you have hosted code on an online repository such as GitHub, users will naturally give feedback on our code (especially if you make it clear that you welcome feedback). Another good place is StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to post answers to other users questions. When you post an answer, if your code is unclear, this will be flagged in comments below your answer.
 
