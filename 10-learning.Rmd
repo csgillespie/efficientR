@@ -8,18 +8,9 @@ rm(list=ls())
 
 # Efficient learning {#learning}
 
-As with any vibrant open source software community, R is fast moving. This can be
-disorientating because it means that you can never 'finish' learning R. On the other
-hand, it makes R a fascinating subject: there is always more to learn. Even
-experienced R users keep finding new functionality that helps solve problems quicker
-and more elegantly. Therefore *learning how to learn* is one of the most important
-skills to have if you want to learn R *in depth*. We emphasise *depth* of
-learning because it is more efficient to learn something properly than to Google it
-repeatedly every time you forget how it works.
+As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never 'finish' learning R. On the other hand, it makes R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore *learning how to learn* is one of the most important skills to have if you want to learn R *in depth*. We emphasise *depth* of learning because it is more efficient to learn something properly than to Google it repeatedly every time you forget how it works.
 
-This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition
-from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's
-help, reading R source code, and use of online material.
+This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's help, reading R source code, and use of online material.
 
 ### Prerequisties {-}
 
@@ -158,43 +149,27 @@ optim(par = 0, fn = fn)
 The results show that the minimum value of `fn(x)` is found when `x = 0.707..` ($\frac{1}{\sqrt{2}}$), with a minimum value of $-0.25$. It took $58$ iterations of the function call for `optim()` to converge on this value. Each of these output values is described in the Values section of the help pages.
 From the help pages, we could guess that providing the function call without specifying `par` (i.e. `optim(fn = fn)`) would fail, which indeed it does. 
 
-The most _helpful_
-section is often the Examples. These lie at the bottom of the help page and show precisely
-how the function works. You can either copy and paste the code, or actually run the
-example code using the `example` command (it is well worth running these examples due to the graphics produced):
+The most _helpful_ section is often the Examples. These lie at the bottom of the help page and show precisely how the function works. You can either copy and paste the code, or actually run the example code using the `example` command (it is well worth running these examples due to the graphics produced):
 
 ```{r eval=FALSE}
 example(optim)
 ```
 
 ```{block, type="rmdnote"}
-When a package is added to CRAN, the example part of the documentation is run on all major
-platforms. This helps ensure that a package works on multiple systems.
+When a package is added to CRAN, the example part of the documentation is run on all major platforms. This helps ensure that a package works on multiple systems.
 ```
 
 Another useful section in the help file is `See Also:`. In the `optim()` help page, it links to `optimize()` which may be more appropriate for this use case.
 
 ### Reading R source code
-
-R is open source. This means that we can view the underlying source code and examine any
-function. Of course the code is complex, and diving straight into the source code
-won't help that much. However, watching the GitHub R source code
-[mirror](https://github.com/wch/r-source/) will allow you to monitor small changes
-that occur. This gives a nice entry point into a complex code base. Likewise, examining
-the source of small functions, such as `NCOL` is informative, e.g.
-`getFunction("NCOL")`
+ 
+R is open source. This means that we can view the underlying source code and examine any function. Of course the code is complex, and diving straight into the source code won't help that much. However, watching the GitHub R source code [mirror](https://github.com/wch/r-source/) will allow you to monitor small changes that occur. This gives a nice entry point into a complex code base. Likewise, examining the source of small functions, such as `NCOL` is informative, e.g. `getFunction("NCOL")`
 
 ```{block, type="rmdtip"}
-Subscribing to the R NEWS [blog](https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/)
-is an easy way of keeping track of future changes.
+Subscribing to the R NEWS [blog](https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/) is an easy way of keeping track of future changes.
 ```
 
-Many R packages are developed in the open on GitHub or R-Forge. Select a few well
-known packages and examine their source. A good package to start with is
-**[drat](https://github.com/eddelbuettel/drat)**. This is a relatively simple package
-developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It
-gives you an excellent pointer into software development by one of the key R package
-writers.
+Many R packages are developed in the open on GitHub or R-Forge. Select a few well known packages and examine their source. A good package to start with is **[drat](https://github.com/eddelbuettel/drat)**. This is a relatively simple package developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It gives you an excellent pointer into software development by one of the key R package writers.
 
 A shortcut for browsing R's source code is provided by the RStudio IDE: clicking on a function and then hit `F2` will open its source code in the file editor. This works for both functions that exist in R and its packages and functions that you created yourself in another R script (so long as it is within your project directory).
 Although reading source code can be interesting in itself, it is probably best done in the context of a specific question, e.g. "how can I use a function name as an argument in my own function?" (looking at the source code of `apply()` may help here).
@@ -216,48 +191,24 @@ The R community has a strong online presence, providing many resources for learn
 
 The R-project website contains six detailed [official manuals](https://cran.r-project.org/manuals.html), plus a giant pdf file containing documentation for all recommended packages. These include [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.html), [The R language definition](https://cran.r-project.org/doc/manuals/r-release/R-lang.html) and [R Installation and Administration](https://cran.r-project.org/doc/manuals/r-release/R-admin.html), all of which are recommended for people wanting to learn their general R skills. If you are developing a package and want to submit it to CRAN, the [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) manual is recommended reading, although it has to some extent been superseded by @Wickham_2015, the source code of which is [available online](https://github.com/hadley/r-pkgs). While these manuals are long, they contain important information written by experienced R programmers.
 
-For more domain-specific and up-to-date information on developments in R, we recommend checking out academic journals.
-The [R-journal](https://journal.r-project.org/) regularly publishes articles
-describing new R packages, as well as general programming hints. Similarly, the
-articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a
-strong R bias. Publications in these journals are generally of very high quality and have been rigorously peer reviewed. However, they may be rather technical for R novices.
+For more domain-specific and up-to-date information on developments in R, we recommend checking out academic journals. The [R-journal](https://journal.r-project.org/) regularly publishes articles describing new R packages, as well as general programming hints. Similarly, the articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a strong R bias. Publications in these journals are generally of very high quality and have been rigorously peer reviewed. However, they may be rather technical for R novices.
 
 The wider community provides a much larger body of information, of more variable quality, than the official R resources. The [Contributed Documentation](https://cran.r-project.org/other-docs.html) page on R's home page contains dozens of tutorials and other resources on a wide range of topics. Some of these are excellent, although many are not kept up-to-date. An excellent resource for browsing R help pages online is provided by [rdocumentation.org](http://www.rdocumentation.org).
 
-Lower grade but more frequently released information can be found on the 'blogosphere'. Central to this is  [R-bloggers](http://www.r-bloggers.com/),
-a blog aggregator of content contributed by bloggers who write about R (in English).
-It is a great way to get exposed to new and different packages. Similarly monitoring
-the _[#rstats](https://twitter.com/search?q=%23rstats)_ twitter tag keeps you up-to-date
-with the latest news.
+Lower grade but more frequently released information can be found on the 'blogosphere'. Central to this is  [R-bloggers](http://www.r-bloggers.com/), a blog aggregator of content contributed by bloggers who write about R (in English). It is a great way to get exposed to new and different packages. Similarly monitoring the _[#rstats](https://twitter.com/search?q=%23rstats)_ twitter tag keeps you up-to-date with the latest news.
 
-There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before
-requesting help, read a few other questions to learn the format of the site. Make sure
-you search previous questions so you are not duplicating work. Perhaps the most
-important point is that people aren't under __any__ obligation to answer your
-question. One of the fantastic things about the open-source community is that you can
-ask questions and one of core developers may answer your question free; but remember,
-everyone is busy!
+There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before requesting help, read a few other questions to learn the format of the site. Make sure you search previous questions so you are not duplicating work. Perhaps the most important point is that people aren't under __any__ obligation to answer your question. One of the fantastic things about the open-source community is that you can ask questions and one of core developers may answer your question free; but remember, everyone is busy!
 
 ### Stackoverflow
 
-The number one place on the internet for getting help on programming is
-[Stackoverflow](http://www.stackoverflow.com). This website provides a platform for
-asking and answering questions. Through site membership, questions and answers are
-voted up or down. Users of Stackoverflow earn reputation points when their question or
-answer is up-voted. Anyone (with enough reputation) can edit a question or answer.
-This helps the content remain relevant.
+The number one place on the internet for getting help on programming is [Stackoverflow](http://www.stackoverflow.com). This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps the content remain relevant.
 
 Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using `r-faq`, a few questions that often crop up. 
 
 ### Mailing lists and groups.
 
-There are many mailing lists and Google groups focused on R and particular packages. The main list for getting help is
-`R-help`. This is a high volume mailing list, with around a dozen messages per day. A more technical mailing list
-is `R-devel`. This list is intended for questions and discussion about code development in R. The discussion on this list is very technical. However,
-it's a good place to be introduced to new ideas - but it's not the place to ask about these ideas! There are 
-many other special interest mailing [lists](https://www.r-project.org/mail.html) covering topics such as high performance computing to ecology.
-Many popular packages also have their own mailing list or Google group, e.g. **ggplot2** and **shiny**. The key piece of advice is before mailing a
-list, read the relevant mailing archive and check that your message is appropriate.
+There are many mailing lists and Google groups focused on R and particular packages. The main list for getting help is `R-help`. This is a high volume mailing list, with around a dozen messages per day. A more technical mailing list is `R-devel`. This list is intended for questions and discussion about code development in R. The discussion on this list is very technical. However, it's a good place to be introduced to new ideas - but it's not the place to ask about these ideas! There are 
+many other special interest mailing [lists](https://www.r-project.org/mail.html) covering topics such as high performance computing to ecology. Many popular packages also have their own mailing list or Google group, e.g. **ggplot2** and **shiny**. The key piece of advice  is before mailing a list, read the relevant mailing archive and check that your message is appropriate.
 
 ## Asking a question
 
@@ -268,31 +219,21 @@ However, asking a good question is not easy. Three common mistakes, and ways to 
 2. The answer to the question can be found in R's help: make sure you've properly read the relevant help pages before asking.
 3. The question does not contain a reproducible example: create a simple version of your data, show the code you've tried, and display the result you are hoping for.
 
-Your question should contain
-just enough information that you problem is clear and can be reproducible, while
-at the same time avoid unnecessary details. Fortunately there is a StackOverflow question - [How to make a great R reproducible example?](http://stackoverflow.com/q/5963269/203420) that provides excellent guidance.
-Additional guides that explain how to create good programming questions are provided by
-[StackOverflow](https://stackoverflow.com/help/how-to-ask) and and the [R mailing list posting guide](https://www.r-project.org/posting-guide.html). 
+Your question should contain just enough information that you problem is clear and can be reproducible, while at the same time avoid unnecessary details. Fortunately there is a StackOverflow question - [How to make a great R reproducible example?](http://stackoverflow.com/q/5963269/203420) that provides excellent guidance.
+Additional guides that explain how to create good programming questions are provided by [StackOverflow](https://stackoverflow.com/help/how-to-ask) and and the [R mailing list posting guide](https://www.r-project.org/posting-guide.html). 
 
 ### Minimal data set {-}
 
-What is the smallest data set you can construct that will reproduce your issue? Your
-actual data set may contain $10^5$ rows and $10^4$ columns, but to get your idea across
-you might only need $4$ rows and $3$ columns. Making small example data sets is easy. 
-For example, to create a data frame with two numeric columns and a column of characters
-just use
+What is the smallest data set you can construct that will reproduce your issue? Your actual data set may contain $10^5$ rows and $10^4$ columns, but to get your idea across you might only need $4$ rows and $3$ columns. Making small example data sets is easy.  For example, to create a data frame with two numeric columns and a column of characters just use
 
 ```{r echo=-3}
 set.seed(1)
 example_df = data.frame(x = rnorm(4), y = rnorm(4), z = sample(LETTERS, 4))
 ```
 
-Note the call to `set.seed` ensures anyone who runs the code will get the same
-random number stream. Alternatively, you can use one of the many data sets that come with R - `library(help = "datasets")`. 
+Note the call to `set.seed` ensures anyone who runs the code will get the same random number stream. Alternatively, you can use one of the many data sets that come with R - `library(help = "datasets")`. 
 
-If creating an example data set isn't possible, then use `dput` on your actual data set. This
-will create an ASCII text representation of the object that will enable anyone to recreate
-the object
+If creating an example data set isn't possible, then use `dput` on your actual data set. This will create an ASCII text representation of the object that will enable anyone to recreate the object
 
 ```{r results="hide"}
 dput(example_df)
@@ -304,12 +245,8 @@ dput(example_df)
 ```
 
 ### Minimal example {-}
-
-What you should not do, is simply copy and paste your entire function into your question.
-It's unlikely that your entire function doesn't work, so just simplify it to the bare minimum. 
-The aim is to target your actual issue. 
-Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem.
-Before asking your question, can you run your code in a clean R environment and reproduce your error?
+ 
+What you should not do, is simply copy and paste your entire function into your question. It's unlikely that your entire function doesn't work, so just simplify it to the bare minimum.  The aim is to target your actual issue.  Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem. Before asking your question, can you run your code in a clean R environment and reproduce your error?
 
 ## Learning in depth
 

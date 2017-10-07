@@ -18,10 +18,8 @@ Before reading in a single line of data, it is worth considering a general princ
 
 ### Prerequisites {-}
 
-R can read data from a variety of sources. We begin by discussing the generic package **rio** that 
-handles a wide variety of data types. Special attention is paid to CSV files, which leads to 
-the **readr** and **data.table** packages. The relatively new package **feather** is
-introduced as a binary file format, that has cross-language support.
+R can read data from a variety of sources. We begin by discussing the generic package **rio** that handles a wide variety of data types. Special attention is paid to CSV files, which leads to  the **readr** and **data.table** packages. The relatively new package **feather** is introduced as a binary file format, that has cross-language support.
+
 ```{r eval=FALSE}
 library("rio")
 library("readr")
@@ -30,6 +28,7 @@ library("feather")
 ```
 
 We also use the **WDI** package to illustrate accessing online data sets
+
 ```{r eval=FALSE}
 library("WDI")
 ```
@@ -100,9 +99,7 @@ Colin, British, Scotland
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv()`; the **data.table** approach, which uses the function `fread()`; and the newer **readr** package which provides `read_csv()` and other `read_*()` functions such as `read_tsv()`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
 
 ```{block, type="rmdwarning"}
-In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv()` or an
-equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt)
-that facilities sharing CSV files between tools and operating systems.
+In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv()` or an equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt) that facilities sharing CSV files between tools and operating systems.
 ```
 
 ```{r, echo=-1:-2}
@@ -129,10 +126,7 @@ For files beyond $100$ MB in size `fread()` and `read_csv()` can be expected to 
 local(source("code/05-io_f1.R", local=TRUE))
 ```
 
-When tested on a large ($4$GB) `.csv` file it was found that `fread()` and `read_csv()` were almost identical in load
-times and that `read.csv()` took around $5$ times longer. This consumed more than $10$GB of RAM, making it unsuitable to
-run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be
-made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in `?read.table`.
+When tested on a large ($4$GB) `.csv` file it was found that `fread()` and `read_csv()` were almost identical in load times and that `read.csv()` took around $5$ times longer. This consumed more than $10$GB of RAM, making it unsuitable to run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in `?read.table`.
 
 ```{r eval=FALSE}
 read.csv(file_name, colClasses = c("numeric", "numeric"))
@@ -151,9 +145,11 @@ voyages_base = read.delim(fname)
 ```
 
 When we run the equivalent operation using **readr**, 
+
 ```{r, cache=TRUE}
 voyages_readr = readr::read_tsv(fname)
 ```
+
 a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
 ```{r}
@@ -340,12 +336,7 @@ co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
 
-There are a number of R packages that provide more advanced functionality than simply downloading files. 
-The CRAN task view on [Web technologies](https://cran.r-project.org/web/views/WebTechnologies.html) provides
-a comprehensive list. The two packages for interacting with web pages are **httr** and **RCurl**. The former package
-provides (a relatively) user-friendly interface for executing standard HTTP methods, such as `GET` and `POST`.
-It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging. 
-The **RCurl** package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.
+There are a number of R packages that provide more advanced functionality than simply downloading files.  The CRAN task view on [Web technologies](https://cran.r-project.org/web/views/WebTechnologies.html) provides a comprehensive list. The two packages for interacting with web pages are **httr** and **RCurl**. The former package provides (a relatively) user-friendly interface for executing standard HTTP methods, such as `GET` and `POST`. It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging.  The **RCurl** package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.
 
 ```{r, eval=FALSE, echo=FALSE}
 # Not shown as a distraction (RL)
