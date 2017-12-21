@@ -99,7 +99,7 @@ Colin, British, Scotland
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv()`; the **data.table** approach, which uses the function `fread()`; and the newer **readr** package which provides `read_csv()` and other `read_*()` functions such as `read_tsv()`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
 
 ```{block, type="rmdwarning"}
-In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv()` or an equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt) that facilities sharing CSV files between tools and operating systems.
+In general, you should never "hand-write" a CSV file. Instead, you should use `write.csv()` or an equivalent function. The Internet Engineering Task Force has the [CSV definition](https://www.ietf.org/rfc/rfc4180.txt) that facilitates sharing CSV files between tools and operating systems.
 ```
 
 ```{r, echo=-1:-2}
@@ -195,7 +195,7 @@ Table \@ref(tab:colclasses) shows 4 main similarities and differences between th
 
 - `read_*()` functions generate objects of class `tbl_df`, an extension of the `data.frame` class, as discussed in Section  \@ref(dplyr). `fread()` generates objects of class `data.table()`. These can be used as standard data frames but differ subtly in their behaviour.
 
-An additional difference is that `read_csv()` creates data frames of class `tbl_df`, *and* the `data.frame`. This makes no practical difference, unless the **tibble** package is loaded, as described in section \@ref(efficient-data-frames-with-tibble) in the next chapter.
+An additional difference is that `read_csv()` creates data frames of class `tbl_df`, *and* `data.frame`. This makes no practical difference, unless the **tibble** package is loaded, as described in section \@ref(efficient-data-frames-with-tibble) in the next chapter.
 
 The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities for your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
@@ -233,7 +233,7 @@ There are limitations to plain text files. Even the trusty CSV format is "restri
 Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
 portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
-Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
+Unlike plain text files, data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
 
 ### Native binary formats: Rdata or Rds?
 

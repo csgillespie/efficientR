@@ -161,7 +161,7 @@ Splitting means taking a variable that is really two variables combined and crea
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
 agesex_df = tibble(agesex, n) # create a data frame
-separate(agesex_df, agesex, c("age", "sex"))
+separate(agesex_df, agesex, c("age", "sex"), sep = 1)
 ```
 
 ```{r to-separate, echo=FALSE,}
@@ -169,7 +169,7 @@ knitr::kable(agesex_df, caption = "Joined age and sex variables in one column")
 ```
 
 ```{r separated, echo=FALSE}
-knitr::kable(separate(agesex_df, agesex, c("age", "sex")),
+knitr::kable(separate(agesex_df, agesex, c("age", "sex"), sep = 1),
              caption = "Age and sex variables separated by the function `separate`.")
 ```
 
@@ -402,7 +402,7 @@ By way of explanation, this is what happened:
 1. Only the columns `Year` and `gini` were selected, using `select()`.
 1. A new variable, `decade` was created, to show only the decade figures (e.g. 1989 becomes 1980).
 1. This new variable was used to group rows in the data frame with the same decade.
-1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
+1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1990 but has since decreased slightly.
 
 Let's ask another question to see how the **dplyr** chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here's how chains can help organise the analysis needed to answer this question step-by-step:
 
