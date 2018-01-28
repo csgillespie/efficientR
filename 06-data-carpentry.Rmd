@@ -284,7 +284,7 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 
 ```{r, message=FALSE}
 # Load global inequality data
-data(wb_ineq)
+data(package = "efficient", wb_ineq)
 ```
 
 **dplyr** is a large package and can be seen as a language in its own right. Following the 'walk before you run' principle, we'll start simple, by filtering and aggregating rows.
@@ -294,75 +294,60 @@ data(wb_ineq)
 Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The **dplyr** function `rename()` makes this easy.
 
 ```{block, varname-block, style='rmdtip'}
-Note in this code block the variable name is surrounded by back-quotes (\`).
+Note in this code block the variable name is surrounded by back-quotes (`\`).
 This allows R to refer to column names that are non-standard.
 Note also the syntax:
-`rename` takes the data frame as the first object and then creates new variables by specifying `new_variable_name = original_name`.
+`rename()` takes the data frame as the first object and then creates new variables by specifying `new_variable_name = original_name`.
 ```
 
 ```{r, message=FALSE}
-library("dplyr")
+data("wb_ineq")
 wb_ineq = rename(wb_ineq, code = `Country Code`)
 ```
 
-To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated on an older version of the dataset (not run) to illustrate how long, clunky and inefficient names can be converted into short and lean ones.
-
-```{r, eval=FALSE}
-# The dplyr way (rename two variables)
-wb_ineq = rename(wb_ineq,
- top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
- bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
-# The base R way (rename five variables)
-names(wb_ineq)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
-```
+To rename multiple columns the variable names are simply separated by commas.
+`rename(x, x = X1, y = X2)` would rename variables `X1` and `X2` in the dataset `x`.
+In base R the equivalent function would be `names(x)[1:2] = c("x", "y")` or `setNames(x, c("x", "y"))`, assuming we were dealing with the first and second columns.
 
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object).^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
+
+Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric.
+The class of numeric variables can be altered one-by one using `mutate()` as follows (which would set the `gini` column to be of class `numeric` if it weren't already):^[
+The base R equivalent of this is `wb_ineq$gini = as.numeric(wb_ineq$gini)`.
+]
 
 ```{r}
-vapply(wb_ineq, class, character(1))
-```
-
-This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(wb_ineq$gini)` fails.
-
-Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
-
-```{r}
-wb_ineq$gini = as.numeric(wb_ineq$gini)
-mean(wb_ineq$gini, na.rm = TRUE) # now the mean is calculated
+wb_ineq = mutate(wb_ineq, gini = as.numeric(gini))
 ```
 
 However the purpose of programming languages is to *automate* tasks and reduce typing.
-The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts the data frame to a numeric `matrix`:
+The following code chunk ensures the numeric variables in the `cols_to_change` object are `numeric` using the same function (`vars()` is a helper function to select variables and also words with **dplyr** functions such as `contains()` which select all columns containing a given text string): 
 
-<!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
+```{r}
+cols_to_change = 5:9 # column ids to change
+wb_ineq = mutate_at(wb_ineq, vars(cols_to_change), as.numeric)
+```
+
+Another way to acheive the same result is to use `data.matrix()`, which converts the data frame to a numeric `matrix`:
+
 ```{r, warning=FALSE}
-cols_to_change= 5:9 # column ids to change
+cols_to_change = 5:9 # column ids to change
 wb_ineq[cols_to_change] = data.matrix(wb_ineq[cols_to_change])
-vapply(wb_ineq, class, character(1))
 ```
 
-As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
+Each method (base R and **dplyr**) has its merits.
+For readers new to R who plan to use other **tidyverse** packages we would provide a slight steer towards `mutate_at()` for its flexibility and expressive syntax.
+Other methods for acheiving the same result include the use of loops via `apply()` and `for()`.
+These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
 
-```{r, warning=FALSE}
-wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
-```
-
-<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
-*Another* one-liner to achieve the same result uses **dplyr**'s `mutate_at` function: 
-
-```{r, warning=FALSE, echo=-2}
-wb_ineq = mutate_at(wb_ineq, vars(cols_to_change), funs(as.numeric))
-# This file is saved as wb_ineq in the efficient package
-```
-
-As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
-
-```{r, echo=FALSE, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 # Idea: these 4 methods could be benchmarked
 # An alternative method for changing the column class
+wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
+
 wb_ineq[cols_to_change] = apply(wb_ineq[cols_to_change], 2, as.numeric)
 
 # Another alternative method using a for loop
@@ -391,7 +376,7 @@ Another interesting feature of **dplyr** is its ability to chain operations toge
 ```{r}
 wb_ineq %>% 
   select(Year, gini) %>% 
-  mutate(decade = floor(Year / 10) * 10) %>% 
+  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>% 
   group_by(decade) %>% 
   summarise(mean(gini, na.rm = TRUE))
 ```
@@ -508,22 +493,21 @@ The example above relates to a wider programming issue: how much work should one
 To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
 
 ```{r}
-data(wb_ineq, package="efficient")
 countries = group_by(wb_ineq, Country)
-summarise(countries, gini = mean(gini, na.rm  = TRUE))
+summarise(countries, mean_gini = mean(gini, na.rm = TRUE))
 ```
 
 Note that `summarise` is highly versatile, and can be used to return a customised range of summary statistics:
 
-```{r tidy=FALSE}
+```{r}
 summarise(countries,
   # number of rows per country
-  obs = n(), 
+  obs = n(),
   med_t10 = median(top10, na.rm  = TRUE),
   # standard deviation
-  sdev = sd(gini, na.rm  = TRUE), 
+  sdev = sd(gini, na.rm  = TRUE),
   # number with gini > 30
-  n30 = sum(gini > 30, na.rm  = TRUE), 
+  n30 = sum(gini > 30, na.rm  = TRUE),
   sdn30 = sd(gini[ gini > 30 ], na.rm  = TRUE),
   # range
   dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
@@ -542,7 +526,6 @@ To showcase the power of `summarise` used on a `grouped_df`, the above code repo
 #### Exercises {-}
 
 1. Refer back to the greenhouse gas emissions example at the outset of section \@ref(dplyr), in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?
-
 
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
@@ -755,13 +738,13 @@ The foundational object class of **data.table** is the `data.table`. Like **dply
 
 ```{r}
 library("data.table")
-data(wb_ineq_renamed) # from the efficient package
-wb_ineq_dt = data.table(wb_ineq_renamed) # convert to data.table class
+# data(wb_ineq) # from the efficient package
+wb_ineq_dt = data.table(wb_ineq) # convert to data.table class
 aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
 ```{block, type='rmdnote'}
-Note that the square brackets do not need a comma to refer to rows with `data.table` objects: in base R you would write `wb_ineq_renamed[wb_ineq_renamed$Country == "Australia",]`.
+Note that the square brackets do not need a comma to refer to rows with `data.table` objects: in base R you would write `wb_ineq[wb_ineq$Country == "Australia",]`.
 ```
 
 To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)' which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
