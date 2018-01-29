@@ -534,15 +534,21 @@ To showcase the power of `summarise` used on a `grouped_df`, the above code repo
 
 The final thing to say about **dplyr** does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. `Country` rather than `"Country"`). This is called non-standard evaluation (NSE) (see `vignette("nse")`). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.
 
-This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation which requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `group_by()` and `summarise()` functions:
+This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. To overcome this the concept of 'tidy evaluation' was developed and implemented in the package **rlang** (part of the tidyverse) to provide functions to control when symbols are evaluated and when they are treated as text strings. Without going into detail, the code below demonstrates how tidy evaluation works (see the [`tidy-evaluation`](https://cran.r-project.org/web/packages/rlang/vignettes/tidy-evaluation.html) vignette and [`Programming-with-dplyr`](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html) for further information):
 
-```{r}
+```{r, message=FALSE}
+library(rlang)
 # 1: Default NSE function
-group_by(cars, cut(speed, c(0, 10, 100))) %>% summarise(mean(dist))
-# 2: Standard evaluation using quote marks
-group_by_(cars, "cut(speed, c(0, 10, 100))") %>% summarise_("mean(dist)")
-# 3: Standard evaluation using formula, tilde notation (recommended standard evaluation method)
-group_by_(cars, ~cut(speed, c(0, 10, 100))) %>% summarise_(~mean(dist))
+group_by(cars, speed = cut(speed, c(0, 10, 100))) %>%
+  summarise(mean_dist = mean(dist))
+# 2: Evaluation from character string
+group_by(cars, speed = !!parse_quosure("cut(speed, c(0, 10, 100))")) %>%
+  summarise(mean_dist = !!parse_quosure("mean(dist)"))
+# 3: Using !! to evaluate 'quosures' when appropriate
+q1 = quo(cut(speed, c(0, 10, 100)))
+q2 = quo(mean(dist))
+group_by(cars, speed = !!q1) %>%
+  summarise(mean_dist = !!q2)
 ```
 
 ## Combining datasets
