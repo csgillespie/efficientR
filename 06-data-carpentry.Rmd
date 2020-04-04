@@ -116,30 +116,30 @@ Large and complex datasets are usually represented by multiple tables, with uniq
 
 Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns. 
 
-### Make wide tables long with `gather()`
+### Make wide tables long with `pivot_longer()`
 
-Gathering means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
+Pivoting Longer means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
+`pivot_longer()` (the inverse of which is `pivot_wider()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
 The code that performs this operation is provided in the code block below.
 This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
 
 ```{r}
 dim(pew)
-pewt = gather(data = pew, key = Income, value = Count, -religion)
+pewt = pivot_longer(data = pew, -religion, names_to = "income", values_to = "count")
 dim(pewt)
 pewt[c(1:3, 50),]
 ```
 
-The above code demonstrates the three arguments that `gather()` requires:
+The above code demonstrates the three arguments that `pivot_longer()` requires:
 
 1. `data`, a data frame in which column names will become row values.
-1. `key`, the name of the categorical variable into which the column names in the original datasets are converted.
-1. `value`, the name of cell value columns.
+1. `names_to`, the name of the categorical variable into which the column names in the original datasets are converted.
+1. `values_to`, the name of cell value columns.
 
 As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this column are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
 
 ```{r}
-gather(pew)
+pivot_longer(pew)
 ```
 
 ```{r tpew, echo=FALSE, message=FALSE}
@@ -148,8 +148,8 @@ knitr::kable(pew[1:3,1:4], caption = "First 3 rows of the aggregated 'pew' datas
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-pewt = gather(pew, Income, Count, -religion)
-pewt_mini = gather(pew[1:3,1:4], Income, Count, -religion)
+pewt = pivot_longer(pew, -religion, Income, Count)
+pewt_mini = pivot_longer(pew[1:3,1:4], -religion, Income, Count)
 knitr::kable(pewt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
 ```
 
