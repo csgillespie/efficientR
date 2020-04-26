@@ -1,4 +1,4 @@
-FROM rocker/tidyvers
+FROM rocker/tidyverse
 # other dependencies
 # RUN apt-get update \
 #   && apt-get install -y --no-install-recommends \
@@ -12,7 +12,7 @@ RUN cd /home/rstudio && \
   mv efficientR-master /home/rstudio/efficientR && \
   cd efficientR && \
   make html
-RUN chown -Rv rstudio /home/rstudio/efficientR 
+RUN chown -Rv rstudio /home/rstudio/efficientR
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-1.3.938-amd64.deb
 RUN dpkg -i rstudio-server-*-amd64.deb
 RUN rm rstudio-server-*-amd64.deb
