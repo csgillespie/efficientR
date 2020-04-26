@@ -16,6 +16,6 @@ To run the book in a Docker container run the following commands
 # from Docker hub
 # docker run -e PASSWORD=pw --rm -p 8786:8787 robinlovelace/efficientR
 # local version from inside this repo:
-docker build -t efficientr docker/rstudio
-docker run -e PASSWORD=pw --rm -p 8786:8787 efficientr
+docker build -t efficientr docker/rstudio-no-build
+docker run -e PASSWORD=pw --rm -p 8785:8787 efficientr
 ```

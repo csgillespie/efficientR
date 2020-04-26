@@ -6,8 +6,8 @@ RUN apt-get update \
 # install other R packages
 # RUN R -e "install.packages(c('sf', 'lwgeom', 'rgdal', 'sp', 'stars'))"
 RUN R -e "remotes::install_github('csgillespie/efficientR')"
-RUN cd /home/rstudio && \
-  wget https://github.com/csgillespie/efficientR/archive/master.zip && \
+RUN su rstudio && \
+  cd /home/rstudio && \  wget https://github.com/csgillespie/efficientR/archive/master.zip && \
   unzip master.zip && \
   mv efficientR-master /home/rstudio/efficientR && \
   cd efficientR && \
