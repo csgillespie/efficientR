@@ -1,8 +1,8 @@
 FROM rocker/tidyverse
 # other dependencies
-# RUN apt-get update \
-#   && apt-get install -y --no-install-recommends \
-#  	  libudunits2-dev libgdal-dev libgeos-dev libproj-dev liblwgeom-dev
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+	  libjpeg-dev
 # install other R packages
 # RUN R -e "install.packages(c('sf', 'lwgeom', 'rgdal', 'sp', 'stars'))"
 RUN R -e "remotes::install_github('csgillespie/efficientR')"
