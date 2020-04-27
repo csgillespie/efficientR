@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Efficient R programming</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 Efficient data carpentry | Efficient R programming</title>
+  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Efficient R programming" />
+  <meta property="og:title" content="6 Efficient data carpentry | Efficient R programming" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://csgillespie.github.io/efficientR/" />
   <meta property="og:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
@@ -18,31 +16,34 @@
   <meta name="github-repo" content="csgillespie/efficientR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Efficient R programming" />
+  <meta name="twitter:title" content="6 Efficient data carpentry | Efficient R programming" />
   <meta name="twitter:site" content="@csgillespie" />
   <meta name="twitter:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
   <meta name="twitter:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
 
-<meta name="author" content="Colin Gillespie">
-<meta name="author" content="Robin Lovelace">
+<meta name="author" content="Colin Gillespie" />
+<meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2017-04-10">
+<meta name="date" content="2020-04-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="input-output.html">
-<link rel="next" href="performance.html">
-
+<link rel="prev" href="input-output.html"/>
+<link rel="next" href="performance.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -53,41 +54,68 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -95,6 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -176,11 +205,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop()</code></a></li>
-<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning()</code></a></li>
-<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></a></li>
+<li><a href="programming.html#fatal-errors-stop">Fatal errors: <code>stop()</code></a></li>
+<li><a href="programming.html#warnings-warning">Warnings: <code>warning()</code></a></li>
+<li><a href="programming.html#informative-output-message-and-cat">Informative output: <code>message()</code> and <code>cat()</code></a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
-<li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.4</b> Invisible returns</a></li>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.1</b> Invisible returns</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
 <li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#inherent-order"><i class="fa fa-check"></i><b>3.4.1</b> Inherent order</a></li>
@@ -240,7 +269,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
 <li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
-<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-gather"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>gather()</code></a></li>
+<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-pivot_longer"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>pivot_longer()</code></a></li>
 <li class="chapter" data-level="6.3.2" data-path="data-carpentry.html"><a href="data-carpentry.html#split-joint-variables-with-separate"><i class="fa fa-check"></i><b>6.3.2</b> Split joint variables with <code>separate()</code></a></li>
 <li class="chapter" data-level="6.3.3" data-path="data-carpentry.html"><a href="data-carpentry.html#other-tidyr-functions"><i class="fa fa-check"></i><b>6.3.3</b> Other tidyr functions</a></li>
 <li class="chapter" data-level="6.3.4" data-path="data-carpentry.html"><a href="data-carpentry.html#regular-expressions"><i class="fa fa-check"></i><b>6.3.4</b> Regular expressions</a></li>
@@ -279,7 +308,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-movie_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>movie_square()</code> function</a></li>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-move_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>move_square()</code> function</a></li>
 <li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.5</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.5.1</b> Parallel versions of apply functions</a></li>
 <li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.5.2</b> Example: Snakes and Ladders</a></li>
@@ -358,7 +387,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a></li>
+<li><a href="http://www.robinlovelace.net">Robin Lovelace</a></li>
 
 </ul>
 
@@ -392,12 +422,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="prerequisites-5" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter relies on a number of packages for data cleaning and processing - test they are installed on your computer and load them with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)</a>
+<a class="sourceLine" id="cb134-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;tidyr&quot;</span>)</a>
+<a class="sourceLine" id="cb134-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)</a>
+<a class="sourceLine" id="cb134-4" data-line-number="4"><span class="kw">library</span>(<span class="st">&quot;readr&quot;</span>)</a>
+<a class="sourceLine" id="cb134-5" data-line-number="5"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb134-6" data-line-number="6"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)</a></code></pre></div>
 <p><strong>RSQLite</strong> and <strong>ggmap</strong> are also used in a couple of examples, although they are not central to the chapter’s content.</p>
 </div>
 <div id="top-5-tips-for-efficient-data-carpentry" class="section level2">
@@ -419,14 +449,14 @@ A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <co
 </p>
 </div>
 <p>To create a tibble data frame, we use <code>tibble</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)
-<span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))
-<span class="co">#&gt; # A tibble: 3 × 2</span>
-<span class="co">#&gt;       x     y</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span>
-<span class="co">#&gt; 1     1     A</span>
-<span class="co">#&gt; 2     2     B</span>
-<span class="co">#&gt; 3     3     C</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;tibble&quot;</span>)</a>
+<a class="sourceLine" id="cb135-2" data-line-number="2"><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>))</a>
+<a class="sourceLine" id="cb135-3" data-line-number="3"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
+<a class="sourceLine" id="cb135-4" data-line-number="4"><span class="co">#&gt;       x y    </span></a>
+<a class="sourceLine" id="cb135-5" data-line-number="5"><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;</span></a>
+<a class="sourceLine" id="cb135-6" data-line-number="6"><span class="co">#&gt; 1     1 A    </span></a>
+<a class="sourceLine" id="cb135-7" data-line-number="7"><span class="co">#&gt; 2     2 B    </span></a>
+<a class="sourceLine" id="cb135-8" data-line-number="8"><span class="co">#&gt; 3     3 C</span></a></code></pre></div>
 <p>The example above illustrates the main differences between the <strong>tibble</strong> and base R approach to data frames:</p>
 <ul>
 <li>When printed, the tibble diff reports the class of each variable. <code>data.frame</code> objects do not.</li>
@@ -442,28 +472,29 @@ You can create a tibble data frame row-by-row using the <code>tribble</code> fun
 <div id="exercise-5" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <p>Create the following data frame</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_base =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colA =</span> <span class="st">&quot;A&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">df_base =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colA =</span> <span class="st">&quot;A&quot;</span>)</a></code></pre></div>
 <p>Try and guess the output of the following commands</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(df_base)
-df_base$colA
-df_base$col
-df_base$colB</code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1"><span class="kw">print</span>(df_base)</a>
+<a class="sourceLine" id="cb137-2" data-line-number="2">df_base<span class="op">$</span>colA</a>
+<a class="sourceLine" id="cb137-3" data-line-number="3">df_base<span class="op">$</span>col</a>
+<a class="sourceLine" id="cb137-4" data-line-number="4">df_base<span class="op">$</span>colB</a></code></pre></div>
 <p>Now create a tibble data frame and repeat the above commands.</p>
 </div>
 </div>
 <div id="tidying-data-with-tidyr-and-regular-expressions" class="section level2">
 <h2><span class="header-section-number">6.3</span> Tidying data with tidyr and regular expressions</h2>
 <p>A key skill in data analysis is understanding the structure of datasets and being able to ‘reshape’ them. This is important from a workflow efficiency perspective: more than half of a data analyst’s time can be spent re-formatting datasets <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>, so getting it into a suitable form early could save hours in the future. Converting data into a ‘tidy’ form is also advantageous from a computational efficiency perspective: it is usually faster to run analysis and plotting commands on tidy data.</p>
-<p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling. The process of reshaping is illustrated by Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a>, provided by <span class="citation">H. Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span> and loaded using the code below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
-<span class="kw">data</span>(pew) <span class="co"># see ?pew - dataset from the efficient package</span>
-pew[<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">1</span>:<span class="dv">4</span>] <span class="co"># take a look at the data</span>
-<span class="co">#&gt; # A tibble: 3 × 4</span>
-<span class="co">#&gt;   religion `&lt;$10k` `$10--20k` `$20--30k`</span>
-<span class="co">#&gt;      &lt;chr&gt;   &lt;int&gt;      &lt;int&gt;      &lt;int&gt;</span>
-<span class="co">#&gt; 1 Agnostic      27         34         60</span>
-<span class="co">#&gt; 2  Atheist      12         27         37</span>
-<span class="co">#&gt; 3 Buddhist      27         21         30</span></code></pre></div>
+<p>Data tidying includes data cleaning and data reshaping. Data cleaning is the process of re-formatting and labelling messy data. Packages including <strong>stringi</strong> and <strong>stringr</strong> can help update messy character strings using regular expressions; <strong>assertive</strong> and <strong>assertr</strong> packages can perform diagnostic checks for data integrity at the outset of a data analysis project. A common data cleaning task is the conversion of non-standard text strings into date formats as described in the <strong>lubridate</strong> vignette (see <code>vignette(&quot;lubridate&quot;)</code>). Tidying is a broader concept, however, and also includes re-shaping data so that it is in a form more conducive to data analysis and modelling.
+The process of reshaping is illustrated by Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a>, provided by <span class="citation">H. Wickham (<a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span> and loaded using the code below:</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb138-2" data-line-number="2"><span class="kw">data</span>(pew) <span class="co"># see ?pew - dataset from the efficient package</span></a>
+<a class="sourceLine" id="cb138-3" data-line-number="3">pew[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>] <span class="co"># take a look at the data</span></a>
+<a class="sourceLine" id="cb138-4" data-line-number="4"><span class="co">#&gt; # A tibble: 3 x 4</span></a>
+<a class="sourceLine" id="cb138-5" data-line-number="5"><span class="co">#&gt;   religion `&lt;$10k` `$10--20k` `$20--30k`</span></a>
+<a class="sourceLine" id="cb138-6" data-line-number="6"><span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb138-7" data-line-number="7"><span class="co">#&gt; 1 Agnostic      27         34         60</span></a>
+<a class="sourceLine" id="cb138-8" data-line-number="8"><span class="co">#&gt; 2 Atheist       12         27         37</span></a>
+<a class="sourceLine" id="cb138-9" data-line-number="9"><span class="co">#&gt; 3 Buddhist      27         21         30</span></a></code></pre></div>
 <p>Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a> show a subset of the ‘wide’ <code>pew</code> and ‘long’ (tidy) <code>pewt</code> datasets, respectively. They have different dimensions, but they contain precisely the same information. Column names in the ‘wide’ form in Table <a href="data-carpentry.html#tab:tpew">6.1</a> became a new variable in the ‘long’ form in Table <a href="data-carpentry.html#tab:tpewt">6.2</a>. According to the concept of ‘tidy data’, the long form is correct. Note that ‘correct’ here is used in the context of data analysis and graphical visualisation. Because R is a vector-based language, tidy data also has efficiency advantages: it’s often faster to operate on few long columns than many short ones. Furthermore the powerful and efficient packages <strong>dplyr</strong> and <strong>ggplot2</strong> were designed around tidy data. Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it’s useful to be able to transfer between wide (or otherwise ‘untidy’) and tidy formats.</p>
 <p>Tidy data has the following characteristics <span class="citation">(H. Wickham <a href="#ref-Wickham_2014">2014</a><a href="#ref-Wickham_2014">b</a>)</span>:</p>
 <ol style="list-style-type: decimal">
@@ -471,40 +502,44 @@ pew[<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">1</spa
 <li>Each observation forms a row.</li>
 <li>Each type of observational unit forms a table.</li>
 </ol>
-<p>Because there is only one observational unit in the example (religions), it can be described in a single table. Large and complex datasets are usually represented by multiple tables, with unique identifiers or ‘keys’ to join them together <span class="citation">(Codd <a href="#ref-Codd1979">1979</a>)</span>.</p>
+<p>Because there is only one observational unit in the example (religions), it can be described in a single table.
+Large and complex datasets are usually represented by multiple tables, with unique identifiers or ‘keys’ to join them together <span class="citation">(Codd <a href="#ref-Codd1979">1979</a>)</span>.</p>
 <p>Two common operations facilitated by <strong>tidyr</strong> are <em>gathering</em> and <em>splitting</em> columns.</p>
-<div id="make-wide-tables-long-with-gather" class="section level3">
-<h3><span class="header-section-number">6.3.1</span> Make wide tables long with <code>gather()</code></h3>
-<p>Gathering means making ‘wide’ tables ‘long’, by converting column names to a new variable. This is done with the function <code>gather()</code> (the inverse of which is <code>spread()</code>). The process is illustrated in Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a> respectively. The code that performs this operation is provided in the code block below. This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of <code>pew</code>, shown above):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(pew)
-<span class="co">#&gt; [1] 18 10</span>
-pewt =<span class="st"> </span><span class="kw">gather</span>(<span class="dt">data =</span> pew, <span class="dt">key =</span> Income, <span class="dt">value =</span> Count, -religion)
-<span class="kw">dim</span>(pewt)
-<span class="co">#&gt; [1] 162   3</span>
-pewt[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">50</span>),]
-<span class="co">#&gt; # A tibble: 4 × 3</span>
-<span class="co">#&gt;   religion   Income Count</span>
-<span class="co">#&gt;      &lt;chr&gt;    &lt;chr&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1 Agnostic    &lt;$10k    27</span>
-<span class="co">#&gt; 2  Atheist    &lt;$10k    12</span>
-<span class="co">#&gt; 3 Buddhist    &lt;$10k    27</span>
-<span class="co">#&gt; 4 Orthodox $20--30k    23</span></code></pre></div>
-<p>The above code demonstrates the three arguments that <code>gather()</code> requires:</p>
+<div id="make-wide-tables-long-with-pivot_longer" class="section level3">
+<h3><span class="header-section-number">6.3.1</span> Make wide tables long with <code>pivot_longer()</code></h3>
+<p>Pivoting Longer means making ‘wide’ tables ‘long’, by converting column names to a new variable. This is done with the function
+<code>pivot_longer()</code> (the inverse of which is <code>pivot_wider()</code>). The process is illustrated in Tables <a href="data-carpentry.html#tab:tpew">6.1</a> and <a href="data-carpentry.html#tab:tpewt">6.2</a> respectively.
+The code that performs this operation is provided in the code block below.
+This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of <code>pew</code>, shown above):</p>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1"><span class="kw">dim</span>(pew)</a>
+<a class="sourceLine" id="cb139-2" data-line-number="2"><span class="co">#&gt; [1] 18 10</span></a>
+<a class="sourceLine" id="cb139-3" data-line-number="3">pewt =<span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">data =</span> pew, <span class="op">-</span>religion, <span class="dt">names_to =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;count&quot;</span>)</a>
+<a class="sourceLine" id="cb139-4" data-line-number="4"><span class="kw">dim</span>(pewt)</a>
+<a class="sourceLine" id="cb139-5" data-line-number="5"><span class="co">#&gt; [1] 162   3</span></a>
+<a class="sourceLine" id="cb139-6" data-line-number="6">pewt[<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">50</span>),]</a>
+<a class="sourceLine" id="cb139-7" data-line-number="7"><span class="co">#&gt; # A tibble: 4 x 3</span></a>
+<a class="sourceLine" id="cb139-8" data-line-number="8"><span class="co">#&gt;   religion                        income   count</span></a>
+<a class="sourceLine" id="cb139-9" data-line-number="9"><span class="co">#&gt;   &lt;chr&gt;                           &lt;chr&gt;    &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb139-10" data-line-number="10"><span class="co">#&gt; 1 Agnostic                        &lt;$10k       27</span></a>
+<a class="sourceLine" id="cb139-11" data-line-number="11"><span class="co">#&gt; 2 Agnostic                        $10--20k    34</span></a>
+<a class="sourceLine" id="cb139-12" data-line-number="12"><span class="co">#&gt; 3 Agnostic                        $20--30k    60</span></a>
+<a class="sourceLine" id="cb139-13" data-line-number="13"><span class="co">#&gt; 4 Evangelical Protestant Churches $40--50k   881</span></a></code></pre></div>
+<p>The above code demonstrates the three arguments that <code>pivot_longer()</code> requires:</p>
 <ol style="list-style-type: decimal">
 <li><code>data</code>, a data frame in which column names will become row values.</li>
-<li><code>key</code>, the name of the categorical variable into which the column names in the original datasets are converted.</li>
-<li><code>value</code>, the name of cell value columns.</li>
+<li><code>names_to</code>, the name of the categorical variable into which the column names in the original datasets are converted.</li>
+<li><code>values_to</code>, the name of cell value columns.</li>
 </ol>
 <p>As with other functions in the ‘tidyverse’, all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as <code>-religion</code>, was used to remove the religion variable from the gathering, ensuring that the values in this column are the first column in the output. If no <code>-religion</code> argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gather</span>(pew)
-<span class="co">#&gt; # A tibble: 180 × 2</span>
-<span class="co">#&gt;        key    value</span>
-<span class="co">#&gt;      &lt;chr&gt;    &lt;chr&gt;</span>
-<span class="co">#&gt; 1 religion Agnostic</span>
-<span class="co">#&gt; 2 religion  Atheist</span>
-<span class="co">#&gt; 3 religion Buddhist</span>
-<span class="co">#&gt; 4 religion Catholic</span>
-<span class="co">#&gt; # ... with 176 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">pivot_longer</span>(pew, <span class="op">-</span>religion)</a>
+<a class="sourceLine" id="cb140-2" data-line-number="2"><span class="co">#&gt; # A tibble: 162 x 3</span></a>
+<a class="sourceLine" id="cb140-3" data-line-number="3"><span class="co">#&gt;   religion name     value</span></a>
+<a class="sourceLine" id="cb140-4" data-line-number="4"><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb140-5" data-line-number="5"><span class="co">#&gt; 1 Agnostic &lt;$10k       27</span></a>
+<a class="sourceLine" id="cb140-6" data-line-number="6"><span class="co">#&gt; 2 Agnostic $10--20k    34</span></a>
+<a class="sourceLine" id="cb140-7" data-line-number="7"><span class="co">#&gt; 3 Agnostic $20--30k    60</span></a>
+<a class="sourceLine" id="cb140-8" data-line-number="8"><span class="co">#&gt; 4 Agnostic $30--40k    81</span></a>
+<a class="sourceLine" id="cb140-9" data-line-number="9"><span class="co">#&gt; # … with 158 more rows</span></a></code></pre></div>
 <table>
 <caption><span id="tab:tpew">Table 6.1: </span>First 3 rows of the aggregated ‘pew’ dataset from Wickham (2014a) in an ‘untidy’ form.</caption>
 <thead>
@@ -541,8 +576,8 @@ pewt[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</spa
 <thead>
 <tr class="header">
 <th align="left">religion</th>
-<th align="left">Income</th>
-<th align="right">Count</th>
+<th align="left">name</th>
+<th align="right">value</th>
 </tr>
 </thead>
 <tbody>
@@ -552,29 +587,9 @@ pewt[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</spa
 <td align="right">27</td>
 </tr>
 <tr class="even">
-<td align="left">Atheist</td>
-<td align="left">&lt;$10k</td>
-<td align="right">12</td>
-</tr>
-<tr class="odd">
-<td align="left">Buddhist</td>
-<td align="left">&lt;$10k</td>
-<td align="right">27</td>
-</tr>
-<tr class="even">
 <td align="left">Agnostic</td>
 <td align="left">$10–20k</td>
 <td align="right">34</td>
-</tr>
-<tr class="odd">
-<td align="left">Atheist</td>
-<td align="left">$10–20k</td>
-<td align="right">27</td>
-</tr>
-<tr class="even">
-<td align="left">Buddhist</td>
-<td align="left">$10–20k</td>
-<td align="right">21</td>
 </tr>
 <tr class="odd">
 <td align="left">Agnostic</td>
@@ -583,8 +598,28 @@ pewt[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</spa
 </tr>
 <tr class="even">
 <td align="left">Atheist</td>
+<td align="left">&lt;$10k</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">Atheist</td>
+<td align="left">$10–20k</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">Atheist</td>
 <td align="left">$20–30k</td>
 <td align="right">37</td>
+</tr>
+<tr class="odd">
+<td align="left">Buddhist</td>
+<td align="left">&lt;$10k</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">Buddhist</td>
+<td align="left">$10–20k</td>
+<td align="right">21</td>
 </tr>
 <tr class="odd">
 <td align="left">Buddhist</td>
@@ -597,15 +632,15 @@ pewt[<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</spa
 <div id="split-joint-variables-with-separate" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Split joint variables with <code>separate()</code></h3>
 <p>Splitting means taking a variable that is really two variables combined and creating two separate columns from it. A classic example is age-sex variables (e.g. <code>m0-10</code> and <code>f0-10</code> to represent males and females in the 0 to 10 age band). Splitting such variables can be done with the <code>separate()</code> function, as illustrated in the Tables <a href="data-carpentry.html#tab:to-separate">6.3</a> and <a href="data-carpentry.html#tab:separated">6.4</a> and in the code chunk below. See <code>?separate</code> for more information on this function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span>
-n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span>
-agesex_df =<span class="st"> </span><span class="kw">tibble</span>(agesex, n) <span class="co"># create a data frame</span>
-<span class="kw">separate</span>(agesex_df, <span class="dt">col =</span> agesex, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>))
-<span class="co">#&gt; # A tibble: 2 × 3</span>
-<span class="co">#&gt;     age   sex     n</span>
-<span class="co">#&gt; * &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1    m0    10     3</span>
-<span class="co">#&gt; 2    f0    10     5</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1">agesex =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m0-10&quot;</span>, <span class="st">&quot;f0-10&quot;</span>) <span class="co"># create compound variable</span></a>
+<a class="sourceLine" id="cb141-2" data-line-number="2">n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># create a value for each observation</span></a>
+<a class="sourceLine" id="cb141-3" data-line-number="3">agesex_df =<span class="st"> </span><span class="kw">tibble</span>(agesex, n) <span class="co"># create a data frame</span></a>
+<a class="sourceLine" id="cb141-4" data-line-number="4"><span class="kw">separate</span>(agesex_df, agesex, <span class="kw">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>), <span class="dt">sep =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb141-5" data-line-number="5"><span class="co">#&gt; # A tibble: 2 x 3</span></a>
+<a class="sourceLine" id="cb141-6" data-line-number="6"><span class="co">#&gt;   age   sex       n</span></a>
+<a class="sourceLine" id="cb141-7" data-line-number="7"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb141-8" data-line-number="8"><span class="co">#&gt; 1 m     0-10      3</span></a>
+<a class="sourceLine" id="cb141-9" data-line-number="9"><span class="co">#&gt; 2 f     0-10      5</span></a></code></pre></div>
 <table>
 <caption><span id="tab:to-separate">Table 6.3: </span>Joined age and sex variables in one column</caption>
 <thead>
@@ -629,8 +664,8 @@ agesex_df =<span class="st"> </span><span class="kw">tibble</span>(agesex, n) <s
 <caption><span id="tab:separated">Table 6.4: </span>Age and sex variables separated by the function <code>separate</code>.</caption>
 <thead>
 <tr class="header">
-<th align="left">sex</th>
 <th align="left">age</th>
+<th align="left">sex</th>
 <th align="right">n</th>
 </tr>
 </thead>
@@ -650,7 +685,8 @@ agesex_df =<span class="st"> </span><span class="kw">tibble</span>(agesex, n) <s
 </div>
 <div id="other-tidyr-functions" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Other tidyr functions</h3>
-<p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>). The wider issue of manipulation is a large topic with major potential implications for efficiency <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span> and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms.</p>
+<p>There are other tidying operations that <strong>tidyr</strong> can perform, as described in the package’s vignette (<code>vignette(&quot;tidy-data&quot;)</code>).
+The wider issue of manipulation is a large topic with major potential implications for efficiency <span class="citation">(Spector <a href="#ref-Spector_2008">2008</a>)</span> and this section only covers some of the key operations. More important is understanding the principles behind converting messy data into standard output forms.</p>
 <p>These same principles can also be applied to the representation of model results. The <strong>broom</strong> package provides a standard output format for model results, easing interpretation (see <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html">the broom vignette</a>). The function <code>broom::tidy()</code> can be applied to a wide range of model objects and return the model’s output in a standardized data frame output.</p>
 <p>Usually it is more efficient to use the non-standard evaluation version of variable names, as these can be auto completed by RStudio. In some cases you may want to use standard evaluation and refer to variable names using quote marks. To do this, affix <code>_</code> can be added to <strong>dplyr</strong> and <strong>tidyr</strong> function names to allow the use of standard evaluation. Thus the standard evaluation version of <code>separate(agesex_df, agesex, c(&quot;sex&quot;, &quot;age&quot;), 1)</code> is <code>separate_(agesex_df, &quot;agesex&quot;, c(&quot;sex&quot;, &quot;age&quot;), 1)</code>.</p>
 </div>
@@ -658,13 +694,13 @@ agesex_df =<span class="st"> </span><span class="kw">tibble</span>(agesex, n) <s
 <h3><span class="header-section-number">6.3.4</span> Regular expressions</h3>
 <p>Regular expressions (commonly known as regex) is a language for describing and manipulating text strings. There are books on the subject, and several good tutorials on regex in R <span class="citation">(e.g. Sanchez <a href="#ref-sanchez_handling_2013">2013</a>)</span>, so we’ll just scratch the surface of the topic, and provide a taster of what is possible. Regex is a deep topic. However, knowing the basics can save a huge amount of time from a data tidying perspective, by automating the cleaning of messy strings.</p>
 <p>In this section we teach both <strong>stringr</strong> and base R ways of doing pattern matching. The former provides easy to remember function names and consistency. The latter is useful to know as you’ll find lots of base R regex code in other peoples code as <strong>stringr</strong> is relatively new and not installed by default. The foundational regex operation is to detect whether or not a particular text string exists in an element or not which is done with <code>grepl()</code> and <code>str_detect()</code> in base R and <strong>stringr</strong> respectively:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)
-x =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Hi I&#39;m Robin.&quot;</span>, <span class="st">&quot;DoB 1985&quot;</span>)
-
-<span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;9&quot;</span>, <span class="dt">x =</span> x)
-<span class="co">#&gt; [1] FALSE  TRUE</span>
-<span class="kw">str_detect</span>(<span class="dt">string =</span> x, <span class="dt">pattern =</span> <span class="st">&quot;9&quot;</span>)
-<span class="co">#&gt; [1] FALSE  TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;stringr&quot;</span>)</a>
+<a class="sourceLine" id="cb142-2" data-line-number="2">x =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Hi I&#39;m Robin.&quot;</span>, <span class="st">&quot;DoB 1985&quot;</span>)</a>
+<a class="sourceLine" id="cb142-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb142-4" data-line-number="4"><span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;9&quot;</span>, <span class="dt">x =</span> x)</a>
+<a class="sourceLine" id="cb142-5" data-line-number="5"><span class="co">#&gt; [1] FALSE  TRUE</span></a>
+<a class="sourceLine" id="cb142-6" data-line-number="6"><span class="kw">str_detect</span>(<span class="dt">string =</span> x, <span class="dt">pattern =</span> <span class="st">&quot;9&quot;</span>)</a>
+<a class="sourceLine" id="cb142-7" data-line-number="7"><span class="co">#&gt; [1] FALSE  TRUE</span></a></code></pre></div>
 <div class="rmdnote">
 <p>
 Note: <strong>stringr</strong> does not include a direct replacement for <code>grep()</code>. You can use <code>which(str_detect())</code> instead.
@@ -684,47 +720,41 @@ Note: <strong>stringr</strong> does not include a direct replacement for <code>g
 <li><p>What are the three criteria of tidy data?</p></li>
 <li><p>Load and look at subsets of these datasets. The first is the <code>pew</code> datasets we’ve been using already. The second reports the points that define, roughly, the geographical boundaries of different London boroughs. What is ‘untidy’ about each?</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(pew, <span class="dv">10</span>)
-<span class="co">#&gt; # A tibble: 10 × 10</span>
-<span class="co">#&gt;   religion `&lt;$10k` `$10--20k` `$20--30k` `$30--40k` `$40--50k` `$50--75k`</span>
-<span class="co">#&gt;      &lt;chr&gt;   &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;</span>
-<span class="co">#&gt; 1 Agnostic      27         34         60         81         76        137</span>
-<span class="co">#&gt; 2  Atheist      12         27         37         52         35         70</span>
-<span class="co">#&gt; 3 Buddhist      27         21         30         34         33         58</span>
-<span class="co">#&gt; 4 Catholic     418        617        732        670        638       1116</span>
-<span class="co">#&gt; # ... with 6 more rows, and 3 more variables: `$75--100k` &lt;int&gt;,</span>
-<span class="co">#&gt; #   `$100--150k` &lt;int&gt;, `&gt;150k` &lt;int&gt;</span>
-<span class="kw">data</span>(lnd_geo_df)
-<span class="kw">head</span>(lnd_geo_df, <span class="dv">10</span>)
-<span class="co">#&gt;                    name_date population      x      y</span>
-<span class="co">#&gt; 1               Bromley-2001     295535 544362 172379</span>
-<span class="co">#&gt; 2               Bromley-2001     295535 549546 169911</span>
-<span class="co">#&gt; 3               Bromley-2001     295535 539596 160796</span>
-<span class="co">#&gt; 4               Bromley-2001     295535 533693 170730</span>
-<span class="co">#&gt; 5               Bromley-2001     295535 533718 170814</span>
-<span class="co">#&gt; 6               Bromley-2001     295535 534004 171442</span>
-<span class="co">#&gt; 7               Bromley-2001     295535 541105 173356</span>
-<span class="co">#&gt; 8               Bromley-2001     295535 544362 172379</span>
-<span class="co">#&gt; 9  Richmond upon Thames-2001     172330 523605 176321</span>
-<span class="co">#&gt; 10 Richmond upon Thames-2001     172330 521455 172362</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">head</span>(pew, <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb143-2" data-line-number="2"><span class="co">#&gt; # A tibble: 10 x 10</span></a>
+<a class="sourceLine" id="cb143-3" data-line-number="3"><span class="co">#&gt;   religion `&lt;$10k` `$10--20k` `$20--30k` `$30--40k` `$40--50k` `$50--75k`</span></a>
+<a class="sourceLine" id="cb143-4" data-line-number="4"><span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb143-5" data-line-number="5"><span class="co">#&gt; 1 Agnostic      27         34         60         81         76        137</span></a>
+<a class="sourceLine" id="cb143-6" data-line-number="6"><span class="co">#&gt; 2 Atheist       12         27         37         52         35         70</span></a>
+<a class="sourceLine" id="cb143-7" data-line-number="7"><span class="co">#&gt; 3 Buddhist      27         21         30         34         33         58</span></a>
+<a class="sourceLine" id="cb143-8" data-line-number="8"><span class="co">#&gt; 4 Catholic     418        617        732        670        638       1116</span></a>
+<a class="sourceLine" id="cb143-9" data-line-number="9"><span class="co">#&gt; # … with 6 more rows, and 3 more variables: `$75--100k` &lt;int&gt;,</span></a>
+<a class="sourceLine" id="cb143-10" data-line-number="10"><span class="co">#&gt; #   `$100--150k` &lt;int&gt;, `&gt;150k` &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb143-11" data-line-number="11"><span class="kw">data</span>(lnd_geo_df)</a>
+<a class="sourceLine" id="cb143-12" data-line-number="12"><span class="kw">head</span>(lnd_geo_df, <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb143-13" data-line-number="13"><span class="co">#&gt;                    name_date population      x      y</span></a>
+<a class="sourceLine" id="cb143-14" data-line-number="14"><span class="co">#&gt; 1               Bromley-2001     295535 544362 172379</span></a>
+<a class="sourceLine" id="cb143-15" data-line-number="15"><span class="co">#&gt; 2               Bromley-2001     295535 549546 169911</span></a>
+<a class="sourceLine" id="cb143-16" data-line-number="16"><span class="co">#&gt; 3               Bromley-2001     295535 539596 160796</span></a>
+<a class="sourceLine" id="cb143-17" data-line-number="17"><span class="co">#&gt; 4               Bromley-2001     295535 533693 170730</span></a>
+<a class="sourceLine" id="cb143-18" data-line-number="18"><span class="co">#&gt; 5               Bromley-2001     295535 533718 170814</span></a>
+<a class="sourceLine" id="cb143-19" data-line-number="19"><span class="co">#&gt; 6               Bromley-2001     295535 534004 171442</span></a>
+<a class="sourceLine" id="cb143-20" data-line-number="20"><span class="co">#&gt; 7               Bromley-2001     295535 541105 173356</span></a>
+<a class="sourceLine" id="cb143-21" data-line-number="21"><span class="co">#&gt; 8               Bromley-2001     295535 544362 172379</span></a>
+<a class="sourceLine" id="cb143-22" data-line-number="22"><span class="co">#&gt; 9  Richmond upon Thames-2001     172330 523605 176321</span></a>
+<a class="sourceLine" id="cb143-23" data-line-number="23"><span class="co">#&gt; 10 Richmond upon Thames-2001     172330 521455 172362</span></a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Convert each of the above datasets into tidy form.</p></li>
 <li><p>Consider the following string of phone numbers and fruits from <span class="citation">(Wickham <a href="#ref-wickham2010stringr">2010</a>)</span>:</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">strings =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; 219 733 8965&quot;</span>, <span class="st">&quot;329-293-8753 &quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;595 794 7569&quot;</span>,
-             <span class="st">&quot;387 287 6718&quot;</span>, <span class="st">&quot;apple&quot;</span>, <span class="st">&quot;233.398.9187  &quot;</span>, <span class="st">&quot;482 952 3315&quot;</span>, <span class="st">&quot;239 923 8115&quot;</span>,
-             <span class="st">&quot;842 566 4692&quot;</span>, <span class="st">&quot;Work: 579-499-7527&quot;</span>, <span class="st">&quot;$1000&quot;</span>, <span class="st">&quot;Home: 543.355.3679&quot;</span>)</code></pre></div>
-<p>Write functions in <strong>stringr</strong> and base R that return:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1">strings =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot; 219 733 8965&quot;</span>, <span class="st">&quot;329-293-8753 &quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;595 794 7569&quot;</span>,</a>
+<a class="sourceLine" id="cb144-2" data-line-number="2">             <span class="st">&quot;387 287 6718&quot;</span>, <span class="st">&quot;apple&quot;</span>, <span class="st">&quot;233.398.9187  &quot;</span>, <span class="st">&quot;482 952 3315&quot;</span>, <span class="st">&quot;239 923 8115&quot;</span>,</a>
+<a class="sourceLine" id="cb144-3" data-line-number="3">             <span class="st">&quot;842 566 4692&quot;</span>, <span class="st">&quot;Work: 579-499-7527&quot;</span>, <span class="st">&quot;$1000&quot;</span>, <span class="st">&quot;Home: 543.355.3679&quot;</span>)</a></code></pre></div>
+<p>Write expressions in <strong>stringr</strong> and base R that return:</p>
 <ul>
 <li>A logical vector reporting whether or not each string contains a number.</li>
 <li>Complete words only, without extraneous non-letter characters.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str_detect</span>(<span class="dt">string =</span> strings, <span class="dt">pattern =</span> <span class="st">&quot;[0-9]&quot;</span>)
-<span class="co">#&gt;  [1]  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE</span>
-<span class="co">#&gt; [12]  TRUE  TRUE</span>
-<span class="kw">str_extract</span>(strings, <span class="dt">pattern =</span> <span class="st">&quot;[A-z]+&quot;</span>)
-<span class="co">#&gt;  [1] NA       NA       &quot;banana&quot; NA       NA       &quot;apple&quot;  NA      </span>
-<span class="co">#&gt;  [8] NA       NA       NA       &quot;Work&quot;   NA       &quot;Home&quot;</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -790,18 +820,19 @@ Note: <strong>stringr</strong> does not include a direct replacement for <code>g
 </tr>
 </tbody>
 </table>
-<p>Unlike the base R analogues, <strong>dplyr</strong>‘s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ’pipe’ operator <code>%&gt;%</code> provided by the <strong>magrittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greenhouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-<span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
-top_table =
-<span class="st">  </span>ghg_ems %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(!<span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(Country) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Mean =</span> <span class="kw">mean</span>(Transportation),
-            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) %&gt;%
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Growth) %&gt;%
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(Growth))</code></pre></div>
-<p>The results, illustrated in table <a href="data-carpentry.html#tab:speed">6.6</a>, show that the USA has the highest growth and average emissions from the transport sector, followed closely by China. The aim of this code chunk is not for you to somehow read it and understand it: it is to provide a taster of <strong>dplyr</strong>’s unique syntax, which is described in more detail throughout the duration of this section.</p>
+<p>Unlike the base R analogues, <strong>dplyr</strong>’s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the <code>$</code> operator. <strong>dplyr</strong> was designed to be used with the ‘pipe’ operator <code>%&gt;%</code> provided by the <strong>magrittr</strong> package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greenhouse gas emissions from the <strong>efficient</strong> package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012:</p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb145-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb145-3" data-line-number="3">top_table =</a>
+<a class="sourceLine" id="cb145-4" data-line-number="4"><span class="st">  </span>ghg_ems <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb145-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb145-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(Country) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb145-7" data-line-number="7"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Mean =</span> <span class="kw">mean</span>(Transportation),</a>
+<a class="sourceLine" id="cb145-8" data-line-number="8">            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb145-9" data-line-number="9"><span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Growth) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb145-10" data-line-number="10"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(Growth))</a></code></pre></div>
+<p>The results, illustrated in table <a href="data-carpentry.html#tab:speed">6.6</a>, show that the USA has the highest growth and average emissions from the transport sector, followed closely by China.
+The aim of this code chunk is not for you to somehow read it and understand it: it is to provide a taster of <strong>dplyr</strong>’s unique syntax, which is described in more detail throughout the duration of this section.</p>
 <table>
 <caption><span id="tab:speed">Table 6.6: </span>The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).</caption>
 <thead>
@@ -830,99 +861,92 @@ top_table =
 </tbody>
 </table>
 <p>Building on the ‘learning by doing’ ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load global inequality data</span>
-<span class="kw">data</span>(wb_ineq)</code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="co"># Load global inequality data</span></a>
+<a class="sourceLine" id="cb146-2" data-line-number="2"><span class="kw">data</span>(<span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>, wb_ineq)</a></code></pre></div>
 <p><strong>dplyr</strong> is a large package and can be seen as a language in its own right. Following the ‘walk before you run’ principle, we’ll start simple, by filtering and aggregating rows.</p>
 <div id="renaming-columns" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Renaming columns</h3>
 <p>Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The <strong>dplyr</strong> function <code>rename()</code> makes this easy.</p>
-<p>Note in this code block the variable name is surrounded by back-quotes (`). This allows R to refer to column names that are non-standard. Note also the syntax: <code>rename</code> takes the data frame as the first object and then creates new variables by specifying <code>new_variable_name = original_name</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-wb_ineq =<span class="st"> </span><span class="kw">rename</span>(wb_ineq, <span class="dt">code =</span> <span class="st">`</span><span class="dt">Country Code</span><span class="st">`</span>)</code></pre></div>
-<p>To rename multiple columns the variable names are simply separated by commas. The base R and <strong>dplyr</strong> way of doing this is illustrated on an older version of the dataset (not run) to illustrate how long, clunky and inefficient names can be converted into short and lean ones.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The dplyr way (rename two variables)</span>
-wb_ineq =<span class="st"> </span><span class="kw">rename</span>(wb_ineq,
- <span class="dt">top10 =</span> <span class="st">`</span><span class="dt">Income share held by highest 10% [SI.DST.10TH.10]</span><span class="st">`</span>,
- <span class="dt">bot10 =</span> <span class="st">`</span><span class="dt">Income share held by lowest 10% [SI.DST.FRST.10]</span><span class="st">`</span>)
-<span class="co"># The base R way (rename five variables)</span>
-<span class="kw">names</span>(wb_ineq)[<span class="dv">5</span>:<span class="dv">9</span>] =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;top10&quot;</span>, <span class="st">&quot;bot10&quot;</span>, <span class="st">&quot;gini&quot;</span>, <span class="st">&quot;b40_cons&quot;</span>, <span class="st">&quot;gdp_percap&quot;</span>)</code></pre></div>
+<p>Note in this code block the variable name is surrounded by back-quotes (<code>\</code>).
+This allows R to refer to column names that are non-standard.
+Note also the syntax:
+<code>rename()</code> takes the data frame as the first object and then creates new variables by specifying <code>new_variable_name = original_name</code>.</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1">wb_ineq =<span class="st"> </span><span class="kw">rename</span>(wb_ineq, <span class="dt">code =</span> <span class="st">`</span><span class="dt">Country Code</span><span class="st">`</span>)</a></code></pre></div>
+<p>To rename multiple columns the variable names are simply separated by commas.
+<code>rename(x, x = X1, y = X2)</code> would rename variables <code>X1</code> and <code>X2</code> in the dataset <code>x</code>.
+In base R the equivalent function would be <code>names(x)[1:2] = c(&quot;x&quot;, &quot;y&quot;)</code> or <code>setNames(x, c(&quot;x&quot;, &quot;y&quot;))</code>, assuming we were dealing with the first and second columns.</p>
 </div>
 <div id="changing-column-classes" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> Changing column classes</h3>
-<p>The <em>class</em> of R objects is critical to performance. If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object), as illustrated below, with the inequality data loaded previously.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(wb_ineq, class, <span class="kw">character</span>(<span class="dv">1</span>))
-<span class="co">#&gt;     Country        code        Year   Year Code       top10       bot10 </span>
-<span class="co">#&gt; &quot;character&quot; &quot;character&quot;   &quot;integer&quot; &quot;character&quot;   &quot;numeric&quot;   &quot;numeric&quot; </span>
-<span class="co">#&gt;        gini    b40_cons  gdp_percap </span>
-<span class="co">#&gt;   &quot;numeric&quot;   &quot;numeric&quot;   &quot;numeric&quot;</span></code></pre></div>
-<p>This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: <code>mean(wb_ineq$gini)</code> fails.</p>
-<p>Visual inspection of the data (e.g. via <code>View(wb_ineq)</code>) clearly shows that all columns except for 1 to 4 (<code>Country</code>, <code>Country Code</code>, <code>Year</code> and <code>Year Code</code>) should be numeric. We can re-assign the classes of the numeric variables one-by one:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq$gini =<span class="st"> </span><span class="kw">as.numeric</span>(wb_ineq$gini)
-<span class="kw">mean</span>(wb_ineq$gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="co"># now the mean is calculated</span>
-<span class="co">#&gt; [1] 40.5</span></code></pre></div>
-<p>However the purpose of programming languages is to <em>automate</em> tasks and reduce typing. The following code chunk re-classifies all of the numeric variables using <code>data.matrix()</code>, which converts the data frame to a numeric <code>matrix</code>:</p>
-<!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cols_to_change=<span class="st"> </span><span class="dv">5</span>:<span class="dv">9</span> <span class="co"># column ids to change</span>
-wb_ineq[cols_to_change] =<span class="st"> </span><span class="kw">data.matrix</span>(wb_ineq[cols_to_change])
-<span class="kw">vapply</span>(wb_ineq, class, <span class="kw">character</span>(<span class="dv">1</span>))
-<span class="co">#&gt;     Country        code        Year   Year Code       top10       bot10 </span>
-<span class="co">#&gt; &quot;character&quot; &quot;character&quot;   &quot;integer&quot; &quot;character&quot;   &quot;numeric&quot;   &quot;numeric&quot; </span>
-<span class="co">#&gt;        gini    b40_cons  gdp_percap </span>
-<span class="co">#&gt;   &quot;numeric&quot;   &quot;numeric&quot;   &quot;numeric&quot;</span></code></pre></div>
-<p>As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using <code>unlist()</code> which converts list objects into vectors:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq[cols_to_change] =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(wb_ineq[cols_to_change]))</code></pre></div>
-<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
-<p><em>Another</em> one-liner to achieve the same result uses <strong>dplyr</strong>’s <code>mutate_each</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq =<span class="st"> </span><span class="kw">mutate_each</span>(wb_ineq, <span class="st">&quot;as.numeric&quot;</span>, cols_to_change)</code></pre></div>
-<p>As with other operations there are other ways of achieving the same result in R, including the use of loops via <code>apply()</code> and <code>for()</code>. These are shown in the chapter’s <a href="https://github.com/csgillespie/efficientR">source code</a>.</p>
+<p>The <em>class</em> of R objects is critical to performance.
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object).<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a></p>
+<p>Visual inspection of the data (e.g. via <code>View(wb_ineq)</code>) clearly shows that all columns except for 1 to 4 (<code>Country</code>, <code>Country Code</code>, <code>Year</code> and <code>Year Code</code>) should be numeric.
+The class of numeric variables can be altered one-by one using <code>mutate()</code> as follows (which would set the <code>gini</code> column to be of class <code>numeric</code> if it weren’t already):<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a></p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1">wb_ineq =<span class="st"> </span><span class="kw">mutate</span>(wb_ineq, <span class="dt">gini =</span> <span class="kw">as.numeric</span>(gini))</a></code></pre></div>
+<p>However the purpose of programming languages is to <em>automate</em> tasks and reduce typing.
+The following code chunk ensures the numeric variables in the <code>cols_to_change</code> object are <code>numeric</code> using the same function (<code>vars()</code> is a helper function to select variables and also words with <strong>dplyr</strong> functions such as <code>contains()</code> which select all columns containing a given text string):</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">cols_to_change =<span class="st"> </span><span class="dv">5</span><span class="op">:</span><span class="dv">9</span> <span class="co"># column ids to change</span></a>
+<a class="sourceLine" id="cb149-2" data-line-number="2">wb_ineq =<span class="st"> </span><span class="kw">mutate_at</span>(wb_ineq, <span class="kw">vars</span>(cols_to_change), as.numeric)</a>
+<a class="sourceLine" id="cb149-3" data-line-number="3"><span class="co">#&gt; Note: Using an external vector in selections is ambiguous.</span></a>
+<a class="sourceLine" id="cb149-4" data-line-number="4"><span class="co">#&gt; ℹ Use `all_of(cols_to_change)` instead of `cols_to_change` to silence this message.</span></a>
+<a class="sourceLine" id="cb149-5" data-line-number="5"><span class="co">#&gt; ℹ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</span></a>
+<a class="sourceLine" id="cb149-6" data-line-number="6"><span class="co">#&gt; This message is displayed once per session.</span></a></code></pre></div>
+<p>Another way to acheive the same result is to use <code>data.matrix()</code>, which converts the data frame to a numeric <code>matrix</code>:</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1">cols_to_change =<span class="st"> </span><span class="dv">5</span><span class="op">:</span><span class="dv">9</span> <span class="co"># column ids to change</span></a>
+<a class="sourceLine" id="cb150-2" data-line-number="2">wb_ineq[cols_to_change] =<span class="st"> </span><span class="kw">data.matrix</span>(wb_ineq[cols_to_change])</a></code></pre></div>
+<p>Each method (base R and <strong>dplyr</strong>) has its merits.
+For readers new to R who plan to use other <strong>tidyverse</strong> packages we would provide a slight steer towards <code>mutate_at()</code> for its flexibility and expressive syntax.
+Other methods for acheiving the same result include the use of loops via <code>apply()</code> and <code>for()</code>.
+These are shown in the chapter’s <a href="https://github.com/csgillespie/efficientR">source code</a>.</p>
 </div>
 <div id="filtering-rows" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Filtering rows</h3>
 <p><strong>dplyr</strong> offers an alternative way of filtering data, using <code>filter()</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Base R: wb_ineq[wb_ineq$Country == &quot;Australia&quot;,]</span>
-aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country ==<span class="st"> &quot;Australia&quot;</span>)</code></pre></div>
-<p><code>filter()</code> is slightly more flexible than <code>[</code>: <code>filter(wb_ineq, code == &quot;AUS&quot;, Year == 1974)</code> works as well as <code>filter(wb_ineq, code == &quot;AUS&quot; &amp; Year == 1974)</code>, and takes any number of conditions (see <code>?filter</code>). <code>filter()</code> is slightly faster than base R.<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a> By avoiding the <code>$</code> symbol, <strong>dplyr</strong> makes subsetting code concise and consistent with other <strong>dplyr</strong> functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of <strong>dplyr</strong>. In the next section we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1"><span class="co"># Base R: wb_ineq[wb_ineq$Country == &quot;Australia&quot;,]</span></a>
+<a class="sourceLine" id="cb151-2" data-line-number="2">aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country <span class="op">==</span><span class="st"> &quot;Australia&quot;</span>)</a></code></pre></div>
+<p><code>filter()</code> is slightly more flexible than <code>[</code>: <code>filter(wb_ineq, code == &quot;AUS&quot;, Year == 1974)</code> works as well as <code>filter(wb_ineq, code == &quot;AUS&quot; &amp; Year == 1974)</code>, and takes any number of conditions (see <code>?filter</code>). <code>filter()</code> is slightly faster than base R.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> By avoiding the <code>$</code> symbol, <strong>dplyr</strong> makes subsetting code concise and consistent with other <strong>dplyr</strong> functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of <strong>dplyr</strong>. In the next section we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.</p>
 <p>There are <strong>dplyr</strong> equivalents of many base R functions but these usually work slightly differently. The <strong>dplyr</strong> equivalent of <code>aggregate</code>, for example is to use the grouping function <code>group_by</code> in combination with the general purpose function <code>summarise</code> (not to be confused with <code>summary</code> in base R), as we shall see in Section <a href="data-carpentry.html#data-aggregation">6.4.5</a>.</p>
 </div>
 <div id="chaining-operations" class="section level3">
 <h3><span class="header-section-number">6.4.4</span> Chaining operations</h3>
 <p>Another interesting feature of <strong>dplyr</strong> is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end-up with very long commands with many functions nested inside each other to answer relatively simple questions. Combined with the <code>group_by()</code> function, pipes can help condense thousands of lines of data into something human readable. Here’s how you could use the chains to summarize average Gini indexes per decade, for example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(Year, gini) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">decade =</span> <span class="kw">floor</span>(Year /<span class="st"> </span><span class="dv">10</span>) *<span class="st"> </span><span class="dv">10</span>) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(decade) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
-<span class="co">#&gt; # A tibble: 6 × 2</span>
-<span class="co">#&gt;   decade `mean(gini, na.rm = TRUE)`</span>
-<span class="co">#&gt;    &lt;dbl&gt;                      &lt;dbl&gt;</span>
-<span class="co">#&gt; 1   1970                       40.1</span>
-<span class="co">#&gt; 2   1980                       37.8</span>
-<span class="co">#&gt; 3   1990                       42.0</span>
-<span class="co">#&gt; 4   2000                       40.5</span>
-<span class="co">#&gt; # ... with 2 more rows</span></code></pre></div>
-<p>Often the best way to learn is to try and break something, so try running the above commands with different <strong>dplyr</strong> verbs. By way of explanation, this is what happened:</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb152-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb152-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">decade =</span> <span class="kw">floor</span>(<span class="kw">as.numeric</span>(Year) <span class="op">/</span><span class="st"> </span><span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb152-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(decade) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb152-5" data-line-number="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb152-6" data-line-number="6"><span class="co">#&gt; # A tibble: 6 x 2</span></a>
+<a class="sourceLine" id="cb152-7" data-line-number="7"><span class="co">#&gt;   decade `mean(gini, na.rm = TRUE)`</span></a>
+<a class="sourceLine" id="cb152-8" data-line-number="8"><span class="co">#&gt;    &lt;dbl&gt;                      &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb152-9" data-line-number="9"><span class="co">#&gt; 1   1970                       40.1</span></a>
+<a class="sourceLine" id="cb152-10" data-line-number="10"><span class="co">#&gt; 2   1980                       37.8</span></a>
+<a class="sourceLine" id="cb152-11" data-line-number="11"><span class="co">#&gt; 3   1990                       42.0</span></a>
+<a class="sourceLine" id="cb152-12" data-line-number="12"><span class="co">#&gt; 4   2000                       40.5</span></a>
+<a class="sourceLine" id="cb152-13" data-line-number="13"><span class="co">#&gt; # … with 2 more rows</span></a></code></pre></div>
+<p>Often the best way to learn is to try and break something, so try running the above commands with different <strong>dplyr</strong> verbs.
+By way of explanation, this is what happened:</p>
 <ol style="list-style-type: decimal">
 <li>Only the columns <code>Year</code> and <code>gini</code> were selected, using <code>select()</code>.</li>
 <li>A new variable, <code>decade</code> was created, to show only the decade figures (e.g. 1989 becomes 1980).</li>
 <li>This new variable was used to group rows in the data frame with the same decade.</li>
-<li>The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.</li>
+<li>The mean value per decade was calculated, illustrating how average income inequality was greatest in 1990 but has since decreased slightly.</li>
 </ol>
 <p>Let’s ask another question to see how the <strong>dplyr</strong> chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here’s how chains can help organise the analysis needed to answer this question step-by-step:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(Year) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) %&gt;%
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) %&gt;%
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)
-<span class="co">#&gt; Selecting by gini</span>
-<span class="co">#&gt; # A tibble: 5 × 2</span>
-<span class="co">#&gt;    Year  gini</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1980  46.9</span>
-<span class="co">#&gt; 2  1993  46.0</span>
-<span class="co">#&gt; 3  2013  44.5</span>
-<span class="co">#&gt; 4  1981  43.6</span>
-<span class="co">#&gt; # ... with 1 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb153-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(Year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-5" data-line-number="5"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(gini)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-6" data-line-number="6"><span class="st">  </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb153-7" data-line-number="7"><span class="co">#&gt; Selecting by gini</span></a>
+<a class="sourceLine" id="cb153-8" data-line-number="8"><span class="co">#&gt; # A tibble: 5 x 2</span></a>
+<a class="sourceLine" id="cb153-9" data-line-number="9"><span class="co">#&gt;   Year   gini</span></a>
+<a class="sourceLine" id="cb153-10" data-line-number="10"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb153-11" data-line-number="11"><span class="co">#&gt; 1 1980   46.8</span></a>
+<a class="sourceLine" id="cb153-12" data-line-number="12"><span class="co">#&gt; 2 1993   46.0</span></a>
+<a class="sourceLine" id="cb153-13" data-line-number="13"><span class="co">#&gt; 3 2013   44.6</span></a>
+<a class="sourceLine" id="cb153-14" data-line-number="14"><span class="co">#&gt; 4 1981   43.6</span></a>
+<a class="sourceLine" id="cb153-15" data-line-number="15"><span class="co">#&gt; # … with 1 more row</span></a></code></pre></div>
 <p>The above function consists of 6 stages, each of which corresponds to a new line and <strong>dplyr</strong> function:</p>
 <ol style="list-style-type: decimal">
 <li>Filter-out the countries we’re interested in (any selection criteria could be used in place of <code>grepl(&quot;g&quot;, Country)</code>).</li>
@@ -932,41 +956,41 @@ aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country =
 <li>Select only the top 5 most unequal years.</li>
 </ol>
 <p>To see why this method is preferable to the nested function approach, take a look at the latter. Even after indenting properly it looks terrible and is almost impossible to understand!</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">top_n</span>(
-  <span class="kw">arrange</span>(
-    <span class="kw">summarise</span>(
-      <span class="kw">group_by</span>(
-        <span class="kw">filter</span>(wb_ineq, <span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)),
-        Year),
-      <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)),
-    <span class="kw">desc</span>(gini)),
-  <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1"><span class="kw">top_n</span>(</a>
+<a class="sourceLine" id="cb154-2" data-line-number="2">  <span class="kw">arrange</span>(</a>
+<a class="sourceLine" id="cb154-3" data-line-number="3">    <span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb154-4" data-line-number="4">      <span class="kw">group_by</span>(</a>
+<a class="sourceLine" id="cb154-5" data-line-number="5">        <span class="kw">filter</span>(wb_ineq, <span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)),</a>
+<a class="sourceLine" id="cb154-6" data-line-number="6">        Year),</a>
+<a class="sourceLine" id="cb154-7" data-line-number="7">      <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)),</a>
+<a class="sourceLine" id="cb154-8" data-line-number="8">    <span class="kw">desc</span>(gini)),</a>
+<a class="sourceLine" id="cb154-9" data-line-number="9">  <span class="dt">n =</span> <span class="dv">5</span>)</a></code></pre></div>
 <p>This section has provided only a taster of what is possible <strong>dplyr</strong> and why it makes sense from code writing and computational efficiency perspectives. For a more detailed account of data processing with R using this approach we recommend <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span>.</p>
 <div id="exercises-13" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li>Try running each of the chaining examples above line-by-line, so the first two entries for the first example would look like this:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq
-<span class="co">#&gt; # A tibble: 6,925 × 9</span>
-<span class="co">#&gt;       Country  code  Year `Year Code` top10 bot10  gini b40_cons</span>
-<span class="co">#&gt;         &lt;chr&gt; &lt;chr&gt; &lt;int&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Afghanistan   AFG  1974      YR1974    NA    NA    NA       NA</span>
-<span class="co">#&gt; 2 Afghanistan   AFG  1975      YR1975    NA    NA    NA       NA</span>
-<span class="co">#&gt; 3 Afghanistan   AFG  1976      YR1976    NA    NA    NA       NA</span>
-<span class="co">#&gt; 4 Afghanistan   AFG  1977      YR1977    NA    NA    NA       NA</span>
-<span class="co">#&gt; # ... with 6,921 more rows, and 1 more variables: gdp_percap &lt;dbl&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1">wb_ineq</a>
+<a class="sourceLine" id="cb155-2" data-line-number="2"><span class="co">#&gt; # A tibble: 6,925 x 9</span></a>
+<a class="sourceLine" id="cb155-3" data-line-number="3"><span class="co">#&gt;   Country     code  Year  `Year Code` top10 bot10  gini b40_cons gdp_percap</span></a>
+<a class="sourceLine" id="cb155-4" data-line-number="4"><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb155-5" data-line-number="5"><span class="co">#&gt; 1 Afghanistan AFG   1974  YR1974         NA    NA    NA       NA         NA</span></a>
+<a class="sourceLine" id="cb155-6" data-line-number="6"><span class="co">#&gt; 2 Afghanistan AFG   1975  YR1975         NA    NA    NA       NA         NA</span></a>
+<a class="sourceLine" id="cb155-7" data-line-number="7"><span class="co">#&gt; 3 Afghanistan AFG   1976  YR1976         NA    NA    NA       NA         NA</span></a>
+<a class="sourceLine" id="cb155-8" data-line-number="8"><span class="co">#&gt; 4 Afghanistan AFG   1977  YR1977         NA    NA    NA       NA         NA</span></a>
+<a class="sourceLine" id="cb155-9" data-line-number="9"><span class="co">#&gt; # … with 6,921 more rows</span></a></code></pre></div>
 <p>followed by:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wb_ineq %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(Year, gini) 
-<span class="co">#&gt; # A tibble: 6,925 × 2</span>
-<span class="co">#&gt;    Year  gini</span>
-<span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1974    NA</span>
-<span class="co">#&gt; 2  1975    NA</span>
-<span class="co">#&gt; 3  1976    NA</span>
-<span class="co">#&gt; 4  1977    NA</span>
-<span class="co">#&gt; # ... with 6,921 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb156-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini) </a>
+<a class="sourceLine" id="cb156-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6,925 x 2</span></a>
+<a class="sourceLine" id="cb156-4" data-line-number="4"><span class="co">#&gt;   Year   gini</span></a>
+<a class="sourceLine" id="cb156-5" data-line-number="5"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb156-6" data-line-number="6"><span class="co">#&gt; 1 1974     NA</span></a>
+<a class="sourceLine" id="cb156-7" data-line-number="7"><span class="co">#&gt; 2 1975     NA</span></a>
+<a class="sourceLine" id="cb156-8" data-line-number="8"><span class="co">#&gt; 3 1976     NA</span></a>
+<a class="sourceLine" id="cb156-9" data-line-number="9"><span class="co">#&gt; 4 1977     NA</span></a>
+<a class="sourceLine" id="cb156-10" data-line-number="10"><span class="co">#&gt; # … with 6,921 more rows</span></a></code></pre></div>
 <p>Explain in your own words what changes each time.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Use chained <strong>dplyr</strong> functions to answer the following question: In which year did countries without an ‘a’ in their name have the lowest level of inequality?</li>
@@ -976,15 +1000,15 @@ aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country =
 <div id="data-aggregation" class="section level3">
 <h3><span class="header-section-number">6.4.5</span> Data aggregation</h3>
 <p>Data aggregation involves creating summaries of data based on a grouping variable, in a process that has been referred to as ‘split-apply-combine’. The end result usually has the same number of rows as there are groups. Because aggregation is a way of condensing datasets it can be a very useful technique for making sense of large datasets. The following code finds the number of unique countries (country being the grouping variable) from the <code>ghg_ems</code> dataset stored in the <strong>efficient</strong> package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># data available online, from github.com/csgillespie/efficient_pkg</span>
-<span class="kw">data</span>(ghg_ems, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)
-<span class="kw">names</span>(ghg_ems)
-<span class="co">#&gt; [1] &quot;Country&quot;        &quot;Year&quot;           &quot;Electricity&quot;    &quot;Manufacturing&quot; </span>
-<span class="co">#&gt; [5] &quot;Transportation&quot; &quot;Other&quot;          &quot;Fugitive&quot;</span>
-<span class="kw">nrow</span>(ghg_ems)
-<span class="co">#&gt; [1] 7896</span>
-<span class="kw">length</span>(<span class="kw">unique</span>(ghg_ems$Country))
-<span class="co">#&gt; [1] 188</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1"><span class="co"># data available online, from github.com/csgillespie/efficient_pkg</span></a>
+<a class="sourceLine" id="cb157-2" data-line-number="2"><span class="kw">data</span>(ghg_ems, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb157-3" data-line-number="3"><span class="kw">names</span>(ghg_ems)</a>
+<a class="sourceLine" id="cb157-4" data-line-number="4"><span class="co">#&gt; [1] &quot;Country&quot;        &quot;Year&quot;           &quot;Electricity&quot;    &quot;Manufacturing&quot; </span></a>
+<a class="sourceLine" id="cb157-5" data-line-number="5"><span class="co">#&gt; [5] &quot;Transportation&quot; &quot;Other&quot;          &quot;Fugitive&quot;</span></a>
+<a class="sourceLine" id="cb157-6" data-line-number="6"><span class="kw">nrow</span>(ghg_ems)</a>
+<a class="sourceLine" id="cb157-7" data-line-number="7"><span class="co">#&gt; [1] 7896</span></a>
+<a class="sourceLine" id="cb157-8" data-line-number="8"><span class="kw">length</span>(<span class="kw">unique</span>(ghg_ems<span class="op">$</span>Country))</a>
+<a class="sourceLine" id="cb157-9" data-line-number="9"><span class="co">#&gt; [1] 188</span></a></code></pre></div>
 <p>Note that while there are almost <span class="math inline">\(8000\)</span> rows, there are fewer than 200 countries: factors would have been a more space efficient way of storing the countries data.</p>
 <!-- Note the first argument in the function is the vector we're aiming to aggregate and the second is the grouping variable (in this case Countries). -->
 <!-- Another way to specify the `by` argument is with the tilde (`~`). -->
@@ -995,56 +1019,171 @@ aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country =
 <!-- ```{r} -->
 <!-- head(e_ems[order(e_ems$x),], 3) -->
 <!-- ``` -->
-<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-<span class="kw">group_by</span>(ghg_ems, Country) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
-<span class="co">#&gt; # A tibble: 188 × 2</span>
-<span class="co">#&gt;       Country mean_eco2</span>
-<span class="co">#&gt;         &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Afghanistan       NaN</span>
-<span class="co">#&gt; 2     Albania     0.641</span>
-<span class="co">#&gt; 3     Algeria    23.015</span>
-<span class="co">#&gt; 4      Angola     0.791</span>
-<span class="co">#&gt; # ... with 184 more rows</span></code></pre></div>
+<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a></p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb158-2" data-line-number="2"><span class="kw">group_by</span>(ghg_ems, Country) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb158-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb158-4" data-line-number="4"><span class="co">#&gt; # A tibble: 188 x 2</span></a>
+<a class="sourceLine" id="cb158-5" data-line-number="5"><span class="co">#&gt;   Country     mean_eco2</span></a>
+<a class="sourceLine" id="cb158-6" data-line-number="6"><span class="co">#&gt;   &lt;chr&gt;           &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb158-7" data-line-number="7"><span class="co">#&gt; 1 Afghanistan   NaN    </span></a>
+<a class="sourceLine" id="cb158-8" data-line-number="8"><span class="co">#&gt; 2 Albania         0.641</span></a>
+<a class="sourceLine" id="cb158-9" data-line-number="9"><span class="co">#&gt; 3 Algeria        23.0  </span></a>
+<a class="sourceLine" id="cb158-10" data-line-number="10"><span class="co">#&gt; 4 Angola          0.791</span></a>
+<a class="sourceLine" id="cb158-11" data-line-number="11"><span class="co">#&gt; # … with 184 more rows</span></a></code></pre></div>
 <div class="rmdnote">
 <p>
 The example above relates to a wider programming issue: how much work should one function do? The work could have been done with a single <code>aggregate()</code> call. However, the <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should “do one thing well”, which is how <strong>dplyr</strong>’s functions were designed. Shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing.
 </p>
 </div>
 <p>To reinforce the point, this operation is also performed below on the <code>wb_ineq</code> dataset:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(wb_ineq, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
-countries =<span class="st"> </span><span class="kw">group_by</span>(wb_ineq, Country)
-<span class="kw">summarise</span>(countries, <span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))
-<span class="co">#&gt; # A tibble: 176 × 2</span>
-<span class="co">#&gt;       Country  gini</span>
-<span class="co">#&gt;         &lt;chr&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Afghanistan   NaN</span>
-<span class="co">#&gt; 2     Albania  30.4</span>
-<span class="co">#&gt; 3     Algeria  37.8</span>
-<span class="co">#&gt; 4      Angola  50.6</span>
-<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">countries =<span class="st"> </span><span class="kw">group_by</span>(wb_ineq, Country)</a>
+<a class="sourceLine" id="cb159-2" data-line-number="2"><span class="kw">summarise</span>(countries, <span class="dt">mean_gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="co">#&gt; # A tibble: 176 x 2</span></a>
+<a class="sourceLine" id="cb159-4" data-line-number="4"><span class="co">#&gt;   Country     mean_gini</span></a>
+<a class="sourceLine" id="cb159-5" data-line-number="5"><span class="co">#&gt;   &lt;chr&gt;           &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb159-6" data-line-number="6"><span class="co">#&gt; 1 Afghanistan     NaN  </span></a>
+<a class="sourceLine" id="cb159-7" data-line-number="7"><span class="co">#&gt; 2 Albania          30.4</span></a>
+<a class="sourceLine" id="cb159-8" data-line-number="8"><span class="co">#&gt; 3 Algeria          37.8</span></a>
+<a class="sourceLine" id="cb159-9" data-line-number="9"><span class="co">#&gt; 4 Angola           50.6</span></a>
+<a class="sourceLine" id="cb159-10" data-line-number="10"><span class="co">#&gt; # … with 172 more rows</span></a></code></pre></div>
 <p>Note that <code>summarise</code> is highly versatile, and can be used to return a customised range of summary statistics:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summarise</span>(countries,
-  <span class="co"># number of rows per country</span>
-  <span class="dt">obs =</span> <span class="kw">n</span>(), 
-  <span class="dt">med_t10 =</span> <span class="kw">median</span>(top10, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
-  <span class="co"># standard deviation</span>
-  <span class="dt">sdev =</span> <span class="kw">sd</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
-  <span class="co"># number with gini &gt; 30</span>
-  <span class="dt">n30 =</span> <span class="kw">sum</span>(gini &gt;<span class="st"> </span><span class="dv">30</span>, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>), 
-  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini &gt;<span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),
-  <span class="co"># range</span>
-  <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) -<span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)
-  )
-<span class="co">#&gt; # A tibble: 176 × 7</span>
-<span class="co">#&gt;       Country   obs med_t10  sdev   n30  sdn30   dif</span>
-<span class="co">#&gt;         &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Afghanistan    40      NA   NaN     0     NA    NA</span>
-<span class="co">#&gt; 2     Albania    40    24.4  1.25     3  0.364  2.78</span>
-<span class="co">#&gt; 3     Algeria    40    29.8  3.44     2  3.437  4.86</span>
-<span class="co">#&gt; 4      Angola    40    38.6 11.30     2 11.300 15.98</span>
-<span class="co">#&gt; # ... with 172 more rows</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1"><span class="kw">summarise</span>(countries,</a>
+<a class="sourceLine" id="cb160-2" data-line-number="2">  <span class="co"># number of rows per country</span></a>
+<a class="sourceLine" id="cb160-3" data-line-number="3">  <span class="dt">obs =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb160-4" data-line-number="4">  <span class="dt">med_t10 =</span> <span class="kw">median</span>(top10, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb160-5" data-line-number="5">  <span class="co"># standard deviation</span></a>
+<a class="sourceLine" id="cb160-6" data-line-number="6">  <span class="dt">sdev =</span> <span class="kw">sd</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb160-7" data-line-number="7">  <span class="co"># number with gini &gt; 30</span></a>
+<a class="sourceLine" id="cb160-8" data-line-number="8">  <span class="dt">n30 =</span> <span class="kw">sum</span>(gini <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span>, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb160-9" data-line-number="9">  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb160-10" data-line-number="10">  <span class="co"># range</span></a>
+<a class="sourceLine" id="cb160-11" data-line-number="11">  <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb160-12" data-line-number="12">  )</a>
+<a class="sourceLine" id="cb160-13" data-line-number="13"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-14" data-line-number="14"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-15" data-line-number="15"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-16" data-line-number="16"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-17" data-line-number="17"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-18" data-line-number="18"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-19" data-line-number="19"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-20" data-line-number="20"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-21" data-line-number="21"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-22" data-line-number="22"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-23" data-line-number="23"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-24" data-line-number="24"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-25" data-line-number="25"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-26" data-line-number="26"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-27" data-line-number="27"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-28" data-line-number="28"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-29" data-line-number="29"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-30" data-line-number="30"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-31" data-line-number="31"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-32" data-line-number="32"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-33" data-line-number="33"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-34" data-line-number="34"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-35" data-line-number="35"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-36" data-line-number="36"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-37" data-line-number="37"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-38" data-line-number="38"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-39" data-line-number="39"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-40" data-line-number="40"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-41" data-line-number="41"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-42" data-line-number="42"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-43" data-line-number="43"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-44" data-line-number="44"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-45" data-line-number="45"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-46" data-line-number="46"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-47" data-line-number="47"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-48" data-line-number="48"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-49" data-line-number="49"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-50" data-line-number="50"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-51" data-line-number="51"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-52" data-line-number="52"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-53" data-line-number="53"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-54" data-line-number="54"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-55" data-line-number="55"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-56" data-line-number="56"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-57" data-line-number="57"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-58" data-line-number="58"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-59" data-line-number="59"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-60" data-line-number="60"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-61" data-line-number="61"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-62" data-line-number="62"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-63" data-line-number="63"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-64" data-line-number="64"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-65" data-line-number="65"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-66" data-line-number="66"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-67" data-line-number="67"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-68" data-line-number="68"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-69" data-line-number="69"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-70" data-line-number="70"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-71" data-line-number="71"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-72" data-line-number="72"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-73" data-line-number="73"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-74" data-line-number="74"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-75" data-line-number="75"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-76" data-line-number="76"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-77" data-line-number="77"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-78" data-line-number="78"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-79" data-line-number="79"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-80" data-line-number="80"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-81" data-line-number="81"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-82" data-line-number="82"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-83" data-line-number="83"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-84" data-line-number="84"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-85" data-line-number="85"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-86" data-line-number="86"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-87" data-line-number="87"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-88" data-line-number="88"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-89" data-line-number="89"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-90" data-line-number="90"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-91" data-line-number="91"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-92" data-line-number="92"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-93" data-line-number="93"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-94" data-line-number="94"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-95" data-line-number="95"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-96" data-line-number="96"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-97" data-line-number="97"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-98" data-line-number="98"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-99" data-line-number="99"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-100" data-line-number="100"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-101" data-line-number="101"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-102" data-line-number="102"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-103" data-line-number="103"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-104" data-line-number="104"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-105" data-line-number="105"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-106" data-line-number="106"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-107" data-line-number="107"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-108" data-line-number="108"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-109" data-line-number="109"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-110" data-line-number="110"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-111" data-line-number="111"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-112" data-line-number="112"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-113" data-line-number="113"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-114" data-line-number="114"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-115" data-line-number="115"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-116" data-line-number="116"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-117" data-line-number="117"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-118" data-line-number="118"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-119" data-line-number="119"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-120" data-line-number="120"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-121" data-line-number="121"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-122" data-line-number="122"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-123" data-line-number="123"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-124" data-line-number="124"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-125" data-line-number="125"><span class="co">#&gt; Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -</span></a>
+<a class="sourceLine" id="cb160-126" data-line-number="126"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-127" data-line-number="127"><span class="co">#&gt; Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning</span></a>
+<a class="sourceLine" id="cb160-128" data-line-number="128"><span class="co">#&gt; Inf</span></a>
+<a class="sourceLine" id="cb160-129" data-line-number="129"><span class="co">#&gt; # A tibble: 176 x 7</span></a>
+<a class="sourceLine" id="cb160-130" data-line-number="130"><span class="co">#&gt;   Country       obs med_t10   sdev   n30  sdn30     dif</span></a>
+<a class="sourceLine" id="cb160-131" data-line-number="131"><span class="co">#&gt;   &lt;chr&gt;       &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb160-132" data-line-number="132"><span class="co">#&gt; 1 Afghanistan    40    NA   NaN        0 NA     -Inf   </span></a>
+<a class="sourceLine" id="cb160-133" data-line-number="133"><span class="co">#&gt; 2 Albania        40    24.4   1.25     3  0.364    2.78</span></a>
+<a class="sourceLine" id="cb160-134" data-line-number="134"><span class="co">#&gt; 3 Algeria        40    29.8   3.44     2  3.44     4.86</span></a>
+<a class="sourceLine" id="cb160-135" data-line-number="135"><span class="co">#&gt; 4 Angola         40    38.6  11.3      2 11.3     16.0 </span></a>
+<a class="sourceLine" id="cb160-136" data-line-number="136"><span class="co">#&gt; # … with 172 more rows</span></a></code></pre></div>
 <p>To showcase the power of <code>summarise</code> used on a <code>grouped_df</code>, the above code reports a wide range of customised summary statistics <em>per country</em>:</p>
 <ul>
 <li>the number of rows in each country group</li>
@@ -1066,96 +1205,109 @@ countries =<span class="st"> </span><span class="kw">group_by</span>(wb_ineq, Co
 <div id="non-standard-evaluation" class="section level3">
 <h3><span class="header-section-number">6.4.6</span> Non standard evaluation</h3>
 <p>The final thing to say about <strong>dplyr</strong> does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. <code>Country</code> rather than <code>&quot;Country&quot;</code>). This is called non-standard evaluation (NSE) (see <code>vignette(&quot;nse&quot;)</code>). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.</p>
-<p>This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in <strong>tidyr</strong> and <strong>dplyr</strong> have two versions: one that uses NSE (the default) and another that uses standard evaluation which requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix <code>_</code>. This is illustrated below with the <code>group_by()</code> and <code>summarise()</code> functions:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1: Default NSE function</span>
-<span class="kw">group_by</span>(cars, <span class="kw">cut</span>(speed, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>))) %&gt;%<span class="st"> </span><span class="kw">summarise</span>(<span class="kw">mean</span>(dist))
-<span class="co">#&gt; # A tibble: 2 × 2</span>
-<span class="co">#&gt;   `cut(speed, c(0, 10, 100))` `mean(dist)`</span>
-<span class="co">#&gt;                        &lt;fctr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1                      (0,10]         15.8</span>
-<span class="co">#&gt; 2                    (10,100]         49.0</span>
-<span class="co"># 2: Standard evaluation using quote marks</span>
-<span class="kw">group_by_</span>(cars, <span class="st">&quot;cut(speed, c(0, 10, 100))&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">summarise_</span>(<span class="st">&quot;mean(dist)&quot;</span>)
-<span class="co">#&gt; # A tibble: 2 × 2</span>
-<span class="co">#&gt;   `cut(speed, c(0, 10, 100))` `mean(dist)`</span>
-<span class="co">#&gt;                        &lt;fctr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1                      (0,10]         15.8</span>
-<span class="co">#&gt; 2                    (10,100]         49.0</span>
-<span class="co"># 3: Standard evaluation using formula, tilde notation (recommended standard evaluation method)</span>
-<span class="kw">group_by_</span>(cars, ~<span class="kw">cut</span>(speed, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>))) %&gt;%<span class="st"> </span><span class="kw">summarise_</span>(~<span class="kw">mean</span>(dist))
-<span class="co">#&gt; # A tibble: 2 × 2</span>
-<span class="co">#&gt;   `cut(speed, c(0, 10, 100))` `mean(dist)`</span>
-<span class="co">#&gt;                        &lt;fctr&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1                      (0,10]         15.8</span>
-<span class="co">#&gt; 2                    (10,100]         49.0</span></code></pre></div>
+<p>This is fine when using R interactively. But when you’d like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. To overcome this the concept of ‘tidy evaluation’ was developed and implemented in the package <strong>rlang</strong> (part of the tidyverse) to provide functions to control when symbols are evaluated and when they are treated as text strings. Without going into detail, the code below demonstrates how tidy evaluation works (see the <a href="https://cran.r-project.org/web/packages/rlang/vignettes/tidy-evaluation.html"><code>tidy-evaluation</code></a> vignette and <a href="https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html"><code>Programming-with-dplyr</code></a> for further information):</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1"><span class="kw">library</span>(rlang)</a>
+<a class="sourceLine" id="cb161-2" data-line-number="2"><span class="co"># 1: Default NSE function</span></a>
+<a class="sourceLine" id="cb161-3" data-line-number="3"><span class="kw">group_by</span>(cars, <span class="dt">speed =</span> <span class="kw">cut</span>(speed, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb161-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_dist =</span> <span class="kw">mean</span>(dist))</a>
+<a class="sourceLine" id="cb161-5" data-line-number="5"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb161-6" data-line-number="6"><span class="co">#&gt;   speed    mean_dist</span></a>
+<a class="sourceLine" id="cb161-7" data-line-number="7"><span class="co">#&gt;   &lt;fct&gt;        &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb161-8" data-line-number="8"><span class="co">#&gt; 1 (0,10]        15.8</span></a>
+<a class="sourceLine" id="cb161-9" data-line-number="9"><span class="co">#&gt; 2 (10,100]      49.0</span></a>
+<a class="sourceLine" id="cb161-10" data-line-number="10"><span class="co"># 2: Evaluation from character string</span></a>
+<a class="sourceLine" id="cb161-11" data-line-number="11"><span class="kw">group_by</span>(cars, <span class="dt">speed =</span> <span class="op">!!</span><span class="kw">parse_quosure</span>(<span class="st">&quot;cut(speed, c(0, 10, 100))&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb161-12" data-line-number="12"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_dist =</span> <span class="op">!!</span><span class="kw">parse_quosure</span>(<span class="st">&quot;mean(dist)&quot;</span>))</a>
+<a class="sourceLine" id="cb161-13" data-line-number="13"><span class="co">#&gt; Warning: `parse_quosure()` is deprecated as of rlang 0.2.0.</span></a>
+<a class="sourceLine" id="cb161-14" data-line-number="14"><span class="co">#&gt; Please use `parse_quo()` instead.</span></a>
+<a class="sourceLine" id="cb161-15" data-line-number="15"><span class="co">#&gt; This warning is displayed once per session.</span></a>
+<a class="sourceLine" id="cb161-16" data-line-number="16"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb161-17" data-line-number="17"><span class="co">#&gt;   speed    mean_dist</span></a>
+<a class="sourceLine" id="cb161-18" data-line-number="18"><span class="co">#&gt;   &lt;fct&gt;        &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb161-19" data-line-number="19"><span class="co">#&gt; 1 (0,10]        15.8</span></a>
+<a class="sourceLine" id="cb161-20" data-line-number="20"><span class="co">#&gt; 2 (10,100]      49.0</span></a>
+<a class="sourceLine" id="cb161-21" data-line-number="21"><span class="co"># 3: Using !! to evaluate &#39;quosures&#39; when appropriate</span></a>
+<a class="sourceLine" id="cb161-22" data-line-number="22">q1 =<span class="st"> </span><span class="kw">quo</span>(<span class="kw">cut</span>(speed, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>)))</a>
+<a class="sourceLine" id="cb161-23" data-line-number="23">q2 =<span class="st"> </span><span class="kw">quo</span>(<span class="kw">mean</span>(dist))</a>
+<a class="sourceLine" id="cb161-24" data-line-number="24"><span class="kw">group_by</span>(cars, <span class="dt">speed =</span> <span class="op">!!</span>q1) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb161-25" data-line-number="25"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_dist =</span> <span class="op">!!</span>q2)</a>
+<a class="sourceLine" id="cb161-26" data-line-number="26"><span class="co">#&gt; # A tibble: 2 x 2</span></a>
+<a class="sourceLine" id="cb161-27" data-line-number="27"><span class="co">#&gt;   speed    mean_dist</span></a>
+<a class="sourceLine" id="cb161-28" data-line-number="28"><span class="co">#&gt;   &lt;fct&gt;        &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb161-29" data-line-number="29"><span class="co">#&gt; 1 (0,10]        15.8</span></a>
+<a class="sourceLine" id="cb161-30" data-line-number="30"><span class="co">#&gt; 2 (10,100]      49.0</span></a></code></pre></div>
 </div>
 </div>
 <div id="combining-datasets" class="section level2">
 <h2><span class="header-section-number">6.5</span> Combining datasets</h2>
 <p>The usefulness of a dataset can sometimes be greatly enhanced by combining it with other data. If we could merge the global <code>ghg_ems</code> dataset with geographic data, for example, we could visualise the spatial distribution of climate pollution. For the purposes of this section we join <code>ghg_ems</code> to the <code>world</code> data provided by <strong>ggmap</strong> to illustrate the concepts and methods of data <em>joining</em> (also referred to as merging).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;ggmap&quot;</span>)
-world =<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;world&quot;</span>)
-<span class="kw">names</span>(world)
-<span class="co">#&gt; [1] &quot;long&quot;      &quot;lat&quot;       &quot;group&quot;     &quot;order&quot;     &quot;region&quot;    &quot;subregion&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;ggmap&quot;</span>)</a>
+<a class="sourceLine" id="cb162-2" data-line-number="2">world =<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;world&quot;</span>)</a>
+<a class="sourceLine" id="cb162-3" data-line-number="3"><span class="kw">names</span>(world)</a>
+<a class="sourceLine" id="cb162-4" data-line-number="4"><span class="co">#&gt; [1] &quot;long&quot;      &quot;lat&quot;       &quot;group&quot;     &quot;order&quot;     &quot;region&quot;    &quot;subregion&quot;</span></a></code></pre></div>
 <p>Visually compare this new dataset of the <code>world</code> with <code>ghg_ems</code> (e.g. via <code>View(world); View(ghg_ems)</code>). It is clear that the column <code>region</code> in the former contains the same information as <code>Country</code> in the latter. This will be the <em>joining variable</em>; renaming it in <code>world</code> will make the join more efficient.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world =<span class="st"> </span><span class="kw">rename</span>(world, <span class="dt">Country =</span> region)
-ghg_ems$All =<span class="st"> </span><span class="kw">rowSums</span>(ghg_ems[<span class="dv">3</span>:<span class="dv">7</span>])</code></pre></div>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1">world =<span class="st"> </span><span class="kw">rename</span>(world, <span class="dt">Country =</span> region)</a>
+<a class="sourceLine" id="cb163-2" data-line-number="2">ghg_ems<span class="op">$</span>All =<span class="st"> </span><span class="kw">rowSums</span>(ghg_ems[<span class="dv">3</span><span class="op">:</span><span class="dv">7</span>])</a></code></pre></div>
 <div class="rmdtip">
 <p>
 Ensure that both joining variables have the same class (combining <code>character</code> and <code>factor</code> columns can cause havoc).
 </p>
 </div>
 <p>How large is the overlap between <code>ghg_ems$Country</code> and <code>world$Country</code>? We can find out using the <code>%in%</code> operator, which finds out how many elements in one vector match those in another vector. Specifically, we will find out how many <em>unique</em> country names from <code>ghg_ems</code> are present in the <code>world</code> dataset:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">unique_countries_ghg_ems =<span class="st"> </span><span class="kw">unique</span>(ghg_ems$Country)
-unique_countries_world =<span class="st"> </span><span class="kw">unique</span>(world$Country)
-matched =<span class="st"> </span>unique_countries_ghg_ems %in%<span class="st"> </span>unique_countries_world
-<span class="kw">table</span>(matched)
-<span class="co">#&gt; matched</span>
-<span class="co">#&gt; FALSE  TRUE </span>
-<span class="co">#&gt;    20   168</span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">unique_countries_ghg_ems =<span class="st"> </span><span class="kw">unique</span>(ghg_ems<span class="op">$</span>Country)</a>
+<a class="sourceLine" id="cb164-2" data-line-number="2">unique_countries_world =<span class="st"> </span><span class="kw">unique</span>(world<span class="op">$</span>Country)</a>
+<a class="sourceLine" id="cb164-3" data-line-number="3">matched =<span class="st"> </span>unique_countries_ghg_ems <span class="op">%in%</span><span class="st"> </span>unique_countries_world</a>
+<a class="sourceLine" id="cb164-4" data-line-number="4"><span class="kw">table</span>(matched)</a>
+<a class="sourceLine" id="cb164-5" data-line-number="5"><span class="co">#&gt; matched</span></a>
+<a class="sourceLine" id="cb164-6" data-line-number="6"><span class="co">#&gt; FALSE  TRUE </span></a>
+<a class="sourceLine" id="cb164-7" data-line-number="7"><span class="co">#&gt;    20   168</span></a></code></pre></div>
 <p>This comparison exercise has been fruitful: most of the countries in the <code>co2</code> dataset exist in the <code>world</code> dataset. But what about the 20 country names that do not match? We can identify these as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">unmatched_countries_ghg_ems =</span> unique_countries_ghg_ems[!matched])
-<span class="co">#&gt;  [1] &quot;Antigua &amp; Barbuda&quot;          &quot;Bahamas, The&quot;              </span>
-<span class="co">#&gt;  [3] &quot;Bosnia &amp; Herzegovina&quot;       &quot;Congo, Dem. Rep.&quot;          </span>
-<span class="co">#&gt;  [5] &quot;Congo, Rep.&quot;                &quot;Cote d&#39;Ivoire&quot;             </span>
-<span class="co">#&gt;  [7] &quot;European Union (15)&quot;        &quot;European Union (28)&quot;       </span>
-<span class="co">#&gt;  [9] &quot;Gambia, The&quot;                &quot;Korea, Dem. Rep. (North)&quot;  </span>
-<span class="co">#&gt; [11] &quot;Korea, Rep. (South)&quot;        &quot;Macedonia, FYR&quot;            </span>
-<span class="co">#&gt; [13] &quot;Russian Federation&quot;         &quot;Saint Kitts &amp; Nevis&quot;       </span>
-<span class="co">#&gt; [15] &quot;Saint Vincent &amp; Grenadines&quot; &quot;Sao Tome &amp; Principe&quot;       </span>
-<span class="co">#&gt; [17] &quot;Trinidad &amp; Tobago&quot;          &quot;United Kingdom&quot;            </span>
-<span class="co">#&gt; [19] &quot;United States&quot;              &quot;World&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">(<span class="dt">unmatched_countries_ghg_ems =</span> unique_countries_ghg_ems[<span class="op">!</span>matched])</a>
+<a class="sourceLine" id="cb165-2" data-line-number="2"><span class="co">#&gt;  [1] &quot;Antigua &amp; Barbuda&quot;          &quot;Bahamas, The&quot;              </span></a>
+<a class="sourceLine" id="cb165-3" data-line-number="3"><span class="co">#&gt;  [3] &quot;Bosnia &amp; Herzegovina&quot;       &quot;Congo, Dem. Rep.&quot;          </span></a>
+<a class="sourceLine" id="cb165-4" data-line-number="4"><span class="co">#&gt;  [5] &quot;Congo, Rep.&quot;                &quot;Cote d&#39;Ivoire&quot;             </span></a>
+<a class="sourceLine" id="cb165-5" data-line-number="5"><span class="co">#&gt;  [7] &quot;European Union (15)&quot;        &quot;European Union (28)&quot;       </span></a>
+<a class="sourceLine" id="cb165-6" data-line-number="6"><span class="co">#&gt;  [9] &quot;Gambia, The&quot;                &quot;Korea, Dem. Rep. (North)&quot;  </span></a>
+<a class="sourceLine" id="cb165-7" data-line-number="7"><span class="co">#&gt; [11] &quot;Korea, Rep. (South)&quot;        &quot;Macedonia, FYR&quot;            </span></a>
+<a class="sourceLine" id="cb165-8" data-line-number="8"><span class="co">#&gt; [13] &quot;Russian Federation&quot;         &quot;Saint Kitts &amp; Nevis&quot;       </span></a>
+<a class="sourceLine" id="cb165-9" data-line-number="9"><span class="co">#&gt; [15] &quot;Saint Vincent &amp; Grenadines&quot; &quot;Sao Tome &amp; Principe&quot;       </span></a>
+<a class="sourceLine" id="cb165-10" data-line-number="10"><span class="co">#&gt; [17] &quot;Trinidad &amp; Tobago&quot;          &quot;United Kingdom&quot;            </span></a>
+<a class="sourceLine" id="cb165-11" data-line-number="11"><span class="co">#&gt; [19] &quot;United States&quot;              &quot;World&quot;</span></a></code></pre></div>
 <p>It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as ‘Gambia, The’ and the United States clearly should have matches. <em>Fuzzy matching</em> can help find which countries <em>do</em> match, as illustrated with the first non-matching country below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">unmatched_country =</span> unmatched_countries_ghg_ems[<span class="dv">1</span>])
-<span class="co">#&gt; [1] &quot;Antigua &amp; Barbuda&quot;</span>
-unmatched_world_selection =<span class="st"> </span><span class="kw">agrep</span>(<span class="dt">pattern =</span> unmatched_country, unique_countries_world, <span class="dt">max.distance =</span> <span class="dv">10</span>)
-unmatched_world_countries =<span class="st"> </span>unique_countries_world[unmatched_world_selection]</code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">(<span class="dt">unmatched_country =</span> unmatched_countries_ghg_ems[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb166-2" data-line-number="2"><span class="co">#&gt; [1] &quot;Antigua &amp; Barbuda&quot;</span></a>
+<a class="sourceLine" id="cb166-3" data-line-number="3">unmatched_world_selection =<span class="st"> </span><span class="kw">agrep</span>(<span class="dt">pattern =</span> unmatched_country, unique_countries_world, <span class="dt">max.distance =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb166-4" data-line-number="4">unmatched_world_countries =<span class="st"> </span>unique_countries_world[unmatched_world_selection]</a></code></pre></div>
 <p>What just happened? We verified that the first unmatching country in the <code>ghg_ems</code> dataset was not in the <code>world</code> country names. So we used the more powerful <code>agrep</code> to search for fuzzy matches (with the <code>max.distance</code> argument set to <code>10</code>. The results show that the country <code>Antigua &amp; Barbuda</code> from the <code>ghg_ems</code> data matches <em>two</em> countries in the <code>world</code> dataset. We can update the names in the dataset we are joining to accordingly:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">world$Country[world$Country %in%<span class="st"> </span>unmatched_world_countries] =
-<span class="st">  </span>unmatched_countries_ghg_ems[<span class="dv">1</span>]</code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">world<span class="op">$</span>Country[world<span class="op">$</span>Country <span class="op">%in%</span><span class="st"> </span>unmatched_world_countries] =</a>
+<a class="sourceLine" id="cb167-2" data-line-number="2"><span class="st">  </span>unmatched_countries_ghg_ems[<span class="dv">1</span>]</a></code></pre></div>
 <p>The above code reduces the number of country names in the <code>world</code> dataset by replacing <em>both</em> “Antigua” and “Barbuda” to “Antigua &amp; Barbuda”. This would not work other way around: how would one know whether to change “Antigua &amp; Barbuda” to “Antigua” or to “Barbuda”.</p>
 <p>Thus fuzzy matching is still a laborious process that must be complemented by human judgement. It takes a human to know for sure that <code>United States</code> is represented as <code>USA</code> in the <code>world</code> dataset, without risking false matches via <code>agrep</code>.</p>
 </div>
 <div id="working-with-databases" class="section level2">
 <h2><span class="header-section-number">6.6</span> Working with databases</h2>
-<p>Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first. R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R’s interfaces to databases can be found in the README of the <a href="https://cran.r-project.org/web/packages/DBI/README.html"><strong>DBI</strong> package</a>, which provides a common interface and set of classes for driver packages (such as <strong>RSQLite</strong>).</p>
-<p><strong>RODBC</strong> is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of <strong>RODBC</strong> is described in the package’s vignette (see <code>vignette(&quot;RODBC&quot;)</code>) and nowadays its main use is to provide an R interface to SQL Server databases which lack a <strong>DBI</strong> interface.</p>
+<p>Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R’s interfaces to databases can be found in the README of the <a href="https://cran.r-project.org/web/packages/DBI/README.html"><strong>DBI</strong> package</a>, which provides a common interface and set of classes for driver packages (such as <strong>RSQLite</strong>).</p>
+<p><strong>RODBC</strong> is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of <strong>RODBC</strong> is described in the package’s vignette (see <code>vignette(&quot;RODBC&quot;)</code>) and nowadays its main use is to provide an R interface to
+SQL Server databases which lack a <strong>DBI</strong> interface.</p>
 <p>The <strong>DBI</strong> package is a unified framework for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on <strong>DBI</strong> can be seen partly as a replacement of <strong>RODBC</strong> (<strong>RMySQL</strong>, <strong>RPostgreSQL</strong>, and <strong>RSQLite</strong>) (see <code>vignette(&quot;backend&quot;)</code> for more on how <strong>DBI</strong> drivers work). Because the <strong>DBI</strong> syntax applies to a wide range of database types we use it here with a worked example.</p>
 <p>Imagine you have access to a database that contains the <code>ghg_ems</code> data set.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Connect to a database driver</span>
-<span class="kw">library</span>(<span class="st">&quot;RSQLite&quot;</span>)
-con =<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), <span class="dt">dbname =</span> ghg_db) <span class="co"># Also username &amp; password arguments</span>
-<span class="kw">dbListTables</span>(con)
-rs =<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM `ghg_ems` WHERE (`Country` != &#39;World&#39;)&quot;</span>)
-df_head =<span class="st"> </span><span class="kw">dbFetch</span>(rs, <span class="dt">n =</span> <span class="dv">6</span>) <span class="co"># extract first 6 row</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1"><span class="co"># Connect to a database driver</span></a>
+<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;RSQLite&quot;</span>)</a>
+<a class="sourceLine" id="cb168-3" data-line-number="3">con =<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), <span class="dt">dbname =</span> ghg_db) <span class="co"># Also username &amp; password arguments</span></a>
+<a class="sourceLine" id="cb168-4" data-line-number="4"><span class="kw">dbListTables</span>(con)</a>
+<a class="sourceLine" id="cb168-5" data-line-number="5">rs =<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM `ghg_ems` WHERE (`Country` != &#39;World&#39;)&quot;</span>)</a>
+<a class="sourceLine" id="cb168-6" data-line-number="6">df_head =<span class="st"> </span><span class="kw">dbFetch</span>(rs, <span class="dt">n =</span> <span class="dv">6</span>) <span class="co"># extract first 6 row</span></a></code></pre></div>
 <p>The above code chunk shows how the function <code>dbConnect</code> connects to an external database, in this case a SQLite database. The <code>username</code> and <code>password</code> arguments are used to establish the connection. Next we query which tables are available with <code>dbListTables</code>, query the database (without yet extracting the results to R) with <code>dbSendQuery</code> and, finally, load the results into R with <code>dbFetch</code>.</p>
 <div class="rmdtip">
 <p>
 Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in <code>.Renviron</code>, described in Chapter 2. Assuming you had saved your password as the environment variable <code>PSWRD</code>, you could enter <code>pwd = Sys.getenv(“PSWRD”)</code> to minimise the risk of exposing your password through accidentally releasing the code or your session history.
 </p>
 </div>
-<p>Recently there has been a shift to the ‘noSQL’ approach for storing large datasets. This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages <a href="https://cran.r-project.org/web/packages/mongolite/index.html">mongolite</a> and <a href="https://cran.r-project.org/web/packages/RJDBC/index.html">RJDBC</a>, which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.</p>
-<p>MonetDB is a recent alternative to relational and noSQL approaches which offers substantial efficiency advantages for handling large datasets <span class="citation">(Kersten et al. <a href="#ref-kersten2011researcher">2011</a>)</span>. A tutorial on the <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">MonetDB website</a> provides an excellent introduction to handling databases from within R.</p>
+<p>Recently there has been a shift to the ‘noSQL’ approach for storing large datasets.
+This is illustrated by the emergence and uptake of software such as MongoDB and Apache Cassandra, which have R interfaces via packages <a href="https://cran.r-project.org/web/packages/mongolite/index.html">mongolite</a> and <a href="https://cran.r-project.org/web/packages/RJDBC/index.html">RJDBC</a>, which can connect to Apache Cassandra data stores and any source compliant with the Java Database Connectivity (JDBC) API.</p>
+<p>MonetDB is a recent alternative to relational and noSQL approaches which offers substantial efficiency advantages for handling large datasets <span class="citation">(Kersten et al. <a href="#ref-kersten2011researcher">2011</a>)</span>.
+A tutorial on the <a href="https://www.monetdb.org/Documentation/UserGuide/MonetDB-R">MonetDB website</a> provides an excellent introduction to handling databases from within R.</p>
 <p>There are many wider considerations in relation to databases that we will not cover here: who will manage and maintain the database? How will it be backed up locally (local copies should be stored to reduce reliance on the network)? What is the appropriate database for your project. These issues can have major implications for efficiency, especially on large, data intensive projects. However, we will not cover them here because it is a fast-moving field. Instead, we direct the interested reader towards further resources on the subject, including:</p>
 <ul>
 <li>The website for <strong><a href="http://spark.rstudio.com/">sparklyr</a></strong>, a recent package for efficiently interfacing with the Apache Spark stack.</li>
@@ -1166,61 +1318,69 @@ Be sure never to release your password by entering it directly into the command.
 <div id="databases-and-dplyr" class="section level3">
 <h3><span class="header-section-number">6.6.1</span> Databases and <strong>dplyr</strong></h3>
 <p>To access a database in R via <strong>dplyr</strong>, one must use one of the <code>src_</code> functions to create a source. Continuing with the SQLite example above, one would create a <code>tbl</code> object, that can be queried by <strong>dplyr</strong> as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)
-ghg_db =<span class="st"> </span><span class="kw">src_sqlite</span>(ghg_db)
-ghg_tbl =<span class="st"> </span><span class="kw">tbl</span>(ghg_db, <span class="st">&quot;ghg_ems&quot;</span>)</code></pre></div>
-<p>The <code>ghg_tbl</code> object can then be queried in a similar way to a standard data frame. For example, suppose we wish to filter by <code>Country</code>. Then we use the <code>filter</code> function as before:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rm_world =<span class="st"> </span>ghg_tbl %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(Country !=<span class="st"> &quot;World&quot;</span>)</code></pre></div>
-<p>In the above code, <strong>dplyr</strong> has actually generated the necessary SQL command, which can be examined using <code>explain(rm_world)</code>. When working with databases, <strong>dplyr</strong> uses lazy evaluation: the data is only fetched at the last moment when it’s needed. The SQL command associated with <code>rm_world</code> hasn’t yet been executed, this is why <code>tail(rm_world)</code> doesn’t work. By using lazy evaluation, <strong>dplyr</strong> is more efficient at handling large data structures since it avoids unnecessary copying. When you want your SQL command to be executed, use <code>collect(rm_world)</code>.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb169-2" data-line-number="2">ghg_db =<span class="st"> </span><span class="kw">src_sqlite</span>(ghg_db)</a>
+<a class="sourceLine" id="cb169-3" data-line-number="3">ghg_tbl =<span class="st"> </span><span class="kw">tbl</span>(ghg_db, <span class="st">&quot;ghg_ems&quot;</span>)</a></code></pre></div>
+<p>The <code>ghg_tbl</code> object can then be queried in a similar way to a standard data frame. For example, suppose we wish to
+filter by <code>Country</code>. Then we use the <code>filter</code> function as before:</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1">rm_world =<span class="st"> </span>ghg_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb170-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(Country <span class="op">!=</span><span class="st"> &quot;World&quot;</span>)</a></code></pre></div>
+<p>In the above code, <strong>dplyr</strong> has actually generated the necessary SQL command, which can be examined using <code>explain(rm_world)</code>.
+When working with databases, <strong>dplyr</strong> uses lazy evaluation: the data is only fetched at the last moment when it’s needed. The SQL command associated with <code>rm_world</code> hasn’t yet been executed, this is why
+<code>tail(rm_world)</code> doesn’t work. By using lazy evaluation, <strong>dplyr</strong> is more efficient at handling large data structures since it avoids unnecessary copying.
+When you want your SQL command to be executed, use <code>collect(rm_world)</code>.</p>
 <p>The final stage when working with databases in R is to disconnect, e.g.:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(<span class="dt">conn =</span> con)</code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="kw">dbDisconnect</span>(<span class="dt">conn =</span> con)</a></code></pre></div>
 <div id="exercises-15" class="section level4 unnumbered">
 <h4>Exercises</h4>
-<p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database. The first stage is to read-in the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for details</span>
-<span class="kw">data</span>(land_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</code></pre></div>
+<p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database.
+The first stage is to read-in the data:</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for details</span></a>
+<a class="sourceLine" id="cb172-2" data-line-number="2"><span class="kw">data</span>(land_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
 <p>The next stage is to create an SQLite database to hold the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;RSQLite&quot;) # Requires RSQLite package</span>
-my_db =<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;land.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
-land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, land_df, <span class="dt">indexes =</span> <span class="kw">list</span>(<span class="st">&quot;postcode&quot;</span>, <span class="st">&quot;price&quot;</span>)) </code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1"><span class="co"># install.packages(&quot;RSQLite&quot;) # Requires RSQLite package</span></a>
+<a class="sourceLine" id="cb173-2" data-line-number="2">my_db =<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;land.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb173-3" data-line-number="3">land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, land_df, <span class="dt">indexes =</span> <span class="kw">list</span>(<span class="st">&quot;postcode&quot;</span>, <span class="st">&quot;price&quot;</span>)) </a></code></pre></div>
 <p>What class is the new object <code>land_sqlite</code>?</p>
 <p>Why did we use the <code>indexes</code> argument?</p>
 <p>From the above code we can see that we have created a <code>tbl</code>. This can be accessed using <strong>dplyr</strong> in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard <strong>dplyr</strong> verbs on the table.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Method 1: using sql</span>
-<span class="kw">tbl</span>(my_db, <span class="kw">sql</span>(<span class="st">&#39;SELECT &quot;price&quot;, &quot;postcode&quot;, &quot;old/new&quot;  FROM land_df&#39;</span>))
-<span class="co">#&gt; Source:   query [?? x 3]</span>
-<span class="co">#&gt; Database: sqlite 3.8.6 [land.sqlite3]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;    price postcode `old/new`</span>
-<span class="co">#&gt;    &lt;int&gt;    &lt;chr&gt;     &lt;chr&gt;</span>
-<span class="co">#&gt; 1  84000  CW9 5EU         N</span>
-<span class="co">#&gt; 2 123500 TR13 8JH         N</span>
-<span class="co">#&gt; 3 217950 PL33 9DL         N</span>
-<span class="co">#&gt; 4 147000 EX39 5XT         N</span>
-<span class="co">#&gt; # ... with more rows</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1"><span class="co"># Method 1: using sql</span></a>
+<a class="sourceLine" id="cb174-2" data-line-number="2"><span class="kw">tbl</span>(my_db, <span class="kw">sql</span>(<span class="st">&#39;SELECT &quot;price&quot;, &quot;postcode&quot;, &quot;old/new&quot;  FROM land_df&#39;</span>))</a>
+<a class="sourceLine" id="cb174-3" data-line-number="3"><span class="co">#&gt; Source:   query [?? x 3]</span></a>
+<a class="sourceLine" id="cb174-4" data-line-number="4"><span class="co">#&gt; Database: sqlite 3.8.6 [land.sqlite3]</span></a>
+<a class="sourceLine" id="cb174-5" data-line-number="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb174-6" data-line-number="6"><span class="co">#&gt;    price postcode `old/new`</span></a>
+<a class="sourceLine" id="cb174-7" data-line-number="7"><span class="co">#&gt;    &lt;int&gt;    &lt;chr&gt;     &lt;chr&gt;</span></a>
+<a class="sourceLine" id="cb174-8" data-line-number="8"><span class="co">#&gt; 1  84000  CW9 5EU         N</span></a>
+<a class="sourceLine" id="cb174-9" data-line-number="9"><span class="co">#&gt; 2 123500 TR13 8JH         N</span></a>
+<a class="sourceLine" id="cb174-10" data-line-number="10"><span class="co">#&gt; 3 217950 PL33 9DL         N</span></a>
+<a class="sourceLine" id="cb174-11" data-line-number="11"><span class="co">#&gt; 4 147000 EX39 5XT         N</span></a>
+<a class="sourceLine" id="cb174-12" data-line-number="12"><span class="co">#&gt; # ... with more rows</span></a></code></pre></div>
 <p>How would you perform the same query using <code>select()</code>? Try it to see if you get the same result (hint: use backticks for the <code>old/new</code> variable name).</p>
 </div>
 </div>
 </div>
 <div id="data-processing-with-data.table" class="section level2">
 <h2><span class="header-section-number">6.7</span> Data processing with data.table</h2>
-<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different tasks.<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> Which is more efficient to some extent depends on personal preferences and what you are used to. Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dplyr</strong> provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning <strong>dplyr</strong> first if you are new to both packages. <strong>dplyr</strong> can also be used to work with the <code>data.table</code> class used by the <strong>data.table</strong> package so you can get the best of both worlds.</p>
+<p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different
+tasks.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>
+Which is more efficient to some extent depends on personal preferences and what you are used to.
+Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dplyr</strong> provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning <strong>dplyr</strong> first if you are new to both packages. <strong>dplyr</strong> can also be used to work with the <code>data.table</code> class used by the <strong>data.table</strong> package so you can get the best of both worlds.</p>
 <p><strong>data.table</strong> is faster than <strong>dplyr</strong> for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. <strong>data.table</strong> supports <a href="https://www.r-bloggers.com/understanding-data-table-rolling-joins/">rolling joins</a> (which allow rows in one table to be selected based on proximity between shared variables (typically time) and <a href="http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php">non-equi joins</a> (where join criteria can be inequalities rather than equal to).</p>
 <p>This section provides a few examples to illustrate how <strong>data.table</strong> differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it’s a matter of preference.</p>
 <p>The foundational object class of <strong>data.table</strong> is the <code>data.table</code>. Like <strong>dplyr</strong>’s <code>tbl_df</code>, <strong>data.table</strong>’s <code>data.table</code> objects behave in the same was as the base <code>data.frame</code> class. However the <strong>data.table</strong> paradigm has some unique features that make it highly computationally efficient for many common tasks in data analysis. Building on subsetting methods using <code>[</code> and <code>filter()</code>, mentioned previously, we’ll see <strong>data.tables</strong>’s unique approach to subsetting. Like base R <strong>data.table</strong> uses square brackets but (unlike base R but like <strong>dplyr</strong>) uses non-standard evaluation so you need not refer to the object name inside the brackets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)
-<span class="kw">data</span>(wb_ineq_renamed) <span class="co"># from the efficient package</span>
-wb_ineq_dt =<span class="st"> </span><span class="kw">data.table</span>(wb_ineq_renamed) <span class="co"># convert to data.table class</span>
-aus3a =<span class="st"> </span>wb_ineq_dt[Country ==<span class="st"> &quot;Australia&quot;</span>]</code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb175-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;data.table&quot;</span>)</a>
+<a class="sourceLine" id="cb175-2" data-line-number="2"><span class="co"># data(wb_ineq) # from the efficient package</span></a>
+<a class="sourceLine" id="cb175-3" data-line-number="3">wb_ineq_dt =<span class="st"> </span><span class="kw">data.table</span>(wb_ineq) <span class="co"># convert to data.table class</span></a>
+<a class="sourceLine" id="cb175-4" data-line-number="4">aus3a =<span class="st"> </span>wb_ineq_dt[Country <span class="op">==</span><span class="st"> &quot;Australia&quot;</span>]</a></code></pre></div>
 <div class="rmdnote">
 <p>
-Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq_renamed[wb_ineq_renamed$Country == “Australia”,]</code>.
+Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq[wb_ineq$Country == “Australia”,]</code>.
 </p>
 </div>
 <p>To boost performance, one can set ‘keys’, analogous to ‘primary keys in databases’. These are ‘<a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">supercharged rownames</a>’ which order the table based on one or more variables. This allows a <em>binary search</em> algorithm to subset the rows of interest, which is much, much faster than the <em>vector scan</em> approach used in base R (see <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html"><code>vignette(&quot;datatable-keys-fast-subset&quot;)</code></a>). <strong>data.table</strong> uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise <code>.()</code> syntax, which is synonymous with <code>list()</code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setkey</span>(wb_ineq_dt, Country)
-aus3b =<span class="st"> </span>wb_ineq_dt[.(<span class="st">&quot;Australia&quot;</span>)]</code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1"><span class="kw">setkey</span>(wb_ineq_dt, Country)</a>
+<a class="sourceLine" id="cb176-2" data-line-number="2">aus3b =<span class="st"> </span>wb_ineq_dt[.(<span class="st">&quot;Australia&quot;</span>)]</a></code></pre></div>
 <p>The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure <a href="data-carpentry.html#fig:6-2">6.1</a>, which compares 4 methods of subsetting incrementally larger versions of the <code>wb_ineq</code> dataset.</p>
 <div class="figure" style="text-align: center"><span id="fig:6-2"></span>
 <img src="_main_files/figure-html/6-2-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="70%" />
@@ -1229,41 +1389,41 @@ Figure 6.1: Benchmark illustrating the performance gains to be expected for diff
 </p>
 </div>
 <p>Figure <a href="data-carpentry.html#fig:6-2">6.1</a> demonstrates that <strong>data.table</strong> is <em>much faster</em> than base R and <strong>dplyr</strong> at subsetting. As with using external packages to read in data (see Section <a href="input-output.html#fread">5.3</a>), the relative benefits of <strong>data.table</strong> improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on <strong>dplyr</strong> as the dataset size reaches half a Gigabyte. Interestingly, even the ‘non key’ implementation of <strong>data.table</strong> subset method is faster than the alternatives: this is because <strong>data.table</strong> creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.</p>
-<p>This section has introduced <strong>data.table</strong> as a complimentary approach to base and <strong>dplyr</strong> methods for data processing. It offers performance gains due to its implementation in C and use of <em>keys</em> for subsetting tables. <strong>data.table</strong> offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with <code>left_join</code> in <strong>dplyr</strong>); and grouping. For further information on <strong>data.table</strong>, we recommend reading the package’s <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf"><code>datatable-intro</code></a>, <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html"><code>datatable-reshape</code></a> and <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html"><code>datatable-reference-semantics</code></a> vignettes.</p>
+<p>This section has introduced <strong>data.table</strong> as a complimentary approach to base and <strong>dplyr</strong> methods for data processing. It offers performance gains due to its implementation in C and use of <em>keys</em> for subsetting tables. <strong>data.table</strong> offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with <code>left_join</code> in <strong>dplyr</strong>); and grouping. For further information on <strong>data.table</strong>, we recommend reading the package’s <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html"><code>datatable-intro</code></a>, <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html"><code>datatable-reshape</code></a> and <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html"><code>datatable-reference-semantics</code></a> vignettes.</p>
 
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-Wickham_2014">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
-</div>
 <div id="ref-Codd1979">
-<p>Codd, E. F. 1979. “Extending the database relational model to capture more meaning.” <em>ACM Transactions on Database Systems</em> 4 (4): 397–434. doi:<a href="https://doi.org/10.1145/320107.320109">10.1145/320107.320109</a>.</p>
-</div>
-<div id="ref-Spector_2008">
-<p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
-</div>
-<div id="ref-sanchez_handling_2013">
-<p>Sanchez, Gaston. 2013. “Handling and Processing Strings in R.” <em>Trowchez Editions</em>. <a href="http://www.academia.edu/download/36290733/Handling_and_Processing_Strings_in_R.pdf" class="uri">http://www.academia.edu/download/36290733/Handling_and_Processing_Strings_in_R.pdf</a>.</p>
+<p>Codd, E. F. 1979. “Extending the database relational model to capture more meaning.” <em>ACM Transactions on Database Systems</em> 4 (4): 397–434. <a href="https://doi.org/10.1145/320107.320109" class="uri">https://doi.org/10.1145/320107.320109</a>.</p>
 </div>
 <div id="ref-grolemund_r_2016">
 <p>Grolemund, G., and H. Wickham. 2016. <em>R for Data Science</em>. O’Reilly Media.</p>
 </div>
+<div id="ref-kersten2011researcher">
+<p>Kersten, Martin L, Stratos Idreos, Stefan Manegold, Erietta Liarou, and others. 2011. “The Researcher’s Guide to the Data Deluge: Querying a Scientific Database in Just a Few Seconds.” <em>PVLDB Challenges and Visions</em> 3.</p>
+</div>
+<div id="ref-sanchez_handling_2013">
+<p>Sanchez, Gaston. 2013. “Handling and Processing Strings in R.” <em>Trowchez Editions</em>. <a href="http://www.academia.edu/download/36290733/Handling_and_Processing_Strings_in_R.pdf" class="uri">http://www.academia.edu/download/36290733/Handling_and_Processing_Strings_in_R.pdf</a>.</p>
+</div>
+<div id="ref-Spector_2008">
+<p>Spector, Phil. 2008. <em>Data Manipulation with R</em>. Springer Science &amp; Business Media.</p>
+</div>
 <div id="ref-wickham2010stringr">
 <p>Wickham, Hadley. 2010. “Stringr: Modern, Consistent String Processing.” <em>The R Journal</em> 2 (2): 38–40.</p>
 </div>
-<div id="ref-kersten2011researcher">
-<p>Kersten, Martin L, Stratos Idreos, Stefan Manegold, Erietta Liarou, and others. 2011. “The Researcher’s Guide to the Data Deluge: Querying a Scientific Database in Just a Few Seconds.” <em>PVLDB Challenges and Visions</em> 3.</p>
+<div id="ref-Wickham_2014">
+<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 14 (5).</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
 <ol start="15">
-<li id="fn15"><p><code>str(wb_ineq)</code> is another way to see the contents of an object, but produces more verbose output.<a href="data-carpentry.html#fnref15">↩</a></p></li>
-<li id="fn16"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="data-carpentry.html#fnref16">↩</a></p></li>
-<li id="fn17"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="data-carpentry.html#fnref17">↩</a></p></li>
-<li id="fn18"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the StackOverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="data-carpentry.html#fnref18">↩</a></p></li>
+<li id="fn15"><p><code>str(wb_ineq)</code> is another way to see the contents of an object, but produces more verbose output.<a href="data-carpentry.html#fnref15" class="footnote-back">↩</a></p></li>
+<li id="fn17"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="data-carpentry.html#fnref17" class="footnote-back">↩</a></p></li>
+<li id="fn18"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="data-carpentry.html#fnref18" class="footnote-back">↩</a></p></li>
+<li id="fn19"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the StackOverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="data-carpentry.html#fnref19" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -1272,27 +1432,30 @@ Figure 6.1: Benchmark illustrating the performance gains to be expected for diff
         </div>
       </div>
 <a href="input-output.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="performance.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="performance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
+"linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1302,6 +1465,14 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/csgillespie/efficientR/edit/master/06-data-carpentry.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -1316,9 +1487,12 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

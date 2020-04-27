@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Efficient R programming</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>8 Efficient hardware | Efficient R programming</title>
+  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Efficient R programming" />
+  <meta property="og:title" content="8 Efficient hardware | Efficient R programming" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://csgillespie.github.io/efficientR/" />
   <meta property="og:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
@@ -18,31 +16,34 @@
   <meta name="github-repo" content="csgillespie/efficientR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Efficient R programming" />
+  <meta name="twitter:title" content="8 Efficient hardware | Efficient R programming" />
   <meta name="twitter:site" content="@csgillespie" />
   <meta name="twitter:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
   <meta name="twitter:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
 
-<meta name="author" content="Colin Gillespie">
-<meta name="author" content="Robin Lovelace">
+<meta name="author" content="Colin Gillespie" />
+<meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2017-04-10">
+<meta name="date" content="2020-04-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="performance.html">
-<link rel="next" href="collaboration.html">
-
+<link rel="prev" href="performance.html"/>
+<link rel="next" href="collaboration.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -53,41 +54,68 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -95,6 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -176,11 +205,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop()</code></a></li>
-<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning()</code></a></li>
-<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></a></li>
+<li><a href="programming.html#fatal-errors-stop">Fatal errors: <code>stop()</code></a></li>
+<li><a href="programming.html#warnings-warning">Warnings: <code>warning()</code></a></li>
+<li><a href="programming.html#informative-output-message-and-cat">Informative output: <code>message()</code> and <code>cat()</code></a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
-<li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.4</b> Invisible returns</a></li>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.1</b> Invisible returns</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
 <li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#inherent-order"><i class="fa fa-check"></i><b>3.4.1</b> Inherent order</a></li>
@@ -240,7 +269,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
 <li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
-<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-gather"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>gather()</code></a></li>
+<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-pivot_longer"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>pivot_longer()</code></a></li>
 <li class="chapter" data-level="6.3.2" data-path="data-carpentry.html"><a href="data-carpentry.html#split-joint-variables-with-separate"><i class="fa fa-check"></i><b>6.3.2</b> Split joint variables with <code>separate()</code></a></li>
 <li class="chapter" data-level="6.3.3" data-path="data-carpentry.html"><a href="data-carpentry.html#other-tidyr-functions"><i class="fa fa-check"></i><b>6.3.3</b> Other tidyr functions</a></li>
 <li class="chapter" data-level="6.3.4" data-path="data-carpentry.html"><a href="data-carpentry.html#regular-expressions"><i class="fa fa-check"></i><b>6.3.4</b> Regular expressions</a></li>
@@ -279,7 +308,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-movie_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>movie_square()</code> function</a></li>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-move_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>move_square()</code> function</a></li>
 <li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.5</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.5.1</b> Parallel versions of apply functions</a></li>
 <li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.5.2</b> Example: Snakes and Ladders</a></li>
@@ -358,7 +387,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a></li>
+<li><a href="http://www.robinlovelace.net">Robin Lovelace</a></li>
 
 </ul>
 
@@ -385,12 +415,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="prerequisites-7" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter will focus on assessing your hardware and the benefit of upgrading. We will use the <strong>benchmarkme</strong> package to quantify the effect of changing your CPU.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb230-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</a></code></pre></div>
 </div>
 <div id="top-5-tips-for-efficient-hardware" class="section level2">
 <h2><span class="header-section-number">8.1</span> Top 5 tips for efficient hardware</h2>
 <ol style="list-style-type: decimal">
-<li>Use the package <strong>benchmarkme</strong> to assess your CPUs number crunching ability; is it worth upgrading your hardware?</li>
+<li>Use the package <strong>benchmarkme</strong> to assess your CPUs number crunching ability is it worth upgrading your hardware?</li>
 <li>If possible, add more RAM.</li>
 <li>Double check that you have installed a <span class="math inline">\(64\)</span>-bit version of R.</li>
 <li>Cloud computing is a cost effective way of obtaining more compute power.</li>
@@ -400,7 +430,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="background-what-is-a-byte" class="section level2">
 <h2><span class="header-section-number">8.2</span> Background: what is a byte?</h2>
 <p>A computer cannot store “numbers” or “letters”. The only thing a computer can store and work with is bits. A bit is binary, it is either a <span class="math inline">\(0\)</span> or a <span class="math inline">\(1\)</span>. In fact from a physics perspective, a bit is just a blip of electricity that either is or isn’t there.</p>
-<p>In the past the ASCII character set dominated computing. This set defines <span class="math inline">\(128\)</span> characters including <span class="math inline">\(0\)</span> to <span class="math inline">\(9\)</span>, upper and lower case alpha-numeric and a few control characters such as a new line. To store these characters required <span class="math inline">\(7\)</span> bits since <span class="math inline">\(2^7 = 128\)</span>, but <span class="math inline">\(8\)</span> bits were typically used for performance <a href="http://stackoverflow.com/q/14690159/203420">reasons</a>. Table <a href="hardware.html#tab:ascii">8.1</a> gives the binary representation of the first few characters.</p>
+<p>In the past the ASCII character set dominated computing. This set defines <span class="math inline">\(128\)</span> characters including <span class="math inline">\(0\)</span> to <span class="math inline">\(9\)</span>, upper and lower case alpha-numeric and a few control characters such as a new line. To store these characters required <span class="math inline">\(7\)</span> bits
+since <span class="math inline">\(2^7 = 128\)</span>, but <span class="math inline">\(8\)</span> bits were typically used for performance <a href="http://stackoverflow.com/q/14690159/203420">reasons</a>. Table <a href="hardware.html#tab:ascii">8.1</a> gives the binary representation of the first few characters.</p>
 <table>
 <caption><span id="tab:ascii">Table 8.1: </span>The bit representation of a few ASCII characters.</caption>
 <thead>
@@ -440,94 +471,88 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Eight bits is one byte, or ASCII character. So two ASCII characters would use two bytes or <span class="math inline">\(16\)</span> bits. A pure text document containing <span class="math inline">\(100\)</span> characters would use <span class="math inline">\(100\)</span> bytes (<span class="math inline">\(800\)</span> bits). Note that mark-up, such as font information or meta-data, can impose a substantial memory overhead: an empty <code>.docx</code> file requires about <span class="math inline">\(3,700\)</span> bytes of storage.</p>
 <p>When computer scientists first started to think about computer memory, they noticed that <span class="math inline">\(2^{10} = 1024 \simeq 10^3\)</span> and <span class="math inline">\(2^{20} =1,048,576\simeq 10^6\)</span>, so they adopted the short hand of kilo- and mega-bytes. Of course, <em>everyone</em> knew that it was just a short hand, and it was really a binary power. When computers became more wide spread, foolish people like you and me just assumed that kilo actually meant <span class="math inline">\(10^3\)</span> bytes.</p>
 <p>Fortunately the IEEE Standards Board intervened and created conventional, internationally adopted definitions of the International System of Units (SI) prefixes. So a kilobyte (kB) is <span class="math inline">\(10^3 = 1000\)</span> bytes and a megabyte (MB) is <span class="math inline">\(10^6\)</span> bytes or <span class="math inline">\(10^3\)</span> kilobytes (see table 8.2). A petabyte is approximately <span class="math inline">\(100\)</span> million drawers filled with text. Astonishingly Google processes around <span class="math inline">\(20\)</span> petabytes of data every day.</p>
-<table style="width:65%;">
-<colgroup>
-<col width="11%" />
-<col width="11%" />
-<col width="13%" />
-<col width="12%" />
-<col width="16%" />
-</colgroup>
+<table>
 <thead>
 <tr class="header">
-<th align="left">Factor</th>
-<th align="left">Name</th>
-<th align="left">Symbol</th>
-<th align="left">Origin</th>
-<th align="left">Derivation</th>
+<th>Factor</th>
+<th>Name</th>
+<th>Symbol</th>
+<th>Origin</th>
+<th>Derivation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><span class="math inline">\(2^{10}\)</span></td>
-<td align="left">kibi</td>
-<td align="left">Ki</td>
-<td align="left">Kilobinary:</td>
-<td align="left"><span class="math inline">\((2^{10})^1\)</span></td>
+<td><span class="math inline">\(2^{10}\)</span></td>
+<td>kibi</td>
+<td>Ki</td>
+<td>Kilobinary:</td>
+<td><span class="math inline">\((2^{10})^1\)</span></td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math inline">\(2^{20}\)</span></td>
-<td align="left">mebi</td>
-<td align="left">Mi</td>
-<td align="left">Megabinary:</td>
-<td align="left"><span class="math inline">\((2^{10})^2\)</span></td>
+<td><span class="math inline">\(2^{20}\)</span></td>
+<td>mebi</td>
+<td>Mi</td>
+<td>Megabinary:</td>
+<td><span class="math inline">\((2^{10})^2\)</span></td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math inline">\(2^{30}\)</span></td>
-<td align="left">gibi</td>
-<td align="left">Gi</td>
-<td align="left">Gigabinary:</td>
-<td align="left"><span class="math inline">\((2^{10})^3\)</span></td>
+<td><span class="math inline">\(2^{30}\)</span></td>
+<td>gibi</td>
+<td>Gi</td>
+<td>Gigabinary:</td>
+<td><span class="math inline">\((2^{10})^3\)</span></td>
 </tr>
 <tr class="even">
-<td align="left"><span class="math inline">\(2^{40}\)</span></td>
-<td align="left">tebi</td>
-<td align="left">Ti</td>
-<td align="left">Terabinary:</td>
-<td align="left"><span class="math inline">\((2^{10})^4\)</span></td>
+<td><span class="math inline">\(2^{40}\)</span></td>
+<td>tebi</td>
+<td>Ti</td>
+<td>Terabinary:</td>
+<td><span class="math inline">\((2^{10})^4\)</span></td>
 </tr>
 <tr class="odd">
-<td align="left"><span class="math inline">\(2^{50}\)</span></td>
-<td align="left">pebi</td>
-<td align="left">Pi</td>
-<td align="left">Petabinary:</td>
-<td align="left"><span class="math inline">\((2^{10})^5\)</span></td>
+<td><span class="math inline">\(2^{50}\)</span></td>
+<td>pebi</td>
+<td>Pi</td>
+<td>Petabinary:</td>
+<td><span class="math inline">\((2^{10})^5\)</span></td>
 </tr>
 </tbody>
 </table>
 <p>Table 8.2: Data conversion table. Credit: <a href="http://physics.nist.gov/cuu/Units/binary.html" class="uri">http://physics.nist.gov/cuu/Units/binary.html</a></p>
-<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it. Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!</p>
+<p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it.
+Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!</p>
 </div>
 <div id="ram" class="section level2">
 <h2><span class="header-section-number">8.3</span> Random access memory: RAM</h2>
 <p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.</p>
-<p>Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USAarrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)
-<span class="co">#&gt;         Murder Assault UrbanPop Rape</span>
-<span class="co">#&gt; Alabama   13.2     236       58 21.2</span>
-<span class="co">#&gt; Alaska    10.0     263       48 44.5</span>
-<span class="co">#&gt; Arizona    8.1     294       80 31.0</span></code></pre></div>
+<p>Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USArrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" data-line-number="1"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb231-2" data-line-number="2"><span class="co">#&gt;         Murder Assault UrbanPop Rape</span></a>
+<a class="sourceLine" id="cb231-3" data-line-number="3"><span class="co">#&gt; Alabama   13.2     236       58 21.2</span></a>
+<a class="sourceLine" id="cb231-4" data-line-number="4"><span class="co">#&gt; Alaska    10.0     263       48 44.5</span></a>
+<a class="sourceLine" id="cb231-5" data-line-number="5"><span class="co">#&gt; Arizona    8.1     294       80 31.0</span></a></code></pre></div>
 <p>If we want to group states that have similar crime statistics, a standard first step is to calculate the distance or similarity matrix</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb232-1" data-line-number="1">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</a></code></pre></div>
 <p>When we inspect the object size of the original data set and the distance object using the <strong>pryr</strong> package</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(USArrests)
-<span class="co">#&gt; 5.23 kB</span>
-pryr::<span class="kw">object_size</span>(d)
-<span class="co">#&gt; 14.3 kB</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb233-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(USArrests)</a>
+<a class="sourceLine" id="cb233-2" data-line-number="2"><span class="co">#&gt; 5.74 kB</span></a>
+<a class="sourceLine" id="cb233-3" data-line-number="3">pryr<span class="op">::</span><span class="kw">object_size</span>(d)</a>
+<a class="sourceLine" id="cb233-4" data-line-number="4"><span class="co">#&gt; 14.8 kB</span></a></code></pre></div>
 <div class="rmdnote">
 <p>
 The distance object <code>d</code> is actually a vector that contains the distances in the upper triangular region.
 </p>
 </div>
-<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math inline">\(n \times n\)</span> matrix, where <span class="math inline">\(n\)</span> is the number of rows in <code>USAarrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math inline">\(O(n^2)\)</span>. So if our original data set contained <span class="math inline">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math inline">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math inline">\(50\)</span> million unique values.</p>
+<p>we have managed to create an object that is three times larger than the original data set. In fact the object <code>d</code> is a symmetric <span class="math inline">\(n \times n\)</span> matrix, where <span class="math inline">\(n\)</span> is the number of rows in <code>USArrests</code>. Clearly, as <code>n</code> increases the size of <code>d</code> increases at rate <span class="math inline">\(O(n^2)\)</span>. So if our original data set contained <span class="math inline">\(10,000\)</span> records, the associated distance matrix would contain almost <span class="math inline">\(10^8\)</span> values. Of course since the matrix is symmetric, this corresponds to around <span class="math inline">\(50\)</span> million unique values.</p>
 <div class="rmdtip">
 <p>
 A rough rule of thumb is that your RAM should be three times the size of your data set.
 </p>
 </div>
 <p>Another benefit of increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the <strong>benchmarkme</strong> package</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">benchmarkme::<span class="kw">get_ram</span>()
-<span class="co">#&gt; 16.3 GB</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb234-1" data-line-number="1">benchmarkme<span class="op">::</span><span class="kw">get_ram</span>()</a>
+<a class="sourceLine" id="cb234-2" data-line-number="2"><span class="co">#&gt; 16.3 GB</span></a></code></pre></div>
 <!-- https://en.wikipedia.org/wiki/DIMM -->
 <div class="figure" style="text-align: center"><span id="fig:8-1"></span>
 <img src="figures/f8_1_3SDRAM-DIMMs.jpg" alt="Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org" width="100%" />
@@ -535,22 +560,24 @@ A rough rule of thumb is that your RAM should be three times the size of your da
 Figure 8.1: Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org
 </p>
 </div>
-<p>It is sometimes possible to increase your computer’s RAM. On a computer motherboard there are typically <span class="math inline">\(2\)</span> to <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure <a href="hardware.html#fig:8-1">8.1</a> for example). However it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the DIMMs will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from <span class="math inline">\(4\)</span>GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">192</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; RAM is cheap and thinking hurts.</span>
-<span class="co">#&gt;    -- Uwe Ligges (about memory requirements in R)</span>
-<span class="co">#&gt;       R-help (June 2007)</span></code></pre></div>
+<p>It is sometimes possible to increase your computer’s RAM. On a computer motherboard there are typically <span class="math inline">\(2\)</span> to <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure <a href="hardware.html#fig:8-1">8.1</a> for example).
+However it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the DIMMs will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from <span class="math inline">\(4\)</span>GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" data-line-number="1">fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">192</span>)</a>
+<a class="sourceLine" id="cb235-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb235-3" data-line-number="3"><span class="co">#&gt; RAM is cheap and thinking hurts.</span></a>
+<a class="sourceLine" id="cb235-4" data-line-number="4"><span class="co">#&gt;    -- Uwe Ligges (about memory requirements in R)</span></a>
+<a class="sourceLine" id="cb235-5" data-line-number="5"><span class="co">#&gt;       R-help (June 2007)</span></a></code></pre></div>
 <p>It is a testament to the design of R that it is still relevant and its popularity is growing. Ross Ihaka, one of the originators of the R programming language, made a throw-away comment in 2003:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fortunes::<span class="kw">fortune</span>(<span class="dv">21</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; I seem to recall that we were targetting 512k Macintoshes. In our dreams</span>
-<span class="co">#&gt; we might have seen 16Mb Sun.</span>
-<span class="co">#&gt;    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they</span>
-<span class="co">#&gt;       started out that they would see R using 16G memory on a dual Opteron</span>
-<span class="co">#&gt;       computer)</span>
-<span class="co">#&gt;       R-help (November 2003)</span></code></pre></div>
-<p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive. R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb236-1" data-line-number="1">fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">21</span>)</a>
+<a class="sourceLine" id="cb236-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb236-3" data-line-number="3"><span class="co">#&gt; I seem to recall that we were targetting 512k Macintoshes. In our dreams we</span></a>
+<a class="sourceLine" id="cb236-4" data-line-number="4"><span class="co">#&gt; might have seen 16Mb Sun.</span></a>
+<a class="sourceLine" id="cb236-5" data-line-number="5"><span class="co">#&gt;    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they</span></a>
+<a class="sourceLine" id="cb236-6" data-line-number="6"><span class="co">#&gt;       started out that they would see R using 16G memory on a dual Opteron</span></a>
+<a class="sourceLine" id="cb236-7" data-line-number="7"><span class="co">#&gt;       computer)</span></a>
+<a class="sourceLine" id="cb236-8" data-line-number="8"><span class="co">#&gt;       R-help (November 2003)</span></a></code></pre></div>
+<p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive.
+R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
 <div id="exercises-19" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>The following two exercises aim to help you determine if it is worthwhile upgrading your RAM.</p>
@@ -562,7 +589,10 @@ Figure 8.1: Three DIMM slots on a computer motherboard used for increasing the a
 </div>
 <div id="hard-drives-hdd-vs-ssd" class="section level2">
 <h2><span class="header-section-number">8.4</span> Hard drives: HDD vs SSD</h2>
-<p>You are using R because you want to analyse data. The data is typically stored on your hard drive; but not all hard drives are equal. Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD). HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure <a href="hardware.html#fig:8-2">8.2</a>. The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either <span class="math inline">\(5400\)</span>RPM (Revolutions per Minute) or <span class="math inline">\(7200\)</span>RPM. The major advantage of HDDs is that they are cheap, making a <span class="math inline">\(1\)</span>TB laptop standard.</p>
+<p>You are using R because you want to analyse data.
+The data is typically stored on your hard drive; but not all hard drives are equal.
+Unless you have a fairly expensive laptop your computer probably has a standard hard disk drive (HDD).
+HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure <a href="hardware.html#fig:8-2">8.2</a>. The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either <span class="math inline">\(5400\)</span>RPM (Revolutions per Minute) or <span class="math inline">\(7200\)</span>RPM. The major advantage of HDDs is that they are cheap, making a <span class="math inline">\(1\)</span>TB laptop standard.</p>
 <div class="rmdnote">
 <p>
 In the authors’ experience, having an SSD drive doesn’t make <strong>much</strong> difference to R. However, the reduction in boot time and general tasks makes an SSD drive a wonderful purchase.
@@ -587,11 +617,11 @@ If you are unsure what type of hard drive you have, then time how long your comp
 <p>R comes in two versions: <span class="math inline">\(32\)</span>-bit and <span class="math inline">\(64\)</span>-bit. Your operating system also comes in two versions, <span class="math inline">\(32\)</span>-bit and <span class="math inline">\(64\)</span>-bit. Ideally you want <span class="math inline">\(64\)</span>-bit versions of both R and the operating system. Using a <span class="math inline">\(32\)</span>-bit version of either has severe limitations on the amount of RAM R can access. So when we suggest that you should just buy more RAM, this assumes that you are using a <span class="math inline">\(64\)</span>-bit operating system, with a <span class="math inline">\(64\)</span>-bit version of R.</p>
 <div class="rmdnote">
 <p>
-If you are using an OS version from the last five years, it is unlikely to be <span class="math inline">32</span>-bit OS.
+If you are using an OS version from the last five years, it is unlikely to be <span class="math inline"><span class="math inline">\(32\)</span></span>-bit OS.
 </p>
 </div>
 <p>A <span class="math inline">\(32\)</span>-bit machine can access at most only <span class="math inline">\(4\)</span>GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a <span class="math inline">\(32\)</span>-bit operating system, then R is limited to around <span class="math inline">\(3\)</span>GB RAM. If you are running a <span class="math inline">\(64\)</span>-bit operating system, but only a <span class="math inline">\(32\)</span>-bit version of R, then you have access to slightly more memory (but not much). Modern systems should run a <span class="math inline">\(64\)</span>-bit operating system, with a <span class="math inline">\(64\)</span>-bit version of R. Your memory limit is now measured as <span class="math inline">\(8\)</span> terabytes for Windows machines and <span class="math inline">\(128\)</span>TB for Unix-based OSs. An easy method for determining if you are running a <span class="math inline">\(64\)</span>-bit version of R is to run</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.Machine$sizeof.pointer</code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" data-line-number="1">.Machine<span class="op">$</span>sizeof.pointer</a></code></pre></div>
 <p>which will return <span class="math inline">\(8\)</span> if you a running a <span class="math inline">\(64\)</span>-bit version of R.</p>
 <p>To find precise details consult the R help pages <code>help(&quot;Memory-limits&quot;)</code> and <code>help(&quot;Memory&quot;)</code>.</p>
 <div id="exercises-20" class="section level4 unnumbered">
@@ -619,12 +649,13 @@ Figure 8.3: CPU clock speed. The data for this figure was collected from web-for
 Figure 8.4: CPU benchmarks from the R package, <strong>benchmarkme</strong>. Each point represents an individual CPU result.
 </p>
 </div>
-<p>Running the benchmarks and comparing your CPU to others is straightforward using the <strong>benchmarkme</strong> package. After loading the package, we can benchmark your CPU</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">benchmark_std</span>() </code></pre></div>
+<p>Running the benchmarks and comparing your CPU to others is straightforward using the <strong>benchmarkme</strong> package.
+After loading the package, we can benchmark your CPU</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" data-line-number="1">res =<span class="st"> </span><span class="kw">benchmark_std</span>() </a></code></pre></div>
 <p>and compare the results to other users</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res)
-<span class="co"># Upload your benchmarks for future users</span>
-<span class="kw">upload_results</span>(res) </code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" data-line-number="1"><span class="kw">plot</span>(res)</a>
+<a class="sourceLine" id="cb239-2" data-line-number="2"><span class="co"># Upload your benchmarks for future users</span></a>
+<a class="sourceLine" id="cb239-3" data-line-number="3"><span class="kw">upload_results</span>(res) </a></code></pre></div>
 <p>You get the model specifications of the top CPUs using <code>get_datatable(res)</code>.</p>
 </div>
 <div id="cloud-computing" class="section level2">
@@ -648,27 +679,30 @@ Figure 8.4: CPU benchmarks from the R package, <strong>benchmarkme</strong>. Eac
         </div>
       </div>
 <a href="performance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="collaboration.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="collaboration.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
+"linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -678,6 +712,14 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/csgillespie/efficientR/edit/master/08-hardware.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -692,9 +734,12 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

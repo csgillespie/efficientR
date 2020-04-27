@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2017-04-10"
+date: "2020-04-27"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -11,7 +11,7 @@ link-citations: yes
 twitter-handle: csgillespie
 cover-image: figures/f0_web.png
 description: "Efficient R Programming is about increasing the amount of work you 
-can do with R in a given amount of time. It's about both computational and programmer efficiency."
+  can do with R in a given amount of time. It's about both computational and programmer efficiency."
 github-repo: csgillespie/efficientR
 url: 'https\://csgillespie.github.io/efficientR/'
 ---
@@ -30,7 +30,7 @@ Get a hard copy from: [Amazon (UK)](https://alexa.design/2pmrqBj), [Amazon (USA)
 [Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/) is Senior lecturer (Associate
 professor) at Newcastle University, UK. His research interests are high performance
 statistical computing and Bayesian statistics. He is regularly employed as a
-consultant by [Jumping Rivers](http://www.jumpingrivers.com/) and has been teaching R
+consultant by [Jumping Rivers](https://www.jumpingrivers.com/) and has been teaching R
 since 2005 at a variety of levels, ranging from beginning to advanced programming.
 
 [Robin Lovelace](http://robinlovelace.net/) is a researcher at the Leeds Institute for Transport Studies ([ITS](http://www.its.leeds.ac.uk/)) and the Leeds Institute for Data Analytics ([LIDA](http://lida.leeds.ac.uk/about-lida/contact/)). Robin has many years using R for academic
@@ -104,9 +104,9 @@ For everyone, we recommend reading *Efficient R Programming* while you have an a
 If you're an R novice and fit into the final category, we recommend that this 'active R project' is not an important deliverable, but another R resource. While this book is generic, it is likely that your usage of R will be largely domain-specific. For this reason we recommend reading it alongside teaching material in your chosen area. Furthermore, we advocate that all readers use this book alongside other R resources such as the numerous, vignettes, tutorials and online articles that the R community has produced (described in the *tip* below). At a bare minimum you should be familiar with data frames, looping and simple plots.
 
 <div class="rmdtip">
-<p>There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://cran.r-project.org/doc/contrib/Horton+Pruim+Kaplan_MOSAIC-StudentGuide.pdf">Student's Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.</p>
-<p>R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette's name into the same command, e.g. <code>vignette(package = &quot;dplyr&quot;, &quot;introduction&quot;)</code> to see the introductory vignette for the <strong>dplyr</strong> package.</p>
-<p>Another early port of call should be the CRAN website. The <a href="https://cran.r-project.org/other-docs.html">Contributed Documentation</a> page contains a list of contributed resources, mainly tutorials, on subjects ranging from <a href="https://github.com/Robinlovelace/Creating-maps-in-R">map making</a> to <a href="https://cran.r-project.org/doc/contrib/Farnsworth-EconometricsInR.pdf">Econometrics</a> The new <a href="https://bookdown.org/">bookdown website</a> contains a list of complete (or near complete) books, which cover domains including <a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> and <a href="https://bookdown.org/yihui/bookdown/">Authoring Books with R Markdown</a>. We recommend keeping your eye on the 'R-o-sphere', e.g. via the <a href="http://r-bloggers.com/">R-Bloggers</a> website, popular Twitter feeds and <a href="https://www.r-project.org/mail.html">CRAN-affiliated email lists</a> for up-to-date materials that can be used in conjunction with this book.</p>
+<p>There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://cran.r-project.org/doc/contrib/Horton+Pruim+Kaplan_MOSAIC-StudentGuide.pdf">Student’s Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.</p>
+<p>R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = &quot;dplyr&quot;, &quot;dplyr&quot;)</code> to see the introductory vignette for the <strong>dplyr</strong> package.</p>
+<p>Another early port of call should be the CRAN website. The <a href="https://cran.r-project.org/other-docs.html">Contributed Documentation</a> page contains a list of contributed resources, mainly tutorials, on subjects ranging from <a href="https://github.com/Robinlovelace/Creating-maps-in-R">map making</a> to <a href="https://cran.r-project.org/doc/contrib/Farnsworth-EconometricsInR.pdf">Econometrics</a> The new <a href="https://bookdown.org/">bookdown website</a> contains a list of complete (or near complete) books, which cover domains including <a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> and <a href="https://bookdown.org/yihui/bookdown/">Authoring Books with R Markdown</a>. We recommend keeping your eye on the ‘R-o-sphere’, e.g. via the <a href="http://r-bloggers.com/">R-Bloggers</a> website, popular Twitter feeds and <a href="https://www.r-project.org/mail.html">CRAN-affiliated email lists</a> for up-to-date materials that can be used in conjunction with this book.</p>
 </div>
 
 ## What is efficiency?
@@ -192,23 +192,9 @@ In some ways benchmarks can be seen as the building blocks of profiles. Profilin
 
 ### Benchmarking
 
-Modifying elements from one benchmark to the next and recording the results
-after the alteration enables us to determine the fastest piece of code.
-Benchmarking is important in the efficient programmer's tool-kit: you may *think* that
-your code is faster than mine but benchmarking allows you to *prove* it.
-The easiest way to benchmark a function is to use `system.time()`. However
-it is important to remember that we are taking a sample. We wouldn't expect 
-a single person in London to be representative of the entire UK population, similarly,
-a single benchmark provides us with a single observation on our
-functions behaviour. Therefore, we'll need to repeat the
-timing many times with a loop. 
+Modifying elements from one benchmark to the next and recording the results after the alteration enables us to determine the fastest piece of code. Benchmarking is important in the efficient programmer's tool-kit: you may *think* that your code is faster than mine but benchmarking allows you to *prove* it. The easiest way to benchmark a function is to use `system.time()`. However it is important to remember that we are taking a sample. We wouldn't expect a single person in London to be representative of the entire UK population, similarly, a single benchmark provides us with a single observation on our functions behaviour. Therefore, we'll need to repeat the timing many times with a loop. 
 
-An alternative way of benchmarking, is via the flexible **microbenchmark** package. 
-This allows us to easily run each function multiple times (by default $100$), enabling the user to
-detect microsecond differences in code performance. We then get a convenient summary of the results:
-the minimum/maximum, lower/upper quartiles and the mean/median times. We suggest
-focusing on the median time to get a feel for the standard time and the quartiles to understand
-the variability.
+An alternative way of benchmarking, is via the flexible **microbenchmark** package. This allows us to easily run each function multiple times (by default $100$), enabling the user to detect microsecond differences in code performance. We then get a convenient summary of the results: the minimum/maximum, lower/upper quartiles and the mean/median times. We suggest focusing on the median time to get a feel for the standard time and the quartiles to understand the variability.
 
 ### Benchmarking example
 
@@ -226,7 +212,7 @@ microbenchmark(df[3, 2], df[3, "name"], df$name[3])
 #    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a 
 ```
 
-The results summarise how long each query took: the minimum (`min`), lower and upper quariles (`lq` and `uq` respectively) and the mean, median and maximum, for each of the number of evaluations (`neval`, with the default value of 100 used in this case). `cld` reports the relative rank of each row in the form of 'compact letter display': in this case `df$name[3]` performs best, with a rank of `a` and a mean time around 25% lower than the other two functions.
+The results summarise how long each query took: the minimum (`min`), lower and upper quartiles (`lq` and `uq` respectively) and the mean, median and maximum, for each of the number of evaluations (`neval`, with the default value of 100 used in this case). `cld` reports the relative rank of each row in the form of 'compact letter display': in this case `df$name[3]` performs best, with a rank of `a` and a mean time around 25% lower than the other two functions.
 
 When using `microbenchmark()`, you should pay careful attention to the units. In the above example, each function call takes approximately 20 _microseconds_, implying around 50,000 function calls could be done in a second. When comparing quick functions, the standard units are:
 
@@ -313,15 +299,15 @@ cs_apply = function(x){
 # Method 3: cumsum (1 line, not shown)
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
-#>         expr    min     lq   mean median     uq    max neval
-#>    cs_for(x) 213960 268664 279269 281453 303860 322735   100
-#>  cs_apply(x) 129409 158064 174889 173838 193257 286384   100
-#>    cumsum(x)    542    624   1311   1018   1134  18300   100
+#>         expr    min     lq   mean median     uq     max neval
+#>    cs_for(x) 107124 115666 176820 120229 127988 5523820   100
+#>  cs_apply(x)  73564  81520 117308  89170  99598 2559501   100
+#>    cumsum(x)    531    690   1092    820    992   20315   100
 ```
 
 1. Which method is fastest and how many times faster is it?
 
-2. Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument `neval = 1` so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the *relative* time difference increase or decrease? By how much?
+2. Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument `times = 1` so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the *relative* time difference increase or decrease? By how much?
 
 
 
@@ -345,17 +331,14 @@ system.time(
 
 ### R package
 
-This book has an associated R package that contains data sets and functions referenced in the book. The
-package is hosted on [github](https://github.com/csgillespie/efficient) and can be installed
-using the **devtools** package:
+This book has an associated R package that contains data sets and functions referenced in the book. The package is hosted on [github](https://github.com/csgillespie/efficient) and can be installed using the **devtools** package:
 
 
 ```r
-devtools::install_github("csgillespie/efficient", build_vignettes = TRUE)
+devtools::install_github("csgillespie/efficient", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
-The package also contains solutions (as vignettes) to the exercises found in this book. They 
-can be browsed with the following command:
+The package also contains solutions (as vignettes) to the exercises found in this book. They can be browsed with the following command:
 
 
 ```r
@@ -371,12 +354,8 @@ devtools::install_github("csgillespie/efficientR")
 
 ### Online version
 
-We are grateful to O'Reilly Press for allowing us to develop this book [online](https://csgillespie.github.io/efficientR/).
-The online version constitutes a substantial additional resource to supplement this book,
-and will continue to evolve in between reprints of the physical book. 
-The book's code also represents a substantial learning opportunity in itself as it was written using R Markdown and the **bookdown** package, allowing us to run the R code each time we compile the book to ensure that it works, and allowing others to contribute to its future longevity.
-To edit this chapter, for example, simply navigate to [github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd](https://github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd) while logged into a [GitHub account](https://help.github.com/articles/signing-up-for-a-new-github-account/).
-The full source of the book is available at [https://github.com/csgillespie/efficientR](https://github.com/csgillespie/efficientR) where we welcome comments/questions on the [Issue Tracker](https://github.com/csgillespie/efficientR/issues) and Pull Requests.
+We are grateful to O'Reilly Press for allowing us to develop this book [online](https://csgillespie.github.io/efficientR/). The online version constitutes a substantial additional resource to supplement this book, and will continue to evolve in between reprints of the physical book.  The book's code also represents a substantial learning opportunity in itself as it was written using R Markdown and the **bookdown** package, allowing us to run the R code each time we compile the book to ensure that it works, and allowing others to contribute to its future longevity.
+To edit this chapter, for example, simply navigate to [github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd](https://github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd) while logged into a [GitHub account](https://help.github.com/articles/signing-up-for-a-new-github-account/). The full source of the book is available at [https://github.com/csgillespie/efficientR](https://github.com/csgillespie/efficientR) where we welcome comments/questions on the [Issue Tracker](https://github.com/csgillespie/efficientR/issues) and Pull Requests.
 
 <!--chapter:end:01-introduction.Rmd-->
 
@@ -389,19 +368,9 @@ knit: "bookdown::preview_chapter"
 
 # Efficient set-up {#set-up}
 
-An efficient computer set-up is analogous to a well-tuned vehicle.
-Its components work in harmony. It is well-serviced.
-It's fast!
+An efficient computer set-up is analogous to a well-tuned vehicle. Its components work in harmony. It is well-serviced. It's fast!
 
-This chapter describes the set-up that will enable
-a productive workflow.
-It explores how the operating system,
-R version, startup files and IDE can make your R work faster.
-Understanding and at times changing these set-up options can have many knock-on benefits.
-That's why we cover them at this early stage (hardware is covered in the next [chapter](#programming)). 
-By the end of this chapter you should understand how to set-up your computer
-and R installation for optimal efficiency.
-It covers the following topics:
+This chapter describes the set-up that will enable a productive workflow. It explores how the operating system, R version, startup files and IDE can make your R work faster. Understanding and at times changing these set-up options can have many knock-on benefits. That's why we cover them at this early stage (hardware is covered in Chapter \@ref(hardware)).  By the end of this chapter you should understand how to set-up your computer and R installation for optimal efficiency. It covers the following topics:
 
 - R and the operating systems: system monitoring on Linux, Mac and Windows
 - R version: how to keep your base R installation and packages up-to-date
@@ -430,13 +399,7 @@ library("benchmarkme")
 
 ## Operating system
 
-R supports all three major operating system (OS) types: Linux, Mac and
-Windows.^[All CRAN packages are automatically tested on these
-systems, in addition to Solaris. R has also been reported to run on more exotic
-operating systems, including those used in smart phones and game consoles [@peng_r_2014].]
-R is platform-independent, although there are some OS-specific quirks,
-e.g. in relation to file path
-notation (see Section \@ref(location)).
+R supports all three major operating system (OS) types: Linux, Mac and Windows.^[All CRAN packages are automatically tested on these systems, in addition to Solaris. R has also been reported to run on more exotic operating systems, including those used in smart phones and game consoles [@peng_r_2014].] R is platform-independent, although there are some OS-specific quirks, e.g. in relation to file path notation (see Section \@ref(location)).
 
 Basic OS-specific information can be queried from within R using `Sys.info()`:
 
@@ -450,59 +413,35 @@ Sys.info()
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
 
 <div class="rmdtip">
-<p>The <strong>assertive.reflection</strong> package can be used to report additional information about your computer's operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.</p>
+<p>The <strong>assertive.reflection</strong> package can be used to report additional information about your computer’s operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.</p>
 </div>
 
 ### Operating system and resource monitoring
 
-Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking
-conducted for a presentation "R on Different Platforms" at useR 2006
-found that R was marginally faster on Windows than Linux set-ups.
-Similar results were reported in an academic paper, with R completing
-statistical analyses faster on a Linux than Mac OS's [@sekhon2006art].
-In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html)
-supported these results with slightly faster
-run times for certain benchmarks on Ubuntu than Mac systems. The data from the **benchmarkme** package
-also suggests that running code under the Linux OS is marginally faster.
+Minor differences aside, R's computational efficiency is broadly the same across different operating systems.^[Benchmarking conducted for a presentation "R on Different Platforms" at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS's [@sekhon2006art]. In 2015 [Revolution R](http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html) supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the **benchmarkme** package also suggests that running code under the Linux OS is marginally faster.
 ]
-Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)), another OS-related issue to consider is external dependencies: programs that R packages depend on.
-Sometimes external package dependencies must be installed manually (i.e. not using `install.packages()`).
-This is especially common with Unix-based systems (Linux and Mac).
-On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
+Beyond the $32$ vs $64$ bit issue (covered in the next chapter) and *process forking* (covered in Chapter \@ref(performance)), another OS-related issue to consider is external dependencies: programs that R packages depend on. Sometimes external package dependencies must be installed manually (i.e. not using `install.packages()`). This is especially common with Unix-based systems (Linux and Mac). On Debian-based operating systems such as Ubuntu, many R packages can be installed at the OS level, to ensure external dependencies are also installed (see Section \@ref(deps)).
 
-Resource monitoring is the process of checking the status of key OS variables.
-For computationally intensive work, it is sensible to monitor system resources in this way.
-Resource monitoring can help identify computational bottlenecks.
-Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter \@ref(programming)).
+Resource monitoring is the process of checking the status of key OS variables. For computationally intensive work, it is sensible to monitor system resources in this way. Resource monitoring can help identify computational bottlenecks. Alongside R profiling functions such as **profvis** (see Section \@ref(performance-profvis)), system monitoring provides a useful tool for understanding how R is performing in relation to variables reporting the OS state, such as how much RAM is in use, which relates to the wider question of whether more is needed (covered in Chapter \@ref(programming)).
 
-CPU resource allocated over time is another common OS variable that is worth monitoring.
-A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)),
-and whether there is spare CPU capacity on the OS that could be harnessed by parallel code.
+CPU resource allocated over time is another common OS variable that is worth monitoring. A basic use case is to check whether your code is running in parallel (see Figure \@ref(fig:2-1)), and whether there is spare CPU capacity on the OS that could be harnessed by parallel code.
 
 <div class="figure" style="text-align: center">
 <img src="figures/f2_1_sysmon.png" alt="Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded." width="100%" />
 <p class="caption">(\#fig:2-1)Output from a system monitor (`gnome-system-monitor` running on Ubuntu) showing the resources consumed by running the code presented in the second of the Exercises at the end of this section. The first increases RAM use, the second is single-threaded and the third is multi-threaded.</p>
 </div>
 
-System monitoring is a complex topic that spills over into system administration and
-server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
+System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
 
-- On Linux, the shell command `top` displays key resource use figures for most
-distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively.
-A number of options such as `nethogs` monitor internet usage.
-- On Mac the **Activity Monitor** provides similar functionality. This can be initiated
-from the Utilities folder in Launchpad.
-- On Windows the **Task Manager** provides key information on RAM and CPU use by
-process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
+- On Linux, the shell command `top` displays key resource use figures for most distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as `nethogs` monitor internet usage.
+- On Mac the **Activity Monitor** provides similar functionality. This can be initiated from the Utilities folder in Launchpad.
+- On Windows the **Task Manager** provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
 
 #### Exercises {-}
 
 1. What is the exact version of your computer's operating system?
-2. Start an activity monitor then execute the following code chunk.
-In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object
-`X` (see Section \@ref(the-apply-family) for more on the 'apply family' of 
-functions).[The
-reason this works is that a data frame is really a list of vectors, each vector forming a column.
+
+2. Start an activity monitor then execute the following code chunk. In it `lapply()` (or its parallel version `mclapply()`) is used to *apply* a function, `median()`, over every column in the data frame object `X` (see Section \@ref(the-apply-family) for more on the 'apply family' of functions).[The reason this works is that a data frame is really a list of vectors, each vector forming a column.
 ]
 How do the system output logs (results) on your system compare to those presented in Figure \@ref(fig:2-1)? 
 
@@ -518,27 +457,21 @@ How do the system output logs (results) on your system compare to those presente
     ```
 
 <div class="rmdnote">
-<p><code>mclapply</code> only works in parallel on Mac and Linux. In Chapter 7 you'll learn about an equivalent function <code>parLapply()</code> that works in parallel on Windows.</p>
+<p><code>mclapply</code> only works in parallel on Mac and Linux. In Chapter 7 you’ll learn about an equivalent function <code>parLapply()</code> that works in parallel on Windows.</p>
 </div>
 
-
 3. What do you notice regarding CPU usage, RAM and system time, during and after each of the three operations?
+
 4. Bonus question: how would the results change depending on operating system?
 
 
 
 ## R version
 
-It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general 
-base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package. 
-For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code.
-In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested,
-to ensure stability.
-Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich.
-This section explains how.
+It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package.  For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
 
 <div class="rmdtip">
-<p>Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at <a href="https://cran.r-project.org/bin/">cran.r-project.org/bin/</a>. To download binary versions for Ubuntu 'Wily', for example, see <a href="https://cran.r-project.org/bin/linux/ubuntu/wily/">cran.r-project.org/bin/linux/ubuntu/wily/</a>. To 'pin' specific versions of R packages you can use the <strong>packrat</strong> package. For more on pinning R versions and R packages see articles on RStudio's website <a href="https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R">Using-Different-Versions-of-R</a> and <a href="https://rstudio.github.io/packrat/">rstudio.github.io/packrat/</a>.</p>
+<p>Previous R versions can be installed from CRAN’s archive or previous R releases. The binary versions for all OSs can be found at <a href="https://cran.r-project.org/bin/">cran.r-project.org/bin/</a>. To download binary versions for Ubuntu ‘Wily’, for example, see <a href="https://cran.r-project.org/bin/linux/ubuntu/wily/">cran.r-project.org/bin/linux/ubuntu/wily/</a>. To ‘pin’ specific versions of R packages you can use the <strong>packrat</strong> package. For more on pinning R versions and R packages see articles on RStudio’s website <a href="https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R">Using-Different-Versions-of-R</a> and <a href="https://rstudio.github.io/packrat/">rstudio.github.io/packrat/</a>.</p>
 </div>
 
 ### Installing R
@@ -558,9 +491,7 @@ deb http://cran.rstudio.com/bin/linux/ubuntu xenial/
 
 `http://cran.rstudio.com` is the mirror (which can be replaced by any listed at [cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)) and `xenial` is the release. See the [Debian](https://cran.r-project.org/bin/linux/debian/) and [Ubuntu](https://cran.r-project.org/bin/linux/ubuntu/) installation pages on CRAN from further details.
 
-Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system.
-The following two commands, for example, would install the base R package (a 'bare-bones' install)
-and the package **rcurl**, which has an external dependency:
+Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system. The following two commands, for example, would install the base R package (a 'bare-bones' install) and the package **rcurl**, which has an external dependency:
 
 
 ```bash
@@ -587,25 +518,19 @@ Do you want to continue? [Y/n]
 
 ```
 
-Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See
-[jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
+Further details are provided at [cran.r-project.org/bin/linux/](https://cran.r-project.org/bin/linux/) for Debian, Redhat and Suse OSs. R also works on FreeBSD and other Unix-based systems.^[See [jason-french.com/blog/2013/03/11/installing-r-in-linux/](http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/) for more information on installing R on a variety of Linux distributions.]
 
 Once R is installed it should be kept up-to-date.
 
 ### Updating R
 
-R is a mature and stable language so well-written code in base R should work on most versions.
-However, it is important to keep your R version relatively up-to-date, because:
+R is a mature and stable language so well-written code in base R should work on most versions. However, it is important to keep your R version relatively up-to-date, because:
 
 - Bug fixes are introduced in each version, making errors less likely;
 - Performance enhancements are made from one version to the next, meaning your code may run faster in later versions;
 - Many R packages only work on recent versions on R.
 
-Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS).
-R release versions have 3 components corresponding to major.minor.patch changes.
-Generally 2 or 3 patches are released before the next minor increment - each 'patch' is
-released roughly every 3 months.
-R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
+Release notes with details on each of these issues are hosted at [cran.r-project.org/src/base/NEWS](https://cran.r-project.org/src/base/NEWS). R release versions have 3 components corresponding to major.minor.patch changes. Generally 2 or 3 patches are released before the next minor increment - each 'patch' is released roughly every 3 months. R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.
 
  - On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with `apt-get upgrade`.
  - On Mac, the latest version should be installed by the user from the `.pkg` files mentioned above.
@@ -621,9 +546,7 @@ For information about changes to expect in the next version, you can subscribe t
 
 ### Installing R packages
 
-Large projects may need several packages to be installed.
-In this case, the required packages can be installed at once.
-Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:
+Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:
 
 
 ```r
@@ -631,19 +554,16 @@ pkgs = c("raster", "leaflet", "rgeos") # package names
 install.packages(pkgs)
 ```
 
-In the above code all the required packages are installed with two not three lines, reducing typing.
-Note that we can now re-use the `pkgs` object to load them all:
+In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the `pkgs` object to load them all:
 
 
 ```r
 inst = lapply(pkgs, library, character.only = TRUE) # load them
 ```
 
-In the above code `library(pkg[i])` is executed for every package stored in the text string vector.
-We use `library` here instead of `require` because the former produces an error if the package is not available.
+In the above code `library(pkgs[i])` is executed for every package stored in the text string vector. We use `library` here instead of `require` because the former produces an error if the package is not available.
 
-Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code.
-Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
+Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed *before* time is spent executing code. Storing package names in a character vector object such as `pkgs` is also useful because it allows us to refer back to them again and again.
 <!-- To provide another example, we can update only the packages named in `pkgs` with the following command: -->
 
 <!-- ```{r, eval=FALSE} -->
@@ -652,10 +572,7 @@ Storing package names in a character vector object such as `pkgs` is also useful
 
 ### Installing R packages with dependencies {#deps}
 
-Some packages have external dependencies (i.e. they call libraries outside R).
-On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`.
-This will ensure the necessary dependencies are installed and setup correctly alongside the R package.
-On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be searched for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
+Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing `install.packages`. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with `r-cran-` can be searched for and installed as follows (see [cran.r-project.org/bin/linux/ubuntu/](https://cran.r-project.org/bin/linux/ubuntu/) for a list of these):
 
 
 ```bash
@@ -663,8 +580,7 @@ apt-cache search r-cran- # search for available cran Debian packages
 sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies)
 ```
 
-On Windows the **installr** package helps manage and update R packages with system-level dependencies.
-For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
+On Windows the **installr** package helps manage and update R packages with system-level dependencies. For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
 
 
 ```r
@@ -681,17 +597,13 @@ This can be done *for all packages* with:
 update.packages() # update installed CRAN packages
 ```
 
-The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system.
-This is generally desirable as
-updating dozens of large packages can consume a large proportion of available system resources.
+The default for this function is for the `ask` argument to be set to `TRUE`, giving control over what is downloaded onto your system. This is generally desirable as updating dozens of large packages can consume a large proportion of available system resources.
 
 <div class="rmdtip">
 <p>To update packages automatically, you can add the line <code>update.packages(ask = FALSE)</code> to your <code>.Rprofile</code> startup file (see the next section for more on <code>.Rprofile</code>). Thanks to Richard Cotton for this tip.</p>
 </div>
 
-An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates.
-Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio).
-Next (after the exercises) we take a look at how to configure R using start-up files. 
+An even more interactive method for updating packages in R is provided by RStudio via Tools > Check for Package Updates. Many such time saving tricks are enabled by RStudio, as described in [a subsequent section](#install-rstudio). Next (after the exercises) we take a look at how to configure R using start-up files. 
 
 #### Exercises {-}
 
@@ -700,13 +612,10 @@ Next (after the exercises) we take a look at how to configure R using start-up f
 
 ## R startup
 
-Every time R starts a couple of file scripts are run by default, as documented in `?Startup`.
-This section explains how to customise these files, allowing you to save API keys or load frequently used functions.
-Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments.
-If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
+Every time R starts a couple of file scripts are run by default, as documented in `?Startup`. This section explains how to customise these files, allowing you to save API keys or load frequently used functions. Before learning how to modify these files, we'll take a look at how to ignore them, with R's startup arguments. If you want to turn custom set-up 'on' it's useful to be able to turn it 'off', e.g. for debugging.
 
 <div class="rmdtip">
-<p>Some of R's startup arguments can be controlled interactively in RStudio. See the online help file <a href="https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio">Customizing RStudio</a> for more on this.</p>
+<p>Some of R’s startup arguments can be controlled interactively in RStudio. See the online help file <a href="https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio">Customizing RStudio</a> for more on this.</p>
 </div>
 
 ### R startup arguments
@@ -720,12 +629,10 @@ The following are particularly important:
 
 - `--no-save` tells R not to ask the user if they want to save objects saved in RAM when the session is ended with `q()`.
 
-Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit.
-R's default setting of loading data from the last session automatically is potentially problematic in this context.
-See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
+Adding each of these will make R load slightly faster, and mean that slightly less user input is needed when you quit. R's default setting of loading data from the last session automatically is potentially problematic in this context. See [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf), Appendix B, for more startup arguments.
 
 <div class="rmdtip">
-<p>A concise way to load a 'vanilla' version of R, with all of the above options enabled is with an option of the same name:</p>
+<p>A concise way to load a ‘vanilla’ version of R, with all of the above options enabled is with an option of the same name:</p>
 </div>
 
 
@@ -745,16 +652,13 @@ When R starts (unless it was launched with `--no-environ`) it first searches for
 Although `.Renviron` is searched for first, we will look at `.Rprofile` first as it is simpler and for many set-up tasks more frequently useful. Both files can exist in three directories on your computer.
 
 <div class="rmdwarning">
-<p>Modification of R's startup files should not be taken lightly. This is an advanced topic. If you modify your startup files in the wrong way, it can cause problems: a seemingly innocent call to <code>setwd()</code> in <code>.Rprofile</code>, for example, will break <strong>devtools</strong> <code>build</code> and <code>check</code> functions.</p>
+<p>Modification of R’s startup files should not be taken lightly. This is an advanced topic. If you modify your startup files in the wrong way, it can cause problems: a seemingly innocent call to <code>setwd()</code> in <code>.Rprofile</code>, for example, will break <strong>devtools</strong> <code>build</code> and <code>check</code> functions.</p>
 <p>Proceed with caution and, if you mess things up, just delete the offending files!</p>
 </div>
 
 ### The location of startup files {#location}
 
-Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session.
-Note also that these files should only be changed with caution and if you know what you are doing.
-This is because they can make your R version behave differently to other R installations,
-potentially reducing the reproducibility of your code.
+Confusingly, multiple versions of these files can exist on the same computer, only one of which will be used per session. Note also that these files should only be changed with caution and if you know what you are doing. This is because they can make your R version behave differently to other R installations, potentially reducing the reproducibility of your code.
 
 Files in three folders are important in this process:
 
@@ -767,7 +671,7 @@ Files in three folders are important in this process:
 It is important to know the location of the `.Rprofile` and `.Renviron` set-up files that are being used out of these three options.
 R only uses one `.Rprofile` and one `.Renviron` in any session: if you have a `.Rprofile` file in your current project, R will ignore `.Rprofile` in `R_HOME` and `HOME`.
 Likewise, `.Rprofile` in `HOME` overrides `.Rprofile` in `R_HOME`. 
-The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files.
+The same applies to `.Renviron`: you should remember that adding project specific environment variables with `.Renviron` will de-activate other `.Renviron` files. 
 
 To create a project-specific start-up script, simply create a `.Rprofile` file in the project's root directory and start adding R code, e.g. via `file.edit(".Rprofile")`.
 Remember that this will make `.Rprofile` in the home directory be ignored.
@@ -800,11 +704,7 @@ The location, contents and uses of each is outlined in more detail below.
 
 ### The `.Rprofile` file {#rprofile}
 
-By default, R looks for and runs `.Rprofile` files in the three locations described above, in a specific order.
-`.Rprofile` files are simply R scripts that run each time R runs and
-they can be found within `R_HOME`, `HOME` and the project's home directory, found with `getwd()`.
-To check if you have a site-wide `.Rprofile`,
-which will run for all users on start-up, run:
+By default, R looks for and runs `.Rprofile` files in the three locations described above, in a specific order. `.Rprofile` files are simply R scripts that run each time R runs and they can be found within `R_HOME`, `HOME` and the project's home directory, found with `getwd()`. To check if you have a site-wide `.Rprofile`, which will run for all users on start-up, run:
 
 
 ```r
@@ -813,10 +713,7 @@ fname = file.path(site_path, "etc", "Rprofile.site")
 file.exists(fname)
 ```
 
-The above code checks for the presence of
-`Rprofile.site` in that directory.
-As outlined above, the `.Rprofile` located in your home directory is user-specific.
-Again, we can test whether this file exists using 
+The above code checks for the presence of `Rprofile.site` in that directory. As outlined above, the `.Rprofile` located in your home directory is user-specific. Again, we can test whether this file exists using 
 
 
 ```r
@@ -845,33 +742,20 @@ message("Hi Robin, welcome to R")
 options(prompt = "R4geo> ")
 ```
 
-To quickly explain each line of code: the first simply prints a message in the console
-each time a new R session is started. The latter modifies the console prompt in the
-console (set to `> ` by default). Note that simply adding more lines to the `.Rprofile`
-will set more features. An important aspect of `.Rprofile` (and `.Renviron`) is that
-*each line is run once and only once for each R session*. That means that the options
-set within `.Rprofile` can easily be changed during the session. The following command
-run mid-session, for example, will return the default prompt:
+To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started. The latter modifies the console prompt in the console (set to `> ` by default). Note that simply adding more lines to the `.Rprofile` will set more features. An important aspect of `.Rprofile` (and `.Renviron`) is that *each line is run once and only once for each R session*. That means that the options set within `.Rprofile` can easily be changed during the session. The following command run mid-session, for example, will return the default prompt:
 
 
 ```r
 options(prompt = "> ")
 ```
 
-More details on these, and other potentially useful `.Rprofile` options are described subsequently.
-For more suggestions of useful startup settings, see Examples in `help("Startup")`
-and online resources such as those at [statmethods.net](http://www.statmethods.net/interface/customizing.html).
-The help pages for R options (accessible with `?options`) are also worth a read before writing your own `.Rprofile`.
+More details on these, and other potentially useful `.Rprofile` options are described subsequently. For more suggestions of useful startup settings, see Examples in `help("Startup")` and online resources such as those at [statmethods.net](http://www.statmethods.net/interface/customizing.html). The help pages for R options (accessible with `?options`) are also worth a read before writing your own `.Rprofile`.
 
-Ever been frustrated by unwanted `+` symbols that prevent copied and pasted multi-line functions from working?
-These potentially annoying `+`s can be eradicated by adding `options(continue = "  ")` to your `.Rprofile`.
+Ever been frustrated by unwanted `+` symbols that prevent copied and pasted multi-line functions from working? These potentially annoying `+`s can be eradicated by adding `options(continue = "  ")` to your `.Rprofile`.
 
 #### Setting options
 
-The function `options`, used above, contains a number of default settings.
-Typing `options()` provides a good indication of what can be configured.
-Since `options()` are often related to personal preferences (with few implications for reproducibility), that you will want for many of your R sessions, `.Rprofile` in your home directory or in your project's folder are sensible places to set them.
-Other illustrative options are shown below:
+The function `options`, used above, contains a number of default settings. Typing `options()` provides a good indication of what can be configured. Since `options()` are often related to personal preferences (with few implications for reproducibility), that you will want for many of your R sessions, `.Rprofile` in your home directory or in your project's folder are sensible places to set them. Other illustrative options are shown below:
 
 
 ```r
@@ -888,16 +772,11 @@ The first option changes four default options in a single line.
   * Removing the stars after significant $p$-values.
   * Removing the `+` in multi-line functions.
 
-Try to avoid adding options to the start-up file that make your code non-portable. For
-example, adding `options(stringsAsFactors = FALSE)` to your start-up script has
-knock-on effects for `read.table` and related functions including `read.csv`, making
-them convert text strings into characters rather than into factors as is default. This
-may be useful for you, but can make your code less portable, so be warned.
+Try to avoid adding options to the start-up file that make your code non-portable. For example, adding `options(stringsAsFactors = FALSE)` to your start-up script has knock-on effects for `read.table` and related functions including `read.csv`, making them convert text strings into characters rather than into factors as is default. This may be useful for you, but can make your code less portable, so be warned.
 
 #### Setting the CRAN mirror
 
-To avoid setting the CRAN mirror each time you run
-`install.packages()` you can permanently set the mirror in your `.Rprofile`.
+To avoid setting the CRAN mirror each time you run `install.packages()` you can permanently set the mirror in your `.Rprofile`.
 
 
 ```r
@@ -910,16 +789,11 @@ local({
 })
 ```
   
-The RStudio mirror is a virtual machine run by Amazon's 
-EC2 service, and it syncs with the main CRAN mirror in Austria once per day. 
-Since RStudio is using Amazon's CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn't need to travel very far, and is therefore fast to download.
+The RStudio mirror is a virtual machine run by Amazon's EC2 service, and it syncs with the main CRAN mirror in Austria once per day.  Since RStudio is using Amazon's CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn't need to travel very far, and is therefore fast to download.
 
 #### The **fortunes** package
 
-This section illustrates the power of `.Rprofile` customisation with reference to a
-package that was developed for fun. The code below could easily be altered to
-automatically connect to a database, or ensure that the latest packages have been
-downloaded.
+This section illustrates the power of `.Rprofile` customisation with reference to apackage that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.
 
 The **fortunes** package contains a number of memorable quotes that the community has collected over many years, called R fortunes. Each fortune has a number. To get fortune number $50$, for example, enter
 
@@ -927,8 +801,8 @@ The **fortunes** package contains a number of memorable quotes that the communit
 ```r
 fortunes::fortune(50)
 #> 
-#> To paraphrase provocatively, 'machine learning is statistics minus any
-#> checking of models and assumptions'.
+#> To paraphrase provocatively, 'machine learning is statistics minus any checking
+#> of models and assumptions'.
 #>    -- Brian D. Ripley (about the difference between machine learning and
 #>       statistics)
 #>       useR! 2004, Vienna (May 2004)
@@ -942,20 +816,13 @@ if(interactive())
   try(fortunes::fortune(), silent = TRUE)
 ```
 
-The `interactive()` function tests whether R is being used interactively in a terminal.
-The `fortune()` function is called within `try()`. If the **fortunes** package is not
-available, we avoid raising an error and move on. By using `::` we avoid adding the
-**fortunes** package to our list of attached packages.
+The `interactive()` function tests whether R is being used interactively in a terminal. The `fortune()` function is called within `try()`. If the **fortunes** package is not available, we avoid raising an error and move on. By using `::` we avoid adding the **fortunes** package to our list of attached packages.
 
 <div class="rmdtip">
 <p>Typing <code>search()</code>, gives the list of attached packages. By using <code>fortunes::fortune()</code> we avoid adding the <strong>fortunes</strong> package to that list.</p>
 </div>
 
-The function `.Last()`, if it exists in the `.Rprofile`, is always run 
-at the end of the session.
-We can use it to install the **fortunes** package if needed. To load
-the package, we use `require()`, since if the package isn't installed, the `require()` function
-returns `FALSE` and raises a warning.
+The function `.Last()`, if it exists in the `.Rprofile`, is always run at the end of the session. We can use it to install the **fortunes** package if needed. To load the package, we use `require()`, since if the package isn't installed, the `require()` function returns `FALSE` and raises a warning.
 
 
 ```r
@@ -994,8 +861,7 @@ nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
 Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
 Shortening long function names for interactive (but not reproducible code writing) is another option for using `.Rprofile` to increase efficiency.
-If you frequently use `View()`, for example, you may be able to save time by referring to it
-in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
+If you frequently use `View()`, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
 
 
 ```r
@@ -1013,12 +879,8 @@ setwd("R")
 
 #### Creating hidden environments with .Rprofile
 
-Beyond making your code less portable, another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space:
-when you run the `ls()` command, your `.Rprofile` functions will appear.
-Also if you run `rm(list = ls())`, your functions will be deleted. 
-One neat trick to overcome this issue is to use hidden objects and environments. When an object
-name starts with `.`, by default it doesn't appear in the output of the
-`ls()` function
+Beyond making your code less portable, another downside of putting functions in your `.Rprofile` is that it can clutter-up your work space: 
+when you run the `ls()` command, your `.Rprofile` functions will appear. Also if you run `rm(list = ls())`, your functions will be deleted. One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with `.`, by default it doesn't appear in the output of the `ls()` function
 
 
 ```r
@@ -1027,8 +889,7 @@ name starts with `.`, by default it doesn't appear in the output of the
 #> [1] FALSE
 ```
 
-This concept also works with environments. In the `.Rprofile` file
-we can create a _hidden_ environment
+This concept also works with environments. In the `.Rprofile` file we can create a _hidden_ environment
 
 
 ```r
@@ -1042,8 +903,7 @@ and then add functions to this environment
 .env$ht = function(d, n = 6) rbind(head(d, n), tail(d, n))
 ```
 
-At the end of the `.Rprofile` file, we use
-`attach`, which makes it possible to refer to objects in the environment by their names alone.
+At the end of the `.Rprofile` file, we use `attach`, which makes it possible to refer to objects in the environment by their names alone.
 
 
 ```r
@@ -1056,10 +916,8 @@ attach(.env)
   
 ### The `.Renviron` file {#renviron}
 
-The `.Renviron` file is used to store system variables. It follows a similar
-start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for
-local versions. A typical use of the `.Renviron` file is to
-specify the `R_LIBS` path, which determines where new packages are installed:
+The `.Renviron` file is used to store system variables. It follows a similar start-up routine to the `.Rprofile` file: R first looks for a global `.Renviron` file, then for local versions. A typical use of the `.Renviron` file is to specify the `R_LIBS` path, which determines where new packages are installed:
+
 
 ```bash
 # Linux
@@ -1076,12 +934,7 @@ Sys.getenv("R_LIBS_USER")
 #> [1] "/home/travis/R/Library"
 ```
 
-All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments.
-Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`.
-`HOME`, for example, which can be seen with `Sys.getenv("HOME")`, is
-taken from the operating system's list of environment variables.
-A list of the most important environment variables that can affect R's behaviour is documented in the
-little known help page `help("environment variables")`.
+All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments. Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`. `HOME`, for example, which can be seen with `Sys.getenv("HOME")`, is taken from the operating system's list of environment variables. A list of the most important environment variables that can affect R's behaviour is documented in the little known help page `help("environment variables")`.
 
 To set or unset an environment variable for the duration of a session, use the following commands:
 
@@ -1091,72 +944,49 @@ Sys.setenv("TEST" = "test-string") # set an environment variable for the session
 Sys.unsetenv("TEST") # unset it
 ```
 
-Another common use of `.Renviron` is to store API keys and authentication tokens that will be available
-from one session to another.^[See
-[`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)
-from the `httr` package for more on
-this.]
-A common use case is setting the 'envvar' `GITHUB_PAT`, which will be detected by the **devtools** package
-via the function `github_pat()`.
-To take another example, the following line in `.Renviron`
-sets the `ZEIT_KEY` environment variable which is used in the
-**[diezeit](https://cran.r-project.org/web/packages/diezeit/)** package:
+Another common use of `.Renviron` is to store API keys and authentication tokens that will be available from one session to another.^[See [`vignette("api-packages")`](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html) from the `httr` package for more on this.]
+A common use case is setting the 'envvar' `GITHUB_PAT`, which will be detected by the **devtools** package via the function `github_pat()`. To take another example, the following line in `.Renviron` sets the `ZEIT_KEY` environment variable which is used in the **[diezeit](https://cran.r-project.org/web/packages/diezeit/)** package:
 
 
 ```bash
 ZEIT_KEY=PUT_YOUR_KEY_HERE
 ```
 
-You will need to sign-in and start a new R session for the environment variable
-(accessed by `Sys.getenv()`) to be visible. To test if the example API key has been
-successfully added as an environment variable, run the following:
+You will need to sign-in and start a new R session for the environment variable (accessed by `Sys.getenv()`) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:
 
 
 ```r
 Sys.getenv("ZEIT_KEY")
 ```
 
-Use of the `.Renviron` file for storing settings such as library paths and API keys is
-efficient because it reduces the need to update your settings for every R session.
-Furthermore, the same `.Renviron` file will work across different platforms so keep it
-stored safely.
+Use of the `.Renviron` file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session. Furthermore, the same `.Renviron` file will work across different platforms so keep it stored safely.
 
 #### Example `.Renviron` file
 
-My `.Renviron` file has grown over the years. I often switch between my desktop and
-laptop computers, so to maintain a consistent working environment, I have the same
-`.Renviron` file on all of my machines. As well as containing an `R_LIBS` entry and
-some API keys, my `.Renviron` has a few other lines:
+My `.Renviron` file has grown over the years. I often switch between my desktop and laptop computers, so to maintain a consistent working environment, I have the same `.Renviron` file on all of my machines. As well as containing an `R_LIBS` entry and some API keys, my `.Renviron` has a few other lines:
 
-  * `TMPDIR=/data/R_tmp/`. When R is running, it creates temporary copies. On my work
-    machine, the default directory is a network drive. 
+  * `TMPDIR=/data/R_tmp/`. When R is running, it creates temporary copies. On my work machine, the default directory is a network drive. 
   
   * `R_COMPILE_PKGS=3`. Byte compile all packages (covered in Chapter \@ref(programming)).
   
-  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to 
-    look for packages. My University has a site-wide directory that contains out of date 
-    packages. I want to avoiding using this directory.
+  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoiding using this directory.
 
-  * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the 
-    packages to load. Note I don't load the `datasets` package, but I ensure that 
-    `methods` is always loaded. Due to historical reasons, 
-    the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
+  * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the packages to load. Note I don't load the `datasets` package, but I ensure that `methods` is always loaded. Due to historical reasons, the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
 
 #### Exercises {-}
 
-1. What are the three locations where the startup files are stored? Where are these
-locations on your computer?
+1. What are the three locations where the startup files are stored? Where are these locations on your computer?
 
 2. For each location, does a `.Rprofile` or `.Renviron` file exist?
+
 3. Create a `.Rprofile` file in your current working directory that prints the message `Happy efficient R programming` each time you start R at this location.
+
 4. What happens to the startup files in `R_HOME` if you create them in `HOME` or local project directories? 
 
 ## RStudio {#rstudio}
 
 RStudio is an Integrated Development Environment (IDE) for R.
-It makes life easy for R users and developers with its intuitive and flexible interface.
-RStudio encourages good programming practice.
-Through its wide range of features RStudio can help make you a more efficient and productive R programmer. RStudio can, for example, greatly reduce the amount of time spent remembering and typing function names thanks to intelligent autocompletion.
+It makes life easy for R users and developers with its intuitive and flexible interface. RStudio encourages good programming practice. Through its wide range of features RStudio can help make you a more efficient and productive R programmer. RStudio can, for example, greatly reduce the amount of time spent remembering and typing function names thanks to intelligent autocompletion.
 Some of the most important features of RStudio include:
 
 - Flexible window pane layouts to optimise use of screen space and enable fast interactive visual feed-back.
@@ -1188,8 +1018,7 @@ Alt+H U
 ```
 
 On Mac it works differently.
-`Cmd+?` should activate a search across menu items,
-allowing the same operation can be achieved with:
+`Cmd+?` should activate a search across menu items, allowing the same operation can be achieved with:
 
 ```
 Cmd+? update
@@ -1226,6 +1055,7 @@ Test out the multi-panel RStudio workflow by following the steps below:
 1. Create a new folder for the input data using the **Files pane**.
 
 2. Type in `downl` in the **Source pane** and hit `Enter` to make the function `download.file()` autocomplete. Then type `"`, which will autocomplete to `""`, paste the URL of a file to download (e.g. `https://www.census.gov/2010census/csv/pop_change.csv`) and a file name (e.g. `pop_change.csv`).
+
 3. Execute the full command with `Ctrl-Enter`:
 
     
@@ -1266,17 +1096,13 @@ Most of these are self-explanatory but it is worth mentioning a few that can boo
 
 - R version settings allow RStudio to 'point' to different R versions/interpreters, which may be faster for some projects.
 
-- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make
-starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this 
-reason we recommend you untick this box.
+- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this reason we recommend you untick this box.
 
 - Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling `Vim mode` makes RStudio act as a (partial) Vim emulator.
 
-- Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work.
-This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.
+- Diagnostic settings can make RStudio more efficient by adding additional diagnostics or by removing diagnostics if they are slowing down your work. This may be an issue for people using RStudio to analyse large datasets on older low-spec computers.
 
-- Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen.
-Other options in this area relate more to aesthetics. Settings such as font type and background color are also important because feeling comfortable in your programming environment can boost productivity. Go to `Tools > Global Options` to modify these.
+- Appearance: if you are struggling to see the source code, changing the default font size may make you a more efficient programmer by reducing the time overheads associated with squinting at the screen. Other options in this area relate more to aesthetics. Settings such as font type and background color are also important because feeling comfortable in your programming environment can boost productivity. Go to `Tools > Global Options` to modify these.
 
 
 
@@ -1288,7 +1114,7 @@ In this case two options would be displayed: `rnbinom` and `rnorm`, providing a 
 RStudio builds on this functionality and takes it to a new level.
 
 <div class="rmdtip">
-<p>The default settings for autocompletion in RStudio work well. They are intuitive and are likely to work well for many users, especially beginners. However, RStudio's autocompletion options can be modified, by navigating to <strong>Tools &gt; Global Options &gt; Code &gt; Completion</strong> in RStudio's top level menu.</p>
+<p>The default settings for autocompletion in RStudio work well. They are intuitive and are likely to work well for many users, especially beginners. However, RStudio’s autocompletion options can be modified, by navigating to <strong>Tools &gt; Global Options &gt; Code &gt; Completion</strong> in RStudio’s top level menu.</p>
 </div>
 
 Instead of only auto completing options when `Tab` is pressed, RStudio auto completes them at any point.
@@ -1331,8 +1157,7 @@ It is worth spending time identifying which of these could be useful in your wor
 The power of these autocompletion capabilities can be further enhanced by setting your own keyboard shortcuts.
 However, as with setting `.Rprofile` and `.Renviron` settings, this risks reducing the portability of your workflow.
 
-Some more [useful](http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/) shortcuts are listed below.
-There are many more gems to find that could boost your R writing productivity:
+Some more useful shortcuts are listed below:
 
 - `Ctrl+Z/Shift+Z`: Undo/Redo.
 - `Ctrl+Enter`: Execute the current line or code selection in the Source pane.
@@ -1395,11 +1220,7 @@ project/
 Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are 'first class citizens' within the project's design, each with their own folder.
 
 Another approach to project management is to treat projects as R packages.
-This is not recommended for most use cases, as it places restrictions on where you can put files.
-However, if the aim is *code development and sharing*, creating a small R package may be the way forward, even
-if you never intend to submit it on CRAN.
-Creating R packages is easier than ever before, as documented in [@cotton_learning_2013] and, more recently [@Wickham_2015].
-The **devtools** package helps manage R's quirks, making the process much less painful.
+This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is *code development and sharing*, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in [@cotton_learning_2013] and, more recently [@Wickham_2015]. The **devtools** package helps manage R's quirks, making the process much less painful.
 If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using `devtools::install_github("username/projectname")`, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.
 
 Note that a `set-up.R` or even a `.Rprofile` file in the project's root directory enable project-specific settings to be loaded each time people work on the project.
@@ -1427,10 +1248,9 @@ This should therefore be seen as an advanced section: if you are not interested 
 Many statistical algorithms manipulate matrices. R uses the Basic Linear Algebra System (BLAS) framework for linear algebra operations. Whenever we carry out a matrix operation, such as transpose or finding the inverse, we use the underlying BLAS library. By switching to a different BLAS library, it may be possible to speed-up your R code. Changing your BLAS library is straightforward if you are using Linux, but can be tricky for Windows users.
 
 The two open source alternative BLAS libraries are [ATLAS](http://math-atlas.sourceforge.net/) and [OpenBLAS](https://github.com/xianyi/OpenBLAS). The [Intel MKL](https://software.intel.com/en-us/intel-mkl) is another implementation,
-designed for Intel processors by Intel and used in Revolution R
-(described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching your BLAS library, linear algebra operations can run several times faster than with the base BLAS routines. 
+designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching your BLAS library, linear algebra operations can run several times faster than with the base BLAS routines. 
 
-If you use Linux, you can check whether you have a BLAS library setting with the following function, from **benchmarkme**:
+If you use macOS or Linux, you can check whether you have a BLAS library setting with the following function, from **benchmarkme**:
 
 
 ```r
@@ -1447,25 +1267,20 @@ As an illustrative test of the performance gains offered by BLAS, the following 
 res = benchmark_std() # run a suit of tests to test R's performance
 ```
 
-It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around
-150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests,
-as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests
-are highly dependent on the particularities of each computer. However, it clearly
-shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci
-numbers) are not much faster, whereas matrix calculations and functions receive a
-substantial speed boost. This demonstrates that the speed-up you can expect from BLAS
-depends heavily on the type of computations you are undertaking.
+It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are not much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
+
+(ref:blas-bench) Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/blas-bench-1.png" alt="Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`)." width="70%" />
-<p class="caption">(\#fig:blas-bench)Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).</p>
+<img src="_main_files/figure-html/blas-bench-1.png" alt="(ref:blas-bench)" width="70%" />
+<p class="caption">(\#fig:blas-bench)(ref:blas-bench)</p>
 </div>
 
 ### Other interpreters
 
 The R *language* can be separated from the R *interpreter*. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.
 
-  * [Microsoft R Open](http://www.revolutionanalytics.com/microsoft-r-open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.
+  * [Microsoft R Open](https://mran.microsoft.com/open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.
   * [Rho](https://github.com/rho-devel/rho) (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).
 
  * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
@@ -1497,26 +1312,20 @@ knit: "bookdown::preview_chapter"
 
 # Efficient programming {#programming}
  
-Many people who use R would not describe themselves as "programmers". Instead they tend to
-have advanced domain level knowledge, understand standard R data
-structures, such as vectors and data frames, but have little formal training in computing.
-Sound familiar? In that case this chapter is for you.
+Many people who use R would not describe themselves as "programmers". Instead they tend to have advanced domain level knowledge, understand standard R data structures, such as vectors and data frames, but have little formal training in computing. Sound familiar? In that case this chapter is for you.
 
-In this
-chapter we will discuss "big picture" programming techniques. We cover general concepts and R programming
-techniques about code optimisation, before describing idiomatic programming
-structures. We conclude the chapter by examining relatively easy ways of speeding up
-code using the **compiler** package and parallel processing, using multiple CPUs.
+In this chapter we will discuss "big picture" programming techniques. We cover general concepts and R programming techniques about code optimisation, before describing idiomatic programming structures. We conclude the chapter by examining relatively easy ways of speeding up code using the **compiler** package and parallel processing, using multiple CPUs.
 
 ### Prerequisites {-}
 
-In this chapter we introduce two new packages, **compiler** and **memoise**. The **compiler**
-package comes with R, so it will already be installed.
+In this chapter we introduce two new packages, **compiler** and **memoise**. The **compiler** package comes with R, so it will already be installed.
+
 
 ```r
 library("compiler")
 library("memoise")
 ```
+
 We also use the **pryr** and **microbenchmark** packages in the exercises.
 
 
@@ -1530,23 +1339,15 @@ We also use the **pryr** and **microbenchmark** packages in the exercises.
 
 ## General advice {#general}
 
-Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of
-every variable used, give you the burdensome responsibility of memory management and have to be compiled. The
-advantage of such languages, compared with R, is that they are faster to run.
-The disadvantage is that they take longer to learn and can not be run interactively.
+Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of every variable used, give you the burdensome responsibility of memory management and have to be compiled. The advantage of such languages, compared with R, is that they are faster to run. The disadvantage is that they take longer to learn and can not be run interactively.
 
 <div class="rmdnote">
 <p>The wikipedia page on compiler optimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).</p>
 </div>
 
-R users don't tend to worry about data types.
-This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going
-parallel can double speed, poor code can easily run 100's of times slower, so it's important to understand the causes of slow code. These are covered in @Burns2011, which should be considered essential
-reading for any aspiring R programmers.
+R users don't tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run 100's of times slower, so it's important to understand the causes of slow code. These are covered in @Burns2011, which should be considered essential reading for any aspiring R programmers.
 
-Ultimately calling an R function always ends up calling some underlying C/Fortran
-code. For example the base R function `runif()` only contains a single line that
-consists of a call to `C_runif()`.
+Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function `runif()` only contains a single line that consists of a call to `C_runif()`.
 
 
 ```r
@@ -1554,19 +1355,21 @@ function (n, min = 0, max = 1)
   .Call(C_runif, n, min, max)
 ```
 
-A **golden rule** in R programming is to access the underlying C/Fortran routines as
-quickly as possible; the fewer functions calls required to achieve this, the better.
-For example, suppose `x` is a standard vector of length `n`. Then
+A **golden rule** in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose `x` is a standard vector of length `n`. Then
+
 
 ```r
 x = x + 1
 ```
+
 involves a single function call to the `+` function. Whereas the `for` loop
+
 
 ```r
 for(i in seq_len(n)) 
   x[i] = x[i] + 1 
 ```
+
 has
 
   * `n` function calls to `+`;
@@ -1574,8 +1377,7 @@ has
   * `n` function calls to the `[<-` function (used in the assignment operation);
   *  Two function calls: one to `for` and another to `seq_len()`. 
 
-It isn't that the `for` loop is slow, rather it is because we have many more function
-calls. Each individual function call is quick, but the total combination is slow.
+It isn't that the `for` loop is slow, rather it is because we have many more function calls. Each individual function call is quick, but the total combination is slow.
 
 <div class="rmdnote">
 <p>Everything in R is a function call. When we execute <code>1 + 1</code>, we are actually executing <code>'+'(1, 1)</code>.</p>
@@ -1583,20 +1385,17 @@ calls. Each individual function call is quick, but the total combination is slow
 
 #### Exercise {-}
 
-Use the **microbenchmark** package to compare the vectorised construct `x = x + 1`, to the
-`for` loop version. Try varying the size of the input vector.
+Use the **microbenchmark** package to compare the vectorised construct `x = x + 1`, to the `for` loop version. Try varying the size of the input vector.
 
 ### Memory allocation
 
-Another general technique is to be careful with memory allocation. If possible
-pre-allocate your vector then fill in the values.
+Another general technique is to be careful with memory allocation. If possible pre-allocate your vector then fill in the values.
 
 <div class="rmdtip">
 <p>You should also consider pre-allocating memory for data frames and lists. Never grow an object. A good rule of thumb is to compare your objects before and after a <code>for</code> loop; have they increased in length?</p>
 </div>
 
-Let's consider three methods of creating a sequence of numbers. __Method 1__ creates
-an empty vector and gradually increases (or grows) the length of the vector
+Let's consider three methods of creating a sequence of numbers. __Method 1__ creates an empty vector and gradually increases (or grows) the length of the vector
 
 
 ```r
@@ -1607,8 +1406,9 @@ method1 = function(n) {
   vec
 }
 ```
-__Method 2__ creates an object of the final length and then changes the values in the
-object by subscripting:
+
+__Method 2__ creates an object of the final length and then changes the values in the object by subscripting:
+
 
 ```r
 method2 = function(n) {
@@ -1618,24 +1418,23 @@ method2 = function(n) {
   vec
 }
 ```
+
 __Method 3__ directly creates the final object
+
 
 ```r
 method3 = function(n) seq_len(n)
 ```
+
 To compare the three methods we use the `microbenchmark()` function from the previous chapter
+
 
 ```r
 microbenchmark(times = 100, unit = "s", 
                method1(n), method2(n), method3(n))
 ```
 
-The table below shows the timing in seconds on my machine for these three methods for
-a selection of values of `n`. The relationships for varying `n` are all roughly linear
-on a log-log scale, but the timings between methods are drastically different. Notice
-that the timings are no longer trivial. When $n=10^7$, method $1$ takes around an hour
-whilst method $2$ takes $2$ seconds and method $3$ is almost instantaneous. Remember
-the golden rule; access the underlying C/Fortran code as quickly as possible.
+The table below shows the timing in seconds on my machine for these three methods for a selection of values of `n`. The relationships for varying `n` are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When $n=10^7$, method $1$ takes around an hour whilst method $2$ takes $2$ seconds and method $3$ is almost instantaneous. Rememberthe golden rule; access the underlying C/Fortran code as quickly as possible.
 
 $n$ | Method 1 | Method 2 | Method 3 
 ----|----------|----------|---------
@@ -1643,28 +1442,23 @@ $10^5$ | $\phantom{000}0.21$    | $0.02$ | $0.00$
 $10^6$ | $\phantom{00}25.50$    | $0.22$ | $0.00$
 $10^7$ | $3827.00$              | $2.21$ | $0.00$
 
-Table: Time in seconds to create sequences. When $n=10^7$, method $1$ takes around an
-hour while the other methods take less than $3$ seconds.
+Table: Time in seconds to create sequences. When $n=10^7$, method $1$ takes around an hour while the other methods take less than $3$ seconds.
 
 ### Vectorised code
 
 <div class="rmdnote">
-<p>Technically <code>x = 1</code> creates a vector of length <span class="math inline">1</span>. In this section, we use <em>vectorised</em> to indicate that functions work with vectors of all lengths.</p>
+<p>Technically <code>x = 1</code> creates a vector of length <span class="math inline">\(1\)</span>. In this section, we use <em>vectorised</em> to indicate that functions work with vectors of all lengths.</p>
 </div>
 
-Recall the __golden rule__ in R programming, access the underlying C/Fortran routines
-as quickly as possible; the fewer functions calls required to achieve this, the
-better. With this mind, many R functions are _vectorised_,  that is
-the function's inputs and/or outputs naturally work with vectors, reducing the
-number of function calls required. For example, the code
+Recall the __golden rule__ in R programming, access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. With this mind, many R functions are _vectorised_,  that is the function's inputs and/or outputs naturally work with vectors, reducing the number of function calls required. For example, the code
+
 
 ```r
 x = runif(n) + 1
 ```
-performs two vectorised operations. First `runif()` returns `n` random numbers. Second
-we add `1` to each element of the vector. In general it is a good idea to exploit
-vectorised functions. Consider this piece of R code that calculates the sum of
-$\log(x)$
+
+performs two vectorised operations. First `runif()` returns `n` random numbers. Second we add `1` to each element of the vector. In general it is a good idea to exploit vectorised functions. Consider this piece of R code that calculates the sum of $\log(x)$
+
 
 ```r
 log_sum = 0
@@ -1675,19 +1469,21 @@ for(i in 1:length(x))
 <div class="rmdwarning">
 <p>Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code> has length zero. Instead use <code>seq_along(x)</code> or <code>seq_len(length(x))</code>.</p>
 </div>
+
 This code could easily be vectorised via
+
 
 ```r
 log_sum = sum(log(x))
 ```
+
 Writing code this way has a number of benefits.
 
   * It's faster. When $n = 10^7$ the _R way_ is about forty times faster.
   * It's neater.
   * It doesn't contain a bug when `x` is of length $0$.
   
-As with the general example in section \@ref(general), the slowdown isn't due to
-the `for` loop. Instead, it's because there are many more functions calls.
+As with the general example in section \@ref(general), the slowdown isn't due to the `for` loop. Instead, it's because there are many more functions calls.
 
 #### Exercises {-}
 
@@ -1696,13 +1492,11 @@ the `for` loop. Instead, it's because there are many more functions calls.
 
 #### Example: Monte-Carlo integration {-}
 
-It's also important to make full use of R functions that use vectors. For example,
-suppose we wish to estimate the integral
+It's also important to make full use of R functions that use vectors. For example, suppose we wish to estimate the integral
 \[
 \int_0^1 x^2 dx
 \]
-using a Monte-Carlo method. Essentially, we throw darts at the curve and count
-the number of darts that fall below the curve (as in \@ref(fig:3-1)).
+using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in \@ref(fig:3-1)).
 
 _Monte Carlo Integration_
 
@@ -1714,6 +1508,7 @@ _Monte Carlo Integration_
 1. Area estimate = `hits/N`
 
 Implementing this Monte-Carlo algorithm in R would typically lead to something like:
+
 
 ```r
 monte_carlo = function(N) {
@@ -1727,15 +1522,19 @@ monte_carlo = function(N) {
   return(hits / N)
 }
 ```
+
 In R this takes a few seconds
+
 
 ```r
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.94    0.16    3.10
+#>   2.224   0.008   2.233
 ```
+
 In contrast a more R-centric approach would be
+
 
 ```r
 monte_carlo_vec = function(N) sum(runif(N)^2 > runif(N))/N
@@ -1756,41 +1555,35 @@ The function `monte_carlo_vec()` is around $30$ times faster than `monte_carlo()
 
 ### Exercise {-}
 
-Verify that `monte_carlo_vec()` is faster than `monte_carlo()`. How does this relate to 
-the number of darts, i.e. the size of `N`, that is used
+Verify that `monte_carlo_vec()` is faster than `monte_carlo()`. How does this relate to the number of darts, i.e. the size of `N`, that is used
 
 ## Communicating with the user
 
-When we create a function we often want the function to give efficient feedback on the
-current state. For example, are there missing arguments or has a numerical calculation
-failed. There are three main techniques for communicating with the user.
+When we create a function we often want the function to give efficient feedback on the current state. For example, are there missing arguments or has a numerical calculation failed. There are three main techniques for communicating with the user.
 
 ### Fatal errors: `stop()` {-}
 
-Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When
-`stop()` is called, there is no way for a function to continue. For instance, when we
-generate random numbers using `rnorm()` the first argument is the sample size,`n`. If
-the number of observations to return is less than $1$, an error is raised. When we need
-to raise an error, we should do so as quickly as possible; otherwise it's a waste of
-resources. Hence, the first few lines of a function typically perform argument checking.
+Fatal errors are raised by calling the `stop()`, i.e. execution is terminated. When `stop()` is called, there is no way for a function to continue. For instance, when we generate random numbers using `rnorm()` the first argument is the sample size,`n`. If the number of observations to return is less than $1$, an error is raised. When we need to raise an error, we should do so as quickly as possible; otherwise it's a waste of resources. Hence, the first few lines of a function typically perform argument checking.
 
-Suppose we call a function that raises an error. What then? Efficient, robust code
-_catches_ the error and handles it appropriately. Errors can be caught using `try()`
-and `tryCatch()`. For example,
+Suppose we call a function that raises an error. What then? Efficient, robust code _catches_ the error and handles it appropriately. Errors can be caught using `try()` and `tryCatch()`. For example,
+
 
 ```r
 # Suppress the error message
 good = try(1 + 1, silent = TRUE)
 bad = try(1 + "1", silent = TRUE)
 ```
+
 When we inspect the objects, the variable `good` just contains the number `2`
+
 
 ```r
 good
 #> [1] 2
 ```
-However, the `bad` object is a character string with class `try-error` and a `condition`
-attribute that contains the error message
+
+However, the `bad` object is a character string with class `try-error` and a `condition` attribute that contains the error message
+
 
 ```r
 bad
@@ -1800,24 +1593,22 @@ bad
 #> attr(,"condition")
 #> <simpleError in 1 + "1": non-numeric argument to binary operator>
 ```
+
 We can use this information in a standard conditional statement
+
 
 ```r
 if(class(bad) == "try-error")
   # Do something 
 ```
-Further details on error handling, as well as some excellent advice on general
-debugging techniques, are given in [@Wickham2014].
+
+Further details on error handling, as well as some excellent advice on general debugging techniques, are given in [@Wickham2014].
 
 ### Warnings: `warning()` {-}
 
-Warnings are generated using the `warning()` function. When a warning is raised, it
-indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a
-warning. 
+Warnings are generated using the `warning()` function. When a warning is raised, it indicates potential problems. For example, `mean(NULL)` returns `NA` and also raises a warning. 
 
-When we come across a warning in our code, it is important to solve the problem and
-not just ignore the issue. While ignoring warnings saves time in the short-term, warnings
-can often mask deeper issues that have crept into our code.
+When we come across a warning in our code, it is important to solve the problem and not just ignore the issue. While ignoring warnings saves time in the short-term, warnings can often mask deeper issues that have crept into our code.
 
 <div class="rmdnote">
 <p>Warnings can be hidden using <code>suppressWarnings()</code>.</p>
@@ -1825,27 +1616,18 @@ can often mask deeper issues that have crept into our code.
 
 ### Informative output: `message()` and `cat()` {-}  
   
-To give informative output, use the `message()` function. For example, in the
-**poweRlaw** package, the `message()` function is used to give the user an estimate of
-expected run time. Providing a rough estimate of how long the function takes, allows the user to
-optimise their time. Similar to warnings, messages can be suppressed with
-`suppressMessages()`.
+To give informative output, use the `message()` function. For example, in the **poweRlaw** package, the `message()` function is used to give the user an estimate of expected run time. Providing a rough estimate of how long the function takes, allows the user to optimise their time. Similar to warnings, messages can be suppressed with `suppressMessages()`.
   
-Another function used for printing messages is `cat()`. In general `cat()` should only be
-used in `print()`/`show()` methods, e.g. look at the function definition of the
-S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
+Another function used for printing messages is `cat()`. In general `cat()` should only be used in `print()`/`show()` methods, e.g. look at the function definition of the S3 print method for `difftime` objects, `getS3method("print", "difftime")`.
 
 ### Exercises {-}
 
-The `stop()` function has an argument `call.` that indicates if the function call
-should be part of the error message. Create a function and experiment with this option.
+The `stop()` function has an argument `call.` that indicates if the function call should be part of the error message. Create a function and experiment with this option.
 
 ### Invisible returns 
 
-The `invisible()` function allows you to return a temporarily invisible copy of an
-object. This is particularly useful for functions that return values which can be
-assigned, but are not printed when they are not assigned. For example suppose we have
-a function that plots the data and fits a straight line
+The `invisible()` function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line
+
 
 ```r
 regression_plot = function(x, y, ...) {
@@ -1860,28 +1642,22 @@ regression_plot = function(x, y, ...) {
   invisible(model)
 }
 ```
-When the function is called, a scatter graph is plotted with the line of best fit, but
-the output is invisible. However when we assign the function to an object, i.e. 
-`out = regression_plot(x, y)` the variable `out` contains the output of the `lm()` call.
 
-Another example is `hist()`. Typically we don't want anything displayed in the console
-when we call the function
+When the function is called, a scatter graph is plotted with the line of best fit, but the output is invisible. However when we assign the function to an object, i.e.  `out = regression_plot(x, y)` the variable `out` contains the output of the `lm()` call.
+
+Another example is `hist()`. Typically we don't want anything displayed in the console when we call the function
+
 
 ```r
 hist(x)
 ```
-However if we assign the output to an object, `out = hist(x)`, the object `out` is
-actually a list containing, _inter alia_, information on the mid-points, breaks and
-counts. 
+
+However if we assign the output to an object, `out = hist(x)`, the object `out` is actually a list containing, _inter alia_, information on the mid-points, breaks and counts. 
 
 ## Factors
 
-Factors are much maligned objects. While at times they are awkward, they do have their
-uses. A factor is used to store categorical variables. This data type is unique to R
-(or at least not common among programming languages). The difference between factors
-and strings is important because R treats factors and strings differently. Although
-factors look similar to character vectors, they are actually integers. This leads to
-initially surprising behaviour
+Factors are much maligned objects. While at times they are awkward, they do have their uses. A factor is used to store categorical variables. This data type is unique to R (or at least not common among programming languages). The difference between factors and strings is important because R treats factors and strings differently. Although factors look similar to character vectors, they are actually integers. This leads to initially surprising behaviour
+
 
 ```r
 x = 4:6
@@ -1890,32 +1666,24 @@ c(x)
 c(factor(x))
 #> [1] 1 2 3
 ```
-In this case the `c()` function is using the underlying integer representation of the
-factor. Dealing with the wrong case of behaviour is a common source of inefficiency for
-R users.
 
-Often categorical variables get stored as $1$, $2$, $3$, $4$, and $5$, with associated
-documentation elsewhere that explains what each number means. This is clearly a pain.
-Alternatively we store the data as a character vector. While this is fine, the
-semantics are wrong because it doesn't convey that this is a categorical variable.
-It's not sensible to say that you should **always** or **never** use factors, since
-factors have both positive and negative features. Instead we need to examine each case
-individually. 
+In this case the `c()` function is using the underlying integer representation of the factor. Dealing with the wrong case of behaviour is a common source of inefficiency for R users.
 
-As a general rule, if your variable has an inherent order, e.g. small vs large, or
-you have a fixed set of categories, then you should consider using a factor.
+Often categorical variables get stored as $1$, $2$, $3$, $4$, and $5$, with associated documentation elsewhere that explains what each number means. This is clearly a pain. Alternatively we store the data as a character vector. While this is fine, the semantics are wrong because it doesn't convey that this is a categorical variable. It's not sensible to say that you should **always** or **never** use factors, since factors have both positive and negative features. Instead we need to examine each case individually. 
+
+As a general rule, if your variable has an inherent order, e.g. small vs large, or you have a fixed set of categories, then you should consider using a factor.
 
 ### Inherent order
 
-Factors can be used for ordering in graphics. For instance, suppose we have a data set
-where the variable `type`, takes one of three values, `small`, `medium` and `large`.
-Clearly there is an ordering. Using a standard `boxplot()` call, 
+Factors can be used for ordering in graphics. For instance, suppose we have a data set where the variable `type`, takes one of three values, `small`, `medium` and `large`. Clearly there is an ordering. Using a standard `boxplot()` call, 
+
 
 ```r
 boxplot(y ~ type)
 ```
-would create a boxplot where the $x$-axis was alphabetically ordered. By converting
-`type` into factor, we can easily specify the correct ordering.
+
+would create a boxplot where the $x$-axis was alphabetically ordered. By converting `type` into factor, we can easily specify the correct ordering.
+
 
 ```r
 boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
@@ -1934,9 +1702,7 @@ Suppose our data set relates to months of the year
 m = c("January", "December", "March")
 ```
 
-If we sort `m` in the usual way, `sort(m)`, we perform standard alpha-numeric
-ordering; placing `December` first. This is technically correct, but not that helpful.
-We can use factors to remedy this problem by specifying the admissible levels
+If we sort `m` in the usual way, `sort(m)`, we perform standard alpha-numeric ordering; placing `December` first. This is technically correct, but not that helpful. We can use factors to remedy this problem by specifying the admissible levels
 
 
 ```r
@@ -1949,31 +1715,31 @@ sort(fac_m)
 
 #### Exercise {-}
 
-Factors are slightly more space efficient than characters. Create a character vector
-and corresponding factor and use `pryr::object_size()` to calculate the space needed for
-each object.
+Factors are slightly more space efficient than characters. Create a character vector and corresponding factor and use `pryr::object_size()` to calculate the space needed for each object.
 
 
 
 ## The apply family
 
-The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to 
-each element of an object. For example, you can apply a function to each row or column of a matrix.
-A list of available functions is given in \@ref(tab:apply-family), with a short description. In
-general, all the apply functions have similar properties:
+The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in \@ref(tab:apply-family), with a short description. In general, all the apply functions have similar properties:
 
   * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
-  * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is
-  given as an argument.
+  * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is given as an argument.
 
-Using apply functions when possible, can lead to more succinct and idiomatic R code. In this section, 
-we will cover the three main functions, `apply()`, `lapply()`, and `sapply()`. Since the apply functions are covered in 
-most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources 
-at the end of this section.
+Using apply functions when possible, can lead to more succinct and idiomatic R code. In this section, we will cover the three main functions, `apply()`, `lapply()`, and `sapply()`. Since the apply functions are covered in  most R textbooks, we just give a brief introduction to the topic and provide pointers to other resources  at the end of this section.
 
 <div class="rmdnote">
 <p>Most people rarely use the other apply functions. For example, I have only used <code>eapply()</code> once. Students in my class uploaded R scripts. Using <code>source()</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply()</code>. Using separate environments, avoided object name clashes.</p>
 </div>
+
+
+```
+#> Warning: `frame_data()` is deprecated as of lifecycle 2.0.0.
+#> Please use `tribble()` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_warnings()` to see where this warning was generated.
+```
+
 
 
 Table: (\#tab:apply-family)The apply family of functions from base R.
@@ -1991,58 +1757,60 @@ Function   Description
 The `apply()` function is used to apply a function to each row or column of a matrix. In many data science
 problems, this is a common task. For example, to calculate the standard deviation of the rows we have
 
+
 ```r
 data("ex_mat", package="efficient")
 # MARGIN=1: corresponds to rows
 row_sd = apply(ex_mat, 1, sd)
 ```
-The first argument of `apply()` is the object of interest. The second argument is the `MARGIN`. 
-This is a vector giving the subscripts which the function (the third argument)
-will be applied over. When the object is a matrix, a margin of `1` indicates rows and `2` indicates columns. 
-So to calculate the column standard deviations, the second argument is changed to `2` 
+
+The first argument of `apply()` is the object of interest. The second argument is the `MARGIN`. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of `1` indicates rows and `2` indicates columns.  So to calculate the column standard deviations, the second argument is changed to `2` 
+
 
 ```r
 col_med = apply(ex_mat, 2, sd)
 ```
-Additional arguments can be passed to the function that is to be applied to the data. For example, 
-to pass the `na.rm` argument to the `sd` function, we have
+
+Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the `na.rm` argument to the `sd` function, we have
+
 
 ```r
 row_sd = apply(ex_mat, 1, sd, na.rm = TRUE)
 ```
-The `apply()` function also works on higher dimensional arrays; a one dimensional array is a vector, 
-a two dimensional array is a matrix.
+
+The `apply()` function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.
 
 The `lapply()` function is similar to `apply()`; with the key difference being that the input type is a vector or list and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions `sapply()` and `vapply()` are similar to `lapply()`, but the return type is not necessary a list.
 
 ### Example: the movies data set
 
-The internet movie [database](http://imdb.com/) is a website that collects movie data supplied 
-by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon.
-The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
+The internet movie [database](http://imdb.com/) is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon. The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
 
 
 ```r
 data(movies, package = "ggplot2movies")
 ```
-Movies are rated between $1$ and $10$ by fans. Columns $7$ to $16$ of the `movies` data set 
-gives the percentage of voters for a particular rating. 
+
+Movies are rated between $1$ and $10$ by fans. Columns $7$ to $16$ of the `movies` data set gives the percentage of voters for a particular rating. 
+
 
 ```r
 ratings = movies[, 7:16]
 ```
+
 For example, 4.5% of voters, rated the first movie a rating of $1$
+
 
 ```r
 ratings[1, ]
-#> # A tibble: 1 × 10
+#> # A tibble: 1 x 10
 #>      r1    r2    r3    r4    r5    r6    r7    r8    r9   r10
 #>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 #> 1   4.5   4.5   4.5   4.5  14.5  24.5  24.5  14.5   4.5   4.5
 ```
-We can use the `apply()` function to investigate voting patterns. The function `nnet::which.is.max()` 
-finds the maximum position in a vector, but breaks ties at random; `which.max()` just returns the first value.
-Using `apply()`, we can easily determine the most popular rating for each movie and plot the results
+
+We can use the `apply()` function to investigate voting patterns. The function `nnet::which.is.max()` finds the maximum position in a vector, but breaks ties at random; `which.max()` just returns the first value. Using `apply()`, we can easily determine the most popular rating for each movie and plot the results
+
 
 ```r
 popular = apply(ratings, 1, nnet::which.is.max)
@@ -2053,16 +1821,13 @@ plot(table(popular))
 <img src="_main_files/figure-html/3-3-1.png" alt="Movie voting preferences." width="70%" />
 <p class="caption">(\#fig:3-3)Movie voting preferences.</p>
 </div>
-Figure \@(fig:3-3) highlights that voting patterns are clearly not uniform between $1$ and $10$. The
-most popular vote is the highest rating, $10$. Clearly if you went to the trouble
-of voting for a movie, it was either very good, or very bad (there is also a peak at $1$). 
-Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings.)
+
+Figure \@(fig:3-3) highlights that voting patterns are clearly not uniform between $1$ and $10$. The most popular vote is the highest rating, $10$. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at $1$).  Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings.)
 
 ### Type consistency
 
-When programming it is helpful if the return value from a function always takes the
-same form. Unfortunately, not all base R functions follow this idiom. For example
-the functions `sapply()` and `[.data.frame()` aren't type consistent
+When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example the functions `sapply()` and `[.data.frame()` aren't type consistent
+
 
 ```r
 two_cols = data.frame(x = 1:5, y = letters[1:5])
@@ -2072,26 +1837,17 @@ sapply(zero_cols, class) # a list
 two_cols[, 1:2]          # a data.frame
 two_cols[, 1]            # an integer vector
 ```
-This can cause unexpected problems. The functions `lapply()` and `vapply()` are type
-consistent. Likewise `dplyr::select()` and `dplyr:filter()`. The **purrr** package has
-some type consistent alternatives to base R functions. For example, `map_dbl()` etc. to
-replace `Map()` and `flatten_df()` to replace `unlist()`.
+
+This can cause unexpected problems. The functions `lapply()` and `vapply()` are type consistent. Likewise for `dplyr::select()` and `dplyr:filter()`. The **purrr** package has some type consistent alternatives to base R functions. For example, `map_dbl()` etc. to replace `Map()` and `flatten_df()` to replace `unlist()`.
 
 #### Other resources {-}
 
-Almost every R book has a section on the apply function. Below, we've given the resources we feel are 
-most helpful.
+Almost every R book has a section on the apply function. Below, we've given the resources we feel are most helpful.
 
-  * Each function has a number of examples in the associated help page. You can directly 
-  access the examples using the `example()` function, e.g. to run the `apply()` examples, use
-  `example("apply")`.
-  * There is a very detailed StackOverflow [answer](http://stackoverflow.com/q/3505701/203420)
-  which describes when, where and how to use each of the functions.
-  * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/)
-  giving an overview of the functions.
-  * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes 
-  the interplay between loops and functional programming in more detail [@grolemund_r_2016], 
-  while @Wickham2014 gives a more in-depth description of the topic.
+  * Each function has a number of examples in the associated help page. You can directly access the examples using the `example()` function, e.g. to run the `apply()` examples, use `example("apply")`.
+  * There is a very detailed StackOverflow [answer](http://stackoverflow.com/q/3505701/203420) which describes when, where and how to use each of the functions.
+  * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/) giving an overview of the functions.
+  * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes the interplay between loops and functional programming in more detail [@grolemund_r_2016], while @Wickham2014 gives a more in-depth description of the topic.
 
 #### Exercises {-}
 
@@ -2102,47 +1858,31 @@ the `drop` argument.
 
 ## Caching variables
 
-A straightforward method for speeding up code is to calculate objects once and reuse
-the value when necessary. This could be as simple as replacing `sd(x)` in multiple
-function calls with the object `sd_x` that is defined once and reused. For example, 
-suppose we wish to normalise each column of a matrix. However, instead of using the
-standard deviation of each column, we will use the standard deviation of the 
-entire data set
+A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing `sd(x)` in multiple function calls with the object `sd_x` that is defined once and reused. For example,  suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the  entire data set
 
 
 ```r
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard
-deviation for every column is unnecessary. Instead we should evaluate once and
-store the result
+This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result
+
 
 ```r
 sd_x = sd(x)
 apply(x, 2, function(i) mean(i) / sd_x)
 ```
 
-If we compare the two methods on a $100$ row by $1000$ column matrix, the cached 
-version is around $100$ times faster (figure \@ref(fig:3-5)).
+If we compare the two methods on a $100$ row by $1000$ column matrix, the cached version is around $100$ times faster (figure \@ref(fig:3-5)).
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/3-5-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
 <p class="caption">(\#fig:3-5)Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.</p>
 </div>
 
-A more advanced form of caching is to use the **memoise** package. If a function is
-called multiple times with the same input, it may be possible to speed things up by
-keeping a cache of known answers that it can retrieve. The **memoise** package allows
-us to easily store the value of function call and returns the cached result when the
-function is called again with the same arguments. This package trades off memory
-versus speed, since the memoised function stores all previous inputs and outputs. To
-cache a function, we simply pass the function to the **memoise** function.
+A more advanced form of caching is to use the **memoise** package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The **memoise** package allows us to easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the **memoise** function.
 
-The classic memoise example is the factorial function. Another example is to limit use
-to a web resource. For example, suppose we are developing a shiny (an interactive
-graphic) application where the user can fit a regression line to data. The user can
-remove points and refit the line. An example function would be
+The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be
 
 
 ```r
@@ -2154,7 +1894,9 @@ plot_mpg = function(row_to_remove) {
   lines(lowess(mpg$cty, mpg$hwy), col = 2)
 }
 ```
+
 We can use **memoise** speed up by caching results. A quick benchmark
+
 
 ```r
 m_plot_mpg = memoise(plot_mpg)
@@ -2164,12 +1906,12 @@ microbenchmark(times = 10, unit = "ms", m_plot_mpg(10), plot_mpg(10))
 #>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a 
 #>    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b
 ```
+
 suggests that we can obtain a $100$-fold speed-up.
 
 #### Exercise {-}
 
-Construct a box plot of timings for the standard plotting function and the memoised
-version. 
+Construct a box plot of timings for the standard plotting function and the memoised version. 
 
 ### Function closures
 
@@ -2177,14 +1919,7 @@ version.
 <p>The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation">[@Wickham2014]</span> for a detailed introduction.</p>
 </div>
 
-More advanced caching is available using _function closures_. A closure in R is an
-object that contains functions bound to the environment the closure was created in.
-Technically all functions in R have this property, but we use the term function
-closure to denote functions where the environment is not in `.GlobalEnv`. One of the
-environments associated with a function is known as the enclosing environment, that
-is, where the function was created. This allows us to store values between function calls.
-Suppose we want to create a stop-watch type function. This is easily achieved with a function 
-closure
+More advanced caching is available using _function closures_. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in `.GlobalEnv`. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function  closure
 
 
 ```r
@@ -2201,67 +1936,59 @@ stop_watch = function() {
 watch = stop_watch()
 ```
 
-The object `watch` is a list, that contains two functions. One function for starting
-the timer
+The object `watch` is a list, that contains two functions. One function for starting the timer
+
 
 ```r
 watch$start()
 ```
+
 the other for stopping the timer
+
 
 ```r
 watch$stop()
 ```
-Without using function closures, the stop-watch function would be longer, more complex and
-therefore more inefficient. When used properly function closures are very useful 
-programming tools for writing concise code.
+
+Without using function closures, the stop-watch function would be longer, more complex and therefore more inefficient. When used properly function closures are very useful  programming tools for writing concise code.
 
 #### Exercise {-}
 
 1. Write a stop-watch function __without__ using function closures.
-1. Many stop-watches have the ability to measure not only your overall time but also your
-individual laps. Add a `lap()` function to the `stop_watch()` function that will record
-individual times, while still keeping track of the overall time.
+1. Many stop-watches have the ability to measure not only your overall time but also your individual laps. Add a `lap()` function to the `stop_watch()` function that will record individual times, while still keeping track of the overall time.
 
 <div class="rmdnote">
-<p>A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute, <code>plot(height, weight)</code> R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is powerful concept that enables us to simplify code. More detail is given in the &quot;Non-standard evaluation&quot; of <span class="citation">[@Wickham2014]</span>.</p>
+<p>A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute, <code>plot(height, weight)</code> R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is powerful concept that enables us to simplify code. More detail is given in the “Non-standard evaluation” of <span class="citation">[@Wickham2014]</span>.</p>
 </div>
 
 ## The byte compiler
 
-The **compiler** package, written by R Core member Luke Tierney has been part of R
-since version 2.13.0. The **compiler** package allows R functions to be compiled,
-resulting in a byte code version that may run faster^[The authors have yet to find a
-situation where byte compiled code runs significantly slower.]. The compilation
-process eliminates a number of costly operations the interpreter has to perform, such
-as variable lookup.
+The **compiler** package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The **compiler** package allows R functions to be compiled, resulting in a byte code version that may run faster^[The authors have yet to find a situation where byte compiled code runs significantly slower.]. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.
 
-Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled
-into byte-code. This is illustrated by the base function `mean()`:
+Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function `mean()`:
 
 
 ```r
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x339ba00>
+#> <bytecode: 0x310adf8>
 #> <environment: namespace:base>
 ```
-The third line contains the `bytecode` of the function. This means that the
-**compiler** package has translated the R function into another language that can be
-interpreted by a very fast interpreter. Amazingly the **compiler** package is almost
-entirely pure R, with just a few C support routines.
+
+The third line contains the `bytecode` of the function. This means that the **compiler** package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the **compiler** package is almost entirely pure R, with just a few C support routines.
 
 ### Example: the mean function
 
-The **compiler** package comes with R, so we just need to load the package in the
-usual way
+The **compiler** package comes with R, so we just need to load the package in the usual way
+
 
 ```r
 library("compiler")
 ```
-Next we create an inefficient function for calculating the mean. This function takes
-in a vector, calculates the length and then updates the `m` variable.
+
+Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the `m` variable.
+
 
 ```r
 mean_r = function(x) {
@@ -2272,12 +1999,14 @@ mean_r = function(x) {
   m
 }
 ```
-This is clearly a bad function and we should just use the `mean()` function, but it's a useful
-comparison. Compiling the function is straightforward
+
+This is clearly a bad function and we should just use the `mean()` function, but it's a useful comparison. Compiling the function is straightforward
+
 
 ```r
 cmp_mean_r = cmpfun(mean_r)
 ```
+
 Then we use the `microbenchmark()` function to compare the three variants
 
 
@@ -2292,9 +2021,8 @@ microbenchmark(times = 10, unit = "ms", # milliseconds
 #>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b 
 #>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  
 ```
-The compiled function is around seven times faster than the uncompiled function. Of
-course the native `mean()` function is faster, but compiling does make a significant
-difference (figure \@ref(fig:3-4)).
+
+The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (figure \@ref(fig:3-4)).
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
@@ -2303,43 +2031,34 @@ difference (figure \@ref(fig:3-4)).
 
 ### Compiling code
 
-There are a number of ways to compile code. The easiest is to compile individual
-functions using `cmpfun()`, but this obviously doesn't scale. If you create a package,
-you can automatically compile the package on installation by adding
+There are a number of ways to compile code. The easiest is to compile individual functions using `cmpfun()`, but this obviously doesn't scale. If you create a package, you can automatically compile the package on installation by adding
 
 ```
 ByteCompile: true
 ```
 
-to the `DESCRIPTION` file. Most R packages installed using `install.packages()` are not
-compiled. We can enable (or force) packages to be compiled by starting R with the
-environment variable `R_COMPILE_PKGS` set to a positive integer value and specify
-that we install the package from `source`, i.e.
+to the `DESCRIPTION` file. Most R packages installed using `install.packages()` are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable `R_COMPILE_PKGS` set to a positive integer value and specify that we install the package from `source`, i.e.
 
 
 ```r
 ## Windows users will need Rtools
 install.packages("ggplot2", type = "source")
 ```
-Or if we want to avoid altering the `.Renviron` file, we can specify an additional
-argument
+
+Or if we want to avoid altering the `.Renviron` file, we can specify an additional argument
 
 
 ```r
 install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile") 
 ```
 
-A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function
-disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement
-different levels of optimisation. JIT can also be enabled by setting the environment
-variable `R_ENABLE_JIT`, to one of these values.
+A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement different levels of optimisation. JIT can also be enabled by setting the environment variable `R_ENABLE_JIT`, to one of these values.
 
 <div class="rmdtip">
 <p>We recommend setting the compile level to the maximum value of 3.</p>
 </div>
 
-The impact of compiling on install will vary from package to package: for packages
-that already have lots of pre-compiled code speed gains will be small [@team2016installation].
+The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code speed gains will be small [@team2016installation].
 
 <div class="rmdwarning">
 <p>Not all packages work if compiled on installation.</p>
@@ -2357,27 +2076,12 @@ knit: "bookdown::preview_chapter"
 
 # Efficient workflow {#workflow}
 
-Efficient programming is an important skill for generating the correct result, on
-time. Yet coding is only one part of a wider skillset needed for successful outcomes
-for projects involving R programming. Unless your project is to write generic R code
-(i.e. unless you are on the R Core Team), the project will probably transcend the
-confines of the R world: it must engage with a whole range of other factors. In this
-context we define 'workflow' as the sum of practices, habits and systems that enable
-productivity.^[The Oxford Dictionary's definition of workflow is similar, with a more
-industrial feel: "The sequence of industrial, administrative, or other processes
-through which a piece of work passes from initiation to completion." ] To some extent
-workflow is about personal preferences. Everyone's mind works differently so the most
-appropriate workflow varies from person to person and from one project to the next.
-Project management practices will also vary depending on the scale and type of the
-project: it's a big topic but can usefully be condensed in 5 top tips.
+Efficient programming is an important skill for generating the correct result, on time. Yet coding is only one part of a wider skillset needed for successful outcomes for projects involving R programming. Unless your project is to write generic R code (i.e. unless you are on the R Core Team), the project will probably transcend the confines of the R world: it must engage with a whole range of other factors. In this context we define 'workflow' as the sum of practices, habits and systems that enable productivity.^[The Oxford Dictionary's definition of workflow is similar, with a more industrial feel: "The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion." ] To some extent workflow is about personal preferences. Everyone's mind works differently so the most appropriate workflow varies from person to person and from one project to the next. Project management practices will also vary depending on the scale and type of the project: it's a big topic but can usefully be condensed in 5 top tips.
 
 ### Prerequisites {-}
 
-This chapter focuses on workflow. For project planning and management, we'll use the 
-**DiagrammeR** package. For project reporting we'll focus on R Markdown and **knitr** which
-are bundled with RStudio (but can be installed independently if needed). We'll suggest
-other packages that are worth investigating, but are not required for this particular 
-chapter.
+This chapter focuses on workflow. For project planning and management, we'll use the **DiagrammeR** package. For project reporting we'll focus on R Markdown and **knitr** which are bundled with RStudio (but can be installed independently if needed). We'll suggest other packages that are worth investigating, but are not required for this particular chapter.
+
 
 ```r
 library("DiagrammeR")
@@ -2404,9 +2108,7 @@ Appropriate project management structures and workflow depend on the *type* of p
 - *Reporting and publishing*.  Here you are writing a report or journal paper or book.  The level of formality varies depending upon the audience, but you have additional worries like how much code it takes to arrive at the conclusions, and how much output does the code create.
 - *Software applications*.  This could range from a simple Shiny app to R being embedded in the server of a much larger piece of software.  Either way, since there is limited opportunity for human interaction, the emphasis is on robust code and gracefully dealing with failure.
 
-Based on these observations we recommend thinking about which type of workflow, file structure and project management system suits your projects best. Sometimes it's best not to be prescriptive so we recommend trying different working practices to discover which works best, time permitting.^[The 
-importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity.
-[Rob Hyndman](http://robjhyndman.com/hyndsight/workflow-in-r/), for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: `load.R`, `clean.R`, `func.R` and `do.R`.
+Based on these observations we recommend thinking about which type of workflow, file structure and project management system suits your projects best. Sometimes it's best not to be prescriptive so we recommend trying different working practices to discover which works best, time permitting.^[The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. [Rob Hyndman](http://robjhyndman.com/hyndsight/workflow-in-r/), for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: `load.R`, `clean.R`, `func.R` and `do.R`.
 ]
 
 There are, however, concrete steps that can be taken to improve workflow in most projects that involve R programming.
@@ -2457,7 +2159,7 @@ which focus exclusively on project planning.  This section condenses some of the
 Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up.
 The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next.
 Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track.
-Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular @PMBoK2000.
+Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular [@PMBoK2000].
 'Chunking' the work will also make collaboration easier, as we shall see in Chapter 5.
 
 <div class="figure" style="text-align: center">
@@ -2480,8 +2182,7 @@ One way to check if an objective is appropriate for action and review is by usin
 
 If the answer to each of these questions is 'yes', the task is likely to be suitable to include in the project's plan.
 Note that this does not mean all project plans need to be uniform.
-A project plan can take many forms, including a short document, a Gantt chart
-(see Figure \@ref(fig:4-2)) or simply a clear vision of the project's steps in mind.
+A project plan can take many forms, including a short document, a Gantt chart(see Figure \@ref(fig:4-2)) or simply a clear vision of the project's steps in mind.
 
 <div class="figure" style="text-align: center">
 <img src="figures/f4_2_DiagrammeR-gantt-book.png" alt="A Gantt chart created using **DiagrammeR** illustrating the steps needed to complete this book at an early stage of its development." width="70%" />
@@ -2491,8 +2192,7 @@ A project plan can take many forms, including a short document, a Gantt chart
 ### Visualising plans with R
 
 Various R packages can help visualise the project plan. 
-While these are useful, they cannot compete with the dedicated project management software outlined at the outset of this section. However, if you are working on relatively simple project, it is useful to know that R can help represent and keep track of your work. Packages for plotting project progress include:^[For
-a more comprehensive discussion of Gantt charts in R,
+While these are useful, they cannot compete with the dedicated project management software outlined at the outset of this section. However, if you are working on relatively simple project, it is useful to know that R can help represent and keep track of your work. Packages for plotting project progress include:^[For a more comprehensive discussion of Gantt charts in R,
 please refer to [stackoverflow.com/questions/3550341](http://stackoverflow.com/questions/3550341/gantt-charts-with-r).]
 
 - the [**plan**](https://cran.r-project.org/web/packages/plan/) package, which provides basic tools to create burndown charts (which concisely show whether a project is on-time or not) and Gantt charts.
@@ -2516,8 +2216,7 @@ mermaid("gantt
 
 In the above code `gantt` defines the subsequent data layout.
 `Section` refers to the project's section (useful for large projects, with milestones) and each new line refers to a discrete task.
-`Planning`, for example, has the code `a`, begins on the first day of 2016 and lasts for 10 days. See [knsv.github.io/mermaid/gantt.html](http://knsv.github.io/mermaid/gantt.html)
-for more detailed documentation.
+`Planning`, for example, has the code `a`, begins on the first day of 2016 and lasts for 10 days. See [knsv.github.io/mermaid/gantt.html](http://knsv.github.io/mermaid/gantt.html) for more detailed documentation.
 
 #### Exercises {-}
 
@@ -2531,11 +2230,7 @@ for more detailed documentation.
 
 ## Package selection
 
-A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection.
-An inefficient, poorly supported or simply outdated package can waste hours.
-When a more appropriate alternative is available this waste can be prevented by prior planning.
-There are many poor packages on CRAN and much duplication so it's easy to go wrong.
-Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
+A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection. An inefficient, poorly supported or simply outdated package can waste hours. When a more appropriate alternative is available this waste can be prevented by prior planning. There are many poor packages on CRAN and much duplication so it's easy to go wrong. Just because a certain package *can* solve a particular problem, doesn't mean that it *should*.
 
 Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don't have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively than the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is *packaged* in functions behind the scenes.
 
@@ -2647,43 +2342,27 @@ Instead of attempting a comprehensive treatment of the topic we will touch brief
 
 ### Dynamic documents with R Markdown
 
-When writing a report using R outputs a typical workflow has historically been to 1)
-do the analysis 2) save the resulting graphics and record the main results outside the
-R project and 3) open a program unrelated to R such as LibreOffice to import and
-communicate the results in prose. This is inefficient: it makes updating and
-maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be
-done again) and there is an overhead involved in jumping between incompatible
-computing environments.
+When writing a report using R outputs a typical workflow has historically been to 1) do the analysis 2) save the resulting graphics and record the main results outside the R project and 3) open a program unrelated to R such as LibreOffice to import and communicate the results in prose. This is inefficient: it makes updating and maintaining the outputs difficult (when the data changes, steps 1 to 3 will have to be done again) and there is an overhead involved in jumping between incompatible computing environments.
 
-To overcome this inefficiency in the documentation of R outputs the R Markdown
-framework was developed. Used in conjunction with the **knitr** package, we have the ability
-to 
+To overcome this inefficiency in the documentation of R outputs the R Markdown framework was developed. Used in conjunction with the **knitr** package, we have the ability to 
 
   * process code chunks (via __knitr__)
   * a notebook interface for R (via RStudio)
   * the ability to render output to multiple formats (via pandoc).
 
-R Markdown documents are plain text and have file extension `.Rmd`. This framework
-allows for documents to be generated automatically. Furthermore, *nothing* is
-efficient unless you can quickly redo it. Documenting your code inside dynamic
-documents in this way ensures that analysis can be quickly re-run.
+R Markdown documents are plain text and have file extension `.Rmd`. This framework allows for documents to be generated automatically. Furthermore, *nothing* is efficient unless you can quickly redo it. Documenting your code inside dynamic documents in this way ensures that analysis can be quickly re-run.
 
 <div class="rmdnote">
 <p>This note briefly explains R Markdown for the un-initiated. R markdown is a form of Markdown. Markdown is a pure text document format that has become a standard for documentation for software. It is the default format for displaying text on GitHub. R Markdown allows the user to embed R code in a Markdown document. This is a powerful addition to Markdown, as it allows custom images, tables and even interactive visualisations, to be included in your R documents. R Markdown is an efficient file format to write in because it is light-weight, human and computer readable, and is much less verbose than HTML and LaTeX. This book was written in R Markdown.</p>
 </div>
 
-In an R Markdown document, results are generated *on the fly* by including 'code
-chunks'. Code chunks are R code that are preceded by ` ```{r, options} ` on the line
-before the R code, and ` ``` ` at the end of the chunk. For example, suppose we have 
-the code chunk
+In an R Markdown document, results are generated *on the fly* by including 'code chunks'. Code chunks are R code that are preceded by ` ```{r, options} ` on the line before the R code, and ` ``` ` at the end of the chunk. For example, suppose we have  the code chunk
 
     ```{r eval = TRUE, echo = TRUE}
     (1:5)^2
     ```
 
-in an R Markdown document. The `eval = TRUE` in the code indicates that the code should
-be evaluated while `echo = TRUE` controls whether the R code is displayed. When we
-compile the document, we get
+in an R Markdown document. The `eval = TRUE` in the code indicates that the code should be evaluated while `echo = TRUE` controls whether the R code is displayed. When we compile the document, we get
 
 
 ```r
@@ -2691,12 +2370,7 @@ compile the document, we get
 #> [1]  1  4  9 16 25
 ```
 
-R Markdown via **knitr** provides a wide range of options to customise what is
-displayed and evaluated. When you adapt to this workflow it is highly efficient,
-especially as RStudio provides a number of shortcuts that make it easy to create and
-modify code chunks. To create a chunk while editing a `.Rmd` file, for example, simply
-enter `Ctrl/Cmd+Alt+I` on Windows or Linux or select the option from the Code drop down
-menu.
+R Markdown via **knitr** provides a wide range of options to customise what is displayed and evaluated. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a `.Rmd` file, for example, simply enter `Ctrl/Cmd+Alt+I` on Windows or Linux or select the option from the Code drop down menu.
 
 Once your document has compiled it should appear on your screen in the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the [rpubs](https://rpubs.com) website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).
@@ -2749,10 +2423,8 @@ Before reading in a single line of data, it is worth considering a general princ
 
 ### Prerequisites {-}
 
-R can read data from a variety of sources. We begin by discussing the generic package **rio** that 
-handles a wide variety of data types. Special attention is paid to CSV files, which leads to 
-the **readr** and **data.table** packages. The relatively new package **feather** is
-introduced as a binary file format, that has cross-language support.
+R can read data from a variety of sources. We begin by discussing the generic package **rio** that handles a wide variety of data types. Special attention is paid to CSV files, which leads to  the **readr** and **data.table** packages. The relatively new package **feather** is introduced as a binary file format, that has cross-language support.
+
 
 ```r
 library("rio")
@@ -2762,6 +2434,7 @@ library("feather")
 ```
 
 We also use the **WDI** package to illustrate accessing online data sets
+
 
 ```r
 library("WDI")
@@ -2797,7 +2470,7 @@ voyages = import(fname)
 export(voyages, "voc_voyages.xlsx")
 ```
 
-There was no need to specify the optional `format` argument for data import and export functions because this is inferred by the *suffix*, in the above example `.tsv` and `.xlsx` respectively. You can override the inferred file format for both functions with the `format` argument. You could, for example, create a comma-delimited file called `voc_voyages.xlsx` with `export(voyages, "voc_voyages.xlsx", format = "csv")`. However, this would **not** be a good idea: it is important to ensure that a file's suffix matches it's format.
+There was no need to specify the optional `format` argument for data import and export functions because this is inferred by the *suffix*, in the above example `.tsv` and `.xlsx` respectively. You can override the inferred file format for both functions with the `format` argument. You could, for example, create a comma-delimited file called `voc_voyages.xlsx` with `export(voyages, "voc_voyages.xlsx", format = "csv")`. However, this would **not** be a good idea: it is important to ensure that a file's suffix matches its format.
 
 To provide another example, the code chunk below downloads and imports as a data frame information about the countries of the world stored in `.json` (downloading data from the internet is covered in more detail in Section \@ref(download)):
 
@@ -2836,7 +2509,7 @@ Colin, British, Scotland
 There is often more than one way to read data into R and `.csv` files are no exception. The method you choose has implications for computational efficiency. This section investigates methods for getting plain text files into R, with a focus on three approaches: base R's plain text reading functions such as `read.csv()`; the **data.table** approach, which uses the function `fread()`; and the newer **readr** package which provides `read_csv()` and other `read_*()` functions such as `read_tsv()`. Although these functions perform differently, they are largely cross-compatible, as illustrated in the below chunk, which loads data on the concentration of CO^2^ in the atmosphere over time:
 
 <div class="rmdwarning">
-<p>In general, you should never &quot;hand-write&quot; a CSV file. Instead, you should use <code>write.csv()</code> or an equivalent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilities sharing CSV files between tools and operating systems.</p>
+<p>In general, you should never “hand-write” a CSV file. Instead, you should use <code>write.csv()</code> or an equivalent function. The Internet Engineering Task Force has the <a href="https://www.ietf.org/rfc/rfc4180.txt">CSV definition</a> that facilitates sharing CSV files between tools and operating systems.</p>
 </div>
 
 
@@ -2846,7 +2519,7 @@ df_co2_dt = readr::read_csv("extdata/co2.csv")
 #> Warning: Missing column names filled in: 'X1' [1]
 #> Parsed with column specification:
 #> cols(
-#>   X1 = col_integer(),
+#>   X1 = col_double(),
 #>   time = col_double(),
 #>   co2 = col_double()
 #> )
@@ -2854,7 +2527,7 @@ df_co2_readr = data.table::fread("extdata/co2.csv")
 ```
 
 <div class="rmdnote">
-<p>Note that a function 'derived from' another in this context means that it calls another function. The functions such as <code>read.csv()</code> and <code>read.delim()</code> in fact are <em>wrappers</em> around <code>read.table()</code>. This can be seen in the source code of <code>read.csv()</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = &quot;,&quot;)</code>.</p>
+<p>Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv()</code> and <code>read.delim()</code> in fact are <em>wrappers</em> around <code>read.table()</code>. This can be seen in the source code of <code>read.csv()</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = &quot;,&quot;)</code>.</p>
 </div>
 
 Although this section is focussed on reading text files, it demonstrates the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantage of additional package dependencies (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that *require* a certain package to load in R: the **readstata13** package, for example, was developed solely to read in `.dta` files generated by versions of Stata 13 and above.
@@ -2863,15 +2536,14 @@ Figure \@ref(fig:5-1) demonstrates that the relative performance gains of the **
 
 For files beyond $100$ MB in size `fread()` and `read_csv()` can be expected to be around *5 times faster* than `read.csv()`. This efficiency gain may be inconsequential for a one-off file of $100$ MB running on a fast computer (which still takes less than a minute with `read.csv()`), but could represent an important speed-up if you frequently load large text files. 
 
+(ref:5-1) Benchmarks of base, data.table and readr approches for reading csv files, using the functions read.csv(), fread() and read_csv(), respectively. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.
+
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/5-1-1.png" alt="Benchmarks of base, data.table and readr approches for reading csv files, using the functions read.csv(), fread() and read_csv(), respectively. The facets ranging from $2$ to $200$ represent the number of columns in the csv file." width="90%" />
-<p class="caption">(\#fig:5-1)Benchmarks of base, data.table and readr approches for reading csv files, using the functions read.csv(), fread() and read_csv(), respectively. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.</p>
+<img src="_main_files/figure-html/5-1-1.png" alt="(ref:5-1)" width="90%" />
+<p class="caption">(\#fig:5-1)(ref:5-1)</p>
 </div>
 
-When tested on a large ($4$GB) `.csv` file it was found that `fread()` and `read_csv()` were almost identical in load
-times and that `read.csv()` took around $5$ times longer. This consumed more than $10$GB of RAM, making it unsuitable to
-run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be
-made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in `?read.table`.
+When tested on a large ($4$GB) `.csv` file it was found that `fread()` and `read_csv()` were almost identical in load times and that `read.csv()` took around $5$ times longer. This consumed more than $10$GB of RAM, making it unsuitable to run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in `?read.table`.
 
 
 ```r
@@ -2893,33 +2565,43 @@ voyages_base = read.delim(fname)
 
 When we run the equivalent operation using **readr**, 
 
+
 ```r
 voyages_readr = readr::read_tsv(fname)
 #> Parsed with column specification:
 #> cols(
 #>   .default = col_character(),
-#>   number = col_integer(),
-#>   trip = col_integer(),
-#>   tonnage = col_integer(),
+#>   number = col_double(),
+#>   number_sup = col_logical(),
+#>   trip = col_double(),
+#>   tonnage = col_double(),
+#>   hired = col_logical(),
 #>   departure_date = col_date(format = ""),
 #>   cape_arrival = col_date(format = ""),
 #>   cape_departure = col_date(format = ""),
+#>   cape_call = col_logical(),
 #>   arrival_date = col_date(format = ""),
-#>   next_voyage = col_integer()
+#>   next_voyage = col_double()
 #> )
 #> See spec(...) for full column specifications.
-#> Warning: 2 parsing failures.
-#>  row            col   expected  actual                                                       file
-#> 4403 cape_arrival   date like  2-01-01 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
-#> 4592 cape_departure date like  8-05-17 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> Warning: 77 parsing failures.
+#>  row   col           expected actual                                                       file
+#> 1023 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1025 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1030 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1034 hired 1/0/T/F/TRUE/FALSE 1664/5 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1035 hired 1/0/T/F/TRUE/FALSE 1665   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> .... ..... .................. ...... ..........................................................
+#> See problems(...) for more details.
 ```
+
 a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
 
 ```r
 voyages_base$built[2841] # a factor.
 #> [1] 1721-01-01
-#> 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 ... taken 1672
+#> 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 1620 ... taken 1672
 voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 #> [1] "1721-01-01"
 ```
@@ -2940,9 +2622,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min   lq mean median   uq  max neval
-#>     with_select  9.95 10.2 10.3   10.3 10.4 10.5     5
-#>  without_select 14.86 15.1 16.1   16.1 16.9 17.6     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.3 10.5 10.6   10.6 10.7 10.7     5
+#>  without_select 17.8 17.9 18.4   18.7 18.8 18.8     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -2953,7 +2635,7 @@ Table: (\#tab:colclasses)Comparison of base, **readr** and **data.table** readin
 number    boatname    built       departure_date   Function   
 --------  ----------  ----------  ---------------  -----------
 integer   factor      factor      factor           base       
-integer   character   character   Date             readr      
+numeric   character   character   Date             readr      
 integer   character   character   character        data.table 
 
 Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
@@ -2967,7 +2649,7 @@ Table \@ref(tab:colclasses) shows 4 main similarities and differences between th
 
 - `read_*()` functions generate objects of class `tbl_df`, an extension of the `data.frame` class, as discussed in Section  \@ref(dplyr). `fread()` generates objects of class `data.table()`. These can be used as standard data frames but differ subtly in their behaviour.
 
-An additional difference is that `read_csv()` creates data frames of class `tbl_df`, *and* the `data.frame`. This makes no practical difference, unless the **tibble** package is loaded, as described in section \@ref(efficient-data-frames-with-tibble) in the next chapter.
+An additional difference is that `read_csv()` creates data frames of class `tbl_df`, *and* `data.frame`. This makes no practical difference, unless the **tibble** package is loaded, as described in section \@ref(efficient-data-frames-with-tibble) in the next chapter.
 
 The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities for your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
@@ -2996,7 +2678,7 @@ There are limitations to plain text files. Even the trusty CSV format is "restri
 Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
 portable.^[Geographical data, for example, can be slow to read in external formats. A large `.shp` or `.geojson` file can take more than $100$ times longer to load than an equivalent `.Rds` or `.Rdata` file.]
 
-Unlike plain text files data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
+Unlike plain text files, data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R's native file format, `.Rds`, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format `.csv` covered in the previous section.
 
 ### Native binary formats: Rdata or Rds?
 
@@ -3042,9 +2724,11 @@ We know that binary formats are advantageous from space and read/write time pers
 
 In terms of file size, Rds files perform the best, occupying just over a quarter of the hard disc space compared with the equivalent CSV files. The equivalent feather format also outperformed the CSV format, occupying around half the disc space.
 
+(ref:5-2) Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather().
+
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/5-2-1.png" alt="Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather(). " width="90%" />
-<p class="caption">(\#fig:5-2)Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather(). </p>
+<img src="_main_files/figure-html/5-2-1.png" alt="(ref:5-2)" width="90%" />
+<p class="caption">(\#fig:5-2)(ref:5-2)</p>
 </div>
 
 The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, reduce data download time and bandwidth usage. But how does each method compare from a computational efficiency perspective? The read and write times for each file format are illustrated in the middle and right hand panels of \@ref(fig:5-2).
@@ -3097,12 +2781,7 @@ co2_transport = WDI(indicator = "EN.CO2.TRAN.ZS") # import data
 
 There will be situations where you cannot download the data directly or when the data cannot be made available. In this case, simply providing a comment relating to the data's origin (e.g. `# Downloaded from http://example.com`) before referring to the dataset can greatly improve the utility of the code to yourself and others. 
 
-There are a number of R packages that provide more advanced functionality than simply downloading files. 
-The CRAN task view on [Web technologies](https://cran.r-project.org/web/views/WebTechnologies.html) provides
-a comprehensive list. The two packages for interacting with web pages are **httr** and **RCurl**. The former package
-provides (a relatively) user-friendly interface for executing standard HTTP methods, such as `GET` and `POST`.
-It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging. 
-The **RCurl** package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.
+There are a number of R packages that provide more advanced functionality than simply downloading files.  The CRAN task view on [Web technologies](https://cran.r-project.org/web/views/WebTechnologies.html) provides a comprehensive list. The two packages for interacting with web pages are **httr** and **RCurl**. The former package provides (a relatively) user-friendly interface for executing standard HTTP methods, such as `GET` and `POST`. It also provides support for web authentication protocols and returns HTTP status codes that are essential for debugging.  The **RCurl** package focuses on lower-level support and is particularly useful for web-based XML support or FTP operations.
 
 
 
@@ -3191,20 +2870,21 @@ library("data.table")
 **tibble** is a package that defines a new data frame class for R, the `tbl_df`. These 'tibble diffs' (as their inventor [suggests](https://github.com/hadley/tibble) they should be pronounced) are like the base class `data.frame`, but with more user friendly printing, subsetting, and factor handling.
 
 <div class="rmdnote">
-<p>A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <code>tbl</code>, and <code>data.frame</code>. Since the object has the <code>data.frame</code> tag, this means that if a <code>tbl_df</code> or <code>tbl</code> method isn't available, the object will be passed on to the appropriate <code>data.frame</code> function.</p>
+<p>A tibble data frame is an S3 object with three classes, <code>tbl_df</code>, <code>tbl</code>, and <code>data.frame</code>. Since the object has the <code>data.frame</code> tag, this means that if a <code>tbl_df</code> or <code>tbl</code> method isn’t available, the object will be passed on to the appropriate <code>data.frame</code> function.</p>
 </div>
+
 To create a tibble data frame, we use `tibble` function
 
 
 ```r
 library("tibble")
 tibble(x = 1:3, y = c("A", "B", "C"))
-#> # A tibble: 3 × 2
-#>       x     y
+#> # A tibble: 3 x 2
+#>       x y    
 #>   <int> <chr>
-#> 1     1     A
-#> 2     2     B
-#> 3     3     C
+#> 1     1 A    
+#> 2     2 B    
+#> 3     3 C
 ```
 
 The example above illustrates the main differences between the **tibble** and base R approach to data frames:
@@ -3249,23 +2929,15 @@ The process of reshaping is illustrated by Tables \@ref(tab:tpew) and \@ref(tab:
 library("efficient")
 data(pew) # see ?pew - dataset from the efficient package
 pew[1:3, 1:4] # take a look at the data
-#> # A tibble: 3 × 4
+#> # A tibble: 3 x 4
 #>   religion `<$10k` `$10--20k` `$20--30k`
-#>      <chr>   <int>      <int>      <int>
+#>   <chr>      <int>      <int>      <int>
 #> 1 Agnostic      27         34         60
-#> 2  Atheist      12         27         37
+#> 2 Atheist       12         27         37
 #> 3 Buddhist      27         21         30
 ```
 
-Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively.
-They have different dimensions, but they contain precisely the same information.
-Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt).
-According to the concept of 'tidy data', the long form is correct.
-Note that 'correct' here is used in the context of data analysis and graphical visualisation.
-Because R is a vector-based language, tidy data also has efficiency advantages: it's often faster to operate on few long columns than many short ones.
-Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data.
-Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be
-able to transfer between wide (or otherwise 'untidy') and tidy formats.
+Tables \@ref(tab:tpew) and \@ref(tab:tpewt) show a subset of the 'wide' `pew` and 'long' (tidy) `pewt` datasets, respectively. They have different dimensions, but they contain precisely the same information. Column names in the 'wide' form in Table \@ref(tab:tpew) became a new variable in the 'long' form in Table \@ref(tab:tpewt). According to the concept of 'tidy data', the long form is correct. Note that 'correct' here is used in the context of data analysis and graphical visualisation. Because R is a vector-based language, tidy data also has efficiency advantages: it's often faster to operate on few long columns than many short ones. Furthermore the powerful and efficient packages **dplyr** and **ggplot2** were designed around tidy data. Wide data is common, however, can be space efficient and is common for presentation in summary tables, so it's useful to be able to transfer between wide (or otherwise 'untidy') and tidy formats.
 
 Tidy data has the following characteristics [@Wickham_2014]:
 
@@ -3278,10 +2950,10 @@ Large and complex datasets are usually represented by multiple tables, with uniq
 
 Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns. 
 
-### Make wide tables long with `gather()`
+### Make wide tables long with `pivot_longer()`
 
-Gathering means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
+Pivoting Longer means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
+`pivot_longer()` (the inverse of which is `pivot_wider()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
 The code that performs this operation is provided in the code block below.
 This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
 
@@ -3289,38 +2961,38 @@ This converts a table with 18 rows and 10 columns into a tidy dataset with 162 r
 ```r
 dim(pew)
 #> [1] 18 10
-pewt = gather(data = pew, key = Income, value = Count, -religion)
+pewt = pivot_longer(data = pew, -religion, names_to = "income", values_to = "count")
 dim(pewt)
 #> [1] 162   3
 pewt[c(1:3, 50),]
-#> # A tibble: 4 × 3
-#>   religion   Income Count
-#>      <chr>    <chr> <int>
-#> 1 Agnostic    <$10k    27
-#> 2  Atheist    <$10k    12
-#> 3 Buddhist    <$10k    27
-#> 4 Orthodox $20--30k    23
+#> # A tibble: 4 x 3
+#>   religion                        income   count
+#>   <chr>                           <chr>    <int>
+#> 1 Agnostic                        <$10k       27
+#> 2 Agnostic                        $10--20k    34
+#> 3 Agnostic                        $20--30k    60
+#> 4 Evangelical Protestant Churches $40--50k   881
 ```
 
-The above code demonstrates the three arguments that `gather()` requires:
+The above code demonstrates the three arguments that `pivot_longer()` requires:
 
 1. `data`, a data frame in which column names will become row values.
-1. `key`, the name of the categorical variable into which the column names in the original datasets are converted.
-1. `value`, the name of cell value columns.
+1. `names_to`, the name of the categorical variable into which the column names in the original datasets are converted.
+1. `values_to`, the name of cell value columns.
 
 As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this column are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
 
 
 ```r
-gather(pew)
-#> # A tibble: 180 × 2
-#>        key    value
-#>      <chr>    <chr>
-#> 1 religion Agnostic
-#> 2 religion  Atheist
-#> 3 religion Buddhist
-#> 4 religion Catholic
-#> # ... with 176 more rows
+pivot_longer(pew, -religion)
+#> # A tibble: 162 x 3
+#>   religion name     value
+#>   <chr>    <chr>    <int>
+#> 1 Agnostic <$10k       27
+#> 2 Agnostic $10--20k    34
+#> 3 Agnostic $20--30k    60
+#> 4 Agnostic $30--40k    81
+#> # … with 158 more rows
 ```
 
 
@@ -3335,16 +3007,16 @@ Buddhist       27         21         30
 
 Table: (\#tab:tpewt)Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).
 
-religion   Income      Count
+religion   name        value
 ---------  ---------  ------
 Agnostic   <$10k          27
-Atheist    <$10k          12
-Buddhist   <$10k          27
 Agnostic   $10--20k       34
-Atheist    $10--20k       27
-Buddhist   $10--20k       21
 Agnostic   $20--30k       60
+Atheist    <$10k          12
+Atheist    $10--20k       27
 Atheist    $20--30k       37
+Buddhist   <$10k          27
+Buddhist   $10--20k       21
 Buddhist   $20--30k       30
 
 ### Split joint variables with `separate()`
@@ -3356,12 +3028,12 @@ Splitting means taking a variable that is really two variables combined and crea
 agesex = c("m0-10", "f0-10") # create compound variable
 n = c(3, 5) # create a value for each observation
 agesex_df = tibble(agesex, n) # create a data frame
-separate(agesex_df, col = agesex, into = c("age", "sex"))
-#> # A tibble: 2 × 3
-#>     age   sex     n
-#> * <chr> <chr> <dbl>
-#> 1    m0    10     3
-#> 2    f0    10     5
+separate(agesex_df, agesex, c("age", "sex"), sep = 1)
+#> # A tibble: 2 x 3
+#>   age   sex       n
+#>   <chr> <chr> <dbl>
+#> 1 m     0-10      3
+#> 2 f     0-10      5
 ```
 
 
@@ -3375,7 +3047,7 @@ f0-10      5
 
 Table: (\#tab:separated)Age and sex variables separated by the function `separate`.
 
-sex   age      n
+age   sex      n
 ----  -----  ---
 m     0-10     3
 f     0-10     5
@@ -3428,14 +3100,14 @@ There is much else to say on the topic but rather than repeat what has been said
 
 ```r
 head(pew, 10)
-#> # A tibble: 10 × 10
+#> # A tibble: 10 x 10
 #>   religion `<$10k` `$10--20k` `$20--30k` `$30--40k` `$40--50k` `$50--75k`
-#>      <chr>   <int>      <int>      <int>      <int>      <int>      <int>
+#>   <chr>      <int>      <int>      <int>      <int>      <int>      <int>
 #> 1 Agnostic      27         34         60         81         76        137
-#> 2  Atheist      12         27         37         52         35         70
+#> 2 Atheist       12         27         37         52         35         70
 #> 3 Buddhist      27         21         30         34         33         58
 #> 4 Catholic     418        617        732        670        638       1116
-#> # ... with 6 more rows, and 3 more variables: `$75--100k` <int>,
+#> # … with 6 more rows, and 3 more variables: `$75--100k` <int>,
 #> #   `$100--150k` <int>, `>150k` <int>
 data(lnd_geo_df)
 head(lnd_geo_df, 10)
@@ -3463,20 +3135,12 @@ strings = c(" 219 733 8965", "329-293-8753 ", "banana", "595 794 7569",
              "842 566 4692", "Work: 579-499-7527", "$1000", "Home: 543.355.3679")
 ```
 
-Write functions in **stringr** and base R that return:
+Write expressions in **stringr** and base R that return:
 
 - A logical vector reporting whether or not each string contains a number.
 - Complete words only, without extraneous non-letter characters.
 
 
-```r
-str_detect(string = strings, pattern = "[0-9]")
-#>  [1]  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
-#> [12]  TRUE  TRUE
-str_extract(strings, pattern = "[A-z]+")
-#>  [1] NA       NA       "banana" NA       NA       "apple"  NA      
-#>  [8] NA       NA       NA       "Work"   NA       "Home"
-```
 
 ## Efficient data processing with dplyr {#dplyr}
 
@@ -3537,96 +3201,69 @@ Building on the 'learning by doing' ethic, the remainder of this section works t
 
 ```r
 # Load global inequality data
-data(wb_ineq)
+data(package = "efficient", wb_ineq)
 ```
 
-**dplyr** is a large package and can be seen as
-a language in its own right. Following the 'walk before you run' principle,
-we'll start simple, by filtering and aggregating rows.
+**dplyr** is a large package and can be seen as a language in its own right. Following the 'walk before you run' principle, we'll start simple, by filtering and aggregating rows.
 
 ### Renaming columns
 
 Renaming data columns is a common task that can make writing code faster by using short, intuitive names. The **dplyr** function `rename()` makes this easy.
 
-Note in this code block the variable name is surrounded by back-quotes (\`).
+Note in this code block the variable name is surrounded by back-quotes (`\`).
 This allows R to refer to column names that are non-standard.
 Note also the syntax:
-`rename` takes the data frame as the first object and then creates new variables by specifying `new_variable_name = original_name`.
+`rename()` takes the data frame as the first object and then creates new variables by specifying `new_variable_name = original_name`.
 
 
 ```r
-library("dplyr")
 wb_ineq = rename(wb_ineq, code = `Country Code`)
 ```
 
-To rename multiple columns the variable names are simply separated by commas. The base R and **dplyr** way of doing this is illustrated on an older version of the dataset (not run) to illustrate how long, clunky and inefficient names can be converted into short and lean ones.
-
-
-```r
-# The dplyr way (rename two variables)
-wb_ineq = rename(wb_ineq,
- top10 = `Income share held by highest 10% [SI.DST.10TH.10]`,
- bot10 = `Income share held by lowest 10% [SI.DST.FRST.10]`)
-# The base R way (rename five variables)
-names(wb_ineq)[5:9] = c("top10", "bot10", "gini", "b40_cons", "gdp_percap")
-```
+To rename multiple columns the variable names are simply separated by commas.
+`rename(x, x = X1, y = X2)` would rename variables `X1` and `X2` in the dataset `x`.
+In base R the equivalent function would be `names(x)[1:2] = c("x", "y")` or `setNames(x, c("x", "y"))`, assuming we were dealing with the first and second columns.
 
 ### Changing column classes
 
 The *class* of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object), as illustrated below, with the inequality data loaded previously.^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function `str()` (short for display the **str**ucture of an object).^[`str(wb_ineq)` is another way to see the contents of an object, but produces more verbose output.]
+
+Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric.
+The class of numeric variables can be altered one-by one using `mutate()` as follows (which would set the `gini` column to be of class `numeric` if it weren't already):^[
+The base R equivalent of this is `wb_ineq$gini = as.numeric(wb_ineq$gini)`.
+]
 
 
 ```r
-vapply(wb_ineq, class, character(1))
-#>     Country        code        Year   Year Code       top10       bot10 
-#> "character" "character"   "integer" "character"   "numeric"   "numeric" 
-#>        gini    b40_cons  gdp_percap 
-#>   "numeric"   "numeric"   "numeric"
-```
-
-This shows that although we loaded the data correctly all columns are seen by R as characters. This means we cannot perform numerical calculations on the dataset: `mean(wb_ineq$gini)` fails.
-
-Visual inspection of the data (e.g. via `View(wb_ineq)`) clearly shows that all columns except for 1 to 4 (`Country`, `Country Code`, `Year` and `Year Code`) should be numeric. We can re-assign the classes of the numeric variables one-by one:
-
-
-```r
-wb_ineq$gini = as.numeric(wb_ineq$gini)
-mean(wb_ineq$gini, na.rm = TRUE) # now the mean is calculated
-#> [1] 40.5
+wb_ineq = mutate(wb_ineq, gini = as.numeric(gini))
 ```
 
 However the purpose of programming languages is to *automate* tasks and reduce typing.
-The following code chunk re-classifies all of the numeric variables using `data.matrix()`, which converts the data frame to a numeric `matrix`:
+The following code chunk ensures the numeric variables in the `cols_to_change` object are `numeric` using the same function (`vars()` is a helper function to select variables and also words with **dplyr** functions such as `contains()` which select all columns containing a given text string): 
 
-<!-- __XXX__ I don't think you need to print the column classes out again; the reader should trust you! -->
 
 ```r
-cols_to_change= 5:9 # column ids to change
+cols_to_change = 5:9 # column ids to change
+wb_ineq = mutate_at(wb_ineq, vars(cols_to_change), as.numeric)
+#> Note: Using an external vector in selections is ambiguous.
+#> ℹ Use `all_of(cols_to_change)` instead of `cols_to_change` to silence this message.
+#> ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+#> This message is displayed once per session.
+```
+
+Another way to acheive the same result is to use `data.matrix()`, which converts the data frame to a numeric `matrix`:
+
+
+```r
+cols_to_change = 5:9 # column ids to change
 wb_ineq[cols_to_change] = data.matrix(wb_ineq[cols_to_change])
-vapply(wb_ineq, class, character(1))
-#>     Country        code        Year   Year Code       top10       bot10 
-#> "character" "character"   "integer" "character"   "numeric"   "numeric" 
-#>        gini    b40_cons  gdp_percap 
-#>   "numeric"   "numeric"   "numeric"
 ```
 
-As is so often the case with R, there are many ways to solve the problem. Below is a one-liner using `unlist()` which converts list objects into vectors:
-
-
-```r
-wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
-```
-
-<!-- __XXX__ Seems odd that for a chapter on dplyr, the dplyr solution is last. Also you give 3 options. Which one is best? -->
-*Another* one-liner to achieve the same result uses **dplyr**'s `mutate_each` function: 
-
-
-```r
-wb_ineq = mutate_each(wb_ineq, "as.numeric", cols_to_change)
-```
-
-As with other operations there are other ways of achieving the same result in R, including the use of loops via `apply()` and `for()`. These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
+Each method (base R and **dplyr**) has its merits.
+For readers new to R who plan to use other **tidyverse** packages we would provide a slight steer towards `mutate_at()` for its flexibility and expressive syntax.
+Other methods for acheiving the same result include the use of loops via `apply()` and `for()`.
+These are shown in the chapter's [source code](https://github.com/csgillespie/efficientR).
 
 
 
@@ -3640,39 +3277,29 @@ As with other operations there are other ways of achieving the same result in R,
 aus2 = filter(wb_ineq, Country == "Australia")
 ```
 
-`filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.]
-By avoiding the `$` symbol, **dplyr** makes subsetting code concise and consistent with other **dplyr** functions.
-The first argument is a data frame and
-subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**.
-In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
+`filter()` is slightly more flexible than `[`: `filter(wb_ineq, code == "AUS", Year == 1974)` works as well as `filter(wb_ineq, code == "AUS" & Year == 1974)`, and takes any number of conditions (see `?filter`). `filter()` is slightly faster than base R.^[Note that `filter` is also the name of a function used in the base **stats** library. Usually packages avoid using names already taken in base R but this is an exception.] By avoiding the `$` symbol, **dplyr** makes subsetting code concise and consistent with other **dplyr** functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of **dplyr**. In the next section we'll learn how this syntax can be used alongside the `%>%` 'pipe' command to write clear data manipulation commands.
 
 There are **dplyr** equivalents of many base R functions but these usually work slightly differently. The **dplyr** equivalent of `aggregate`, for example is to use the grouping function `group_by` in combination with the general purpose function `summarise` (not to be confused with `summary` in base R), as we shall see in Section \@ref(data-aggregation). 
 
 ### Chaining operations
 
-Another interesting feature of **dplyr** is its ability
-to chain operations together. This overcomes one of the
-aesthetic issues with R code: you can end-up with
-very long commands with many functions nested inside each
-other to answer relatively simple questions.
-Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable.
-Here's how you could use the chains to summarize average Gini indexes per decade, for example:
+Another interesting feature of **dplyr** is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end-up with very long commands with many functions nested inside each other to answer relatively simple questions. Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable. Here's how you could use the chains to summarize average Gini indexes per decade, for example:
 
 
 ```r
 wb_ineq %>% 
   select(Year, gini) %>% 
-  mutate(decade = floor(Year / 10) * 10) %>% 
+  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>% 
   group_by(decade) %>% 
   summarise(mean(gini, na.rm = TRUE))
-#> # A tibble: 6 × 2
+#> # A tibble: 6 x 2
 #>   decade `mean(gini, na.rm = TRUE)`
 #>    <dbl>                      <dbl>
 #> 1   1970                       40.1
 #> 2   1980                       37.8
 #> 3   1990                       42.0
 #> 4   2000                       40.5
-#> # ... with 2 more rows
+#> # … with 2 more rows
 ```
 
 Often the best way to learn is to try and break something, so try running the above commands with different **dplyr** verbs. 
@@ -3681,13 +3308,9 @@ By way of explanation, this is what happened:
 1. Only the columns `Year` and `gini` were selected, using `select()`.
 1. A new variable, `decade` was created, to show only the decade figures (e.g. 1989 becomes 1980).
 1. This new variable was used to group rows in the data frame with the same decade.
-1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1992 but has since decreased slightly.
+1. The mean value per decade was calculated, illustrating how average income inequality was greatest in 1990 but has since decreased slightly.
 
-Let's ask another question to see how the **dplyr** chaining workflow can be used to
-answer questions interactively: What are the 5 most unequal
-years for countries containing the letter g?
-Here's how chains can help organise the analysis needed to answer this question
-step-by-step:
+Let's ask another question to see how the **dplyr** chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here's how chains can help organise the analysis needed to answer this question step-by-step:
 
 
 ```r
@@ -3698,18 +3321,17 @@ wb_ineq %>%
   arrange(desc(gini)) %>%
   top_n(n = 5)
 #> Selecting by gini
-#> # A tibble: 5 × 2
-#>    Year  gini
-#>   <int> <dbl>
-#> 1  1980  46.9
-#> 2  1993  46.0
-#> 3  2013  44.5
-#> 4  1981  43.6
-#> # ... with 1 more rows
+#> # A tibble: 5 x 2
+#>   Year   gini
+#>   <chr> <dbl>
+#> 1 1980   46.8
+#> 2 1993   46.0
+#> 3 2013   44.6
+#> 4 1981   43.6
+#> # … with 1 more row
 ```
 
-The above function consists of 6 stages, each of which
-corresponds to a new line and **dplyr** function:
+The above function consists of 6 stages, each of which corresponds to a new line and **dplyr** function:
 
 1. Filter-out the countries we're interested in (any selection criteria could be used in place of `grepl("g", Country)`).
 2. Group the output by year.
@@ -3717,10 +3339,7 @@ corresponds to a new line and **dplyr** function:
 4. Arrange the results by average Gini index
 5. Select only the top 5 most unequal years.
 
-To see why this method is preferable to the nested
-function approach, take a look at the latter.
-Even after indenting properly it looks terrible
-and is almost impossible to understand!
+To see why this method is preferable to the nested function approach, take a look at the latter. Even after indenting properly it looks terrible and is almost impossible to understand!
 
 
 ```r
@@ -3746,14 +3365,14 @@ This section has provided only a taster of what is possible **dplyr** and why it
 
 ```r
 wb_ineq
-#> # A tibble: 6,925 × 9
-#>       Country  code  Year `Year Code` top10 bot10  gini b40_cons
-#>         <chr> <chr> <int>       <chr> <dbl> <dbl> <dbl>    <dbl>
-#> 1 Afghanistan   AFG  1974      YR1974    NA    NA    NA       NA
-#> 2 Afghanistan   AFG  1975      YR1975    NA    NA    NA       NA
-#> 3 Afghanistan   AFG  1976      YR1976    NA    NA    NA       NA
-#> 4 Afghanistan   AFG  1977      YR1977    NA    NA    NA       NA
-#> # ... with 6,921 more rows, and 1 more variables: gdp_percap <dbl>
+#> # A tibble: 6,925 x 9
+#>   Country     code  Year  `Year Code` top10 bot10  gini b40_cons gdp_percap
+#>   <chr>       <chr> <chr> <chr>       <dbl> <dbl> <dbl>    <dbl>      <dbl>
+#> 1 Afghanistan AFG   1974  YR1974         NA    NA    NA       NA         NA
+#> 2 Afghanistan AFG   1975  YR1975         NA    NA    NA       NA         NA
+#> 3 Afghanistan AFG   1976  YR1976         NA    NA    NA       NA         NA
+#> 4 Afghanistan AFG   1977  YR1977         NA    NA    NA       NA         NA
+#> # … with 6,921 more rows
 ```
 
 followed by:
@@ -3762,14 +3381,14 @@ followed by:
 ```r
 wb_ineq %>% 
   select(Year, gini) 
-#> # A tibble: 6,925 × 2
-#>    Year  gini
-#>   <int> <dbl>
-#> 1  1974    NA
-#> 2  1975    NA
-#> 3  1976    NA
-#> 4  1977    NA
-#> # ... with 6,921 more rows
+#> # A tibble: 6,925 x 2
+#>   Year   gini
+#>   <chr> <dbl>
+#> 1 1974     NA
+#> 2 1975     NA
+#> 3 1976     NA
+#> 4 1977     NA
+#> # … with 6,921 more rows
 ```
 
 Explain in your own words what changes each time.
@@ -3816,35 +3435,34 @@ nrow(e_ems)`.]
 library("dplyr")
 group_by(ghg_ems, Country) %>%
   summarise(mean_eco2 = mean(Electricity, na.rm  = TRUE))
-#> # A tibble: 188 × 2
-#>       Country mean_eco2
-#>         <chr>     <dbl>
-#> 1 Afghanistan       NaN
-#> 2     Albania     0.641
-#> 3     Algeria    23.015
-#> 4      Angola     0.791
-#> # ... with 184 more rows
+#> # A tibble: 188 x 2
+#>   Country     mean_eco2
+#>   <chr>           <dbl>
+#> 1 Afghanistan   NaN    
+#> 2 Albania         0.641
+#> 3 Algeria        23.0  
+#> 4 Angola          0.791
+#> # … with 184 more rows
 ```
 
 <div class="rmdnote">
-<p>The example above relates to a wider programming issue: how much work should one function do? The work could have been done with a single <code>aggregate()</code> call. However, the <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should &quot;do one thing well&quot;, which is how <strong>dplyr</strong>'s functions were designed. Shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing.</p>
+<p>The example above relates to a wider programming issue: how much work should one function do? The work could have been done with a single <code>aggregate()</code> call. However, the <a href="http://www.catb.org/esr/writings/taoup/html/ch01s06.html">Unix philosophy</a> states that programs should “do one thing well”, which is how <strong>dplyr</strong>’s functions were designed. Shorter functions are easier to understand and debug. But having too many functions can also make your call stack confusing.</p>
 </div>
 
 To reinforce the point, this operation is also performed below on the `wb_ineq` dataset:
 
 
 ```r
-data(wb_ineq, package="efficient")
 countries = group_by(wb_ineq, Country)
-summarise(countries, gini = mean(gini, na.rm  = TRUE))
-#> # A tibble: 176 × 2
-#>       Country  gini
-#>         <chr> <dbl>
-#> 1 Afghanistan   NaN
-#> 2     Albania  30.4
-#> 3     Algeria  37.8
-#> 4      Angola  50.6
-#> # ... with 172 more rows
+summarise(countries, mean_gini = mean(gini, na.rm = TRUE))
+#> # A tibble: 176 x 2
+#>   Country     mean_gini
+#>   <chr>           <dbl>
+#> 1 Afghanistan     NaN  
+#> 2 Albania          30.4
+#> 3 Algeria          37.8
+#> 4 Angola           50.6
+#> # … with 172 more rows
 ```
 
 Note that `summarise` is highly versatile, and can be used to return a customised range of summary statistics:
@@ -3853,31 +3471,143 @@ Note that `summarise` is highly versatile, and can be used to return a customise
 ```r
 summarise(countries,
   # number of rows per country
-  obs = n(), 
+  obs = n(),
   med_t10 = median(top10, na.rm  = TRUE),
   # standard deviation
-  sdev = sd(gini, na.rm  = TRUE), 
+  sdev = sd(gini, na.rm  = TRUE),
   # number with gini > 30
-  n30 = sum(gini > 30, na.rm  = TRUE), 
+  n30 = sum(gini > 30, na.rm  = TRUE),
   sdn30 = sd(gini[ gini > 30 ], na.rm  = TRUE),
   # range
   dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
   )
-#> # A tibble: 176 × 7
-#>       Country   obs med_t10  sdev   n30  sdn30   dif
-#>         <chr> <int>   <dbl> <dbl> <int>  <dbl> <dbl>
-#> 1 Afghanistan    40      NA   NaN     0     NA    NA
-#> 2     Albania    40    24.4  1.25     3  0.364  2.78
-#> 3     Algeria    40    29.8  3.44     2  3.437  4.86
-#> 4      Angola    40    38.6 11.30     2 11.300 15.98
-#> # ... with 172 more rows
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> # A tibble: 176 x 7
+#>   Country       obs med_t10   sdev   n30  sdn30     dif
+#>   <chr>       <int>   <dbl>  <dbl> <int>  <dbl>   <dbl>
+#> 1 Afghanistan    40    NA   NaN        0 NA     -Inf   
+#> 2 Albania        40    24.4   1.25     3  0.364    2.78
+#> 3 Algeria        40    29.8   3.44     2  3.44     4.86
+#> 4 Angola         40    38.6  11.3      2 11.3     16.0 
+#> # … with 172 more rows
 ```
 
-To showcase the power of `summarise` used on
-a `grouped_df`, the
-above code reports a wide range of customised
-summary statistics
-*per country*: 
+To showcase the power of `summarise` used on a `grouped_df`, the above code reports a wide range of customised summary statistics *per country*: 
 
 - the number of rows in each country group
 - standard deviation of Gini indices
@@ -3890,7 +3620,6 @@ summary statistics
 
 1. Refer back to the greenhouse gas emissions example at the outset of section \@ref(dplyr), in which we found the top 3 countries in terms of emissions growth in the transport sector. a) Explain in words what is going on in each line. b) Try to find the top 3 countries in terms of emissions in 2012 - how is the list different?
 
-
 2. Explore **dplyr**'s documentation, starting with the introductory vignette, accessed by entering [`vignette("introduction")`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
 3. Test additional **dplyr** 'verbs' on the `wb_ineq` dataset. (More vignette names can be discovered by typing `vignette(package = "dplyr")`.)
@@ -3899,31 +3628,40 @@ summary statistics
 
 The final thing to say about **dplyr** does not relate to the data but the syntax of the functions. Note that many of the arguments in the code examples in this section are provided as raw names: they are raw variable names, not surrounded by quote marks (e.g. `Country` rather than `"Country"`). This is called non-standard evaluation (NSE) (see `vignette("nse")`). NSE was used deliberately, with the aim of making the functions more efficient for interactive use. NSE reduces typing and allows autocompletion in RStudio.
 
-This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. For this reason most functions in **tidyr** and **dplyr** have two versions: one that uses NSE (the default) and another that uses standard evaluation which requires the variable names to be provided in quote marks. The standard evaluation versions of functions are denoted with the affix `_`. This is illustrated below with the `group_by()` and `summarise()` functions:
+This is fine when using R interactively. But when you'd like to use R non-interactively, code is generally more robust using standard evaluation: it minimises the chance of creating obscure scope-related bugs. Using standing evaluation also avoids having to declare global variables if you include the code in a package. To overcome this the concept of 'tidy evaluation' was developed and implemented in the package **rlang** (part of the tidyverse) to provide functions to control when symbols are evaluated and when they are treated as text strings. Without going into detail, the code below demonstrates how tidy evaluation works (see the [`tidy-evaluation`](https://cran.r-project.org/web/packages/rlang/vignettes/tidy-evaluation.html) vignette and [`Programming-with-dplyr`](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html) for further information):
 
 
 ```r
+library(rlang)
 # 1: Default NSE function
-group_by(cars, cut(speed, c(0, 10, 100))) %>% summarise(mean(dist))
-#> # A tibble: 2 × 2
-#>   `cut(speed, c(0, 10, 100))` `mean(dist)`
-#>                        <fctr>        <dbl>
-#> 1                      (0,10]         15.8
-#> 2                    (10,100]         49.0
-# 2: Standard evaluation using quote marks
-group_by_(cars, "cut(speed, c(0, 10, 100))") %>% summarise_("mean(dist)")
-#> # A tibble: 2 × 2
-#>   `cut(speed, c(0, 10, 100))` `mean(dist)`
-#>                        <fctr>        <dbl>
-#> 1                      (0,10]         15.8
-#> 2                    (10,100]         49.0
-# 3: Standard evaluation using formula, tilde notation (recommended standard evaluation method)
-group_by_(cars, ~cut(speed, c(0, 10, 100))) %>% summarise_(~mean(dist))
-#> # A tibble: 2 × 2
-#>   `cut(speed, c(0, 10, 100))` `mean(dist)`
-#>                        <fctr>        <dbl>
-#> 1                      (0,10]         15.8
-#> 2                    (10,100]         49.0
+group_by(cars, speed = cut(speed, c(0, 10, 100))) %>%
+  summarise(mean_dist = mean(dist))
+#> # A tibble: 2 x 2
+#>   speed    mean_dist
+#>   <fct>        <dbl>
+#> 1 (0,10]        15.8
+#> 2 (10,100]      49.0
+# 2: Evaluation from character string
+group_by(cars, speed = !!parse_quosure("cut(speed, c(0, 10, 100))")) %>%
+  summarise(mean_dist = !!parse_quosure("mean(dist)"))
+#> Warning: `parse_quosure()` is deprecated as of rlang 0.2.0.
+#> Please use `parse_quo()` instead.
+#> This warning is displayed once per session.
+#> # A tibble: 2 x 2
+#>   speed    mean_dist
+#>   <fct>        <dbl>
+#> 1 (0,10]        15.8
+#> 2 (10,100]      49.0
+# 3: Using !! to evaluate 'quosures' when appropriate
+q1 = quo(cut(speed, c(0, 10, 100)))
+q2 = quo(mean(dist))
+group_by(cars, speed = !!q1) %>%
+  summarise(mean_dist = !!q2)
+#> # A tibble: 2 x 2
+#>   speed    mean_dist
+#>   <fct>        <dbl>
+#> 1 (0,10]        15.8
+#> 2 (10,100]      49.0
 ```
 
 ## Combining datasets
@@ -4124,14 +3862,11 @@ How would you perform the same query using `select()`? Try it to see if you get 
 ## Data processing with data.table
 
 **data.table** is a mature package for fast data processing that presents an alternative to **dplyr**. There is some controversy about which is more appropriate for different
-tasks.^[One
-[question](http://stackoverflow.com/questions/21435339) on the StackOverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.
-]
+tasks.^[One [question](http://stackoverflow.com/questions/21435339) on the StackOverflow website titled 'data.table vs dplyr' illustrates this controversy and delves into the philosophy underlying each approach.]
 Which is more efficient to some extent depends on personal preferences and what you are used to. 
 Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: **dplyr** provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning **dplyr** first if you are new to both packages. **dplyr** can also be used to work with the `data.table` class used by the **data.table** package so you can get the best of both worlds.
 
-**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/)
-(which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
+**data.table** is faster than **dplyr** for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. **data.table** supports [rolling joins](https://www.r-bloggers.com/understanding-data-table-rolling-joins/) (which allow rows in one table to be selected based on proximity between shared variables (typically time) and [non-equi joins](http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php) (where join criteria can be inequalities rather than equal to).
 
 This section provides a few examples to illustrate how **data.table** differs and (at the risk of inflaming the debate further) some benchmarks to explore which is more efficient. As emphasised throughout the book, efficient code writing is often more important than efficient execution on many everyday tasks so to some extent it's a matter of preference.
 
@@ -4140,18 +3875,16 @@ The foundational object class of **data.table** is the `data.table`. Like **dply
 
 ```r
 library("data.table")
-data(wb_ineq_renamed) # from the efficient package
-wb_ineq_dt = data.table(wb_ineq_renamed) # convert to data.table class
+# data(wb_ineq) # from the efficient package
+wb_ineq_dt = data.table(wb_ineq) # convert to data.table class
 aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
 <div class="rmdnote">
-<p>Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq_renamed[wb_ineq_renamed$Country == &quot;Australia&quot;,]</code>.</p>
+<p>Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq[wb_ineq$Country == &quot;Australia&quot;,]</code>.</p>
 </div>
 
-To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are
-'[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)'
-which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
+To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)' which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
 
 
 ```r
@@ -4170,7 +3903,7 @@ The result is the same, so why add the extra stage of setting the key? The reaso
 
 Figure \@ref(fig:6-2) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
 
-This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing. It offers performance gains due to its implementation in C and use of *keys* for subsetting tables. **data.table** offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with `left_join` in **dplyr**); and grouping. For further information on **data.table**, we recommend reading the package's [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf), [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html) and [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignettes.
+This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing. It offers performance gains due to its implementation in C and use of *keys* for subsetting tables. **data.table** offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with `left_join` in **dplyr**); and grouping. For further information on **data.table**, we recommend reading the package's [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html), [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html) and [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignettes.
 
 <!--chapter:end:06-data-carpentry.Rmd-->
 
@@ -4183,47 +3916,26 @@ knit: "bookdown::preview_chapter"
 
 # Efficient optimisation {#performance}
 
-[Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a legendary American
-computer scientist who developed a number of the key algorithms that we use today (see for 
-example `?Random`).
-On the subject of optimisation he gives this advice:
+[Donald Knuth](https://en.wikiquote.org/wiki/Donald_Knuth) is a legendary American computer scientist who developed a number of the key algorithms that we use today (see for  example `?Random`). On the subject of optimisation he gives this advice:
 
-> The real problem is that programmers have spent far too much time worrying about
-efficiency in the wrong places and at the wrong times; premature optimisation is the
-root of all evil (or at least most of it) in programming.
+> The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places and at the wrong times; premature optimisation is the root of all evil (or at least most of it) in programming.
 
-Knuth's point is that it is easy to undertake code optimisation inefficiently.
-When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that
-time spent optimizing code early in the developmental stage could be wasted. Even worse,
-there is a trade-off between code speed and code readability; we've already made this trade-off
-once by using readable, (but slow) R compared with verbose C code! 
+Knuth's point is that it is easy to undertake code optimisation inefficiently. When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that time spent optimizing code early in the developmental stage could be wasted. Even worse, there is a trade-off between code speed and code readability; we've already made this trade-off once by using readable, (but slow) R compared with verbose C code! 
 
-For this reason this chapter is covered towards the latter half of the book. The
-previous chapters deliberately focussed on concepts, packages and functions to
-increase efficiency. These are (relatively) easy ways of saving time that, once
-implemented, will work for future projects. Code optimisation, by contrast, is an
-advanced topic that should only be tackled once 'low hanging fruit' for efficiency
-gains have been taken.
+For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions to increase efficiency. These are (relatively) easy ways of saving time that, once implemented, will work for future projects. Code optimisation, by contrast, is an advanced topic that should only be tackled once 'low hanging fruit' for efficiency gains have been taken.
 
-In this chapter we assume that you already have well-developed code that is mature
-conceptually and has been tried and tested. Now you want to optimize this code, but
-not prematurely. The chapter is organised as follows. First we begin with general
-hints and tips about optimising base R code. Code profiling can identify key
-bottlenecks in the code in need of optimisation, and this is covered in the next
-section. Section \@ref(performance-parallel) discusses how parallel code can overcome
-efficiency bottlenecks for some problems. The final section explains how `Rcpp` can be
-used to efficiently incorporate C++ code into an R analysis.
+In this chapter we assume that you already have well-developed code that is mature conceptually and has been tried and tested. Now you want to optimize this code, but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimisation, and this is covered in the next section. Section \@ref(performance-parallel) discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how `Rcpp` can be used to efficiently incorporate C++ code into an R analysis.
 
 ### Prerequisites {-}
 
-In this chapter, some of the examples require a working C++ compiler. The installation
-method depends on your operating system:
+In this chapter, some of the examples require a working C++ compiler. The installation method depends on your operating system:
  
  * Linux: A compiler should already be installed. Otherwise, install `r-base` and a compiler will be installed as a dependency.
  * Macs: Install `Xcode`.
  * Windows: Install [Rtools](http://cran.r-project.org/bin/windows/). Make sure you select the version that corresponds to your version of R.
 
 The packages used in this chapter are
+
 
 ```r
 library("microbenchmark")
@@ -4244,31 +3956,16 @@ library("Rcpp")
 
 ## Code profiling {#performance-profvis}
 
-Often you will have working code, but simply want it to run faster. In some cases it's
-obvious where the bottleneck lies. Sometimes you will guess, relying on intuition. A
-drawback of this is that you could be wrong, and waste time optimising the wrong piece
-of code. To make slow code run faster, it is first important to determine where the
-slow code lives. This is the purpose of code profiling.
+Often you will have working code, but simply want it to run faster. In some cases it's obvious where the bottleneck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.
 
-The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At
-regular time intervals, the profiler stops the R interpreter, records the current
-function call stack, and saves the information to a file. The results from `Rprof()` are
-stochastic. Each time we run a function in R, the conditions have changed. Hence, each
-time you profile your code, the result will be slightly different.
+The `Rprof()` function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from `Rprof()` are stochastic. Each time we run a function in R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.
 
 Unfortunately `Rprof()` is not user friendly. For this reason we recommend using the **profvis** package for profiling your R code.
 **profvis** provides an interactive graphical interface for visualising code profiling data data from `Rprof()`.
 
 ### Getting started with **profvis**
 
-After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used
-to profile R code. As a simple example, we will use the `movies` data set, which
-contains information on around 60,000 movies. First, we'll select movies that are
-classed as comedies, then plot year the movie was made versus the movie rating, and
-draw a local polynomial regression line to pick out the trend. The main function from
-the **profvis** package is `profvis()`, which profiles the code and creates an
-interactive HTML page of the results. The first argument of `profvis()` is the R
-expression of interest. This can be many lines long:
+After installing **profvis**, e.g. with `install.packages("profvis")`, it can be used to profile R code. As a simple example, we will use the `movies` data set, which contains information on around 60,000 movies. First, we'll select movies that are classed as comedies, then plot year the movie was made versus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the **profvis** package is `profvis()`, which profiles the code and creates an interactive HTML page of the results. The first argument of `profvis()` is the R expression of interest. This can be many lines long:
 
 
 ```r
@@ -4283,41 +3980,24 @@ profvis({
 })
 ```
 
-The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the
-left side is the code and on the right is a flame graph (horizontal direction is time
-in milliseconds and the vertical direction is the call stack).
+The above code provides an interactive HTML page (figure \@ref(fig:7-1)). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).
 
 <div class="figure" style="text-align: center">
 <img src="figures/f7_1_profvis.png" alt="Output from profvis" width="100%" />
 <p class="caption">(\#fig:7-1)Output from profvis</p>
 </div>
 
-The left hand panel gives the amount of time spent on each line of code. It shows that
-majority of time is spent calculating the `loess()` smoothing line. The bottom line of
-the right panel also highlights that most of the execution time is spent on the
-`loess()` function. Travelling up the function, we see that `loess()` calls `simpleLoess()`
-which in turn calls `.C()` function.
+The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the `loess()` smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the `loess()` function. Travelling up the function, we see that `loess()` calls `simpleLoess()` which in turn calls `.C()` function.
 
-The conclusion from this graph is that if optimisation were required, it would make
-sense to focus on the `loess()` and possibly the `order()` function calls.
+The conclusion from this graph is that if optimisation were required, it would make sense to focus on the `loess()` and possibly the `order()` function calls.
  
 
 
 ### Example: Monopoly Simulation {#monopoloy}
 
-Monopoly is a board game that originated in the United States over $100$ years ago. The
-objective of the game is to go round the board and purchase squares (properties). If
-other players land on your properties they have to pay a tax. The player with the most
-money at the end of the game, wins. To make things more interesting, there are Chance
-and Community Chest squares. If you land on one of these squares, you draw card, which
-may send to you to other parts of the board. The other special square, is Jail. One
-way of entering Jail is to roll three successive doubles.
+Monopoly is a board game that originated in the United States over $100$ years ago. The objective of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.
 
-The **efficient** package contains a Monte-Carlo function for simulating a simplified
-game of monopoly. By keeping track of where a person lands when going round the board,
-we obtain an estimate of the probability of landing on a certain square. The entire
-code is around 100 lines long. In order for **profvis** to fully profile the code, the
-**efficient** package needs to be installed from source
+The **efficient** package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for **profvis** to fully profile the code, the **efficient** package needs to be installed from source
 
 
 ```r
@@ -4338,39 +4018,32 @@ profvis(simulate_monopoly(10000))
 <p class="caption">(\#fig:7-2)Code profiling for simulating the game of Monopoly.</p>
 </div>
 
-The output from **profvis** shows that the vast majority of time (around 65%) is spent in the
-`move_square()` function.
+The output from **profvis** shows that the vast majority of time (around 65%) is spent in the `move_square()` function.
 
-In Monopoly moving around the board is complicated by the fact that rolling a double
-(a pair of 1's, 2's, ..., 6's) is special:
+In Monopoly moving around the board is complicated by the fact that rolling a double(a pair of 1's, 2's, ..., 6's) is special:
 
  * Roll two dice (`total1`): `total_score = total1`;
  * If you get a double, roll again (`total2`) and `total_score = total1 + total2`;
  * If you get a double, roll again (`total3`) and `total_score = total1 + total2 + total3`;
  * If roll three is a double, Go To Jail, otherwise move `total_score`.
 
-The function `move_square()` captures this logic. Now we know where the code is slow, 
-how can we speed up the computation? In the next section, we will discuss standard
-techniques that can be used. We will then revisit this example.
+The function `move_square()` captures this logic. Now we know where the code is slow, how can we speed up the computation? In the next section, we will discuss standard techniques that can be used. We will then revisit this example.
 
 ## Efficient base R 
 
-In R there is often more than one way to solve a problem. In this section we
-highlight standard tricks or alternative methods that may improve performance. 
+In R there is often more than one way to solve a problem. In this section we highlight standard tricks or alternative methods that may improve performance. 
 
 ### The `if()` vs `ifelse()` functions {-}
 
-`ifelse()` is a vectorised version of the standard control-flow function `if(test) if_yes else if_no` 
-that works as follows:
+`ifelse()` is a vectorised version of the standard control-flow function `if(test) if_yes else if_no` that works as follows:
+
 
 ```r
 ifelse(test, if_yes, if_no)
 ```
-In the above imaginary example, the return value
-is filled with elements from the `if_yes` and `if_no` arguments that are
-determined by whether the element of `test` is `TRUE` or `FALSE`. For example, 
-suppose we have a vector of exam marks. `ifelse()` could be used to classify
-them as pass or fail:
+
+In the above imaginary example, the return value is filled with elements from the `if_yes` and `if_no` arguments that are determined by whether the element of `test` is `TRUE` or `FALSE`. For example,  suppose we have a vector of exam marks. `ifelse()` could be used to classify them as pass or fail:
+
 
 ```r
 marks = c(25, 55, 75)
@@ -4378,8 +4051,7 @@ ifelse(marks >= 40, "pass", "fail")
 #> [1] "fail" "pass" "pass"
 ```
 
-If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, 
-then the standard conditional statement
+If the length of `test` condition is equal to $1$, i.e. `length(test) == 1`, then the standard conditional statement
 
 
 ```r
@@ -4390,6 +4062,7 @@ if(mark >= 40) {
   "fail"
 }
 ```
+
 is around five to ten times faster than `ifelse(mark >= 40, "pass", "fail")`.
 
 An additional quirk of `ifelse()` is that although it is more *programmer efficient*, as it is more concise and understandable than multi-line alternatives, it is often **less** *computationally efficient* than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:
@@ -4401,13 +4074,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   4.012   0.276   4.286
+#>   2.449   0.241   2.689
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.192   0.032   0.223
+#>   0.133   0.076   0.208
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4420,43 +4093,28 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   1.032   0.104   1.134
+#>   0.442   0.208   0.651
 identical(result1, result3)
 #> [1] TRUE
 ```
 
 ### Sorting and ordering {-}
 
-Sorting a vector is relatively quick; sorting a vector of length
-$10^7$ takes around $0.01$ seconds. If you only sort a vector once at the top of a
-script, then don't worry too much about this. However if you are sorting inside a loop, or
-in a shiny application, then it can be worthwhile thinking about how to optimise this
-operation.
+Sorting a vector is relatively quick; sorting a vector of length $10^7$ takes around $0.01$ seconds. If you only sort a vector once at the top of a script, then don't worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.
 
-There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can
-be specified in the `sort()` function; with `radix` being a new addition to R 3.3.
-Typically the `radix` (the non-default option) is the most computationally efficient option
-for most situations (it is around 
-20% faster when sorting a large vector of doubles).
+There are currently three sorting algorithms, `c("shell", "quick", "radix")` that can be specified in the `sort()` function; with `radix` being a new addition to R 3.3. Typically the `radix` (the non-default option) is the most computationally efficient option for most situations (it is around  20% faster when sorting a large vector of doubles).
 
-Another useful trick is to partially order the results. For example, if you only want
-to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial = 1:10)`.
-For very large vectors, this can give a three fold speed increase.
-
+Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the `partial` argument, i.e. `sort(x, partial = 1:10)`. For very large vectors, this can give a three fold speed increase.
 
 
 
 ### Reversing elements {-}
 
-The `rev()` function provides a reversed version of its argument. If you wish to sort in
-decreasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
+The `rev()` function provides a reversed version of its argument. If you wish to sort in decreasing order, `sort(x, decreasing = TRUE)` is marginally (around 10%) faster than `rev(sort(x))`.
 
 ### Which indices are `TRUE` \ {-}
 
-To determine which index of a vector or array are `TRUE`, we would typically use the
-`which()` function. If we want to find the index of just the minimum or maximum value,
-i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()`
-variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
+To determine which index of a vector or array are `TRUE`, we would typically use the `which()` function. If we want to find the index of just the minimum or maximum value, i.e. `which(x == min(x))` then using the efficient `which.min()`/`which.max()` variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="70%" />
@@ -4465,8 +4123,7 @@ variants can be orders of magnitude faster (see figure \@ref(fig:7-3))
 
 ###  Converting factors to numerics {-}
 
-A factor is just a vector of integers with associated levels. Occasionally we want to
-convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:
+A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:
 
 
 ```r
@@ -4475,9 +4132,7 @@ as.numeric(levels(f))[f]
 
 ### Logical AND and OR {-}
 
-The logical AND (`&`) and OR (`|`) operators are vectorised functions and are
-typically used during multi-criteria subsetting operations. The code below, for example, 
-returns `TRUE` for all elements of `x` greater than $0.4$ or less than $0.6$:
+The logical AND (`&`) and OR (`|`) operators are vectorised functions and are typically used during multi-criteria subsetting operations. The code below, for example,  returns `TRUE` for all elements of `x` less than $0.4$ or greater than $0.6$.
 
 
 ```r
@@ -4485,10 +4140,7 @@ x < 0.4 | x > 0.6
 #> [1]  TRUE FALSE  TRUE
 ```
 
-When R executes the above comparison, it will **always** calculate `x > 0.6`
-regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `&&`,
-only executes the second component if needed. This is efficient and leads to neater
-code, e.g.
+When R executes the above comparison, it will **always** calculate `x > 0.6` regardless of the value of `x < 0.4`. In contrast, the non-vectorised version, `&&`, only executes the second component if needed. This is efficient and leads to neater code, e.g.
 
 
 ```r
@@ -4509,8 +4161,7 @@ if(all(!is.na(x))) {
 }
 ```
 
-However care must be taken not to use `&&` or `||` on vectors since it only evaluates the first element of the vector, giving the
-incorrect answer. This is illustrated below:
+However care must be taken not to use `&&` or `||` on vectors since it only evaluates the first element of the vector, giving the incorrect answer. This is illustrated below:
 
 
 ```r
@@ -4520,47 +4171,34 @@ x < 0.4 || x > 0.6
 
 ### Row and column operations {-}
 
-In data analysis we often want to apply a function to each column or row of a data
-set. For example, we might want to calculate the column or row sums. The `apply()`
-function makes this type of operation straightforward.
+In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculate the column or row sums. The `apply()` function makes this type of operation straightforward.
+
 
 ```r
 # Second argument: 1 -> rows. 2 -> columns
 apply(data_set, 1, function_name)
 ```
-There are optimised functions for calculating row and columns sums/means, `rowSums()`,
-`colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.  The package
-**matrixStats** contains many optimised row/col functions.
+
+There are optimised functions for calculating row and columns sums/means, `rowSums()`, `colSums()`, `rowMeans()` and `colMeans()` that should be used whenever possible.  The package **matrixStats** contains many optimised row/col functions.
 
 ### `is.na()` and `anyNA()` \ {-}
 
-To test whether a vector (or other object) contains missing
-values we use the `is.na()` function. Often we are interested in whether a vector
-contains _any_ missing values. In this case, `anyNA(x)` is more efficient than
-`any(is.na(x))`.
+To test whether a vector (or other object) contains missing values we use the `is.na()` function. Often we are interested in whether a vector contains _any_ missing values. In this case, `anyNA(x)` is more efficient than `any(is.na(x))`.
 
 ### Matrices {-}
 
-A matrix is similar to a data frame: it is a two dimensional object and sub-setting
-and other functions work in the same way. However all matrix elements must have
-the same type. Matrices tend to be used during statistical calculations.
-The `lm()` function, for example, internally converts the data to a
-matrix before calculating the results; any characters are thus recoded as numeric
-dummy variables.
+A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. The `lm()` function, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.
 
-Matrices are generally faster than data frames. For example, the datasets `ex_mat` and `ex_df` from
-the **efficient** package each have $1000$ rows and $100$ columns and contain the
-same random numbers. However selecting rows from the data frame is around $150$ times
-slower than a matrix, as illustrated below:
+Matrices are generally faster than data frames. For example, the datasets `ex_mat` and `ex_df` from the **efficient** package each have $1000$ rows and $100$ columns and contain the same random numbers. However selecting rows from the data frame is around $150$ times slower than a matrix, as illustrated below:
 
 
 ```r
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min     lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00276 0.0037 0.0761 0.00588 0.00625 7.05   100
-#>   ex_df[1, ] 0.78421 0.8235 0.9753 0.84011 0.87759 8.33   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00273 0.00332 0.0517 0.00469 0.00765 4.57   100
+#>   ex_df[1, ] 0.44201 0.45602 0.5273 0.47070 0.49194 5.50   100
 ```
 
 <div class="rmdtip">
@@ -4569,22 +4207,13 @@ microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 
 ### The integer data type {-}
 
-Numbers in R are usually stored in [double-precision floating-point
-format](https://goo.gl/ZA5R8a), which is described in detail in @Braun2007 and @Goldberg1991. The term 'double'
-refers to the fact that on $32$ bit systems (for which the format was developed) two
-memory locations are used to store a single number. Each double-precision number is
-accurate to around $17$ decimal places.
+Numbers in R are usually stored in [double-precision floating-point format](https://goo.gl/ZA5R8a), which is described in detail in @Braun2007 and @Goldberg1991. The term 'double' refers to the fact that on $32$ bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around $17$ decimal places.
 
 <div class="rmdnote">
-<p>When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it's <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(&quot;%.17f&quot;, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).</p>
+<p>When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">\(2\)</span>, instead it’s <strong>almost</strong> <span class="math inline">\(2\)</span>. Using <code>sprintf(&quot;%.17f&quot;, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).</p>
 </div>
 
-Integers are another numeric data type. Integers primarily exist to be passed to C or
-Fortran code. You do not need to create integers for most applications. However,
-they are occasionally used to optimise sub-setting operations. When we subset a data
-frame or matrix, we are interacting with C code so we might be tempted to use integers
-with the purpose of speeding up our code. For example, if we look at the arguments for
-the `head` function
+Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code so we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the `head` function
 
 
 ```r
@@ -4610,23 +4239,22 @@ microbenchmark(head(x, 6.0), head(x, 6L), times=1000000)
 # head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a
 ```
 
-Since this function is ubiquitous, this low level optimisation is useful. 
-In general, if you are worried about shaving microseconds off your R code run time, you should
-probably consider switching to another language.
+Since this function is ubiquitous, this low level optimisation is useful. In general, if you are worried about shaving microseconds off your R code run time, you should probably consider switching to another language.
 
-Integers are more space efficient. 
-The code below compares the size of an integer vector to a standard numeric vector:
+Integers are more space efficient. The code below compares the size of an integer vector to a standard numeric vector:
 
 
 ```r
 pryr::object_size(1:10000)
+#> Registered S3 method overwritten by 'pryr':
+#>   method      from
+#>   print.bytes Rcpp
 #> 40 kB
 pryr::object_size(y = seq(1, 10000, by=1.0))
 #> 80 kB
 ```
 
-The results show that the integer version is roughly half the size. However, most mathematical operations will convert
-the integer vector into a standard numerical vector, as illustrated below: 
+The results show that the integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below: 
 
 
 ```r
@@ -4638,13 +4266,7 @@ Further storage savings can be obtained using the **bit** package.
 
 ### Sparse matrices {-}
 
-Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are
-zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements
-is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our
-data isn't sparse but the resulting data structures we create may be sparse. There are a number of
-techniques/methods used to store sparse matrices. Methods for creating sparse matrices
-can be found in the **Matrix** package^[Technically this isn't in base R, it's a recommended
-package.]. 
+Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn't sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the **Matrix** package^[Technically this isn't in base R, it's a recommended package.]. 
 
 As an example, suppose we have a large matrix where the diagonal elements are non-zero:
 
@@ -4656,16 +4278,12 @@ sp = sparseMatrix(1:N, 1:N, x = 1)
 m = diag(1, N, N)
 ```
 
-Both objects contain the same information, but the data is stored differently; since 
-we have the same value multiple times in the matrix, we only need to store the value once and 
-link it to multiple matrix locations. The matrix object
-stores each individual element, while the sparse matrix object only stores the location of the non-zero
-elements. This is much more memory efficient, as illustrated below:
+Both objects contain the same information, but the data is stored differently; since we have the same value multiple times in the matrix, we only need to store the value once and  link it to multiple matrix locations. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:
 
 
 ```r
 pryr::object_size(sp)
-#> 161 kB
+#> 162 kB
 pryr::object_size(m)
 #> 800 MB
 ```
@@ -4678,43 +4296,30 @@ pryr::object_size(m)
     * `tail.matrix()`
     * `lm()`. 
 
-  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size()`, compare the 
-  objects.
+  1. Construct a matrix of integers and a matrix of numerics. Using `pryr::object_size()`, compare the objects.
   
-  1. How does the function `seq.int()`, which was used in the `tail.matrix()` function, 
-  differ to the standard `seq()` function?
+  1. How does the function `seq.int()`, which was used in the `tail.matrix()` function, differ to the standard `seq()` function?
 
 <div class="rmdnote">
-<p>A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over a 16th of the space (but you can't use <code>NA</code>s).</p>
+<p>A related memory saving idea is to replace <code>logical</code> vectors with vectors from the <strong>bit</strong> package which take up just over a 16th of the space (but you can’t use <code>NA</code>s).</p>
 </div>
 
-## Example: Optimising  the `movie_square()` function
+## Example: Optimising  the `move_square()` function
 
-Figure \@ref(fig:7-2) shows that our main bottleneck in simulating the game of
-Monopoly is the `movie_square()` function. Within this function, we spend around 50%
-of the time creating a data frame, 20% of the time calculating row sums, and the remainder on
-comparison operations. This piece of code can be optimised fairly easily (while still
-retaining the same overall structure) by incorporating the following
-improvements^[Solutions are available in the **efficient** package vignette.]:
+Figure \@ref(fig:7-2) shows that our main bottleneck in simulating the game of Monopoly is the `move_square()` function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements^[Solutions are available in the **efficient** package vignette.]:
 
-  * Instead of using `seq(1, 6)` to generate the 6 possible values of rolling a dice, 
-  use `1:6`. Also, instead of a data frame, use a matrix and perform a single call to 
-  the `sample()` function
+  * Instead of using `seq(1, 6)` to generate the 6 possible values of rolling a dice, use `1:6`. Also, instead of a data frame, use a matrix and perform a single call to the `sample()` function
   
     
     ```r
     matrix(sample(1:6, 6, replace = TRUE), ncol = 2)
     ```
-  
-    Overall, this revised line is around 25 times faster; most of the speed boost came from
-    switching to a matrix.
-  * Using `rowSums()` instead of `apply()`. The `apply()` function call is already faster since we've switched 
-  from a data frame to a matrix (around 3 times). Using `rowSums()` with a matrix, gives a 10 fold speed boost.
+
+    Overall, this revised line is around 25 times faster; most of the speed boost came from switching to a matrix.
+  * Using `rowSums()` instead of `apply()`. The `apply()` function call is already faster since we've switched from a data frame to a matrix (around 3 times). Using `rowSums()` with a matrix, gives a 10 fold speed boost.
   * Use `&&` in the `if` condition; this is around twice as fast compared to `&`.
   
-Impressively the refactored code runs 20 times faster than the original code, compare
-figures \@ref(fig:7-2) and \@ref(fig:7-4), with the main speed boost coming from using
-a matrix instead of a data frame.
+Impressively the refactored code runs 20 times faster than the original code, compare figures \@ref(fig:7-2) and \@ref(fig:7-4), with the main speed boost coming from using a matrix instead of a data frame.
 
 <div class="figure" style="text-align: center">
 <img src="figures/f7_4_profvis_monopoly.png" alt="Code profiling of the optimised code." width="100%" />
@@ -4727,23 +4332,13 @@ a matrix instead of a data frame.
 
 #### Exercise {-}
 
-The `move_square()` function above uses a vectorised solution. Whenever we move, we
-always roll six dice, then examine the outcome and determine the number of doubles.
-However, this is potentially wasteful, since the probability of getting one double is
-$1/6$ and two doubles is $1/36$. Another method is too only roll additional dice if
-and when they are needed. Implement and time this solution.
+The `move_square()` function above uses a vectorised solution. Whenever we move, we always roll six dice, then examine the outcome and determine the number of doubles. However, this is potentially wasteful, since the probability of getting one double is $1/6$ and two doubles is $1/36$. Another method is too only roll additional dice if and when they are needed. Implement and time this solution.
 
 ## Parallel computing {#performance-parallel}
 
-This section provides a brief foray into the world of parallel computing. It only looks
-at methods for parallel computing on 'shared memory systems'. This simply means
-computers in which multiple central processor unit (CPU) cores can access the same
-block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of
-what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
+This section provides a brief foray into the world of parallel computing. It only looks at methods for parallel computing on 'shared memory systems'. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of what is possible; for a fuller account of parallel processing in R, see @mccallum2011.
 
-The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed
-with base R. The **parallel** package must still be loaded before use, however, and
-you must determine the number of available cores manually, as illustrated below:
+The foundational package for parallel computing in R is **parallel**. In recent R versions (since R 2.14.0) this comes pre-installed with base R. The **parallel** package must still be loaded before use, however, and you must determine the number of available cores manually, as illustrated below:
 
 
 ```r
@@ -4758,9 +4353,7 @@ no_of_cores = detectCores()
 
 ### Parallel versions of apply functions
 
-The most commonly used parallel applications are parallelised replacements of
-`lapply()`, `sapply()` and `apply()`. The parallel implementations and their arguments are
-shown below.
+The most commonly used parallel applications are parallelised replacements of `lapply()`, `sapply()` and `apply()`. The parallel implementations and their arguments are shown below.
 
 
 ```r
@@ -4769,19 +4362,11 @@ parApply(cl = NULL, X, MARGIN, FUN, ...)
 parSapply(cl = NULL, X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) 
 ```
 
-The key point is that there is very little difference in arguments between `parLapply()`
-and `apply()`, so the barrier to using (this form) of parallel computing is low,
-assuming you are proficient with the apply family of functions. Each function above
-has an argument `cl`, which is created by a `makeCluster()` call. This function, amongst
-other things, specifies the number of processors to use.
+The key point is that there is very little difference in arguments between `parLapply()` and `lapply()`, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument `cl`, which is created by a `makeCluster()` call. This function, amongst other things, specifies the number of processors to use.
 
 ### Example: Snakes and Ladders
 
-Parallel computing is ideal for Monte-Carlo simulations. Each core independently
-simulates a realisation from the model. At the end, we gather up the results. In the
-**efficient** package, there is a function that simulates a single game of Snakes and
-Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors
-after a particularly long and dull game of Snakes and Ladders with his son.]
+Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the **efficient** package, there is a function that simulates a single game of Snakes and Ladders - `snakes_ladders()`^[The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.]
 
 The following code illustrates how to simulate `N` games using `sapply()`:
 
@@ -4817,20 +4402,14 @@ stopCluster(cl)
  and used a four (or more) core, then we would
 obtain a four-fold speed up (we set `makeCluster(4)`). 
 
-On a multi-processor computer with four (or more) cores, if we achieved perfect 
-parallelisation this could lead to a four-fold speed-up. However, it is rare 
-that we would achieve this optimal speed-up since there is always communication
-between threads.
+On a multi-processor computer with four (or more) cores, if we achieved perfect parallelisation this could lead to a four-fold speed-up. However, it is rare  that we would achieve this optimal speed-up since there is always communication between threads.
 
 ### Exit functions with care
 
-Always call `stopCluster()` to free resources when you finish with the
-cluster object. However if the parallel code is within function, it's possible that
-function ends as the results of an error and so `stopCluster()` is omitted.
+Always call `stopCluster()` to free resources when you finish with the cluster object. However if the parallel code is within function, it's possible that function ends as the results of an error and so `stopCluster()` is omitted.
 
-The `on.exit()` function handles this problem with the minimum of fuss; regardless of
-how the function ends, `on.exit()` is always called. In the context of parallel
-programming we will have something similar to:
+The `on.exit()` function handles this problem with the minimum of fuss; regardless of how the function ends, `on.exit()` is always called. In the context of parallel programming we will have something similar to:
+
 
 ```r
 simulate = function(cores) {
@@ -4848,75 +4427,46 @@ simulate = function(cores) {
 
 
 
-If you are using Linux or OS, then another way of running code in parallel is to use 
-the `mclapply()` and `mcmapply()` functions
+If you are using Linux or OS X, then another way of running code in parallel is to use the `mclapply()` and `mcmapply()` functions
+
 
 ```r
 # This will run on Windows, but will only use 1 core
 mclapply(1:N, snakes_ladders)
 ```
-These functions use forking, that is creating a new copy of a process running on the
-CPU. However Windows does not support this low-level functionality in the way that
-Linux does. The main advantage of `mclapply()` is that you don't have to start and stop cluster 
-objects. The big disadvantage is that on Windows machines, you are limited to a single core.
+
+These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. The main advantage of `mclapply()` is that you don't have to start and stop cluster  objects. The big disadvantage is that on Windows machines, you are limited to a single core.
 
 ## Rcpp
 
-Sometimes R is just slow. You've tried every trick you know, and your code is still
-crawling along. At this point you could consider rewriting key parts of your code in
-another, faster language. R has interfaces to other languages via packages, such as
-**Rcpp**, **rJava**, **rPython** and recently **V8**. These provide R interfaces to
-C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of these
-(figure \@ref(fig:7-5)).
+Sometimes R is just slow. You've tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as **Rcpp**, **rJava**, **rPython** and recently **V8**. These provide R interfaces to C++, Java, Python and JavaScript respectively. **Rcpp** is the most popular of these (figure \@ref(fig:7-5)).
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/7-5-1.png" alt="Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages." width="70%" />
 <p class="caption">(\#fig:7-5)Downloads per day from the RStudio CRAN mirror of packages that provide R interfaces to other languages.</p>
 </div>
 
-C++ is a modern, fast and very well-supported language with libraries for performing
-many kinds of computational tasks. **Rcpp** makes incorporating C++ code into your R
-workflow easy.
+C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational tasks. **Rcpp** makes incorporating C++ code into your R workflow easy.
 
-Although C/Fortran routines can be used using the `.Call()` function this is not
-recommended: using `.Call()` can be a painful experience. **Rcpp** provides a friendly
-API (Application Program Interface) that lets you write high-performance code,
-bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and
-recursive functions.
+Although C/Fortran routines can be used using the `.Call()` function this is not recommended: using `.Call()` can be a painful experience. **Rcpp** provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R's tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.
 
-C++ is a powerful programming language about which entire books have been written.
-This section therefore is focussed on getting started and providing a flavour of what is
-possible. It is structured as follows. After ensuring that your computer is set-up for
-**Rcpp**, we proceed by creating a simple C++ function, to show how C++ compares with
-R (Section \@ref(simple-c)). This is converted into an R function using
-`cppFunction()` in Section \@ref(cppfunction). The remainder of the chapter explains
-C++ data types (Section \@ref(c-types)), illustrates how to source C++ code directly
-(Section \@ref(sourcecpp)), explains vectors (Section \@ref(vectors-and-loops))
-and **Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further
-resources on the subject (Section \@ref(rcpp-resources)).
+C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and providing a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for **Rcpp**, we proceed by creating a simple C++ function, to show how C++ compares with R (Section \@ref(simple-c)). This is converted into an R function using `cppFunction()` in Section \@ref(cppfunction). The remainder of the chapter explains C++ data types (Section \@ref(c-types)), illustrates how to source C++ code directly (Section \@ref(sourcecpp)), explains vectors (Section \@ref(vectors-and-loops)) and **Rcpp** sugar (Section \@ref(sugar)) and finally provides guidance on further resources on the subject (Section \@ref(rcpp-resources)).
 
 
 ### A simple C++ function {#simple-c}
 
-To write and compile C++ functions, you need a working C++ compiler (see the
-Prerequiste section at the beginning of this chapter). The code in this chapter was
-generated using version 0.12.10 of **Rcpp**. 
+To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 1.0.4.6 of **Rcpp**. 
 
-**Rcpp** is well documented, as illustrated by the number of vignettes on the package's
-[CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its
-popularity, many other packages depend on **Rcpp**, which can be seen by looking at
-the `Reverse Imports` section.
+**Rcpp** is well documented, as illustrated by the number of vignettes on the package's [CRAN](https://cran.r-project.org/web/packages/Rcpp/) page. In addition to its popularity, many other packages depend on **Rcpp**, which can be seen by looking at the `Reverse Imports` section.
 
-To check that you have everything needed for this chapter, run the following piece of
-code from the course R package:
+To check that you have everything needed for this chapter, run the following piece of code from the course R package:
 
 
 ```r
 efficient::test_rcpp()
 ```
 
-A C++ function is similar to an R function: you pass a set of inputs to the function, some
-code is run, a single object is returned. However there are some key differences.
+A C++ function is similar to an R function: you pass a set of inputs to the function, some code is run, a single object is returned. However there are some key differences.
 
 1. In the C++ function each line must be terminated with `;` In R, we use `;` only when we have multiple statements on the same line.
 2. We must declare object types in the C++ version. In particular we need to declare the types of the function arguments, return value and any intermediate objects we create. 
@@ -4925,8 +4475,7 @@ code is run, a single object is returned. However there are some key differences
 5. Object assignment must use `=` sign. The `<-` operator isn't valid.
 6. One line comments can be created using `//`. Multi-line comments are created using `/*...*/`
 
-Suppose we want to create a function that adds two numbers together. In R this would
-be a simple one line affair:
+Suppose we want to create a function that adds two numbers together. In R this would be a simple one line affair:
   
 
 ```r
@@ -4946,16 +4495,11 @@ double add_cpp(double x, double y) {
 }
 ```
 
-If we were writing a C++ program we would also need another function called `main()`.
-We would then compile the code to obtain an executable. The executable is platform
-dependent. The beauty of using **Rcpp** is that it makes it very easy to call C++
-functions from R and the user doesn't have to worry about the platform, or compilers
-or the R/C++ interface.
+If we were writing a C++ program we would also need another function called `main()`. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using **Rcpp** is that it makes it very easy to call C++ functions from R and the user doesn't have to worry about the platform, or compilers or the R/C++ interface.
 
 ### The `cppFunction()` command {#cppfunction}
 
-If we pass the C++ function created in the previous section as a text string argument to
-`cppFunction()`:
+If we pass the C++ function created in the previous section as a text string argument to `cppFunction()`:
 
 
 ```r
@@ -4968,16 +4512,15 @@ cppFunction('
 ')
 ```
 
-**Rcpp** will magically compile the C++ code and construct a function that bridges the
-gap between R and C++. After running the above code, we now have access to the `add_cpp()`
-function
+**Rcpp** will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the `add_cpp()` function
 
 
 ```r
 add_cpp
 #> function (x, y) 
-#> .Primitive(".Call")(<pointer: 0x2ba00f719220>, x, y)
+#> .Call(<pointer: 0x7f6c73959bc0>, x, y)
 ```
+
 and can call the `add_cpp()` function in the usual way
 
 
@@ -4986,20 +4529,14 @@ add_cpp(1, 2)
 #> [1] 3
 ```
 
-We don't have to worry about compilers. Also, if you include this function in a
-package, users don't have to worry about any of the **Rcpp** magic. It just works.
+We don't have to worry about compilers. Also, if you include this function in a package, users don't have to worry about any of the **Rcpp** magic. It just works.
 
 ### C++ data types {#c-types}
 
-The most basic type of variable is an integer, `int`. An `int` variable can store a
-value in the range $-32768$ to $+32767$. To store floating point numbers, there are
-single precision numbers, `float` and double precision numbers, `double`. A `double`
-takes twice as much memory as a `float` (in general, we should always work with double
-precision numbers unless we have a compelling reason to switch to floats). For
-__single__ characters, we use the `char` data type.
+The most basic type of variable is an integer, `int`. An `int` variable can store a value in the range $-32768$ to $+32767$. To store floating point numbers, there are single precision numbers, `float` and double precision numbers, `double`. A `double` takes twice as much memory as a `float` (in general, we should always work with double precision numbers unless we have a compelling reason to switch to floats). For __single__ characters, we use the `char` data type.
 
 <div class="rmdnote">
-<p>There is also something called an unsigned int, which goes from <span class="math inline">0</span> to <span class="math inline">65, 535</span> and a <code>long int</code> that ranges from <span class="math inline">0</span> to <span class="math inline">2<sup>31</sup> − 1</span>.</p>
+<p>There is also something called an unsigned int, which goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(65,535\)</span> and a <code>long int</code> that ranges from <span class="math inline">\(0\)</span> to <span class="math inline">\(2^{31}-1\)</span>.</p>
 </div>
 
 
@@ -5013,41 +4550,25 @@ float    A single precision floating point number.
 double   A double-precision floating point number. 
 void     A valueless quantity.                     
 
-A pointer object is a variable that points to an area of memory that has been given a
-name. Pointers are a very powerful, but primitive facility contained in the C++
-language. They are very useful since rather than passing large objects around, we pass
-a pointer to the memory location; rather than pass the house, we just give the
-address. We won't use pointers in this chapter, but mention them for completeness.
-Table \@ref(tab:cpptypes) gives an overview.
+A pointer object is a variable that points to an area of memory that has been given a name. Pointers are a very powerful, but primitive facility contained in the C++ language. They are very useful since rather than passing large objects around, we pass a pointer to the memory location; rather than pass the house, we just give the address. We won't use pointers in this chapter, but mention them for completeness. Table \@ref(tab:cpptypes) gives an overview.
 
 ### The `sourceCpp()` function {#sourcecpp}
 
-The `cppFunction()` is great for getting small examples up and running. But it is better
-practice to put your C++ code in a separate file (with file extension `cpp`) and use
-the function call `sourceCpp("path/to/file.cpp")` to compile them. However we need to
-include a few headers at the top of the file. The first line we add gives us access to
-the **Rcpp** functions. The file `Rcpp.h` contains a list of function and class
-definitions supplied by **Rcpp**. This file will be located where **Rcpp** is
-installed. The `include` line
+The `cppFunction()` is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension `cpp`) and use the function call `sourceCpp("path/to/file.cpp")` to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the **Rcpp** functions. The file `Rcpp.h` contains a list of function and class definitions supplied by **Rcpp**. This file will be located where **Rcpp** is installed. The `include` line
 
 
 ```cpp
 #include <Rcpp.h>
 ```
 
-causes the compiler to replace that lines with the contents of the named source file.
-This means that we can access the functions defined by **Rcpp**. To access the
-**Rcpp** functions we would have to type `Rcpp::function_1`. To avoid typing `Rcpp::`,
-we use the namespace facility
+causes the compiler to replace that lines with the contents of the named source file. This means that we can access the functions defined by **Rcpp**. To access the **Rcpp** functions we would have to type `Rcpp::function_1`. To avoid typing `Rcpp::`, we use the namespace facility
 
 
 ```cpp
 using namespace Rcpp;
 ```
 
-Now we can just type `function_1()`; this is the same concept that R uses for managing
-function name collisions when loading packages. Above each function we want to
-export/use in R, we add the tag
+Now we can just type `function_1()`; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag
 
 
 ```cpp
@@ -5072,20 +4593,11 @@ double add_cpp(double x, double y) {
 }
 ```
 
-There are two main benefits with putting your C++ functions in separate files. First,
-we have the benefit of syntax highlighting (RStudio has great support for C++
-editing). Second, it's easier to make syntax errors when switching between R and
-C++ in the same file. To save space we'll omit the headers for the remainder of
-the chapter.
+There are two main benefits with putting your C++ functions in separate files. First, we have the benefit of syntax highlighting (RStudio has great support for C++ editing). Second, it's easier to make syntax errors when switching between R and C++ in the same file. To save space we'll omit the headers for the remainder of the chapter.
 
 ### Vectors and loops
 
-Let's now consider a slightly more complicated example. Here we want to write our own
-function that calculates the mean. This is just an illustrative example: R's version
-is much better and more robust to scale differences in our data. For comparison, let's
-create a corresponding R function - this is the same function we used in chapter
-\@ref(programming). The function takes a single vector `x` as input, and returns the
-mean value, `m`:
+Let's now consider a slightly more complicated example. Here we want to write our own function that calculates the mean. This is just an illustrative example: R's version is much better and more robust to scale differences in our data. For comparison, let's create a corresponding R function - this is the same function we used in chapter \@ref(programming). The function takes a single vector `x` as input, and returns the mean value, `m`:
 
 
 ```r
@@ -5098,21 +4610,11 @@ mean_r = function(x) {
 }
 ```
 
-This is a very bad R function; we should just use the base function `mean()` for real
-world applications. However the purpose of `mean_r()` is to provide a comparison for the
-C++ version, which we will write in a similar way.
+This is a very bad R function; we should just use the base function `mean()` for real world applications. However the purpose of `mean_r()` is to provide a comparison for the C++ version, which we will write in a similar way.
 
-In this example, we will let **Rcpp** smooth the interface between C++ and R by using
-the `NumericVector` data type. This **Rcpp** data type mirrors the R vector object
-type. Other common classes are: `IntegerVector`, `CharacterVector`, and
-`LogicalVector`.
+In this example, we will let **Rcpp** smooth the interface between C++ and R by using the `NumericVector` data type. This **Rcpp** data type mirrors the R vector object type. Other common classes are: `IntegerVector`, `CharacterVector`, and `LogicalVector`.
 
-In the C++ version of the mean function, we specify the arguments types: `x`
-(`NumericVector`) and the return value (`double`). The C++ version of the `mean()`
-function is a few lines longer. Almost always, the corresponding C++ version will be,
-possibly much, longer. In general R optimises for reduced development time; C++
-optimises for fast execution time. The corresponding C++ function for calculating the
-mean is:
+In the C++ version of the mean function, we specify the arguments types: `x` (`NumericVector`) and the return value (`double`). The C++ version of the `mean()` function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer. In general R optimises for reduced development time; C++ optimises for fast execution time. The corresponding C++ function for calculating the mean is:
 
 
 ```cpp
@@ -5155,16 +4657,14 @@ Although the C++ version is similar, there are a few crucial differences.
 The above code adds `x[i] / n` to the value of `mean`. Other similar operators are `-=`, `*=`, `/=` and `i--`.
 1. A C++ vector starts at `0` **not** `1`
 
-To compare the C++ and R functions, we'll generate some normal random numbers for the
-comparison:
+To compare the C++ and R functions, we'll generate some normal random numbers for the comparison:
 
 
 ```r
 x = rnorm(1e4)
 ```
 
-Then call the `microbenchmark()` function (results plotted in figure
-\@ref(fig:7-6)).
+Then call the `microbenchmark()` function (results plotted in figure \@ref(fig:7-6)).
 
 
 ```r
@@ -5175,12 +4675,7 @@ z = microbenchmark(
 )
 ```
 
-In this simple example, the Rcpp variant is around $100$ times faster than the
-corresponding pure R version. This sort of speed-up is not uncommon when switching to
-an Rcpp solution. Notice that the Rcpp version and standard base function `mean()` run
-at roughly the same speed; after all, the base R function is written in C. However,
-`mean()` uses a more sophisticated algorithm when calculating the mean to ensure
-accuracy.
+In this simple example, the Rcpp variant is around $100$ times faster than the corresponding pure R version. This sort of speed-up is not uncommon when switching to an Rcpp solution. Notice that the Rcpp version and standard base function `mean()` run at roughly the same speed; after all, the base R function is written in C. However, `mean()` uses a more sophisticated algorithm when calculating the mean to ensure accuracy.
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/7-6-1.png" alt="Comparison of mean functions." width="70%" />
@@ -5210,9 +4705,7 @@ double test1() {
 
 #### Matrices {-}
 
-Each vector type has a corresponding matrix equivalent: `NumericMatrix`,
-`IntegerMatrix`, `CharacterMatrix` and `LogicalMatrix`. We use these types in a
-similar way to how we used `NumericVector`'s. The main differences are:
+Each vector type has a corresponding matrix equivalent: `NumericMatrix`, `IntegerMatrix`, `CharacterMatrix` and `LogicalMatrix`. We use these types in a similar way to how we used `NumericVector`'s. The main differences are:
 
  * When we initialise, we need to specify the number of rows and columns
     
@@ -5229,14 +4722,13 @@ similar way to how we used `NumericVector`'s. The main differences are:
 
 ### C++ with sugar on top {#sugar}
 
-**Rcpp** sugar brings a higher-level of abstraction to C++ code written using the
-**Rcpp** API. What this means in practice is that we can write C++ code in the style
-of R. For example, suppose we wanted to find the squared difference of two vectors; a
-squared residual in regression. In R we would use
+**Rcpp** sugar brings a higher-level of abstraction to C++ code written using the **Rcpp** API. What this means in practice is that we can write C++ code in the style of R. For example, suppose we wanted to find the squared difference of two vectors; a squared residual in regression. In R we would use
+
 
 ```r
 sq_diff_r = function(x, y) (x - y)^2
 ```
+
 Rewriting the function in standard C++ would give
 
 
@@ -5252,8 +4744,7 @@ NumericVector res_c(NumericVector x, NumericVector y) {
 }
 ```
 
-With **Rcpp** sugar we can rewrite this code to be more succinct and have more of an R
-feel:
+With **Rcpp** sugar we can rewrite this code to be more succinct and have more of an R feel:
 
 
 ```cpp
@@ -5262,29 +4753,21 @@ NumericVector res_sugar(NumericVector x, NumericVector y) {
 }
 ```
 
-In the above C++ code, the `pow()` function and `x-y` are valid due to **Rcpp** sugar.
-Other functions that are available include the d/q/p/r statistical functions, such as
-`rnorm()` and `pnorm()`. The sweetened versions aren't usually faster than the C++
-version, but typically there's very little difference between the two. However with
-the sugared variety, the code is shorter and is constantly being improved.
+In the above C++ code, the `pow()` function and `x-y` are valid due to **Rcpp** sugar. Other functions that are available include the d/q/p/r statistical functions, such as `rnorm()` and `pnorm()`. The sweetened versions aren't usually faster than the C++ version, but typically there's very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.
 
 #### Exercises {-}
 
-1. Construct an R version (using a `for` loop rather than the vectorised solution),
-`res_r()` and compare the three function variants. 
+1. Construct an R version (using a `for` loop rather than the vectorised solution), `res_r()` and compare the three function variants. 
 1. In the above example, `res_sugar()` is faster than `res_c()`. Do you know why?
 
 ### Rcpp resources
 
-The aim of this section was to provide an introduction to **Rcpp**. One of the selling 
-features of **Rcpp** is that there is a great deal of documentation available.
+The aim of this section was to provide an introduction to **Rcpp**. One of the selling features of **Rcpp** is that there is a great deal of documentation available.
 
  * The **Rcpp** [website](http://www.rcpp.org/);
- * The original Journal of Statistical Software paper describing **Rcpp**
- and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
+ * The original Journal of Statistical Software paper describing **Rcpp** and the follow-up book [@Eddelbuettel2011; @Eddelbuettel2013];
  * @Wickham2014 provides a very readable chapter on **Rcpp** that goes into a bit more detail than this section;
- * The **Rcpp** section on the [StackOverflow](https://stackoverflow.com/questions/tagged/rcpp) website.
- Questions are often answered by the **Rcpp** authors.
+ * The **Rcpp** section on the [StackOverflow](https://stackoverflow.com/questions/tagged/rcpp) website. Questions are often answered by the **Rcpp** authors.
  
 
 
@@ -5299,24 +4782,16 @@ knit: "bookdown::preview_chapter"
 
 # Efficient hardware {#hardware}
 
-This chapter is odd for a book on R programming. It contains very little code, 
-and yet the chapter has the potential to speed up your algorithms by orders of
-magnitude. This chapter considers the impact that your computer has on your time.
+This chapter is odd for a book on R programming. It contains very little code,  and yet the chapter has the potential to speed up your algorithms by orders of magnitude. This chapter considers the impact that your computer has on your time.
 
-Your hardware is crucial. It will not only determine how _fast_ you can solve your
-problem, but also whether you can even tackle the problem of interest. 
-This is because everything is loaded in RAM. Of course, having a more powerful
-computer costs money. The goal is to help you decide whether the benefits of
-upgrading your hardware are worth that extra cost.
+Your hardware is crucial. It will not only determine how _fast_ you can solve your problem, but also whether you can even tackle the problem of interest.  This is because everything is loaded in RAM. Of course, having a more powerful computer costs money. The goal is to help you decide whether the benefits of upgrading your hardware are worth that extra cost.
 
-We'll begin this chapter with a background section on computer storage and 
-memory and how it is measured. Then we consider individual computer components, 
-before concluding with renting machines in the cloud.
+We'll begin this chapter with a background section on computer storage and memory and how it is measured. Then we consider individual computer components,  before concluding with renting machines in the cloud.
 
 ### Prerequisites {-}
 
-This chapter will focus on assessing your hardware and the benefit of upgrading. We 
-will use the **benchmarkme** package to quantify the effect of changing your CPU.
+This chapter will focus on assessing your hardware and the benefit of upgrading. We will use the **benchmarkme** package to quantify the effect of changing your CPU.
+
 
 ```r
 library("benchmarkme")
@@ -5324,13 +4799,11 @@ library("benchmarkme")
 
 ## Top 5 tips for efficient hardware
 
-1. Use the package **benchmarkme** to assess your CPUs number crunching ability; 
-  is it worth upgrading your hardware?
+1. Use the package **benchmarkme** to assess your CPUs number crunching ability is it worth upgrading your hardware?
 1. If possible, add more RAM.
 1. Double check that you have installed a $64$-bit version of R.
 1. Cloud computing is a cost effective way of obtaining more compute power.
-1. A solid state drive typically won't have much impact on the speed of your R code, 
-  but will increase your overall productivity since I/0 is much faster.
+1. A solid state drive typically won't have much impact on the speed of your R code, but will increase your overall productivity since I/0 is much faster.
 
 ## Background: what is a byte?
 
@@ -5376,7 +4849,7 @@ Microsoft Windows, for example, uses 1MB to mean $2^{20}$B. Even more confusing 
 
 Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.
 
-Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USAarrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
+Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set `USArrests`, is a data frame with $50$ rows and $4$ columns. Each row corresponds to a state in the USA
 
 
 ```r
@@ -5399,16 +4872,16 @@ When we inspect the object size of the original data set and the distance object
 
 ```r
 pryr::object_size(USArrests)
-#> 5.23 kB
+#> 5.74 kB
 pryr::object_size(d)
-#> 14.3 kB
+#> 14.8 kB
 ```
 
 <div class="rmdnote">
 <p>The distance object <code>d</code> is actually a vector that contains the distances in the upper triangular region.</p>
 </div>
 
-we have managed to create an object that is three times larger than the original data set. In fact the object `d` is a symmetric $n \times n$ matrix, where $n$ is the number of rows in `USAarrests`. Clearly, as `n` increases the size of `d` increases at rate $O(n^2)$. So if our original data set contained $10,000$ records, the associated distance matrix would contain almost $10^8$ values. Of course since the matrix is symmetric, this corresponds to around $50$ million unique values. 
+we have managed to create an object that is three times larger than the original data set. In fact the object `d` is a symmetric $n \times n$ matrix, where $n$ is the number of rows in `USArrests`. Clearly, as `n` increases the size of `d` increases at rate $O(n^2)$. So if our original data set contained $10,000$ records, the associated distance matrix would contain almost $10^8$ values. Of course since the matrix is symmetric, this corresponds to around $50$ million unique values.
 
 <div class="rmdtip">
 <p>A rough rule of thumb is that your RAM should be three times the size of your data set.</p>
@@ -5446,8 +4919,8 @@ It is a testament to the design of R that it is still relevant and its popularit
 ```r
 fortunes::fortune(21)
 #> 
-#> I seem to recall that we were targetting 512k Macintoshes. In our dreams
-#> we might have seen 16Mb Sun.
+#> I seem to recall that we were targetting 512k Macintoshes. In our dreams we
+#> might have seen 16Mb Sun.
 #>    -- Ross Ihaka (in reply to the question whether R&R thought when they
 #>       started out that they would see R using 16G memory on a dual Opteron
 #>       computer)
@@ -5472,7 +4945,7 @@ Unless you have a fairly expensive laptop your computer probably has a standard 
 HDDs were first introduced by IBM in 1956. Data is stored using magnetism on a rotating platter, as shown in Figure \@ref(fig:8-2). The faster the platter spins, the faster the HDD can perform. Many laptop drives spin at either $5400$RPM (Revolutions per Minute) or $7200$RPM. The major advantage of HDDs is that they are cheap, making a $1$TB laptop standard.
 
 <div class="rmdnote">
-<p>In the authors' experience, having an SSD drive doesn't make <strong>much</strong> difference to R. However, the reduction in boot time and general tasks makes an SSD drive a wonderful purchase.</p>
+<p>In the authors’ experience, having an SSD drive doesn’t make <strong>much</strong> difference to R. However, the reduction in boot time and general tasks makes an SSD drive a wonderful purchase.</p>
 </div>
 
 <div class="figure" style="text-align: center">
@@ -5485,30 +4958,24 @@ Solid state drives (SSDs) can be thought of as large, but more sophisticated ver
 The read/write speed for a standard HDD is usually in the region of $50-120$MB/s (usually closer to $50$MB). For SSDs, speeds are typically over $200$MB/s. For top-of-the-range models this can approach $500$MB/s. If you're wondering, read/write speeds for RAM is around $2-20$GB/s. So at best SSDs are at least one order of magnitude slower than RAM, but still faster than standard HDDs.
 
 <div class="rmdtip">
-<p>If you are unsure what type of hard drive you have, then time how long your computer takes to reach the log-in screen. If it is less then five seconds, you probably have a SSD. There are links on the book's website detailing more precise methods for each OS.</p>
+<p>If you are unsure what type of hard drive you have, then time how long your computer takes to reach the log-in screen. If it is less then five seconds, you probably have a SSD. There are links on the book’s website detailing more precise methods for each OS.</p>
 </div>
 
 ## Operating systems: 32-bit or 64-bit
 
-R comes in two versions: $32$-bit and $64$-bit. 
-Your operating system also comes in two versions, $32$-bit and $64$-bit. 
-Ideally you want $64$-bit versions of both R and the operating system.
-Using a $32$-bit version of either has severe limitations on the amount of RAM R can access.
-So when we suggest that you should just buy more RAM, this assumes that you are using a $64$-bit operating system, with
-a $64$-bit version of R.
+R comes in two versions: $32$-bit and $64$-bit. Your operating system also comes in two versions, $32$-bit and $64$-bit.  Ideally you want $64$-bit versions of both R and the operating system. Using a $32$-bit version of either has severe limitations on the amount of RAM R can access. So when we suggest that you should just buy more RAM, this assumes that you are using a $64$-bit operating system, with a $64$-bit version of R.
 
 <div class="rmdnote">
-<p>If you are using an OS version from the last five years, it is unlikely to be <span class="math inline">32</span>-bit OS.</p>
+<p>If you are using an OS version from the last five years, it is unlikely to be <span class="math inline">\(32\)</span>-bit OS.</p>
 </div>
 
-A $32$-bit machine can access at most only $4$GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a $32$-bit operating system, then R is limited to around $3$GB RAM. If you are running a $64$-bit operating system, but only a $32$-bit version of R, then you have access to slightly more memory (but not much).
-Modern systems should run a $64$-bit operating system, with a $64$-bit version of R.
-Your memory limit is now measured as $8$ terabytes for Windows machines and $128$TB for Unix-based OSs. 
-An easy method for determining if you are running a $64$-bit version of R is to run
+A $32$-bit machine can access at most only $4$GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a $32$-bit operating system, then R is limited to around $3$GB RAM. If you are running a $64$-bit operating system, but only a $32$-bit version of R, then you have access to slightly more memory (but not much). Modern systems should run a $64$-bit operating system, with a $64$-bit version of R. Your memory limit is now measured as $8$ terabytes for Windows machines and $128$TB for Unix-based OSs.  An easy method for determining if you are running a $64$-bit version of R is to run
+
 
 ```r
 .Machine$sizeof.pointer
 ```
+
 which will return $8$ if you a running a $64$-bit version of R.
 
 To find precise details consult the R help pages `help("Memory-limits")` and `help("Memory")`.
@@ -5522,24 +4989,14 @@ These exercises aim to condense the previous section into the key points.
 
 ## Central processing unit (CPU)
 
-The central processing unit (CPU), or the processor, is the brains of a computer. The
-CPU is responsible for performing numerical calculations. The faster the processor,
-the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency
-with which the CPU executes instructions. The faster the clock speed, the more
-instructions a CPU can execute in a section. CPU clock speed for a single CPU has been
-fairly static in the last couple of years, hovering around 3.4GHz (see figure
-\@ref(fig:8-3)).
+The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:8-3)).
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/8-3-1.png" alt="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed." width="70%" />
 <p class="caption">(\#fig:8-3)CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed.</p>
 </div>
 
-Unfortunately we can't simply use clock speeds to compare CPUs, since the internal
-architecture of a CPU plays a crucial role in determining the CPU performance. The R
-package **benchmarkme** provides functions for benchmarking your system and contains
-data from previous benchmarks. Figure \@ref(fig:8-4) shows the relative performance
-for over $150$ CPUs.
+Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package **benchmarkme** provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref(fig:8-4) shows the relative performance for over $150$ CPUs.
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/8-4-1.png" alt="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result." width="70%" />
@@ -5549,16 +5006,20 @@ for over $150$ CPUs.
 Running the benchmarks and comparing your CPU to others is straightforward using the **benchmarkme** package.
 After loading the package, we can benchmark your CPU
 
+
 ```r
 res = benchmark_std() 
 ```
+
 and compare the results to other users
+
 
 ```r
 plot(res)
 # Upload your benchmarks for future users
 upload_results(res) 
 ```
+
 You get the model specifications of the top CPUs using `get_datatable(res)`. 
 
 ## Cloud computing
@@ -5624,10 +5085,8 @@ most programmers agree on, such as:
 - Be concise, clear and consistent.
 
 Good coding style will make you more efficient even if you are the only person who reads it.
-When your code is read by multiple readers or you are developing code with
-co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by
-[Google](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml), [Hadley Whickham](http://adv-r.had.co.nz/Style.html) and
-[Richie Cotton](https://4dpiecharts.com/r-code-style-guide/).
+When your code is read by multiple readers or you are developing code with co-workers, having a consistent style is even more important. There are a number of R style guides online that are broadly similar, including one by
+[Google](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml), [Hadley Whickham](http://adv-r.had.co.nz/Style.html) and [Richie Cotton](https://4dpiecharts.com/r-code-style-guide/).
 The style followed in this book is based on a combination of Hadley Wickham's guide and our own preferences (we follow Yihui Xie in preferring `=` to `<-` for assignment, for example).
 
 In-line with the principle of automation (automate any task that can save time by automating), the easiest way to improve your code is to ask your computer to do it, using RStudio.
@@ -5681,16 +5140,11 @@ Normalise.r
 load data.R
 ```
 
-Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides
-more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed 
-to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.
+Section 1.1 of [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure) provides more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed  to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.
 
 ### Loading packages
 
-Library function calls should be at the top of your script. When loading an essential package, 
-use `library` instead of `require` since a missing package will then raise an error. If a package isn't essential, 
-use `require` and appropriately capture the warning raised. 
-Package names should be surrounded with speech marks. 
+Library function calls should be at the top of your script. When loading an essential package,  use `library` instead of `require` since a missing package will then raise an error. If a package isn't essential,  use `require` and appropriately capture the warning raised.  Package names should be surrounded with speech marks. 
 
 
 ```r
@@ -5700,15 +5154,13 @@ library("dplyr")
 library(dplyr)
 ```
 
-Avoid listing every package you may need, instead just include the packages you actually use. If you find
-that you are loading many packages, consider putting all packages in a file called `packages.R` and using
-`source` appropriately. 
+Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading many packages, consider putting all packages in a file called `packages.R` and using `source` appropriately. 
 
 ### Commenting
 
 Comments can greatly improve the efficiency of collaborative projects by helping everyone to understand what each line of code is doing. However comments should be used carefully: plastering your script with comments does not necessarily make it more efficient, and too many comments can be inefficient. Updating heavily commented code can be a pain, for example: not only will you have to change all the R code, you'll also have to rewrite or delete all the comments!
 
-Ensure that your comments are meaningful. Avoid using verbose English to explain standard R code. The comment below, for example, adds no useful information because it is obvious by reading the code that `i` is being set to 1:
+Ensure that your comments are meaningful. Avoid using verbose English to explain standard R code. The comment below, for example, adds no useful information because it is obvious by reading the code that `x` is being set to 1:
 
 
 ```r
@@ -5740,7 +5192,7 @@ For this reason, giving a clear and consistent name to your objects, especially 
 In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should be last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
 
 <div class="rmdwarning">
-<p>It's tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.</p>
+<p>It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.</p>
 </div>
 
 While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
@@ -5749,8 +5201,7 @@ Where possible, avoid using names of existing functions.
 
 ### Example package
 
-The `lubridate` package is a good example of a package that has a consistent naming system, 
-to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
+The `lubridate` package is a good example of a package that has a consistent naming system,  to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the `lubridate` package has a neat set of functions consisting of the three letters, **y**ear, **m**onth and **d**ay. For example,
 
 
 ```r
@@ -5762,13 +5213,9 @@ mdy("01-02-2012")
 
 ### Assignment
 
-The two most common ways of assigning objects to values in R is with `<-` and `=`. 
-In most (but not all) contexts, they can be used interchangeably. Regardless of which operator
-you prefer, consistency is key, particularly when working in a 
-group. In this book we use the `=` operator for assignment, as it's faster to type and more consistent with other languages.
+The two most common ways of assigning objects to values in R is with `<-` and `=`.  In most (but not all) contexts, they can be used interchangeably. Regardless of which operator you prefer, consistency is key, particularly when working in a  group. In this book we use the `=` operator for assignment, as it's faster to type and more consistent with other languages.
 
-The one place where a difference occurs is during function calls. Consider the following 
-piece of code used for timing random number generation
+The one place where a difference occurs is during function calls. Consider the following  piece of code used for timing random number generation
 
 
 ```r
@@ -5776,10 +5223,7 @@ system.time(expr1 <- rnorm(10e5))
 system.time(expr2 = rnorm(10e5)) # error
 ```
 
-The first lines will run correctly __and__ create a variable called `expr1`.
-The second line will raise an error. When we use `=` in a function call, it changes from an 
-_assignment_ operator to an _argument passing_ operator. For further information about
-assignment, see `?assignOps`.
+The first lines will run correctly __and__ create a variable called `expr1`. The second line will raise an error. When we use `=` in a function call, it changes from an  _assignment_ operator to an _argument passing_ operator. For further information about assignment, see `?assignOps`.
 
 ### Spacing
 
@@ -5818,9 +5262,7 @@ else {
   x}
 ```
 
-Typing this straight into R will result in an error. 
-An opening curly brace, `{` should not go on its own line and 
-should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
+Typing this straight into R will result in an error.  An opening curly brace, `{` should not go on its own line and  should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an `else`, in which case the `else` should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.
 
 
 ```r
@@ -5883,7 +5325,7 @@ devtools::install_github("csgillespie/benchmarkme")
 Note that `csgillespie` is the GitHub user and `benchmarkme` is the package name. Replacing `csgillespie` with `robinlovelace` in the above code would install Robin's version of the package. This is useful for fast collaboration with many people, but you must remember that GitHub packages will not update automatically with the command `update.packages` (see \@ref(updating-r-packages)).
 
 <div class="rmdwarning">
-<p>Warning: although GitHub is fantastic for collaboration, it can end up creating more problems than it solves if your collaborators are not git-literate. In one project, Robin eventually abandoned using GitHub to collaborate after his collaborator found it impossible to work with. More time was being spent debugging git/GitHub than actually working. Our advice therefore is to <strong>never impose git</strong> and always ensure that other lines of communication (e.g. phone calls, emails) are open as different people prefer different ways of communicating.</p>
+<p>Warning: although GitHub is fantastic for collaboration, it can end up creating more problems than it solves if your collaborators are not git-literate. In one project, Robin eventually abandoned using GitHub to collaborate after his collaborator found it impossible to work with. More time was being spent debugging git/GitHub than actually working. Our advice therefore is to <strong>never impose git</strong> and always ensure that other lines of communication (e.g. phone calls, emails) are open as different people prefer different ways of communicating.</p>
 </div>
 
 ### Branches, forks, pulls and clones
@@ -5908,10 +5350,7 @@ A pull request (PR) is a mechanism on GitHub by which your code can be added to 
 
 ## Code review {#code-review}
 
-What is a code review?^[This section is being written with small teams in mind. Larger
-teams should consult a more detailed text on code review.] Simply when we have
-finished working on a piece of code, a colleague reviews our work and considers
-questions such as
+What is a code review?^[This section is being written with small teams in mind. Larger teams should consult a more detailed text on code review.] Simply when we have finished working on a piece of code, a colleague reviews our work and considers questions such as
 
  * Is the code correct and properly documented?
  * Could the code be improved?
@@ -5920,59 +5359,11 @@ questions such as
 
 A good code review shares knowledge and best practice. 
 
-A lightweight code review can take a variety of forms. For example, it could be 
-as simple as emailing round some code for comments, or "over the shoulder", where
-someone literally looks over your shoulder while coding. More formal techniques
-include paired programming where two developers work side by side on the same project.
+A lightweight code review can take a variety of forms. For example, it could be  as simple as emailing round some code for comments, or "over the shoulder", where someone literally looks over your shoulder while coding. More formal techniques include paired programming where two developers work side by side on the same project.
 
-Regardless of the review method being employed, there a number of points to remember.
-First, as with all forms of feedback, be constructive. Rather than pointing out flaws,
-give suggested improvements. Closely related is give praise when appropriate. Second,
-if you are reviewing a piece of code set a time frame or the number of lines of code
-you will review. For example, you will spend one hour reviewing a piece of code, or a
-maximum of 400 lines. Third, a code review should be performed before the code
-is merged into a larger code base; fix mistakes as soon as possible.
+Regardless of the review method being employed, there a number of points to remember. First, as with all forms of feedback, be constructive. Rather than pointing out flaws, give suggested improvements. Closely related is give praise when appropriate. Second, if you are reviewing a piece of code set a time frame or the number of lines of code you will review. For example, you will spend one hour reviewing a piece of code, or a maximum of 400 lines. Third, a code review should be performed before the code is merged into a larger code base; fix mistakes as soon as possible.
 
-Many R users don't work in team or group; instead they work by themselves.
-Practically, there isn't anyone nearby to review their code. However there is still
-the option of an _unoffical_ code review. For example, if you have hosted code on an
-online repository such as GitHub, users will naturally give feedback on our code
-(especially if you make it clear that you welcome feedback). Another good place is
-StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to
-post answers to other users questions. When you post an answer, if your code is
-unclear, this will be flagged in comments below your answer.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Many R users don't work in team or group; instead they work by themselves. Practically, there isn't anyone nearby to review their code. However there is still the option of an _unoffical_ code review. For example, if you have hosted code on an online repository such as GitHub, users will naturally give feedback on our code (especially if you make it clear that you welcome feedback). Another good place is StackOverflow (covered in detail in chapter \@ref(learning)). This site allows you to post answers to other users questions. When you post an answer, if your code is unclear, this will be flagged in comments below your answer.
 
 
 <!--chapter:end:09-collaboration.Rmd-->
@@ -5986,18 +5377,9 @@ knit: "bookdown::preview_chapter"
 
 # Efficient learning {#learning}
 
-As with any vibrant open source software community, R is fast moving. This can be
-disorientating because it means that you can never 'finish' learning R. On the other
-hand, it makes R a fascinating subject: there is always more to learn. Even
-experienced R users keep finding new functionality that helps solve problems quicker
-and more elegantly. Therefore *learning how to learn* is one of the most important
-skills to have if you want to learn R *in depth*. We emphasise *depth* of
-learning because it is more efficient to learn something properly than to Google it
-repeatedly every time you forget how it works.
+As with any vibrant open source software community, R is fast moving. This can be disorientating because it means that you can never 'finish' learning R. On the other hand, it makes R a fascinating subject: there is always more to learn. Even experienced R users keep finding new functionality that helps solve problems quicker and more elegantly. Therefore *learning how to learn* is one of the most important skills to have if you want to learn R *in depth*. We emphasise *depth* of learning because it is more efficient to learn something properly than to Google it repeatedly every time you forget how it works.
 
-This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition
-from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's
-help, reading R source code, and use of online material.
+This chapter aims to equip you with concepts, guidance and tips that will accelerate your transition from an R *hacker* to an R *programmer*. This inevitably involves effective use of R's help, reading R source code, and use of online material.
 
 ### Prerequisties {-}
 
@@ -6066,17 +5448,18 @@ Another function for searching R is `apropos()`. It prints to the console any R 
 
 ```r
 apropos("optim")
-#> [1] "constrOptim" "optim"       "optimHess"   "optimise"    "optimize"
+#> [1] "constrOptim"      "is_blas_optimize" "optim"            "optimHess"       
+#> [5] "optimise"         "optimize"
 apropos("lm")[1:6] # show only first six results
-#> [1] ".__C__anova.glm"      ".__C__anova.glm.null" ".__C__diagonalMatrix"
-#> [4] ".__C__generalMatrix"  ".__C__glm"            ".__C__glm.null"
+#> [1] ".colMeans"        ".lm.fit"          "bm_matrix_cal_lm" "colMeans"        
+#> [5] "colMeans"         "confint.lm"
 ```
 
 To search *all R packages*, including those you have not installed locally, for a specific topic there are a number of options. For obvious reasons, this depends on having internet access. The most rudimentary way to see what packages are available from CRAN, if you are using RStudio, is to use its autocompletion functionality for package names. To take an example, if you are looking for a package for geospatial data analysis, you could do worse than to enter the text string `geo` as an argument into the package installation function (for example `install.packages(geo)`) and hitting `Tab` when the cursor is between the `o` and the `)` in the example. The resulting options are shown in the figure below: selecting one from the dropdown menu will result in it being completed with surrounding quote marks, as necessary.
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-323)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
+<p class="caption">(\#fig:unnamed-chunk-320)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
 </div>
 
 ### Finding and using vignettes
@@ -6084,7 +5467,7 @@ To search *all R packages*, including those you have not installed locally, for 
 Some packages contain vignettes. These are pieces of ['long-form' documentation](http://r-pkgs.had.co.nz/vignettes.html) that allow package authors to go into detail explaining how the package works [@Wickham_2015]. In general they are high quality. Because they can be used to illustrate real world use cases, vignettes can be the best way to understand functions in the context of broader explanations and longer examples than are provided in function help pages. Although many packages lack vignettes, they deserve a sub-section of their own because they can boost the efficiency with which package functions are used, in an integrated workflow.
 
 <div class="rmdnote">
-<p>If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use <code>devtools::use_vignette()</code>. To add a vignette to the <strong>efficient</strong> package used in this book, for example, you could clone the repo, e.g. using the command <code>git clone git@github.com:csgillespie/efficient</code>. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called &quot;efficient-learning&quot; with the following command: <code>use_vignette(&quot;efficient-learning&quot;)</code>.</p>
+<p>If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use <code>devtools::use_vignette()</code>. To add a vignette to the <strong>efficient</strong> package used in this book, for example, you could clone the repo, e.g. using the command <code>git clone git@github.com:csgillespie/efficient</code>. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called “efficient-learning” with the following command: <code>use_vignette(&quot;efficient-learning&quot;)</code>.</p>
 </div>
 
 To browse any vignettes associated with a particular package, we can use the handy function `browseVignettes()`:
@@ -6168,10 +5551,7 @@ optim(par = 0, fn = fn)
 The results show that the minimum value of `fn(x)` is found when `x = 0.707..` ($\frac{1}{\sqrt{2}}$), with a minimum value of $-0.25$. It took $58$ iterations of the function call for `optim()` to converge on this value. Each of these output values is described in the Values section of the help pages.
 From the help pages, we could guess that providing the function call without specifying `par` (i.e. `optim(fn = fn)`) would fail, which indeed it does. 
 
-The most _helpful_
-section is often the Examples. These lie at the bottom of the help page and show precisely
-how the function works. You can either copy and paste the code, or actually run the
-example code using the `example` command (it is well worth running these examples due to the graphics produced):
+The most _helpful_ section is often the Examples. These lie at the bottom of the help page and show precisely how the function works. You can either copy and paste the code, or actually run the example code using the `example` command (it is well worth running these examples due to the graphics produced):
 
 
 ```r
@@ -6185,25 +5565,14 @@ example(optim)
 Another useful section in the help file is `See Also:`. In the `optim()` help page, it links to `optimize()` which may be more appropriate for this use case.
 
 ### Reading R source code
-
-R is open source. This means that we can view the underlying source code and examine any
-function. Of course the code is complex, and diving straight into the source code
-won't help that much. However, watching the GitHub R source code
-[mirror](https://github.com/wch/r-source/) will allow you to monitor small changes
-that occur. This gives a nice entry point into a complex code base. Likewise, examining
-the source of small functions, such as `NCOL` is informative, e.g.
-`getFunction("NCOL")`
+ 
+R is open source. This means that we can view the underlying source code and examine any function. Of course the code is complex, and diving straight into the source code won't help that much. However, watching the GitHub R source code [mirror](https://github.com/wch/r-source/) will allow you to monitor small changes that occur. This gives a nice entry point into a complex code base. Likewise, examining the source of small functions, such as `NCOL` is informative, e.g. `getFunction("NCOL")`
 
 <div class="rmdtip">
 <p>Subscribing to the R NEWS <a href="https://developer.r-project.org/blosxom.cgi/R-devel/NEWS/">blog</a> is an easy way of keeping track of future changes.</p>
 </div>
 
-Many R packages are developed in the open on GitHub or R-Forge. Select a few well
-known packages and examine their source. A good package to start with is
-**[drat](https://github.com/eddelbuettel/drat)**. This is a relatively simple package
-developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It
-gives you an excellent pointer into software development by one of the key R package
-writers.
+Many R packages are developed in the open on GitHub or R-Forge. Select a few well known packages and examine their source. A good package to start with is **[drat](https://github.com/eddelbuettel/drat)**. This is a relatively simple package developed by Dirk Eddelbuettel (author of Rcpp) that only contains a few functions. It gives you an excellent pointer into software development by one of the key R package writers.
 
 A shortcut for browsing R's source code is provided by the RStudio IDE: clicking on a function and then hit `F2` will open its source code in the file editor. This works for both functions that exist in R and its packages and functions that you created yourself in another R script (so long as it is within your project directory).
 Although reading source code can be interesting in itself, it is probably best done in the context of a specific question, e.g. "how can I use a function name as an argument in my own function?" (looking at the source code of `apply()` may help here).
@@ -6226,48 +5595,24 @@ The R community has a strong online presence, providing many resources for learn
 
 The R-project website contains six detailed [official manuals](https://cran.r-project.org/manuals.html), plus a giant pdf file containing documentation for all recommended packages. These include [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.html), [The R language definition](https://cran.r-project.org/doc/manuals/r-release/R-lang.html) and [R Installation and Administration](https://cran.r-project.org/doc/manuals/r-release/R-admin.html), all of which are recommended for people wanting to learn their general R skills. If you are developing a package and want to submit it to CRAN, the [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) manual is recommended reading, although it has to some extent been superseded by @Wickham_2015, the source code of which is [available online](https://github.com/hadley/r-pkgs). While these manuals are long, they contain important information written by experienced R programmers.
 
-For more domain-specific and up-to-date information on developments in R, we recommend checking out academic journals.
-The [R-journal](https://journal.r-project.org/) regularly publishes articles
-describing new R packages, as well as general programming hints. Similarly, the
-articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a
-strong R bias. Publications in these journals are generally of very high quality and have been rigorously peer reviewed. However, they may be rather technical for R novices.
+For more domain-specific and up-to-date information on developments in R, we recommend checking out academic journals. The [R-journal](https://journal.r-project.org/) regularly publishes articles describing new R packages, as well as general programming hints. Similarly, the articles in the [Journal of Statistical Software](https://www.jstatsoft.org/) have a strong R bias. Publications in these journals are generally of very high quality and have been rigorously peer reviewed. However, they may be rather technical for R novices.
 
 The wider community provides a much larger body of information, of more variable quality, than the official R resources. The [Contributed Documentation](https://cran.r-project.org/other-docs.html) page on R's home page contains dozens of tutorials and other resources on a wide range of topics. Some of these are excellent, although many are not kept up-to-date. An excellent resource for browsing R help pages online is provided by [rdocumentation.org](http://www.rdocumentation.org).
 
-Lower grade but more frequently released information can be found on the 'blogosphere'. Central to this is  [R-bloggers](http://www.r-bloggers.com/),
-a blog aggregator of content contributed by bloggers who write about R (in English).
-It is a great way to get exposed to new and different packages. Similarly monitoring
-the _[#rstats](https://twitter.com/search?q=%23rstats)_ twitter tag keeps you up-to-date
-with the latest news.
+Lower grade but more frequently released information can be found on the 'blogosphere'. Central to this is  [R-bloggers](http://www.r-bloggers.com/), a blog aggregator of content contributed by bloggers who write about R (in English). It is a great way to get exposed to new and different packages. Similarly monitoring the _[#rstats](https://twitter.com/search?q=%23rstats)_ twitter tag keeps you up-to-date with the latest news.
 
-There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before
-requesting help, read a few other questions to learn the format of the site. Make sure
-you search previous questions so you are not duplicating work. Perhaps the most
-important point is that people aren't under __any__ obligation to answer your
-question. One of the fantastic things about the open-source community is that you can
-ask questions and one of core developers may answer your question free; but remember,
-everyone is busy!
+There are also mailing lists, Google groups and the Stack Exchange Q & A sites. Before requesting help, read a few other questions to learn the format of the site. Make sure you search previous questions so you are not duplicating work. Perhaps the most important point is that people aren't under __any__ obligation to answer your question. One of the fantastic things about the open-source community is that you can ask questions and one of core developers may answer your question for free; but remember, everyone is busy!
 
 ### Stackoverflow
 
-The number one place on the internet for getting help on programming is
-[Stackoverflow](http://www.stackoverflow.com). This website provides a platform for
-asking and answering questions. Through site membership, questions and answers are
-voted up or down. Users of Stackoverflow earn reputation points when their question or
-answer is up-voted. Anyone (with enough reputation) can edit a question or answer.
-This helps the content remain relevant.
+The number one place on the internet for getting help on programming is [Stackoverflow](http://www.stackoverflow.com). This website provides a platform for asking and answering questions. Through site membership, questions and answers are voted up or down. Users of Stackoverflow earn reputation points when their question or answer is up-voted. Anyone (with enough reputation) can edit a question or answer. This helps the content remain relevant.
 
 Questions are tagged. The R questions can be found under the [R tag](http://stackoverflow.com/questions/tagged/r). The [R page](https://stackoverflow.com/tags/r/info) contains links to Official documentation, free resources, and various other links. Members of the Stackoverflow R community have tagged, using `r-faq`, a few questions that often crop up. 
 
 ### Mailing lists and groups.
 
-There are many mailing lists and Google groups focused on R and particular packages. The main list for getting help is
-`R-help`. This is a high volume mailing list, with around a dozen messages per day. A more technical mailing list
-is `R-devel`. This list is intended for questions and discussion about code development in R. The discussion on this list is very technical. However,
-it's a good place to be introduced to new ideas - but it's not the place to ask about these ideas! There are 
-many other special interest mailing [lists](https://www.r-project.org/mail.html) covering topics such as high performance computing to ecology.
-Many popular packages also have their own mailing list or Google group, e.g. **ggplot2** and **shiny**. The key piece of advice is before mailing a
-list, read the relevant mailing archive and check that your message is appropriate.
+There are many mailing lists and Google groups focused on R and particular packages. The main list for getting help is `R-help`. This is a high volume mailing list, with around a dozen messages per day. A more technical mailing list is `R-devel`. This list is intended for questions and discussion about code development in R. The discussion on this list is very technical. However, it's a good place to be introduced to new ideas - but it's not the place to ask about these ideas! There are 
+many other special interest mailing [lists](https://www.r-project.org/mail.html) covering topics such as high performance computing to ecology. Many popular packages also have their own mailing list or Google group, e.g. **ggplot2** and **shiny**. The key piece of advice  is before mailing a list, read the relevant mailing archive and check that your message is appropriate.
 
 ## Asking a question
 
@@ -6278,19 +5623,12 @@ However, asking a good question is not easy. Three common mistakes, and ways to 
 2. The answer to the question can be found in R's help: make sure you've properly read the relevant help pages before asking.
 3. The question does not contain a reproducible example: create a simple version of your data, show the code you've tried, and display the result you are hoping for.
 
-Your question should contain
-just enough information that you problem is clear and can be reproducible, while
-at the same time avoid unnecessary details. Fortunately there is a StackOverflow question - [How to make a great R reproducible example?](http://stackoverflow.com/q/5963269/203420) that provides excellent guidance.
-Additional guides that explain how to create good programming questions are provided by
-[StackOverflow](https://stackoverflow.com/help/how-to-ask) and and the [R mailing list posting guide](https://www.r-project.org/posting-guide.html). 
+Your question should contain just enough information that you problem is clear and can be reproducible, while at the same time avoid unnecessary details. Fortunately there is a StackOverflow question - [How to make a great R reproducible example?](http://stackoverflow.com/q/5963269/203420) that provides excellent guidance.
+Additional guides that explain how to create good programming questions are provided by [StackOverflow](https://stackoverflow.com/help/how-to-ask) and and the [R mailing list posting guide](https://www.r-project.org/posting-guide.html). 
 
 ### Minimal data set {-}
 
-What is the smallest data set you can construct that will reproduce your issue? Your
-actual data set may contain $10^5$ rows and $10^4$ columns, but to get your idea across
-you might only need $4$ rows and $3$ columns. Making small example data sets is easy. 
-For example, to create a data frame with two numeric columns and a column of characters
-just use
+What is the smallest data set you can construct that will reproduce your issue? Your actual data set may contain $10^5$ rows and $10^4$ columns, but to get your idea across you might only need $4$ rows and $3$ columns. Making small example data sets is easy.  For example, to create a data frame with two numeric columns and a column of characters just use
 
 
 ```r
@@ -6298,12 +5636,9 @@ set.seed(1)
 example_df = data.frame(x = rnorm(4), y = rnorm(4), z = sample(LETTERS, 4))
 ```
 
-Note the call to `set.seed` ensures anyone who runs the code will get the same
-random number stream. Alternatively, you can use one of the many data sets that come with R - `library(help = "datasets")`. 
+Note the call to `set.seed` ensures anyone who runs the code will get the same random number stream. Alternatively, you can use one of the many data sets that come with R - `library(help = "datasets")`. 
 
-If creating an example data set isn't possible, then use `dput` on your actual data set. This
-will create an ASCII text representation of the object that will enable anyone to recreate
-the object
+If creating an example data set isn't possible, then use `dput` on your actual data set. This will create an ASCII text representation of the object that will enable anyone to recreate the object
 
 
 ```r
@@ -6316,12 +5651,8 @@ dput(example_df)
 ```
 
 ### Minimal example {-}
-
-What you should not do, is simply copy and paste your entire function into your question.
-It's unlikely that your entire function doesn't work, so just simplify it to the bare minimum. 
-The aim is to target your actual issue. 
-Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem.
-Before asking your question, can you run your code in a clean R environment and reproduce your error?
+ 
+What you should not do, is simply copy and paste your entire function into your question. It's unlikely that your entire function doesn't work, so just simplify it to the bare minimum.  The aim is to target your actual issue.  Avoid copying and pasting large blocks of code; remove superfluous lines that are not part of the problem. Before asking your question, can you run your code in a clean R environment and reproduce your error?
 
 ## Learning in depth
 
@@ -6396,37 +5727,39 @@ The book depends on the following CRAN packages:
 
 
 
-Name                   Title                                                                     version 
----------------------  ------------------------------------------------------------------------  --------
-assertive.reflection   Assertions for Checking the State of R [@R-assertive.reflection]          0.0.3   
-benchmarkme            Crowd Sourced System Benchmarks [@R-benchmarkme]                          0.3.0   
-bookdown               Authoring Books with R Markdown [@R-bookdown]                             0.1     
-cranlogs               Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]              2.1.0   
-data.table             Extension of Data.frame [@R-data.table]                                   1.9.6   
-devtools               Tools to Make Developing R Packages Easier [@R-devtools]                  1.12.0  
-DiagrammeR             Create Graph Diagrams and Flowcharts Using R [@R-DiagrammeR]              0.8.4   
-dplyr                  A Grammar of Data Manipulation [@R-dplyr]                                 0.5.0   
-drat                   Drat R Archive Template [@R-drat]                                         0.1.2   
-efficient              Becoming an Efficient R Programmer [@R-efficient]                         0.1.1   
-feather                R Bindings to the Feather 'API' [@R-feather]                              0.3.0   
-formatR                Format R Code Automatically [@R-formatR]                                  1.4     
-fortunes               R Fortunes [@R-fortunes]                                                  1.5.3   
-geosphere              Spherical Trigonometry [@R-geosphere]                                     1.5.5   
-ggmap                  Spatial Visualization with ggplot2 [@R-ggmap]                             2.6.1   
-ggplot2                An Implementation of the Grammar of Graphics [@R-ggplot2]                 2.1.0   
-ggplot2movies          Movies Data [@R-ggplot2movies]                                            0.0.1   
-knitr                  A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]   1.14    
-lubridate              Make Dealing with Dates a Little Easier [@R-lubridate]                    1.6.0   
-microbenchmark         Accurate Timing Functions [@R-microbenchmark]                             1.4.2.1 
-profvis                Interactive Visualizations for Profiling R Code [@R-profvis]              0.3.2   
-pryr                   Tools for Computing on the Language [@R-pryr]                             0.1.2   
-Rcpp                   Seamless R and C++ Integration [@R-Rcpp]                                  0.12.7  
-readr                  Read Tabular Data [@R-readr]                                              1.0.0   
-rio                    A Swiss-Army Knife for Data I/O [@R-rio]                                  0.4.16  
-RSQLite                SQLite Interface for R [@R-RSQLite]                                       1.0.0   
-swirl                  Learn R, in R [@R-swirl]                                                  2.4.2   
-tibble                 Simple Data Frames [@R-tibble]                                            1.2     
-tidyr                  Easily Tidy Data with `spread()` and `gather()` Functions [@R-tidyr]      0.6.0   
+Name                   Title                                                                           version  
+---------------------  ------------------------------------------------------------------------------  ---------
+assertive.reflection   Assertions for Checking the State of R [@R-assertive.reflection]                0.0.4    
+benchmarkme            Crowd Sourced System Benchmarks [@R-benchmarkme]                                0.6.0    
+bookdown               Authoring Books and Technical Documents with R Markdown [@R-bookdown]           0.6.2    
+cranlogs               Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]                    2.1.0    
+data.table             Extension of `data.frame` [@R-data.table]                                       1.10.4.3 
+dbplyr                 A 'dplyr' Back End for Databases [@R-dbplyr]                                    1.2.0    
+devtools               Tools to Make Developing R Packages Easier [@R-devtools]                        1.13.4   
+DiagrammeR             Graph/Network Visualization [@R-DiagrammeR]                                     0.9.2    
+dplyr                  A Grammar of Data Manipulation [@R-dplyr]                                       0.7.4    
+drat                   'Drat' R Archive Template [@R-drat]                                             0.1.4    
+efficient              Becoming an Efficient R Programmer [@R-efficient]                               0.1.3    
+feather                R Bindings to the Feather 'API' [@R-feather]                                    0.3.1    
+formatR                Format R Code Automatically [@R-formatR]                                        1.5      
+fortunes               R Fortunes [@R-fortunes]                                                        1.5.4    
+geosphere              Spherical Trigonometry [@R-geosphere]                                           1.5.7    
+ggmap                  Spatial Visualization with ggplot2 [@R-ggmap]                                   2.6.1    
+ggplot2                Create Elegant Data Visualisations Using the Grammar of Graphics [@R-ggplot2]   2.2.1    
+ggplot2movies          Movies Data [@R-ggplot2movies]                                                  0.0.1    
+knitr                  A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]         1.19     
+lubridate              Make Dealing with Dates a Little Easier [@R-lubridate]                          1.7.1    
+microbenchmark         Accurate Timing Functions [@R-microbenchmark]                                   1.4.4    
+profvis                Interactive Visualizations for Profiling R Code [@R-profvis]                    0.3.4    
+pryr                   Tools for Computing on the Language [@R-pryr]                                   0.1.3    
+Rcpp                   Seamless R and C++ Integration [@R-Rcpp]                                        0.12.15  
+readr                  Read Rectangular Text Data [@R-readr]                                           1.1.1    
+reticulate             Interface to 'Python' [@R-reticulate]                                           1.4      
+rio                    A Swiss-Army Knife for Data I/O [@R-rio]                                        0.5.9    
+RSQLite                'SQLite' Interface for R [@R-RSQLite]                                           2.0      
+swirl                  Learn R, in R [@R-swirl]                                                        2.4.3    
+tibble                 Simple Data Frames [@R-tibble]                                                  1.4.2    
+tidyr                  Easily Tidy Data with 'spread()' and 'gather()' Functions [@R-tidyr]            0.8.0    
 
 # References {-}
 

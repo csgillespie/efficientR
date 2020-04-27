@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Efficient R programming</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency.">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Efficient optimisation | Efficient R programming</title>
+  <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Efficient R programming" />
+  <meta property="og:title" content="7 Efficient optimisation | Efficient R programming" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://csgillespie.github.io/efficientR/" />
   <meta property="og:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
@@ -18,31 +16,34 @@
   <meta name="github-repo" content="csgillespie/efficientR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Efficient R programming" />
+  <meta name="twitter:title" content="7 Efficient optimisation | Efficient R programming" />
   <meta name="twitter:site" content="@csgillespie" />
   <meta name="twitter:description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
   <meta name="twitter:image" content="https://csgillespie.github.io/efficientR/figures/f0_web.png" />
 
-<meta name="author" content="Colin Gillespie">
-<meta name="author" content="Robin Lovelace">
+<meta name="author" content="Colin Gillespie" />
+<meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2017-04-10">
+<meta name="date" content="2020-04-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-carpentry.html">
-<link rel="next" href="hardware.html">
-
+<link rel="prev" href="data-carpentry.html"/>
+<link rel="next" href="hardware.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -53,41 +54,68 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -95,6 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -176,11 +205,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#fatal-errors-stop"><i class="fa fa-check"></i><b>3.3.1</b> Fatal errors: <code class="unnumbered">stop()</code></a></li>
-<li class="chapter" data-level="3.3.2" data-path="programming.html"><a href="programming.html#warnings-warning"><i class="fa fa-check"></i><b>3.3.2</b> Warnings: <code class="unnumbered">warning()</code></a></li>
-<li class="chapter" data-level="3.3.3" data-path="programming.html"><a href="programming.html#informative-output-message-and-cat"><i class="fa fa-check"></i><b>3.3.3</b> Informative output: <code>message()</code> and <code class="unnumbered">cat()</code></a></li>
+<li><a href="programming.html#fatal-errors-stop">Fatal errors: <code>stop()</code></a></li>
+<li><a href="programming.html#warnings-warning">Warnings: <code>warning()</code></a></li>
+<li><a href="programming.html#informative-output-message-and-cat">Informative output: <code>message()</code> and <code>cat()</code></a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
-<li class="chapter" data-level="3.3.4" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.4</b> Invisible returns</a></li>
+<li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.1</b> Invisible returns</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
 <li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#inherent-order"><i class="fa fa-check"></i><b>3.4.1</b> Inherent order</a></li>
@@ -240,7 +269,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
 <li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
-<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-gather"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>gather()</code></a></li>
+<li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-pivot_longer"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>pivot_longer()</code></a></li>
 <li class="chapter" data-level="6.3.2" data-path="data-carpentry.html"><a href="data-carpentry.html#split-joint-variables-with-separate"><i class="fa fa-check"></i><b>6.3.2</b> Split joint variables with <code>separate()</code></a></li>
 <li class="chapter" data-level="6.3.3" data-path="data-carpentry.html"><a href="data-carpentry.html#other-tidyr-functions"><i class="fa fa-check"></i><b>6.3.3</b> Other tidyr functions</a></li>
 <li class="chapter" data-level="6.3.4" data-path="data-carpentry.html"><a href="data-carpentry.html#regular-expressions"><i class="fa fa-check"></i><b>6.3.4</b> Regular expressions</a></li>
@@ -279,7 +308,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#the-integer-data-type"><i class="fa fa-check"></i>The integer data type</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-movie_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>movie_square()</code> function</a></li>
+<li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-move_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>move_square()</code> function</a></li>
 <li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.5</b> Parallel computing</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.5.1</b> Parallel versions of apply functions</a></li>
 <li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.5.2</b> Example: Snakes and Ladders</a></li>
@@ -358,7 +387,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a>, Robin Lovelace</li>
+<li><a href="http://www.jumpingrivers.com">Colin Gillespie</a></li>
+<li><a href="http://www.robinlovelace.net">Robin Lovelace</a></li>
 
 </ul>
 
@@ -395,16 +425,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Windows: Install <a href="http://cran.r-project.org/bin/windows/">Rtools</a>. Make sure you select the version that corresponds to your version of R.</li>
 </ul>
 <p>The packages used in this chapter are</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;ggplot2movies&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</a>
+<a class="sourceLine" id="cb177-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;ggplot2movies&quot;</span>)</a>
+<a class="sourceLine" id="cb177-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
+<a class="sourceLine" id="cb177-4" data-line-number="4"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</a></code></pre></div>
 </div>
 <div id="top-5-tips-for-efficient-performance" class="section level2">
 <h2><span class="header-section-number">7.1</span> Top 5 tips for efficient performance</h2>
 <ol style="list-style-type: decimal">
-<li>Before you start to optimise your code, ensure you know where the bottleneck lies; use a code profiler.</li>
-<li>If the data in your data frame is all of the same type, consider converting it to a matrix for a speed boost.</li>
+<li>Before you start to optimise your code, ensure you know where the bottleneck lies; use
+a code profiler.</li>
+<li>If the data in your data frame is all of the same type, consider converting it
+to a matrix for a speed boost.</li>
 <li>Use specialised row and column functions whenever possible.</li>
 <li>The <strong>parallel</strong> package is ideal for Monte-Carlo simulations.</li>
 <li>For optimal performance, consider re-writing key parts of your code in C++.</li>
@@ -414,19 +446,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">7.2</span> Code profiling</h2>
 <p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottleneck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
 <p>The <code>Rprof()</code> function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof()</code> are stochastic. Each time we run a function in R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
-<p>Unfortunately <code>Rprof()</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code. <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof()</code>.</p>
+<p>Unfortunately <code>Rprof()</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code.
+<strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof()</code>.</p>
 <div id="getting-started-with-profvis" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> Getting started with <strong>profvis</strong></h3>
 <p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movie was made versus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)
-<span class="kw">profvis</span>({
-  <span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span>
-  movies =<span class="st"> </span>movies[movies$Comedy ==<span class="st"> </span><span class="dv">1</span>,]
-  <span class="kw">plot</span>(movies$year, movies$rating)
-  model =<span class="st"> </span><span class="kw">loess</span>(rating ~<span class="st"> </span>year, <span class="dt">data =</span> movies) <span class="co"># loess regression line</span>
-  j =<span class="st"> </span><span class="kw">order</span>(movies$year)
-  <span class="kw">lines</span>(movies$year[j], model$fitted[j]) <span class="co"># Add line to the plot</span>
-})</code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
+<a class="sourceLine" id="cb178-2" data-line-number="2"><span class="kw">profvis</span>({</a>
+<a class="sourceLine" id="cb178-3" data-line-number="3">  <span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span></a>
+<a class="sourceLine" id="cb178-4" data-line-number="4">  movies =<span class="st"> </span>movies[movies<span class="op">$</span>Comedy <span class="op">==</span><span class="st"> </span><span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb178-5" data-line-number="5">  <span class="kw">plot</span>(movies<span class="op">$</span>year, movies<span class="op">$</span>rating)</a>
+<a class="sourceLine" id="cb178-6" data-line-number="6">  model =<span class="st"> </span><span class="kw">loess</span>(rating <span class="op">~</span><span class="st"> </span>year, <span class="dt">data =</span> movies) <span class="co"># loess regression line</span></a>
+<a class="sourceLine" id="cb178-7" data-line-number="7">  j =<span class="st"> </span><span class="kw">order</span>(movies<span class="op">$</span>year)</a>
+<a class="sourceLine" id="cb178-8" data-line-number="8">  <span class="kw">lines</span>(movies<span class="op">$</span>year[j], model<span class="op">$</span>fitted[j]) <span class="co"># Add line to the plot</span></a>
+<a class="sourceLine" id="cb178-9" data-line-number="9">})</a></code></pre></div>
 <p>The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-1"></span>
 <img src="figures/f7_1_profvis.png" alt="Output from profvis" width="100%" />
@@ -441,11 +474,11 @@ Figure 7.1: Output from profvis
 <h3><span class="header-section-number">7.2.2</span> Example: Monopoly Simulation</h3>
 <p>Monopoly is a board game that originated in the United States over <span class="math inline">\(100\)</span> years ago. The objective of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
 <p>The <strong>efficient</strong> package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for <strong>profvis</strong> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,
-                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,</a>
+<a class="sourceLine" id="cb179-2" data-line-number="2">                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</a></code></pre></div>
 <p>The function can then be profiled via the following code, which results in figure <a href="performance.html#fig:7-2">7.2</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)
-<span class="kw">profvis</span>(<span class="kw">simulate_monopoly</span>(<span class="dv">10000</span>))</code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb180-2" data-line-number="2"><span class="kw">profvis</span>(<span class="kw">simulate_monopoly</span>(<span class="dv">10000</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:7-2"></span>
 <img src="figures/f7_2_profvis_monopoly.png" alt="Code profiling for simulating the game of Monopoly." width="100%" />
 <p class="caption">
@@ -453,7 +486,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 </p>
 </div>
 <p>The output from <strong>profvis</strong> shows that the vast majority of time (around 65%) is spent in the <code>move_square()</code> function.</p>
-<p>In Monopoly moving around the board is complicated by the fact that rolling a double (a pair of 1’s, 2’s, …, 6’s) is special:</p>
+<p>In Monopoly moving around the board is complicated by the fact that rolling a double(a pair of 1’s, 2’s, …, 6’s) is special:</p>
 <ul>
 <li>Roll two dice (<code>total1</code>): <code>total_score = total1</code>;</li>
 <li>If you get a double, roll again (<code>total2</code>) and <code>total_score = total1 + total2</code>;</li>
@@ -469,42 +502,42 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <div id="the-if-vs-ifelse-functions" class="section level3 unnumbered">
 <h3>The <code>if()</code> vs <code>ifelse()</code> functions</h3>
 <p><code>ifelse()</code> is a vectorised version of the standard control-flow function <code>if(test) if_yes else if_no</code> that works as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ifelse</span>(test, if_yes, if_no)</code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1"><span class="kw">ifelse</span>(test, if_yes, if_no)</a></code></pre></div>
 <p>In the above imaginary example, the return value is filled with elements from the <code>if_yes</code> and <code>if_no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>. For example, suppose we have a vector of exam marks. <code>ifelse()</code> could be used to classify them as pass or fail:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">marks =<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">55</span>, <span class="dv">75</span>)
-<span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
-<span class="co">#&gt; [1] &quot;fail&quot; &quot;pass&quot; &quot;pass&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">marks =<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">55</span>, <span class="dv">75</span>)</a>
+<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
+<a class="sourceLine" id="cb182-3" data-line-number="3"><span class="co">#&gt; [1] &quot;fail&quot; &quot;pass&quot; &quot;pass&quot;</span></a></code></pre></div>
 <p>If the length of <code>test</code> condition is equal to <span class="math inline">\(1\)</span>, i.e. <code>length(test) == 1</code>, then the standard conditional statement</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mark =<span class="st"> </span><span class="dv">25</span>
-if(mark &gt;=<span class="st"> </span><span class="dv">40</span>) {
-  <span class="st">&quot;pass&quot;</span> 
-} else {
-  <span class="st">&quot;fail&quot;</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1">mark =<span class="st"> </span><span class="dv">25</span></a>
+<a class="sourceLine" id="cb183-2" data-line-number="2"><span class="cf">if</span>(mark <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>) {</a>
+<a class="sourceLine" id="cb183-3" data-line-number="3">  <span class="st">&quot;pass&quot;</span> </a>
+<a class="sourceLine" id="cb183-4" data-line-number="4">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb183-5" data-line-number="5">  <span class="st">&quot;fail&quot;</span></a>
+<a class="sourceLine" id="cb183-6" data-line-number="6">}</a></code></pre></div>
 <p>is around five to ten times faster than <code>ifelse(mark &gt;= 40, &quot;pass&quot;, &quot;fail&quot;)</code>.</p>
 <p>An additional quirk of <code>ifelse()</code> is that although it is more <em>programmer efficient</em>, as it is more concise and understandable than multi-line alternatives, it is often <strong>less</strong> <em>computationally efficient</em> than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">marks =<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="fl">10e6</span>, <span class="dt">min =</span> <span class="dv">30</span>, <span class="dt">max =</span> <span class="dv">99</span>)
-<span class="kw">system.time</span>({
-  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
-})
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   4.012   0.276   4.286</span>
-<span class="kw">system.time</span>({
-  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) 
-  result2[marks &gt;=<span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span>
-})
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.192   0.032   0.223</span>
-<span class="kw">identical</span>(result1, result2)
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">marks =<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="fl">10e6</span>, <span class="dt">min =</span> <span class="dv">30</span>, <span class="dt">max =</span> <span class="dv">99</span>)</a>
+<a class="sourceLine" id="cb184-2" data-line-number="2"><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb184-3" data-line-number="3">  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
+<a class="sourceLine" id="cb184-4" data-line-number="4">})</a>
+<a class="sourceLine" id="cb184-5" data-line-number="5"><span class="co">#&gt;    user  system elapsed </span></a>
+<a class="sourceLine" id="cb184-6" data-line-number="6"><span class="co">#&gt;   2.449   0.241   2.689</span></a>
+<a class="sourceLine" id="cb184-7" data-line-number="7"><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb184-8" data-line-number="8">  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </a>
+<a class="sourceLine" id="cb184-9" data-line-number="9">  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></a>
+<a class="sourceLine" id="cb184-10" data-line-number="10">})</a>
+<a class="sourceLine" id="cb184-11" data-line-number="11"><span class="co">#&gt;    user  system elapsed </span></a>
+<a class="sourceLine" id="cb184-12" data-line-number="12"><span class="co">#&gt;   0.133   0.076   0.208</span></a>
+<a class="sourceLine" id="cb184-13" data-line-number="13"><span class="kw">identical</span>(result1, result2)</a>
+<a class="sourceLine" id="cb184-14" data-line-number="14"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
-  result3 =<span class="st"> </span>dplyr::<span class="kw">if_else</span>(marks &gt;=<span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)
-})
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   1.032   0.104   1.134</span>
-<span class="kw">identical</span>(result1, result3)
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1"><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb185-2" data-line-number="2">  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
+<a class="sourceLine" id="cb185-3" data-line-number="3">})</a>
+<a class="sourceLine" id="cb185-4" data-line-number="4"><span class="co">#&gt;    user  system elapsed </span></a>
+<a class="sourceLine" id="cb185-5" data-line-number="5"><span class="co">#&gt;   0.442   0.208   0.651</span></a>
+<a class="sourceLine" id="cb185-6" data-line-number="6"><span class="kw">identical</span>(result1, result3)</a>
+<a class="sourceLine" id="cb185-7" data-line-number="7"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 </div>
 <div id="sorting-and-ordering" class="section level3 unnumbered">
 <h3>Sorting and ordering</h3>
@@ -529,33 +562,33 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 <div id="converting-factors-to-numerics" class="section level3 unnumbered">
 <h3>Converting factors to numerics</h3>
 <p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</a></code></pre></div>
 </div>
 <div id="logical-and-and-or" class="section level3 unnumbered">
 <h3>Logical AND and OR</h3>
-<p>The logical AND (<code>&amp;</code>) and OR (<code>|</code>) operators are vectorised functions and are typically used during multi-criteria subsetting operations. The code below, for example, returns <code>TRUE</code> for all elements of <code>x</code> greater than <span class="math inline">\(0.4\)</span> or less than <span class="math inline">\(0.6\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> |<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
-<span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></code></pre></div>
+<p>The logical AND (<code>&amp;</code>) and OR (<code>|</code>) operators are vectorised functions and are typically used during multi-criteria subsetting operations. The code below, for example, returns <code>TRUE</code> for all elements of <code>x</code> less than <span class="math inline">\(0.4\)</span> or greater than <span class="math inline">\(0.6\)</span>.</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">|</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></a>
+<a class="sourceLine" id="cb187-2" data-line-number="2"><span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></a></code></pre></div>
 <p>When R executes the above comparison, it will <strong>always</strong> calculate <code>x &gt; 0.6</code> regardless of the value of <code>x &lt; 0.4</code>. In contrast, the non-vectorised version, <code>&amp;&amp;</code>, only executes the second component if needed. This is efficient and leads to neater code, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We only calculate the mean if data doesn&#39;t contain NAs</span>
-if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<span class="st"> </span><span class="kw">mean</span>(x) &gt;<span class="st"> </span><span class="dv">0</span>) {
-  <span class="co"># Do something</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1"><span class="co"># We only calculate the mean if data doesn&#39;t contain NAs</span></a>
+<a class="sourceLine" id="cb188-2" data-line-number="2"><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x)) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb188-3" data-line-number="3">  <span class="co"># Do something</span></a>
+<a class="sourceLine" id="cb188-4" data-line-number="4">}</a></code></pre></div>
 <p>compared to</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x))) {
-  if(<span class="kw">mean</span>(x) &gt;<span class="st"> </span><span class="dv">0</span>) {
-    <span class="co"># do somthing</span>
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1"><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x))) {</a>
+<a class="sourceLine" id="cb189-2" data-line-number="2">  <span class="cf">if</span>(<span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb189-3" data-line-number="3">    <span class="co"># do somthing</span></a>
+<a class="sourceLine" id="cb189-4" data-line-number="4">  }</a>
+<a class="sourceLine" id="cb189-5" data-line-number="5">}</a></code></pre></div>
 <p>However care must be taken not to use <code>&amp;&amp;</code> or <code>||</code> on vectors since it only evaluates the first element of the vector, giving the incorrect answer. This is illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;<span class="st"> </span><span class="fl">0.4</span> ||<span class="st"> </span>x &gt;<span class="st"> </span><span class="fl">0.6</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">||</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></a>
+<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 </div>
 <div id="row-and-column-operations" class="section level3 unnumbered">
 <h3>Row and column operations</h3>
 <p>In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculate the column or row sums. The <code>apply()</code> function makes this type of operation straightforward.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span>
-<span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span></a>
+<a class="sourceLine" id="cb191-2" data-line-number="2"><span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</a></code></pre></div>
 <p>There are optimised functions for calculating row and columns sums/means, <code>rowSums()</code>, <code>colSums()</code>, <code>rowMeans()</code> and <code>colMeans()</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
 </div>
 <div id="is.na-and-anyna" class="section level3 unnumbered">
@@ -566,12 +599,12 @@ if(<span class="kw">all</span>(!<span class="kw">is.na</span>(x)) &amp;&amp;<spa
 <h3>Matrices</h3>
 <p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. The <code>lm()</code> function, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
 <p>Matrices are generally faster than data frames. For example, the datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns and contain the same random numbers. However selecting rows from the data frame is around <span class="math inline">\(150\)</span> times slower than a matrix, as illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)
-<span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])
-<span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;         expr     min     lq   mean  median      uq  max neval</span>
-<span class="co">#&gt;  ex_mat[1, ] 0.00276 0.0037 0.0761 0.00588 0.00625 7.05   100</span>
-<span class="co">#&gt;   ex_df[1, ] 0.78421 0.8235 0.9753 0.84011 0.87759 8.33   100</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb192-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</a>
+<a class="sourceLine" id="cb192-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
+<a class="sourceLine" id="cb192-4" data-line-number="4"><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></a>
+<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00273 0.00332 0.0517 0.00469 0.00765 4.57   100</span></a>
+<a class="sourceLine" id="cb192-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.44201 0.45602 0.5273 0.47070 0.49194 5.50   100</span></a></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -583,58 +616,60 @@ Use the <code>data.matrix()</code> function to efficiently convert a data frame 
 <p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a>, which is described in detail in <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
 <div class="rmdnote">
 <p>
-When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">2</span>, instead it’s <strong>almost</strong> <span class="math inline">2</span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
+When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline"><span class="math inline">\(2\)</span></span>, instead it’s <strong>almost</strong> <span class="math inline"><span class="math inline">\(2\)</span></span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
 <p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code so we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the <code>head</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(head.matrix)
-<span class="co">#&gt; function (x, n = 6L, ...) </span>
-<span class="co">#&gt; NULL</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="kw">args</span>(head.matrix)</a>
+<a class="sourceLine" id="cb193-2" data-line-number="2"><span class="co">#&gt; function (x, n = 6L, ...) </span></a>
+<a class="sourceLine" id="cb193-3" data-line-number="3"><span class="co">#&gt; NULL</span></a></code></pre></div>
 <div class="rmdtip">
 <p>
 Using the <code>:</code> operator automatically creates a vector of integers.
 </p>
 </div>
-<p>we see that the default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an integer). This gives a tiny speed boost (around 0.1 microseconds!)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)
-<span class="kw">microbenchmark</span>(<span class="kw">head</span>(x, <span class="fl">6.0</span>), <span class="kw">head</span>(x, 6L), <span class="dt">times=</span><span class="dv">1000000</span>)
-<span class="co"># Unit: microseconds</span>
-<span class="co">#        expr   min    lq  mean median    uq    max neval cld</span>
-<span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span>
-<span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></code></pre></div>
+<p>we see that the default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an
+integer). This gives a tiny speed boost (around 0.1 microseconds!)</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1">x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb194-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="kw">head</span>(x, <span class="fl">6.0</span>), <span class="kw">head</span>(x, 6L), <span class="dt">times=</span><span class="dv">1000000</span>)</a>
+<a class="sourceLine" id="cb194-3" data-line-number="3"><span class="co"># Unit: microseconds</span></a>
+<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="co">#        expr   min    lq  mean median    uq    max neval cld</span></a>
+<a class="sourceLine" id="cb194-5" data-line-number="5"><span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span></a>
+<a class="sourceLine" id="cb194-6" data-line-number="6"><span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></a></code></pre></div>
 <p>Since this function is ubiquitous, this low level optimisation is useful. In general, if you are worried about shaving microseconds off your R code run time, you should probably consider switching to another language.</p>
 <p>Integers are more space efficient. The code below compares the size of an integer vector to a standard numeric vector:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(<span class="dv">1</span>:<span class="dv">10000</span>)
-<span class="co">#&gt; 40 kB</span>
-pryr::<span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))
-<span class="co">#&gt; 80 kB</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>)</a>
+<a class="sourceLine" id="cb195-2" data-line-number="2"><span class="co">#&gt; Registered S3 method overwritten by &#39;pryr&#39;:</span></a>
+<a class="sourceLine" id="cb195-3" data-line-number="3"><span class="co">#&gt;   method      from</span></a>
+<a class="sourceLine" id="cb195-4" data-line-number="4"><span class="co">#&gt;   print.bytes Rcpp</span></a>
+<a class="sourceLine" id="cb195-5" data-line-number="5"><span class="co">#&gt; 40 kB</span></a>
+<a class="sourceLine" id="cb195-6" data-line-number="6">pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))</a>
+<a class="sourceLine" id="cb195-7" data-line-number="7"><span class="co">#&gt; 80 kB</span></a></code></pre></div>
 <p>The results show that the integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.integer</span>(1L +<span class="st"> </span><span class="dv">1</span>)
-<span class="co">#&gt; [1] FALSE</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1"><span class="kw">is.integer</span>(1L <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="co">#&gt; [1] FALSE</span></a></code></pre></div>
 <p>Further storage savings can be obtained using the <strong>bit</strong> package.</p>
 </div>
 <div id="sparse-matrices" class="section level3 unnumbered">
 <h3>Sparse matrices</h3>
-<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a>.</p>
+<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>.</p>
 <p>As an example, suppose we have a large matrix where the diagonal elements are non-zero:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)
-N =<span class="st"> </span><span class="dv">10000</span>
-sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span>:N, <span class="dv">1</span>:N, <span class="dt">x =</span> <span class="dv">1</span>)
-m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)</a>
+<a class="sourceLine" id="cb197-2" data-line-number="2">N =<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb197-3" data-line-number="3">sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span><span class="op">:</span>N, <span class="dv">1</span><span class="op">:</span>N, <span class="dt">x =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb197-4" data-line-number="4">m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</a></code></pre></div>
 <p>Both objects contain the same information, but the data is stored differently; since we have the same value multiple times in the matrix, we only need to store the value once and link it to multiple matrix locations. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pryr::<span class="kw">object_size</span>(sp)
-<span class="co">#&gt; 161 kB</span>
-pryr::<span class="kw">object_size</span>(m)
-<span class="co">#&gt; 800 MB</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(sp)</a>
+<a class="sourceLine" id="cb198-2" data-line-number="2"><span class="co">#&gt; 162 kB</span></a>
+<a class="sourceLine" id="cb198-3" data-line-number="3">pryr<span class="op">::</span><span class="kw">object_size</span>(m)</a>
+<a class="sourceLine" id="cb198-4" data-line-number="4"><span class="co">#&gt; 800 MB</span></a></code></pre></div>
 <div id="exercises-16" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li><p>Create a vector <code>x</code>. Benchmark <code>any(is.na(x))</code> against <code>anyNA()</code>. Do the results vary with the size of the vector?</p></li>
-<li>Examine the following function definitions to give you an idea of how integers are used.
-<ul>
-<li><code>tail.matrix()</code></li>
-<li><code>lm()</code>.</li>
-</ul></li>
+<li><p>Examine the following function definitions to give you an idea of how integers are used.
+* <code>tail.matrix()</code>
+* <code>lm()</code>.</p></li>
 <li><p>Construct a matrix of integers and a matrix of numerics. Using <code>pryr::object_size()</code>, compare the objects.</p></li>
 <li><p>How does the function <code>seq.int()</code>, which was used in the <code>tail.matrix()</code> function, differ to the standard <code>seq()</code> function?</p></li>
 </ol>
@@ -646,12 +681,12 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 </div>
 </div>
-<div id="example-optimising-the-movie_square-function" class="section level2">
-<h2><span class="header-section-number">7.4</span> Example: Optimising the <code>movie_square()</code> function</h2>
-<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that our main bottleneck in simulating the game of Monopoly is the <code>movie_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>:</p>
+<div id="example-optimising-the-move_square-function" class="section level2">
+<h2><span class="header-section-number">7.4</span> Example: Optimising the <code>move_square()</code> function</h2>
+<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that our main bottleneck in simulating the game of Monopoly is the <code>move_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>:</p>
 <ul>
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
 Overall, this revised line is around 25 times faster; most of the speed boost came from switching to a matrix.</li>
 <li>Using <code>rowSums()</code> instead of <code>apply()</code>. The <code>apply()</code> function call is already faster since we’ve switched from a data frame to a matrix (around 3 times). Using <code>rowSums()</code> with a matrix, gives a 10 fold speed boost.</li>
 <li><p>Use <code>&amp;&amp;</code> in the <code>if</code> condition; this is around twice as fast compared to <code>&amp;</code>.</p></li>
@@ -672,8 +707,8 @@ Figure 7.4: Code profiling of the optimised code.
 <h2><span class="header-section-number">7.5</span> Parallel computing</h2>
 <p>This section provides a brief foray into the world of parallel computing. It only looks at methods for parallel computing on ‘shared memory systems’. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of what is possible; for a fuller account of parallel processing in R, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011">2011</a>)</span>.</p>
 <p>The foundational package for parallel computing in R is <strong>parallel</strong>. In recent R versions (since R 2.14.0) this comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use, however, and you must determine the number of available cores manually, as illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
-no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</a>
+<a class="sourceLine" id="cb200-2" data-line-number="2">no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</a></code></pre></div>
 <div class="rmdnote">
 <p>
 The value returned by <code>detectCores()</code> turns out to be operating system and chip maker dependent - see <code>help(“detectCores”)</code> for full details. For most standard machines, <code>detectCores()</code> returns the number of simultaneous threads.
@@ -682,36 +717,38 @@ The value returned by <code>detectCores()</code> turns out to be operating syste
 <div id="parallel-versions-of-apply-functions" class="section level3">
 <h3><span class="header-section-number">7.5.1</span> Parallel versions of apply functions</h3>
 <p>The most commonly used parallel applications are parallelised replacements of <code>lapply()</code>, <code>sapply()</code> and <code>apply()</code>. The parallel implementations and their arguments are shown below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parLapply</span>(cl, x, FUN, ...)
-<span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)
-<span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </code></pre></div>
-<p>The key point is that there is very little difference in arguments between <code>parLapply()</code> and <code>apply()</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster()</code> call. This function, amongst other things, specifies the number of processors to use.</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="kw">parLapply</span>(cl, x, FUN, ...)</a>
+<a class="sourceLine" id="cb201-2" data-line-number="2"><span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)</a>
+<a class="sourceLine" id="cb201-3" data-line-number="3"><span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<p>The key point is that there is very little difference in arguments between <code>parLapply()</code> and <code>lapply()</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster()</code> call. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
 <div id="example-snakes-and-ladders" class="section level3">
 <h3><span class="header-section-number">7.5.2</span> Example: Snakes and Ladders</h3>
-<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a></p>
+<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a></p>
 <p>The following code illustrates how to simulate <code>N</code> games using <code>sapply()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N =<span class="st"> </span><span class="dv">10</span>^<span class="dv">4</span>
-<span class="kw">sapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward. Begin by making a cluster object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)
-cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" data-line-number="1">N =<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb202-2" data-line-number="2"><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
+<p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward.
+Begin by making a cluster object:</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</a>
+<a class="sourceLine" id="cb203-2" data-line-number="2">cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</a></code></pre></div>
 <p>Then simply swap <code>sapply()</code> for <code>parSapply()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">parSapply</span>(cl, <span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
-<p>Not stopping the clusters can lead to memory leaks,<a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a> so it is important to stop the created clusters as illustrated below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopCluster</span>(cl)</code></pre></div>
-<p>and used a four (or more) core, then we would obtain a four-fold speed up (we set <code>makeCluster(4)</code>).</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1"><span class="kw">parSapply</span>(cl, <span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
+<p>Not stopping the clusters can lead to memory leaks,<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> so it is important to stop the created clusters as illustrated below:</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1"><span class="kw">stopCluster</span>(cl)</a></code></pre></div>
+<p>and used a four (or more) core, then we would
+obtain a four-fold speed up (we set <code>makeCluster(4)</code>).</p>
 <p>On a multi-processor computer with four (or more) cores, if we achieved perfect parallelisation this could lead to a four-fold speed-up. However, it is rare that we would achieve this optimal speed-up since there is always communication between threads.</p>
 </div>
 <div id="exit-functions-with-care" class="section level3">
 <h3><span class="header-section-number">7.5.3</span> Exit functions with care</h3>
 <p>Always call <code>stopCluster()</code> to free resources when you finish with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster()</code> is omitted.</p>
 <p>The <code>on.exit()</code> function handles this problem with the minimum of fuss; regardless of how the function ends, <code>on.exit()</code> is always called. In the context of parallel programming we will have something similar to:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simulate =<span class="st"> </span>function(cores) {
-  cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)
-  <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))
-  <span class="co"># Do something  </span>
-}</code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" data-line-number="1">simulate =<span class="st"> </span><span class="cf">function</span>(cores) {</a>
+<a class="sourceLine" id="cb206-2" data-line-number="2">  cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)</a>
+<a class="sourceLine" id="cb206-3" data-line-number="3">  <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))</a>
+<a class="sourceLine" id="cb206-4" data-line-number="4">  <span class="co"># Do something  </span></a>
+<a class="sourceLine" id="cb206-5" data-line-number="5">}</a></code></pre></div>
 <div class="rmdtip">
 <p>
 Another common use of <code>on.exit()</code> is with the <code>par()</code> function. If you use <code>par()</code> to change graphical parameters within a function, <code>on.exit()</code> ensures these parameters are reset to their previous value when the function ends.
@@ -720,9 +757,9 @@ Another common use of <code>on.exit()</code> is with the <code>par()</code> func
 </div>
 <div id="parallel-code-under-linux-os-x" class="section level3">
 <h3><span class="header-section-number">7.5.4</span> Parallel code under Linux &amp; OS X</h3>
-<p>If you are using Linux or OS, then another way of running code in parallel is to use the <code>mclapply()</code> and <code>mcmapply()</code> functions</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This will run on Windows, but will only use 1 core</span>
-<span class="kw">mclapply</span>(<span class="dv">1</span>:N, snakes_ladders)</code></pre></div>
+<p>If you are using Linux or OS X, then another way of running code in parallel is to use the <code>mclapply()</code> and <code>mcmapply()</code> functions</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1"><span class="co"># This will run on Windows, but will only use 1 core</span></a>
+<a class="sourceLine" id="cb207-2" data-line-number="2"><span class="kw">mclapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
 <p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. The main advantage of <code>mclapply()</code> is that you don’t have to start and stop cluster objects. The big disadvantage is that on Windows machines, you are limited to a single core.</p>
 </div>
 </div>
@@ -740,10 +777,10 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p>C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and providing a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="performance.html#simple-c">7.6.1</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="performance.html#cppfunction">7.6.2</a>. The remainder of the chapter explains C++ data types (Section <a href="performance.html#c-types">7.6.3</a>), illustrates how to source C++ code directly (Section <a href="performance.html#sourcecpp">7.6.4</a>), explains vectors (Section <a href="performance.html#vectors-and-loops">7.6.5</a>) and <strong>Rcpp</strong> sugar (Section <a href="performance.html#sugar">7.6.6</a>) and finally provides guidance on further resources on the subject (Section <a href="performance.html#rcpp-resources">7.6.7</a>).</p>
 <div id="simple-c" class="section level3">
 <h3><span class="header-section-number">7.6.1</span> A simple C++ function</h3>
-<p>To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 0.12.10 of <strong>Rcpp</strong>.</p>
+<p>To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 1.0.4.6 of <strong>Rcpp</strong>.</p>
 <p><strong>Rcpp</strong> is well documented, as illustrated by the number of vignettes on the package’s <a href="https://cran.r-project.org/web/packages/Rcpp/">CRAN</a> page. In addition to its popularity, many other packages depend on <strong>Rcpp</strong>, which can be seen by looking at the <code>Reverse Imports</code> section.</p>
 <p>To check that you have everything needed for this chapter, run the following piece of code from the course R package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">efficient::<span class="kw">test_rcpp</span>()</code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1">efficient<span class="op">::</span><span class="kw">test_rcpp</span>()</a></code></pre></div>
 <p>A C++ function is similar to an R function: you pass a set of inputs to the function, some code is run, a single object is returned. However there are some key differences.</p>
 <ol style="list-style-type: decimal">
 <li>In the C++ function each line must be terminated with <code>;</code> In R, we use <code>;</code> only when we have multiple statements on the same line.</li>
@@ -754,34 +791,34 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <li>One line comments can be created using <code>//</code>. Multi-line comments are created using <code>/*...*/</code></li>
 </ol>
 <p>Suppose we want to create a function that adds two numbers together. In R this would be a simple one line affair:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_r =<span class="st"> </span>function(x, y) x +<span class="st"> </span>y</code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb209-1" data-line-number="1">add_r =<span class="st"> </span><span class="cf">function</span>(x, y) x <span class="op">+</span><span class="st"> </span>y</a></code></pre></div>
 <p>In C++ it is a bit more long winded:</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">/* Return type double</span>
-<span class="co"> * Two arguments, also doubles</span>
-<span class="co"> */</span>
-<span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) { 
-  <span class="dt">double</span> value = x + y;
-  <span class="kw">return</span> value;
-}</code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb210-1" data-line-number="1"><span class="co">/* Return type double</span></a>
+<a class="sourceLine" id="cb210-2" data-line-number="2"><span class="co"> * Two arguments, also doubles</span></a>
+<a class="sourceLine" id="cb210-3" data-line-number="3"><span class="co"> */</span></a>
+<a class="sourceLine" id="cb210-4" data-line-number="4"><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) { </a>
+<a class="sourceLine" id="cb210-5" data-line-number="5">  <span class="dt">double</span> value = x + y;</a>
+<a class="sourceLine" id="cb210-6" data-line-number="6">  <span class="cf">return</span> value;</a>
+<a class="sourceLine" id="cb210-7" data-line-number="7">}</a></code></pre></div>
 <p>If we were writing a C++ program we would also need another function called <code>main()</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
 </div>
 <div id="cppfunction" class="section level3">
 <h3><span class="header-section-number">7.6.2</span> The <code>cppFunction()</code> command</h3>
 <p>If we pass the C++ function created in the previous section as a text string argument to <code>cppFunction()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)
-<span class="kw">cppFunction</span>(<span class="st">&#39;</span>
-<span class="st">  double add_cpp(double x, double y) {</span>
-<span class="st">    double value = x + y;</span>
-<span class="st">    return value;</span>
-<span class="st">  }</span>
-<span class="st">&#39;</span>)</code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</a>
+<a class="sourceLine" id="cb211-2" data-line-number="2"><span class="kw">cppFunction</span>(<span class="st">&#39;</span></a>
+<a class="sourceLine" id="cb211-3" data-line-number="3"><span class="st">  double add_cpp(double x, double y) {</span></a>
+<a class="sourceLine" id="cb211-4" data-line-number="4"><span class="st">    double value = x + y;</span></a>
+<a class="sourceLine" id="cb211-5" data-line-number="5"><span class="st">    return value;</span></a>
+<a class="sourceLine" id="cb211-6" data-line-number="6"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb211-7" data-line-number="7"><span class="st">&#39;</span>)</a></code></pre></div>
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_cpp
-<span class="co">#&gt; function (x, y) </span>
-<span class="co">#&gt; .Primitive(&quot;.Call&quot;)(&lt;pointer: 0x2ba00f719220&gt;, x, y)</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1">add_cpp</a>
+<a class="sourceLine" id="cb212-2" data-line-number="2"><span class="co">#&gt; function (x, y) </span></a>
+<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7f6c73959bc0&gt;, x, y)</span></a></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)
-<span class="co">#&gt; [1] 3</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
 <p>We don’t have to worry about compilers. Also, if you include this function in a package, users don’t have to worry about any of the <strong>Rcpp</strong> magic. It just works.</p>
 </div>
 <div id="c-types" class="section level3">
@@ -789,7 +826,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p>The most basic type of variable is an integer, <code>int</code>. An <code>int</code> variable can store a value in the range <span class="math inline">\(-32768\)</span> to <span class="math inline">\(+32767\)</span>. To store floating point numbers, there are single precision numbers, <code>float</code> and double precision numbers, <code>double</code>. A <code>double</code> takes twice as much memory as a <code>float</code> (in general, we should always work with double precision numbers unless we have a compelling reason to switch to floats). For <strong>single</strong> characters, we use the <code>char</code> data type.</p>
 <div class="rmdnote">
 <p>
-There is also something called an unsigned int, which goes from <span class="math inline">0</span> to <span class="math inline">65, 535</span> and a <code>long int</code> that ranges from <span class="math inline">0</span> to <span class="math inline">2<sup>31</sup> − 1</span>.
+There is also something called an unsigned int, which goes from <span class="math inline"><span class="math inline">\(0\)</span></span> to <span class="math inline"><span class="math inline">\(65,535\)</span></span> and a <code>long int</code> that ranges from <span class="math inline"><span class="math inline">\(0\)</span></span> to <span class="math inline"><span class="math inline">\(2^{31}-1\)</span></span>.
 </p>
 </div>
 <table>
@@ -828,73 +865,74 @@ There is also something called an unsigned int, which goes from <span class="mat
 <div id="sourcecpp" class="section level3">
 <h3><span class="header-section-number">7.6.4</span> The <code>sourceCpp()</code> function</h3>
 <p>The <code>cppFunction()</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp(&quot;path/to/file.cpp&quot;)</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. The <code>include</code> line</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;Rcpp.h&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb214-1" data-line-number="1"><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></a></code></pre></div>
 <p>causes the compiler to replace that lines with the contents of the named source file. This means that we can access the functions defined by <strong>Rcpp</strong>. To access the <strong>Rcpp</strong> functions we would have to type <code>Rcpp::function_1</code>. To avoid typing <code>Rcpp::</code>, we use the namespace facility</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb215-1" data-line-number="1"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</a></code></pre></div>
 <p>Now we can just type <code>function_1()</code>; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// [[Rcpp::export]]</span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb216-1" data-line-number="1"><span class="co">// [[Rcpp::export]]</span></a></code></pre></div>
 <div class="rmdnote">
 <p>
 Similar to packages and the <code>library()</code> function in R, we access additional functions via <code>#include</code>. A standard header to include is <code>#include &lt;math.h&gt;</code> which contains standard mathematics functions.
 </p>
 </div>
 <p>This would give the complete file</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;Rcpp.h&gt;</span>
-<span class="kw">using</span> <span class="kw">namespace</span> Rcpp;
-
-<span class="co">// [[Rcpp::export]]</span>
-<span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) {
-  <span class="dt">double</span> value = x + y;
-  <span class="kw">return</span> value;
-}</code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb217-1" data-line-number="1"><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></a>
+<a class="sourceLine" id="cb217-2" data-line-number="2"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</a>
+<a class="sourceLine" id="cb217-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb217-4" data-line-number="4"><span class="co">// [[Rcpp::export]]</span></a>
+<a class="sourceLine" id="cb217-5" data-line-number="5"><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) {</a>
+<a class="sourceLine" id="cb217-6" data-line-number="6">  <span class="dt">double</span> value = x + y;</a>
+<a class="sourceLine" id="cb217-7" data-line-number="7">  <span class="cf">return</span> value;</a>
+<a class="sourceLine" id="cb217-8" data-line-number="8">}</a></code></pre></div>
 <p>There are two main benefits with putting your C++ functions in separate files. First, we have the benefit of syntax highlighting (RStudio has great support for C++ editing). Second, it’s easier to make syntax errors when switching between R and C++ in the same file. To save space we’ll omit the headers for the remainder of the chapter.</p>
 </div>
 <div id="vectors-and-loops" class="section level3">
 <h3><span class="header-section-number">7.6.5</span> Vectors and loops</h3>
 <p>Let’s now consider a slightly more complicated example. Here we want to write our own function that calculates the mean. This is just an illustrative example: R’s version is much better and more robust to scale differences in our data. For comparison, let’s create a corresponding R function - this is the same function we used in chapter <a href="programming.html#programming">3</a>. The function takes a single vector <code>x</code> as input, and returns the mean value, <code>m</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean_r =<span class="st"> </span>function(x) {
-  m =<span class="st"> </span><span class="dv">0</span>
-  n =<span class="st"> </span><span class="kw">length</span>(x)
-  for(i in <span class="dv">1</span>:n)
-    m =<span class="st"> </span>m +<span class="st"> </span>x[i] /<span class="st"> </span>n
-  m
-}</code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1">mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb218-2" data-line-number="2">  m =<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb218-3" data-line-number="3">  n =<span class="st"> </span><span class="kw">length</span>(x)</a>
+<a class="sourceLine" id="cb218-4" data-line-number="4">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n)</a>
+<a class="sourceLine" id="cb218-5" data-line-number="5">    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</a>
+<a class="sourceLine" id="cb218-6" data-line-number="6">  m</a>
+<a class="sourceLine" id="cb218-7" data-line-number="7">}</a></code></pre></div>
 <p>This is a very bad R function; we should just use the base function <code>mean()</code> for real world applications. However the purpose of <code>mean_r()</code> is to provide a comparison for the C++ version, which we will write in a similar way.</p>
 <p>In this example, we will let <strong>Rcpp</strong> smooth the interface between C++ and R by using the <code>NumericVector</code> data type. This <strong>Rcpp</strong> data type mirrors the R vector object type. Other common classes are: <code>IntegerVector</code>, <code>CharacterVector</code>, and <code>LogicalVector</code>.</p>
 <p>In the C++ version of the mean function, we specify the arguments types: <code>x</code> (<code>NumericVector</code>) and the return value (<code>double</code>). The C++ version of the <code>mean()</code> function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer. In general R optimises for reduced development time; C++ optimises for fast execution time. The corresponding C++ function for calculating the mean is:</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> mean_cpp(NumericVector x) {
-  <span class="dt">int</span> i;
-  <span class="dt">int</span> n = x.size();
-  <span class="dt">double</span> mean = <span class="dv">0</span>;
-
-  <span class="kw">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {
-    mean = mean + x[i] / n;
-  }
-  <span class="kw">return</span> mean;
-}</code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb219-1" data-line-number="1"><span class="dt">double</span> mean_cpp(NumericVector x) {</a>
+<a class="sourceLine" id="cb219-2" data-line-number="2">  <span class="dt">int</span> i;</a>
+<a class="sourceLine" id="cb219-3" data-line-number="3">  <span class="dt">int</span> n = x.size();</a>
+<a class="sourceLine" id="cb219-4" data-line-number="4">  <span class="dt">double</span> mean = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb219-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb219-6" data-line-number="6">  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</a>
+<a class="sourceLine" id="cb219-7" data-line-number="7">    mean = mean + x[i] / n;</a>
+<a class="sourceLine" id="cb219-8" data-line-number="8">  }</a>
+<a class="sourceLine" id="cb219-9" data-line-number="9">  <span class="cf">return</span> mean;</a>
+<a class="sourceLine" id="cb219-10" data-line-number="10">}</a></code></pre></div>
 <p>To use the C++ function we need to source the file (remember to put the necessary headers in).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sourceCpp</span>(<span class="st">&quot;src/mean_cpp.cpp&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb220-1" data-line-number="1"><span class="kw">sourceCpp</span>(<span class="st">&quot;src/mean_cpp.cpp&quot;</span>)</a></code></pre></div>
 <p>Although the C++ version is similar, there are a few crucial differences.</p>
 <ol style="list-style-type: decimal">
 <li>We use the <code>.size()</code> method to find the length of <code>x</code>.</li>
 <li><p>The <code>for</code> loop has a more complicated syntax.</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">for</span> (variable initialisation; condition; variable update ) {
-  <span class="co">// Code to execute</span>
-}</code></pre></div>
-In this example, the loop initialises <code>i = 0</code> and will continue running until <code>i &lt; n</code> is false. The statement <code>i++</code> increases the value of <code>i</code> by <code>1</code>; essentially it’s just shortcut for <code>i = i + 1</code>.</li>
+<div class="sourceCode" id="cb221"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb221-1" data-line-number="1"><span class="cf">for</span> (variable initialisation; condition; variable update ) {</a>
+<a class="sourceLine" id="cb221-2" data-line-number="2">  <span class="co">// Code to execute</span></a>
+<a class="sourceLine" id="cb221-3" data-line-number="3">}</a></code></pre></div>
+In this example, the loop initialises <code>i = 0</code> and will continue running until <code>i &lt; n</code> is false.
+The statement <code>i++</code> increases the value of <code>i</code> by <code>1</code>; essentially it’s just shortcut for <code>i = i + 1</code>.</li>
 <li><p>Similar to <code>i++</code>, C++ provides other operators to modify variables in place. For example we could rewrite part of the loop as</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">mean += x[i] / n;</code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb222-1" data-line-number="1">mean += x[i] / n;</a></code></pre></div>
 The above code adds <code>x[i] / n</code> to the value of <code>mean</code>. Other similar operators are <code>-=</code>, <code>*=</code>, <code>/=</code> and <code>i--</code>.</li>
 <li><p>A C++ vector starts at <code>0</code> <strong>not</strong> <code>1</code></p></li>
 </ol>
 <p>To compare the C++ and R functions, we’ll generate some normal random numbers for the comparison:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb223-1" data-line-number="1">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</a></code></pre></div>
 <p>Then call the <code>microbenchmark()</code> function (results plotted in figure <a href="performance.html#fig:7-6">7.6</a>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># com_mean_r is the compiled version of mean_r</span>
-z =<span class="st"> </span><span class="kw">microbenchmark</span>(
-  <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_cpp</span>(x),
-  <span class="dt">times =</span> <span class="dv">1000</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb224-1" data-line-number="1"><span class="co"># com_mean_r is the compiled version of mean_r</span></a>
+<a class="sourceLine" id="cb224-2" data-line-number="2">z =<span class="st"> </span><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb224-3" data-line-number="3">  <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_cpp</span>(x),</a>
+<a class="sourceLine" id="cb224-4" data-line-number="4">  <span class="dt">times =</span> <span class="dv">1000</span></a>
+<a class="sourceLine" id="cb224-5" data-line-number="5">)</a></code></pre></div>
 <p>In this simple example, the Rcpp variant is around <span class="math inline">\(100\)</span> times faster than the corresponding pure R version. This sort of speed-up is not uncommon when switching to an Rcpp solution. Notice that the Rcpp version and standard base function <code>mean()</code> run at roughly the same speed; after all, the base R function is written in C. However, <code>mean()</code> uses a more sophisticated algorithm when calculating the mean to ensure accuracy.</p>
 <div class="figure" style="text-align: center"><span id="fig:7-6"></span>
 <img src="_main_files/figure-html/7-6-1.png" alt="Comparison of mean functions." width="70%" />
@@ -905,13 +943,13 @@ Figure 7.6: Comparison of mean functions.
 <div id="exercises-17" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Consider the following piece of code:</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span> test1() {
-  <span class="dt">double</span> a = <span class="fl">1.</span><span class="dv">0</span> / <span class="dv">81</span>;
-  <span class="dt">double</span> b = <span class="dv">0</span>;
-  <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">729</span>; ++i)
-    b = b + a;
-  <span class="kw">return</span> b;
-}</code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb225-1" data-line-number="1"><span class="dt">double</span> test1() {</a>
+<a class="sourceLine" id="cb225-2" data-line-number="2">  <span class="dt">double</span> a = <span class="fl">1.0</span> / <span class="dv">81</span>;</a>
+<a class="sourceLine" id="cb225-3" data-line-number="3">  <span class="dt">double</span> b = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb225-4" data-line-number="4">  <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">729</span>; ++i)</a>
+<a class="sourceLine" id="cb225-5" data-line-number="5">    b = b + a;</a>
+<a class="sourceLine" id="cb225-6" data-line-number="6">  <span class="cf">return</span> b;</a>
+<a class="sourceLine" id="cb225-7" data-line-number="7">}</a></code></pre></div>
 <ol style="list-style-type: decimal">
 <li>Save the function <code>test1()</code> in a separate file. Make sure it works.</li>
 <li>Write a similar function in R and compare the speed of the C++ and R versions.</li>
@@ -925,10 +963,10 @@ Figure 7.6: Comparison of mean functions.
 <p>Each vector type has a corresponding matrix equivalent: <code>NumericMatrix</code>, <code>IntegerMatrix</code>, <code>CharacterMatrix</code> and <code>LogicalMatrix</code>. We use these types in a similar way to how we used <code>NumericVector</code>’s. The main differences are:</p>
 <ul>
 <li><p>When we initialise, we need to specify the number of rows and columns</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// 10 rows, 5 columns</span>
-NumericMatrix mat(<span class="dv">10</span>, <span class="dv">5</span>);
-<span class="co">// Length 10</span>
-NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
+<div class="sourceCode" id="cb226"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb226-1" data-line-number="1"><span class="co">// 10 rows, 5 columns</span></a>
+<a class="sourceLine" id="cb226-2" data-line-number="2">NumericMatrix mat(<span class="dv">10</span>, <span class="dv">5</span>);</a>
+<a class="sourceLine" id="cb226-3" data-line-number="3"><span class="co">// Length 10</span></a>
+<a class="sourceLine" id="cb226-4" data-line-number="4">NumericVector v(<span class="dv">10</span>);</a></code></pre></div></li>
 <li>We subset using <code>()</code>, i.e. <code>mat(5, 4)</code>.</li>
 <li>The first element in a matrix is <code>mat(0, 0)</code> - remember indexes start with <code>0</code> not <code>1</code>.</li>
 <li><p>To determine the number of rows and columns, we use the <code>.nrow()</code> and <code>.ncol()</code> methods.</p></li>
@@ -938,21 +976,21 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 <div id="sugar" class="section level3">
 <h3><span class="header-section-number">7.6.6</span> C++ with sugar on top</h3>
 <p><strong>Rcpp</strong> sugar brings a higher-level of abstraction to C++ code written using the <strong>Rcpp</strong> API. What this means in practice is that we can write C++ code in the style of R. For example, suppose we wanted to find the squared difference of two vectors; a squared residual in regression. In R we would use</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sq_diff_r =<span class="st"> </span>function(x, y) (x -<span class="st"> </span>y)^<span class="dv">2</span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb227-1" data-line-number="1">sq_diff_r =<span class="st"> </span><span class="cf">function</span>(x, y) (x <span class="op">-</span><span class="st"> </span>y)<span class="op">^</span><span class="dv">2</span></a></code></pre></div>
 <p>Rewriting the function in standard C++ would give</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">NumericVector res_c(NumericVector x, NumericVector y) {
-  <span class="dt">int</span> i;
-  <span class="dt">int</span> n = x.size();
-  NumericVector residuals(n);
-  <span class="kw">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {
-    residuals[i] = pow(x[i] - y[i], <span class="dv">2</span>);
-  }
-  <span class="kw">return</span> residuals;
-}</code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb228-1" data-line-number="1">NumericVector res_c(NumericVector x, NumericVector y) {</a>
+<a class="sourceLine" id="cb228-2" data-line-number="2">  <span class="dt">int</span> i;</a>
+<a class="sourceLine" id="cb228-3" data-line-number="3">  <span class="dt">int</span> n = x.size();</a>
+<a class="sourceLine" id="cb228-4" data-line-number="4">  NumericVector residuals(n);</a>
+<a class="sourceLine" id="cb228-5" data-line-number="5">  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</a>
+<a class="sourceLine" id="cb228-6" data-line-number="6">    residuals[i] = pow(x[i] - y[i], <span class="dv">2</span>);</a>
+<a class="sourceLine" id="cb228-7" data-line-number="7">  }</a>
+<a class="sourceLine" id="cb228-8" data-line-number="8">  <span class="cf">return</span> residuals;</a>
+<a class="sourceLine" id="cb228-9" data-line-number="9">}</a></code></pre></div>
 <p>With <strong>Rcpp</strong> sugar we can rewrite this code to be more succinct and have more of an R feel:</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">NumericVector res_sugar(NumericVector x, NumericVector y) {
-  <span class="kw">return</span> pow(x - y, <span class="dv">2</span>);
-}</code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb229-1" data-line-number="1">NumericVector res_sugar(NumericVector x, NumericVector y) {</a>
+<a class="sourceLine" id="cb229-2" data-line-number="2">  <span class="cf">return</span> pow(x - y, <span class="dv">2</span>);</a>
+<a class="sourceLine" id="cb229-3" data-line-number="3">}</a></code></pre></div>
 <p>In the above C++ code, the <code>pow()</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm()</code> and <code>pnorm()</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
 <div id="exercises-18" class="section level4 unnumbered">
 <h4>Exercises</h4>
@@ -980,17 +1018,17 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 <div id="ref-Braun2007">
 <p>Braun, John, and Duncan J Murdoch. 2007. <em>A First Course in Statistical Programming with R</em>. Vol. 25. Cambridge University Press Cambridge.</p>
 </div>
+<div id="ref-Eddelbuettel2013">
+<p>Eddelbuettel, Dirk. 2013. <em>Seamless R and C++ Integration with Rcpp</em>. Springer.</p>
+</div>
+<div id="ref-Eddelbuettel2011">
+<p>Eddelbuettel, Dirk, and Romain François. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
+</div>
 <div id="ref-Goldberg1991">
 <p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1). ACM: 5–48.</p>
 </div>
 <div id="ref-mccallum2011">
 <p>McCallum, Ethan, and Stephen Weston. 2011. <em>Parallel R</em>. O’Reilly Media.</p>
-</div>
-<div id="ref-Eddelbuettel2011">
-<p>Eddelbuettel, Dirk, and Romain François. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
-</div>
-<div id="ref-Eddelbuettel2013">
-<p>Eddelbuettel, Dirk. 2013. <em>Seamless R and C++ Integration with Rcpp</em>. Springer.</p>
 </div>
 <div id="ref-Wickham2014">
 <p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>
@@ -998,11 +1036,11 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref19">↩</a></p></li>
-<li id="fn20"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref20">↩</a></p></li>
-<li id="fn21"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref21">↩</a></p></li>
-<li id="fn22"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref22">↩</a></p></li>
+<ol start="20">
+<li id="fn20"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref20" class="footnote-back">↩</a></p></li>
+<li id="fn21"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref21" class="footnote-back">↩</a></p></li>
+<li id="fn22"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn23"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref23" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -1011,27 +1049,30 @@ NumericVector v(<span class="dv">10</span>);</code></pre></div></li>
         </div>
       </div>
 <a href="data-carpentry.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="hardware.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="hardware.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
+"linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1041,6 +1082,14 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/csgillespie/efficientR/edit/master/07-performance.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
@@ -1055,9 +1104,12 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
