@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -415,7 +415,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="prerequisites-7" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter will focus on assessing your hardware and the benefit of upgrading. We will use the <strong>benchmarkme</strong> package to quantify the effect of changing your CPU.</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb230-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="hardware.html#cb234-1"></a><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</span></code></pre></div>
 </div>
 <div id="top-5-tips-for-efficient-hardware" class="section level2">
 <h2><span class="header-section-number">8.1</span> Top 5 tips for efficient hardware</h2>
@@ -519,7 +519,7 @@ since <span class="math inline">\(2^7 = 128\)</span>, but <span class="math inli
 </tr>
 </tbody>
 </table>
-<p>Table 8.2: Data conversion table. Credit: <a href="http://physics.nist.gov/cuu/Units/binary.html" class="uri">http://physics.nist.gov/cuu/Units/binary.html</a></p>
+<p>Table 8.2: Data conversion table. Credit: <a href="http://physics.nist.gov/cuu/Units/binary.html">http://physics.nist.gov/cuu/Units/binary.html</a></p>
 <p>Even though there is now an agreed standard for discussing memory, that doesn’t mean that everyone follows it.
 Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{20}\)</span>B. Even more confusing the capacity of a <span class="math inline">\(1.44\)</span>MB floppy disk is a mixture, <span class="math inline">\(1\text{MB} = 10^3 \times 2^{10}\)</span>B. Typically RAM is specified in kibibytes, but hard drive manufacturers follow the SI standard!</p>
 </div>
@@ -527,18 +527,18 @@ Microsoft Windows, for example, uses 1MB to mean <span class="math inline">\(2^{
 <h2><span class="header-section-number">8.3</span> Random access memory: RAM</h2>
 <p>Random access memory (RAM) is a type of computer memory that can be accessed randomly: any byte of memory can be accessed without touching the preceding bytes. RAM is found in computers, phones, tablets and even printers. The amount of RAM R has access to is incredibly important. Since R loads objects into RAM, the amount of RAM you have available can limit the size of data set you can analyse.</p>
 <p>Even if the original data set is relatively small, your analysis can generate large objects. For example, suppose we want to perform standard cluster analysis. The built-in data set <code>USArrests</code>, is a data frame with <span class="math inline">\(50\)</span> rows and <span class="math inline">\(4\)</span> columns. Each row corresponds to a state in the USA</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" data-line-number="1"><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb231-2" data-line-number="2"><span class="co">#&gt;         Murder Assault UrbanPop Rape</span></a>
-<a class="sourceLine" id="cb231-3" data-line-number="3"><span class="co">#&gt; Alabama   13.2     236       58 21.2</span></a>
-<a class="sourceLine" id="cb231-4" data-line-number="4"><span class="co">#&gt; Alaska    10.0     263       48 44.5</span></a>
-<a class="sourceLine" id="cb231-5" data-line-number="5"><span class="co">#&gt; Arizona    8.1     294       80 31.0</span></a></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="hardware.html#cb235-1"></a><span class="kw">head</span>(USArrests, <span class="dv">3</span>)</span>
+<span id="cb235-2"><a href="hardware.html#cb235-2"></a><span class="co">#&gt;         Murder Assault UrbanPop Rape</span></span>
+<span id="cb235-3"><a href="hardware.html#cb235-3"></a><span class="co">#&gt; Alabama   13.2     236       58 21.2</span></span>
+<span id="cb235-4"><a href="hardware.html#cb235-4"></a><span class="co">#&gt; Alaska    10.0     263       48 44.5</span></span>
+<span id="cb235-5"><a href="hardware.html#cb235-5"></a><span class="co">#&gt; Arizona    8.1     294       80 31.0</span></span></code></pre></div>
 <p>If we want to group states that have similar crime statistics, a standard first step is to calculate the distance or similarity matrix</p>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb232-1" data-line-number="1">d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</a></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="hardware.html#cb236-1"></a>d =<span class="st"> </span><span class="kw">dist</span>(USArrests)</span></code></pre></div>
 <p>When we inspect the object size of the original data set and the distance object using the <strong>pryr</strong> package</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb233-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(USArrests)</a>
-<a class="sourceLine" id="cb233-2" data-line-number="2"><span class="co">#&gt; 5.74 kB</span></a>
-<a class="sourceLine" id="cb233-3" data-line-number="3">pryr<span class="op">::</span><span class="kw">object_size</span>(d)</a>
-<a class="sourceLine" id="cb233-4" data-line-number="4"><span class="co">#&gt; 14.8 kB</span></a></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="hardware.html#cb237-1"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(USArrests)</span>
+<span id="cb237-2"><a href="hardware.html#cb237-2"></a><span class="co">#&gt; 5.74 kB</span></span>
+<span id="cb237-3"><a href="hardware.html#cb237-3"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(d)</span>
+<span id="cb237-4"><a href="hardware.html#cb237-4"></a><span class="co">#&gt; 14.8 kB</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
 The distance object <code>d</code> is actually a vector that contains the distances in the upper triangular region.
@@ -551,8 +551,8 @@ A rough rule of thumb is that your RAM should be three times the size of your da
 </p>
 </div>
 <p>Another benefit of increasing the amount of onboard RAM is that the ‘garbage collector’, a process that runs periodically to free-up system memory occupied by R, is called less often. It is straightforward to determine how much RAM you have using the <strong>benchmarkme</strong> package</p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb234-1" data-line-number="1">benchmarkme<span class="op">::</span><span class="kw">get_ram</span>()</a>
-<a class="sourceLine" id="cb234-2" data-line-number="2"><span class="co">#&gt; 16.3 GB</span></a></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="hardware.html#cb238-1"></a>benchmarkme<span class="op">::</span><span class="kw">get_ram</span>()</span>
+<span id="cb238-2"><a href="hardware.html#cb238-2"></a><span class="co">#&gt; 16.3 GB</span></span></code></pre></div>
 <!-- https://en.wikipedia.org/wiki/DIMM -->
 <div class="figure" style="text-align: center"><span id="fig:8-1"></span>
 <img src="figures/f8_1_3SDRAM-DIMMs.jpg" alt="Three DIMM slots on a computer motherboard used for increasing the amount of available RAM. Credit: Wikimedia.org" width="100%" />
@@ -562,20 +562,23 @@ Figure 8.1: Three DIMM slots on a computer motherboard used for increasing the a
 </div>
 <p>It is sometimes possible to increase your computer’s RAM. On a computer motherboard there are typically <span class="math inline">\(2\)</span> to <span class="math inline">\(4\)</span> RAM or memory slots. If you have free slots, then you can add more memory. RAM comes in the form of dual in-line memory modules (DIMMs) that can be slotted into the motherboard spaces (see figure <a href="hardware.html#fig:8-1">8.1</a> for example).
 However it is common that all slots are already taken. This means that to upgrade your computer’s memory, some or all of the DIMMs will have to be removed. To go from <span class="math inline">\(8\)</span>GB to <span class="math inline">\(16\)</span>GB, for example, you may have to discard the two <span class="math inline">\(4\)</span>GB RAM cards and replace them with two <span class="math inline">\(8\)</span>GB cards. Increasing your laptop/desktop from <span class="math inline">\(4\)</span>GB to <span class="math inline">\(16\)</span>GB or <span class="math inline">\(32\)</span>GB is cheap and should definitely be considered. As R Core member Uwe Ligges states,</p>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" data-line-number="1">fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">192</span>)</a>
-<a class="sourceLine" id="cb235-2" data-line-number="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb235-3" data-line-number="3"><span class="co">#&gt; RAM is cheap and thinking hurts.</span></a>
-<a class="sourceLine" id="cb235-4" data-line-number="4"><span class="co">#&gt;    -- Uwe Ligges (about memory requirements in R)</span></a>
-<a class="sourceLine" id="cb235-5" data-line-number="5"><span class="co">#&gt;       R-help (June 2007)</span></a></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="hardware.html#cb239-1"></a>fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">192</span>)</span>
+<span id="cb239-2"><a href="hardware.html#cb239-2"></a><span class="co">#&gt; Warning in seq.default(along = rownames(fortunes.data)): partial argument match of</span></span>
+<span id="cb239-3"><a href="hardware.html#cb239-3"></a><span class="co">#&gt; &#39;along&#39; to &#39;along.with&#39;</span></span>
+<span id="cb239-4"><a href="hardware.html#cb239-4"></a><span class="co">#&gt; </span></span>
+<span id="cb239-5"><a href="hardware.html#cb239-5"></a><span class="co">#&gt; RAM is cheap and thinking hurts.</span></span>
+<span id="cb239-6"><a href="hardware.html#cb239-6"></a><span class="co">#&gt;    -- Uwe Ligges (about memory requirements in R)</span></span>
+<span id="cb239-7"><a href="hardware.html#cb239-7"></a><span class="co">#&gt;       R-help (June 2007)</span></span></code></pre></div>
 <p>It is a testament to the design of R that it is still relevant and its popularity is growing. Ross Ihaka, one of the originators of the R programming language, made a throw-away comment in 2003:</p>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb236-1" data-line-number="1">fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">21</span>)</a>
-<a class="sourceLine" id="cb236-2" data-line-number="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb236-3" data-line-number="3"><span class="co">#&gt; I seem to recall that we were targetting 512k Macintoshes. In our dreams we</span></a>
-<a class="sourceLine" id="cb236-4" data-line-number="4"><span class="co">#&gt; might have seen 16Mb Sun.</span></a>
-<a class="sourceLine" id="cb236-5" data-line-number="5"><span class="co">#&gt;    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they</span></a>
-<a class="sourceLine" id="cb236-6" data-line-number="6"><span class="co">#&gt;       started out that they would see R using 16G memory on a dual Opteron</span></a>
-<a class="sourceLine" id="cb236-7" data-line-number="7"><span class="co">#&gt;       computer)</span></a>
-<a class="sourceLine" id="cb236-8" data-line-number="8"><span class="co">#&gt;       R-help (November 2003)</span></a></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="hardware.html#cb240-1"></a>fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">21</span>)</span>
+<span id="cb240-2"><a href="hardware.html#cb240-2"></a><span class="co">#&gt; Warning in seq.default(along = rownames(fortunes.data)): partial argument match of</span></span>
+<span id="cb240-3"><a href="hardware.html#cb240-3"></a><span class="co">#&gt; &#39;along&#39; to &#39;along.with&#39;</span></span>
+<span id="cb240-4"><a href="hardware.html#cb240-4"></a><span class="co">#&gt; </span></span>
+<span id="cb240-5"><a href="hardware.html#cb240-5"></a><span class="co">#&gt; I seem to recall that we were targetting 512k Macintoshes. In our dreams we might have</span></span>
+<span id="cb240-6"><a href="hardware.html#cb240-6"></a><span class="co">#&gt; seen 16Mb Sun.</span></span>
+<span id="cb240-7"><a href="hardware.html#cb240-7"></a><span class="co">#&gt;    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they started out</span></span>
+<span id="cb240-8"><a href="hardware.html#cb240-8"></a><span class="co">#&gt;       that they would see R using 16G memory on a dual Opteron computer)</span></span>
+<span id="cb240-9"><a href="hardware.html#cb240-9"></a><span class="co">#&gt;       R-help (November 2003)</span></span></code></pre></div>
 <p>Considering that a standard smart phone now contains <span class="math inline">\(1\)</span>GB of RAM, the fact that R was designed for “basic” computers, but can scale across clusters is impressive.
 R’s origins on computers with limited resources helps explain its efficiency at dealing with large datasets.</p>
 <div id="exercises-19" class="section level4 unnumbered">
@@ -601,7 +604,7 @@ In the authors’ experience, having an SSD drive doesn’t make <strong>much</s
 <div class="figure" style="text-align: center"><span id="fig:8-2"></span>
 <img src="figures/f8_2_627px-Laptop-hard-drive-exposed.jpg" alt="A standard 2.5&quot; hard drive, found in most laptops. Credit: https://en.wikipedia.org/wiki/Hard\_disk\_drive" width="314" />
 <p class="caption">
-Figure 8.2: A standard 2.5&quot; hard drive, found in most laptops. Credit: <a href="https://en.wikipedia.org/wiki/Hard\_disk\_drive" class="uri">https://en.wikipedia.org/wiki/Hard\_disk\_drive</a>
+Figure 8.2: A standard 2.5" hard drive, found in most laptops. Credit: <a href="https://en.wikipedia.org/wiki/Hard\_disk\_drive" class="uri">https://en.wikipedia.org/wiki/Hard\_disk\_drive</a>
 </p>
 </div>
 <p>Solid state drives (SSDs) can be thought of as large, but more sophisticated versions of USB sticks. They have no moving parts and information is stored in microchips. Since there are no moving parts, reading/writing is much quicker. SSDs have other benefits: they are quieter, allow faster boot time (no ‘spin up’ time) and require less power (more battery life).</p>
@@ -621,9 +624,9 @@ If you are using an OS version from the last five years, it is unlikely to be <s
 </p>
 </div>
 <p>A <span class="math inline">\(32\)</span>-bit machine can access at most only <span class="math inline">\(4\)</span>GB of RAM. Although some CPUs offer solutions to this limitation, if you are running a <span class="math inline">\(32\)</span>-bit operating system, then R is limited to around <span class="math inline">\(3\)</span>GB RAM. If you are running a <span class="math inline">\(64\)</span>-bit operating system, but only a <span class="math inline">\(32\)</span>-bit version of R, then you have access to slightly more memory (but not much). Modern systems should run a <span class="math inline">\(64\)</span>-bit operating system, with a <span class="math inline">\(64\)</span>-bit version of R. Your memory limit is now measured as <span class="math inline">\(8\)</span> terabytes for Windows machines and <span class="math inline">\(128\)</span>TB for Unix-based OSs. An easy method for determining if you are running a <span class="math inline">\(64\)</span>-bit version of R is to run</p>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" data-line-number="1">.Machine<span class="op">$</span>sizeof.pointer</a></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="hardware.html#cb241-1"></a>.Machine<span class="op">$</span>sizeof.pointer</span></code></pre></div>
 <p>which will return <span class="math inline">\(8\)</span> if you a running a <span class="math inline">\(64\)</span>-bit version of R.</p>
-<p>To find precise details consult the R help pages <code>help(&quot;Memory-limits&quot;)</code> and <code>help(&quot;Memory&quot;)</code>.</p>
+<p>To find precise details consult the R help pages <code>help("Memory-limits")</code> and <code>help("Memory")</code>.</p>
 <div id="exercises-20" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>These exercises aim to condense the previous section into the key points.</p>
@@ -636,6 +639,8 @@ If you are using an OS version from the last five years, it is unlikely to be <s
 <div id="central-processing-unit-cpu" class="section level2">
 <h2><span class="header-section-number">8.6</span> Central processing unit (CPU)</h2>
 <p>The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure <a href="hardware.html#fig:8-3">8.3</a>).</p>
+<pre><code>#&gt; Warning in plot.default(0.1, type = &quot;n&quot;, ylim = c(0.9, 10000), xlim = c(1980, : partial
+#&gt; argument match of &#39;frame&#39; to &#39;frame.plot&#39;</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:8-3"></span>
 <img src="_main_files/figure-html/8-3-1.png" alt="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed." width="70%" />
 <p class="caption">
@@ -643,6 +648,8 @@ Figure 8.3: CPU clock speed. The data for this figure was collected from web-for
 </p>
 </div>
 <p>Unfortunately we can’t simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package <strong>benchmarkme</strong> provides functions for benchmarking your system and contains data from previous benchmarks. Figure <a href="hardware.html#fig:8-4">8.4</a> shows the relative performance for over <span class="math inline">\(150\)</span> CPUs.</p>
+<pre><code>#&gt; Warning in plot.default(0.1, type = &quot;n&quot;, ylim = c(0.95, 100), xlim = c(0, : partial
+#&gt; argument match of &#39;frame&#39; to &#39;frame.plot&#39;</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:8-4"></span>
 <img src="_main_files/figure-html/8-4-1.png" alt="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result." width="70%" />
 <p class="caption">
@@ -651,11 +658,11 @@ Figure 8.4: CPU benchmarks from the R package, <strong>benchmarkme</strong>. Eac
 </div>
 <p>Running the benchmarks and comparing your CPU to others is straightforward using the <strong>benchmarkme</strong> package.
 After loading the package, we can benchmark your CPU</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" data-line-number="1">res =<span class="st"> </span><span class="kw">benchmark_std</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="hardware.html#cb244-1"></a>res =<span class="st"> </span><span class="kw">benchmark_std</span>() </span></code></pre></div>
 <p>and compare the results to other users</p>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" data-line-number="1"><span class="kw">plot</span>(res)</a>
-<a class="sourceLine" id="cb239-2" data-line-number="2"><span class="co"># Upload your benchmarks for future users</span></a>
-<a class="sourceLine" id="cb239-3" data-line-number="3"><span class="kw">upload_results</span>(res) </a></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="hardware.html#cb245-1"></a><span class="kw">plot</span>(res)</span>
+<span id="cb245-2"><a href="hardware.html#cb245-2"></a><span class="co"># Upload your benchmarks for future users</span></span>
+<span id="cb245-3"><a href="hardware.html#cb245-3"></a><span class="kw">upload_results</span>(res) </span></code></pre></div>
 <p>You get the model specifications of the top CPUs using <code>get_datatable(res)</code>.</p>
 </div>
 <div id="cloud-computing" class="section level2">

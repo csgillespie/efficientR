@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -413,7 +413,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="prerequisites-3" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter focuses on workflow. For project planning and management, we’ll use the <strong>DiagrammeR</strong> package. For project reporting we’ll focus on R Markdown and <strong>knitr</strong> which are bundled with RStudio (but can be installed independently if needed). We’ll suggest other packages that are worth investigating, but are not required for this particular chapter.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="workflow.html#cb107-1"></a><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</span></code></pre></div>
 </div>
 <div id="top-5-tips-for-efficient-workflow" class="section level2">
 <h2><span class="header-section-number">4.1</span> Top 5 tips for efficient workflow</h2>
@@ -447,9 +447,9 @@ It builds on the concept of an R/RStudio <em>project</em>, introduced in Chapter
 </div>
 <div id="project-planning-and-management" class="section level2">
 <h2><span class="header-section-number">4.3</span> Project planning and management</h2>
-<p>Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: “smart preparation minimizes work” <span class="citation">(Berkun <a href="#ref-berkun2005art">2005</a>)</span>.
+<p>Good programmers working on a complex project will rarely just start typing code. Instead, they will plan the steps needed to complete the task as efficiently as possible: “smart preparation minimizes work” <span class="citation">(Berkun <a href="#ref-berkun2005art" role="doc-biblioref">2005</a>)</span>.
 Although search engines are useful for identifying the appropriate strategy, trial-and-error approaches (for example typing code at random and Googling the inevitable error messages) are usually highly <em>inefficient</em>.</p>
-<p>Strategic thinking is especially important during a project’s inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project’s entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: <em>technical debt</em>. This has been defined as “not quite right code which we postpone making it right” <span class="citation">(Kruchten, Nord, and Ozkaya <a href="#ref-kruchten2012technical">2012</a>)</span>. Dozens of academic papers have been written on the subject but, from the perspective of <em>beginning</em> a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring.</p>
+<p>Strategic thinking is especially important during a project’s inception: if you make a bad decision early on, it will have cascading negative impacts throughout the project’s entire lifespan. So detrimental and ubiquitous is this phenomenon in software development that a term has been coined to describe it: <em>technical debt</em>. This has been defined as “not quite right code which we postpone making it right” <span class="citation">(Kruchten, Nord, and Ozkaya <a href="#ref-kruchten2012technical" role="doc-biblioref">2012</a>)</span>. Dozens of academic papers have been written on the subject but, from the perspective of <em>beginning</em> a project (i.e. in the planning stage, where we are now), all you need to know is that it is absolutely vital to make sensible decisions at the outset. If you do not, your project may be doomed to failure of incessant rounds of refactoring.</p>
 <p>To minimise technical debt at the outset, the best place to start may be with a pen and paper and an open mind. Sketching out your ideas and deciding precisely what you want to do, free from the constraints of a particular piece of technology, can be a rewarding exercise before you begin.
 Project planning and ‘visioning’ can be a creative process not always well-suited to the linear logic of computing, despite recent advances in project management software, some of which are outlined in the bullet points below.</p>
 <p>Scale can loosely be defined as the number of people working on a project. It should be considered at the outset because the importance of project management increases exponentially with the number of people involved.
@@ -465,7 +465,7 @@ priorities will inevitably consume a large proportion of the project’s time. F
 <li><p>fully featured, enterprise scale open source project management systems such as <a href="https://www.openproject.org/">OpenProject</a> and <a href="http://www.redmine.org/">redmine</a>.</p></li>
 </ul>
 <p>Regardless of the software (or lack thereof) used for project management, it involves considering the project’s aims in the context of available resources (e.g. computational and programmer resources), project scope, time-scales and suitable software. And these things should be considered together. To take one example, is it worth the investment of time needed to learn a particular R package which is not essential to completing the project but which will make the code run faster? Does it make more sense to hire another programmer or invest in more computational resources to complete an urgent deadline?</p>
-<p>Minutes spent thinking through such issues before writing a single line can save hours in the future. This is emphasised in books such as <span class="citation">Berkun (<a href="#ref-berkun2005art">2005</a>)</span> and <span class="citation">PMBoK (<a href="#ref-PMBoK2000">2000</a>)</span> and useful online resources such those by <a href="http://teamgantt.com/guide-to-project-management/">teamgantt.com</a> and
+<p>Minutes spent thinking through such issues before writing a single line can save hours in the future. This is emphasised in books such as <span class="citation">Berkun (<a href="#ref-berkun2005art" role="doc-biblioref">2005</a>)</span> and <span class="citation">PMBoK (<a href="#ref-PMBoK2000" role="doc-biblioref">2000</a>)</span> and useful online resources such those by <a href="http://teamgantt.com/guide-to-project-management/">teamgantt.com</a> and
 <a href="http://www.lasa.org.uk/uploads/publications/ictpublications/computanews_guides/lcgpm.pdf">lasa.org.uk</a>,
 which focus exclusively on project planning. This section condenses some of the most important lessons from this literature in the context of typical R projects (i.e. which involve data analysis, modelling and visualisation).</p>
 <div id="chunking-your-work" class="section level3">
@@ -473,12 +473,14 @@ which focus exclusively on project planning. This section condenses some of the 
 <p>Once a project overview has been devised and stored, in mind (for small projects, if you trust that as storage medium!) or written, a plan with a time-line can be drawn-up.
 The up-to-date visualisation of this plan can be a powerful reminder to yourself and collaborators of progress on the project so far. More importantly the timeline provides an overview of what needs to be done next.
 Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track.
-Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">(PMBoK <a href="#ref-PMBoK2000">2000</a>)</span>.
+Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular <span class="citation">(PMBoK <a href="#ref-PMBoK2000" role="doc-biblioref">2000</a>)</span>.
 ‘Chunking’ the work will also make collaboration easier, as we shall see in Chapter 5.</p>
+<pre><code>#&gt; Warning in plot.default(0.1, type = &quot;n&quot;, ylim = c(0, 3), xlim = c(0, 4), : partial
+#&gt; argument match of &#39;frame&#39; to &#39;frame.plot&#39;</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:4-1"></span>
 <img src="_main_files/figure-html/4-1-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK2000." width="70%" />
 <p class="caption">
-Figure 4.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="#ref-PMBoK2000">2000</a>)</span>.
+Figure 4.1: Schematic illustrations of key project phases and levels of activity over time, based on <span class="citation">PMBoK (<a href="#ref-PMBoK2000" role="doc-biblioref">2000</a>)</span>.
 </p>
 </div>
 <p>The tasks that a project should be split into will depend on the nature of the work and the phases illustrated in Figure <a href="workflow.html#fig:4-1">4.1</a> represent a rough starting point, not a template and the ‘programming’ phase will usually need to be split into at least ‘data tidying’, ‘processing’, and ‘visualisation’.</p>
@@ -515,12 +517,12 @@ While these are useful, they cannot compete with the dedicated project managemen
 </ul>
 <p>The small example below (which provides the basis for creating charts like Figure <a href="workflow.html#fig:4-2">4.2</a>) illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts.
 Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a>
-<a class="sourceLine" id="cb106-2" data-line-number="2"><span class="co"># Define the Gantt chart and plot the result (not shown)</span></a>
-<a class="sourceLine" id="cb106-3" data-line-number="3"><span class="kw">mermaid</span>(<span class="st">&quot;gantt</span></a>
-<a class="sourceLine" id="cb106-4" data-line-number="4"><span class="st">        Section Initiation</span></a>
-<a class="sourceLine" id="cb106-5" data-line-number="5"><span class="st">        Planning           :a1, 2016-01-01, 10d</span></a>
-<a class="sourceLine" id="cb106-6" data-line-number="6"><span class="st">        Data processing    :after a1  , 30d&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="workflow.html#cb109-1"></a><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</span>
+<span id="cb109-2"><a href="workflow.html#cb109-2"></a><span class="co"># Define the Gantt chart and plot the result (not shown)</span></span>
+<span id="cb109-3"><a href="workflow.html#cb109-3"></a><span class="kw">mermaid</span>(<span class="st">&quot;gantt</span></span>
+<span id="cb109-4"><a href="workflow.html#cb109-4"></a><span class="st">        Section Initiation</span></span>
+<span id="cb109-5"><a href="workflow.html#cb109-5"></a><span class="st">        Planning           :a1, 2016-01-01, 10d</span></span>
+<span id="cb109-6"><a href="workflow.html#cb109-6"></a><span class="st">        Data processing    :after a1  , 30d&quot;</span>)</span></code></pre></div>
 <p>In the above code <code>gantt</code> defines the subsequent data layout.
 <code>Section</code> refers to the project’s section (useful for large projects, with milestones) and each new line refers to a discrete task.
 <code>Planning</code>, for example, has the code <code>a</code>, begins on the first day of 2016 and lasts for 10 days. See <a href="http://knsv.github.io/mermaid/gantt.html">knsv.github.io/mermaid/gantt.html</a> for more detailed documentation.</p>
@@ -540,43 +542,43 @@ Such charts can greatly help with the planning and task management of long and c
 <p>A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection. An inefficient, poorly supported or simply outdated package can waste hours. When a more appropriate alternative is available this waste can be prevented by prior planning. There are many poor packages on CRAN and much duplication so it’s easy to go wrong. Just because a certain package <em>can</em> solve a particular problem, doesn’t mean that it <em>should</em>.</p>
 <p>Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don’t have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively than the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is <em>packaged</em> in functions behind the scenes.</p>
 <p>Let’s take an example. Imagine for a project you would like to find the distance between sets of points (origins, <code>o</code> and destinations, <code>d</code>) on the Earth’s surface. Background reading shows that a good approximation of ‘great circle’ distance, which accounts for the curvature of the Earth, can be made by using the Haversine formula, which you duly implement, involving much trial and error:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="co"># Function to convert degrees to radians</span></a>
-<a class="sourceLine" id="cb107-2" data-line-number="2">deg2rad =<span class="st"> </span><span class="cf">function</span>(deg) deg <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">180</span></a>
-<a class="sourceLine" id="cb107-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb107-4" data-line-number="4"><span class="co"># Create origins and destinations</span></a>
-<a class="sourceLine" id="cb107-5" data-line-number="5">o =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.55</span>, <span class="dt">lat =</span> <span class="fl">53.80</span>)</a>
-<a class="sourceLine" id="cb107-6" data-line-number="6">d =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.61</span>, <span class="dt">lat =</span> <span class="fl">54.98</span>)</a>
-<a class="sourceLine" id="cb107-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb107-8" data-line-number="8"><span class="co"># Convert to radians</span></a>
-<a class="sourceLine" id="cb107-9" data-line-number="9">o_rad =<span class="st"> </span><span class="kw">deg2rad</span>(o)</a>
-<a class="sourceLine" id="cb107-10" data-line-number="10">d_rad =<span class="st"> </span><span class="kw">deg2rad</span>(d)</a>
-<a class="sourceLine" id="cb107-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb107-12" data-line-number="12"><span class="co"># Find difference in degrees</span></a>
-<a class="sourceLine" id="cb107-13" data-line-number="13">delta_lon =<span class="st"> </span>(o_rad[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb107-14" data-line-number="14">delta_lat =<span class="st"> </span>(o_rad[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb107-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb107-16" data-line-number="16"><span class="co"># Calculate distance with Haversine formula</span></a>
-<a class="sourceLine" id="cb107-17" data-line-number="17">a =<span class="st"> </span><span class="kw">sin</span>(delta_lat <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">cos</span>(o_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(d_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(delta_lon <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb107-18" data-line-number="18">c =<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">asin</span>(<span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">sqrt</span>(a)))</a>
-<a class="sourceLine" id="cb107-19" data-line-number="19">(<span class="dt">d_hav1 =</span> <span class="dv">6371</span> <span class="op">*</span><span class="st"> </span>c) <span class="co"># multiply by Earth&#39;s diameter</span></a>
-<a class="sourceLine" id="cb107-20" data-line-number="20"><span class="co">#&gt; [1] 131</span></a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="workflow.html#cb110-1"></a><span class="co"># Function to convert degrees to radians</span></span>
+<span id="cb110-2"><a href="workflow.html#cb110-2"></a>deg2rad =<span class="st"> </span><span class="cf">function</span>(deg) deg <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">180</span></span>
+<span id="cb110-3"><a href="workflow.html#cb110-3"></a></span>
+<span id="cb110-4"><a href="workflow.html#cb110-4"></a><span class="co"># Create origins and destinations</span></span>
+<span id="cb110-5"><a href="workflow.html#cb110-5"></a>o =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.55</span>, <span class="dt">lat =</span> <span class="fl">53.80</span>)</span>
+<span id="cb110-6"><a href="workflow.html#cb110-6"></a>d =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.61</span>, <span class="dt">lat =</span> <span class="fl">54.98</span>)</span>
+<span id="cb110-7"><a href="workflow.html#cb110-7"></a></span>
+<span id="cb110-8"><a href="workflow.html#cb110-8"></a><span class="co"># Convert to radians</span></span>
+<span id="cb110-9"><a href="workflow.html#cb110-9"></a>o_rad =<span class="st"> </span><span class="kw">deg2rad</span>(o)</span>
+<span id="cb110-10"><a href="workflow.html#cb110-10"></a>d_rad =<span class="st"> </span><span class="kw">deg2rad</span>(d)</span>
+<span id="cb110-11"><a href="workflow.html#cb110-11"></a></span>
+<span id="cb110-12"><a href="workflow.html#cb110-12"></a><span class="co"># Find difference in degrees</span></span>
+<span id="cb110-13"><a href="workflow.html#cb110-13"></a>delta_lon =<span class="st"> </span>(o_rad[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">1</span>])</span>
+<span id="cb110-14"><a href="workflow.html#cb110-14"></a>delta_lat =<span class="st"> </span>(o_rad[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">2</span>])</span>
+<span id="cb110-15"><a href="workflow.html#cb110-15"></a></span>
+<span id="cb110-16"><a href="workflow.html#cb110-16"></a><span class="co"># Calculate distance with Haversine formula</span></span>
+<span id="cb110-17"><a href="workflow.html#cb110-17"></a>a =<span class="st"> </span><span class="kw">sin</span>(delta_lat <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">cos</span>(o_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(d_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(delta_lon <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb110-18"><a href="workflow.html#cb110-18"></a>c =<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">asin</span>(<span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">sqrt</span>(a)))</span>
+<span id="cb110-19"><a href="workflow.html#cb110-19"></a>(<span class="dt">d_hav1 =</span> <span class="dv">6371</span> <span class="op">*</span><span class="st"> </span>c) <span class="co"># multiply by Earth&#39;s diameter</span></span>
+<span id="cb110-20"><a href="workflow.html#cb110-20"></a><span class="co">#&gt; [1] 131</span></span></code></pre></div>
 <p>This method works but it takes time to write, test and debug. Much better to package it up into a function. Or even better, use a function that someone else has written and put in a package:</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co"># Find great circle distance with geosphere</span></a>
-<a class="sourceLine" id="cb108-2" data-line-number="2">(<span class="dt">d_hav2 =</span> geosphere<span class="op">::</span><span class="kw">distHaversine</span>(o, d))</a>
-<a class="sourceLine" id="cb108-3" data-line-number="3"><span class="co">#&gt; [1] 131415</span></a></code></pre></div>
-<p>The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subsetting stages and small, similar functions (e.g. <code>sin</code> and <code>asin</code>) which are easy to confuse. The other is one line of simple code. The package method using <strong>geosphere</strong> took perhaps 100<sup>th</sup> of the time <em>and</em> gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="workflow.html#cb111-1"></a><span class="co"># Find great circle distance with geosphere</span></span>
+<span id="cb111-2"><a href="workflow.html#cb111-2"></a>(<span class="dt">d_hav2 =</span> geosphere<span class="op">::</span><span class="kw">distHaversine</span>(o, d))</span>
+<span id="cb111-3"><a href="workflow.html#cb111-3"></a><span class="co">#&gt; [1] 131415</span></span></code></pre></div>
+<p>The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subsetting stages and small, similar functions (e.g. <code>sin</code> and <code>asin</code>) which are easy to confuse. The other is one line of simple code. The package method using <strong>geosphere</strong> took perhaps 100<sup>th</sup> of the time <em>and</em> gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?</p>
 <div id="searching-for-r-packages" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Searching for R packages</h3>
 <p>Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, <code>haversine formula R</code>, returned a link to the <strong>geosphere</strong> package in the second result (a <a href="http://www.r-bloggers.com/great-circle-distance-calculations-in-r/">hardcoded implementation</a> was first).</p>
 <p>Beyond Google, there are also several sites for searching for packages and functions.
 <a href="http://www.rdocumentation.org/">rdocumentation.org</a> provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for <code>haversine</code> in the Description field yielded 10 results from 8 packages: R has at least <em>8</em> implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with <code>RSiteSearch()</code>, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="co"># Search CRAN for mentions of haversine</span></a>
-<a class="sourceLine" id="cb109-2" data-line-number="2"><span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="workflow.html#cb112-1"></a><span class="co"># Search CRAN for mentions of haversine</span></span>
+<span id="cb112-2"><a href="workflow.html#cb112-2"></a><span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</span></code></pre></div>
 </div>
 <div id="how-to-select-a-package" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> How to select a package</h3>
 <p>Due to the conservative nature of base R development, which rightly prioritises stability over innovation, much of the innovation and performance gains in the ‘R ecosystem’ has occurred in recent years in the packages.
-The increased ease of package development <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">b</a>)</span> and interfacing with other languages <span class="citation">(e.g. Eddelbuettel et al. <a href="#ref-Eddelbuettel_2011">2011</a>)</span> has accelerated their number, quality and efficiency.
+The increased ease of package development <span class="citation">(H. Wickham <a href="#ref-Wickham_2015" role="doc-biblioref">2015</a><a href="#ref-Wickham_2015" role="doc-biblioref">b</a>)</span> and interfacing with other languages <span class="citation">(e.g. Eddelbuettel et al. <a href="#ref-Eddelbuettel_2011" role="doc-biblioref">2011</a>)</span> has accelerated their number, quality and efficiency.
 An additional factor has been the growth in collaboration and peer review in package development, driven by code-sharing websites such as GitHub and online communities such as <a href="https://ropensci.org/">ROpenSci</a> for peer reviewing code.</p>
 <p>Performance, stability and ease of use should be high on the priority list when choosing which package to use.
 Another more subtle factor is that some packages work better together than others.
@@ -593,7 +595,7 @@ However, the following criteria should provide a good indication of whether a pa
 The most recent of these at the time of writing was <strong>ggplot2</strong> 2.1.0:
 reaching 1 or 2 in the first digit of package versions is usually an indication from the package author that the package has reached a high level of stability.</p></li>
 <li><p><strong>Is it actively developed?</strong> It is a good sign if packages are frequently updated. A frequently updated package will have its latest version ‘published’ recently on CRAN. The CRAN package page for <strong>ggplot2</strong>, for example, said <code>Published: 2016-03-01</code>, less than six months old at the time of writing.</p></li>
-<li><p><strong>Is it well documented?</strong> This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. <code>?ggplot</code>), try the examples (e.g. <code>example(ggplot)</code>) and search for package vignettes (e.g. <code>vignette(package = &quot;ggplot2&quot;)</code>).</p></li>
+<li><p><strong>Is it well documented?</strong> This is not only an indication of how much thought, care and attention has gone into the package. It also has a direct impact on its ease of use. Using a poorly documented package can be inefficient due to the hours spent trying to work out how to use it! To check if the package is well documented, look at the help pages associated with its key functions (e.g. <code>?ggplot</code>), try the examples (e.g. <code>example(ggplot)</code>) and search for package vignettes (e.g. <code>vignette(package = "ggplot2")</code>).</p></li>
 <li><p><strong>Is it well used?</strong> This can be seen by searching for the package name online. Most packages that have a strong user base will produce thousands of results when typed into a generic search engine such as Google’s. More specific (and potentially useful) indications of use will narrow down the search to particular users. A package widely used by the programming community will likely be visible on GitHub. At the time of writing a search for <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=ggplot2"><strong>ggplot2</strong></a> on GitHub yielded over 400 repositories and almost 200,000 matches in committed code!
 Likewise, a package that has been adopted for use in academia will tend to be mentioned in Google Scholar (again, <strong>ggplot2</strong> scores extremely well in this measure, with over 5000 hits).</p></li>
 </ul>
@@ -636,15 +638,15 @@ This note briefly explains R Markdown for the un-initiated. R markdown is a form
 (1:5)^2
 ```</code></pre>
 <p>in an R Markdown document. The <code>eval = TRUE</code> in the code indicates that the code should be evaluated while <code>echo = TRUE</code> controls whether the R code is displayed. When we compile the document, we get</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="co">#&gt; [1]  1  4  9 16 25</span></a></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="workflow.html#cb114-1"></a>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb114-2"><a href="workflow.html#cb114-2"></a><span class="co">#&gt; [1]  1  4  9 16 25</span></span></code></pre></div>
 <p>R Markdown via <strong>knitr</strong> provides a wide range of options to customise what is displayed and evaluated. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a <code>.Rmd</code> file, for example, simply enter <code>Ctrl/Cmd+Alt+I</code> on Windows or Linux or select the option from the Code drop down menu.</p>
 <p>Once your document has compiled it should appear on your screen in the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the <a href="https://rpubs.com">rpubs</a> website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).
 Assuming you have an RStudio account, clicking the ‘Publish’ button at the top of the html output window will instantly publish your work online, with a minimum of effort, enabling fast and efficient communication with many collaborators and the public.</p>
 <p>An important advantage of dynamically documenting work this way is that when the data or analysis code changes, the results will be updated in the document automatically. This can save hours of fiddly copying and pasting of R output between different programs. Also, if your client wants pages and pages of documented output, <strong>knitr</strong> can provide them with a minimum of typing, e.g. by creating slightly different versions of the same plot over and over again. From a delivery of content perspective, that is certainly an efficiency gain compared with hours of copying and pasting figures!</p>
 <p>If your R Markdown documents include time-consuming processing stages, a speed boost can be attained after the first build by setting <code>opts_chunk$set(cache = TRUE)</code> in the first chunk of the document. This setting was used to reduce the build times of this book, as can be seen on <a href="https://github.com/csgillespie/efficientR/blob/master/code/before_script.R">GitHub</a>.</p>
-<p>Furthermore dynamic documents written in R Markdown can compile into a range of output formats including html, pdf and Microsoft’s docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio’s excellent website on R Markdown hosted at <a href="http://rmarkdown.rstudio.com/">rmarkdown.rstudio.com</a> and, for a more detailed account of dynamic documents with R, <span class="citation">(Xie <a href="#ref-xie2015dynamic">2015</a>)</span>.</p>
+<p>Furthermore dynamic documents written in R Markdown can compile into a range of output formats including html, pdf and Microsoft’s docx. There is a wealth of information on the details of dynamic report writing that is not worth replicating here. Key references are RStudio’s excellent website on R Markdown hosted at <a href="http://rmarkdown.rstudio.com/">rmarkdown.rstudio.com</a> and, for a more detailed account of dynamic documents with R, <span class="citation">(Xie <a href="#ref-xie2015dynamic" role="doc-biblioref">2015</a>)</span>.</p>
 </div>
 <div id="r-packages" class="section level3">
 <h3><span class="header-section-number">4.5.2</span> R packages</h3>
@@ -654,10 +656,10 @@ Assuming you have an RStudio account, clicking the ‘Publish’ button at the t
 <ul>
 <li><p>The <a href="http://r-pkgs.had.co.nz/description.html"><code>DESCRIPTION</code></a> file contains key information about the package, including which packages are required for the code contained in your package to work, e.g. using <code>Imports:</code>. This is efficient because it means that anyone who installs your package will automatically install the other packages that it depends on.</p></li>
 <li><p>The <code>R/</code> folder contains all the R code that defines your package’s functions. Placing your code in a single place and encouraging you to make your code modular in this way can greatly reduce duplication of code on large projects. Furthermore the documentation of R packages through <a href="http://r-pkgs.had.co.nz/man.html#man-workflow">Roxygen tags</a> such as <code>#' This function does this...</code> makes it easy for others to use your work. This form of efficient documentation is facilitated by the <strong>roxygen2</strong> package.</p></li>
-<li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data(&quot;data_set_name&quot;)</code>.</p></li>
+<li><p>The <code>data/</code> folder contains example code for demonstrating to others how the functions work and transporting datasets that will be frequently used in your workflow. Data can be added automatically to your package project using the <strong>devtools</strong> package, with <code>devtools::use_data()</code>. This can increase efficiency by providing a way of distributing small to medium sized datasets and making them available when the package is loaded with the function <code>data("data_set_name")</code>.</p></li>
 </ul>
-<p>The package <strong>testthat</strong> makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with ‘continuous integration’ services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in <span class="citation">(Cotton <a href="#ref-cotton_testing_2016">2016</a><a href="#ref-cotton_testing_2016">b</a>)</span>.</p>
-<p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">b</a>)</span>: the online version provides all you need to know about writing R packages for free (see <a href="http://r-pkgs.had.co.nz/">r-pkgs.had.co.nz/</a>).</p>
+<p>The package <strong>testthat</strong> makes it easier than ever to test your R code as you go, ensuring that nothing breaks. This, combined with ‘continuous integration’ services, such as that provided by Travis, make updating your code base as efficient and robust as possible. This, and more, is described in <span class="citation">(Cotton <a href="#ref-cotton_testing_2016" role="doc-biblioref">2016</a><a href="#ref-cotton_testing_2016" role="doc-biblioref">b</a>)</span>.</p>
+<p>As with dynamic documents, package development is a large topic. For small ‘one-off’ projects the time taken in learning how to set-up a package may not be worth the savings. However packages provide a rigorous way of storing code, data and documentation that can greatly boost productivity in the long-run. For more on R packages see <span class="citation">(H. Wickham <a href="#ref-Wickham_2015" role="doc-biblioref">2015</a><a href="#ref-Wickham_2015" role="doc-biblioref">b</a>)</span>: the online version provides all you need to know about writing R packages for free (see <a href="http://r-pkgs.had.co.nz/">r-pkgs.had.co.nz/</a>).</p>
 
 </div>
 </div>
@@ -674,7 +676,7 @@ Assuming you have an RStudio account, clicking the ‘Publish’ button at the t
 <p>Eddelbuettel, Dirk, Romain François, J. Allaire, John Chambers, Douglas Bates, and Kevin Ushey. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
 </div>
 <div id="ref-kruchten2012technical">
-<p>Kruchten, Philippe, Robert L Nord, and Ipek Ozkaya. 2012. “Technical Debt: From Metaphor to Theory and Practice.” <em>IEEE Software</em>, no. 6. IEEE: 18–21.</p>
+<p>Kruchten, Philippe, Robert L Nord, and Ipek Ozkaya. 2012. “Technical Debt: From Metaphor to Theory and Practice.” <em>IEEE Software</em>, no. 6: 18–21.</p>
 </div>
 <div id="ref-PMBoK2000">
 <p>PMBoK, A. 2000. “Guide to the Project Management Body of Knowledge.” <em>Project Management Institute, Pennsylvania USA</em>.</p>
@@ -689,10 +691,10 @@ Assuming you have an RStudio account, clicking the ‘Publish’ button at the t
 <div class="footnotes">
 <hr />
 <ol start="9">
-<li id="fn9"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.” <a href="workflow.html#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p>Thanks to Richard Cotton for suggesting this typology.<a href="workflow.html#fnref10" class="footnote-back">↩</a></p></li>
-<li id="fn11"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="workflow.html#fnref11" class="footnote-back">↩</a></p></li>
-<li id="fn13"><p>An excellent overview of the ‘tidyverse’, formerly now as the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="workflow.html#fnref13" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>The Oxford Dictionary’s definition of workflow is similar, with a more industrial feel: “The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.” <a href="workflow.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>Thanks to Richard Cotton for suggesting this typology.<a href="workflow.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>The importance of workflow has not gone unnoticed by the R community and there are a number of different suggestions to boost R productivity. <a href="http://robjhyndman.com/hyndsight/workflow-in-r/">Rob Hyndman</a>, for example, advocates the strategy of using four self-contained scripts to break up R work into manageable chunks: <code>load.R</code>, <code>clean.R</code>, <code>func.R</code> and <code>do.R</code>.<a href="workflow.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn13"><p>An excellent overview of the ‘tidyverse’, formerly now as the ‘hadleyverse’ and its benefits is available from <a href="https://barryrowlingson.github.io/hadleyverse">barryrowlingson.github.io/hadleyverse</a>.<a href="workflow.html#fnref13" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

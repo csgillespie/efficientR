@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -422,7 +422,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="prerequisites-1" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>Only one package needs to be installed to run the code in this chapter:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="set-up.html#cb9-1"></a><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</span></code></pre></div>
 </div>
 <div id="top-5-tips-for-an-efficient-r-set-up" class="section level2">
 <h2><span class="header-section-number">2.1</span> Top 5 tips for an efficient R set-up</h2>
@@ -438,13 +438,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.2</span> Operating system</h2>
 <p>R supports all three major operating system (OS) types: Linux, Mac and Windows.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> R is platform-independent, although there are some OS-specific quirks, e.g. in relation to file path notation (see Section <a href="set-up.html#location">2.4.3</a>).</p>
 <p>Basic OS-specific information can be queried from within R using <code>Sys.info()</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">Sys.info</span>()</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#R&gt; sysname     release                machine      user </span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#R&gt; &quot;Linux&quot;     &quot;4.2.0-35-generic&quot;     &quot;x86_64&quot;     &quot;robin&quot; </span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="set-up.html#cb10-1"></a><span class="kw">Sys.info</span>()</span>
+<span id="cb10-2"><a href="set-up.html#cb10-2"></a><span class="co">#R&gt; sysname     release                machine      user </span></span>
+<span id="cb10-3"><a href="set-up.html#cb10-3"></a><span class="co">#R&gt; &quot;Linux&quot;     &quot;4.2.0-35-generic&quot;     &quot;x86_64&quot;     &quot;robin&quot; </span></span></code></pre></div>
 <p>Translated into English, the above output means that R is running on a 64 bit (<code>x86_64</code>) Linux distribution (<code>4.2.0-35-generic</code> is the Linux version) and that the current user is <code>robin</code>. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering <code>?Sys.info</code> in the R console.</p>
 <div class="rmdtip">
 <p>
-The <strong>assertive.reflection</strong> package can be used to report additional information about your computer’s operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.
+The <strong>assertive.reflection</strong> package can be used to report additional information about your computer’s operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.
 </p>
 </div>
 <div id="operating-system-and-resource-monitoring" class="section level3">
@@ -471,13 +471,13 @@ Figure 2.1: Output from a system monitor (<code>gnome-system-monitor</code> runn
 <li><p>What is the exact version of your computer’s operating system?</p></li>
 <li><p>Start an activity monitor then execute the following code chunk. In it <code>lapply()</code> (or its parallel version <code>mclapply()</code>) is used to <em>apply</em> a function, <code>median()</code>, over every column in the data frame object <code>X</code> (see Section <a href="programming.html#the-apply-family">3.5</a> for more on the ‘apply family’ of functions).[The reason this works is that a data frame is really a list of vectors, each vector forming a column.]
 How do the system output logs (results) on your system compare to those presented in Figure <a href="set-up.html#fig:2-1">2.1</a>?</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># Note: uses 2+ GB RAM and several seconds or more depending on hardware</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co"># 1: Create large dataset</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">X =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e8</span>), <span class="dt">nrow =</span> <span class="fl">1e7</span>))</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co"># 2: Find the median of each column using a single core</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">r1 =<span class="st"> </span><span class="kw">lapply</span>(X, median)</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co"># 3: Find the median of each column using many cores</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">r2 =<span class="st"> </span>parallel<span class="op">::</span><span class="kw">mclapply</span>(X, median) </a></code></pre></div></li>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="set-up.html#cb11-1"></a><span class="co"># Note: uses 2+ GB RAM and several seconds or more depending on hardware</span></span>
+<span id="cb11-2"><a href="set-up.html#cb11-2"></a><span class="co"># 1: Create large dataset</span></span>
+<span id="cb11-3"><a href="set-up.html#cb11-3"></a>X =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e8</span>), <span class="dt">nrow =</span> <span class="fl">1e7</span>))</span>
+<span id="cb11-4"><a href="set-up.html#cb11-4"></a><span class="co"># 2: Find the median of each column using a single core</span></span>
+<span id="cb11-5"><a href="set-up.html#cb11-5"></a>r1 =<span class="st"> </span><span class="kw">lapply</span>(X, median)</span>
+<span id="cb11-6"><a href="set-up.html#cb11-6"></a><span class="co"># 3: Find the median of each column using many cores</span></span>
+<span id="cb11-7"><a href="set-up.html#cb11-7"></a>r2 =<span class="st"> </span>parallel<span class="op">::</span><span class="kw">mclapply</span>(X, median) </span></code></pre></div></li>
 </ol>
 <div class="rmdnote">
 <p>
@@ -505,14 +505,14 @@ Previous R versions can be installed from CRAN’s archive or previous R release
 <p>On Windows, a single <code>.exe</code> file (hosted at <a href="https://cran.r-project.org/bin/windows/base/">cran.r-project.org/bin/windows/base/</a>) will install the base R package.</p>
 <p>On a Mac, the latest version should be installed by downloading the <code>.pkg</code> files hosted at <a href="https://cran.r-project.org/bin/macosx/">cran.r-project.org/bin/macosx/</a>.</p>
 <p>On Linux, the installation method depends on the distribution of Linux installed, althogh the principles are the same. We’ll cover how to install R on Debian-based systems, with links at the end for details on other Linux distributions. First stage is to add the CRAN repository, to ensure that the latest version is installed. If you are running Ubuntu 16.04, for example, append the following line to the file <code>/etc/apt/sources.list</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="ex">deb</span> http://cran.rstudio.com/bin/linux/ubuntu xenial/</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="set-up.html#cb12-1"></a><span class="ex">deb</span> http://cran.rstudio.com/bin/linux/ubuntu xenial/</span></code></pre></div>
 <p><code>http://cran.rstudio.com</code> is the mirror (which can be replaced by any listed at <a href="https://cran.r-project.org/mirrors.html">cran.r-project.org/mirrors.html</a>) and <code>xenial</code> is the release. See the <a href="https://cran.r-project.org/bin/linux/debian/">Debian</a> and <a href="https://cran.r-project.org/bin/linux/ubuntu/">Ubuntu</a> installation pages on CRAN from further details.</p>
 <p>Once the appropriate repository has been added and the system updated (e.g. with <code>sudo apt-get update</code>, <code>r-base</code> and other <code>r-</code> packages can be installed using the <code>apt</code> system. The following two commands, for example, would install the base R package (a ‘bare-bones’ install) and the package <strong>rcurl</strong>, which has an external dependency:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="fu">sudo</span> apt-get install r-cran-base <span class="co"># install base R</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="fu">sudo</span> apt-get install r-cran-rcurl <span class="co"># install the rcurl package</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="set-up.html#cb13-1"></a><span class="fu">sudo</span> apt-get install r-cran-base <span class="co"># install base R</span></span>
+<span id="cb13-2"><a href="set-up.html#cb13-2"></a><span class="fu">sudo</span> apt-get install r-cran-rcurl <span class="co"># install the rcurl package</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
-<code>apt-cache search &quot;^r-.*&quot; | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-*</code>.
+<code>apt-cache search "^r-.*" | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-*</code>.
 </p>
 </div>
 <p>Typical output from the second command is illustrated below:</p>
@@ -538,21 +538,21 @@ Do you want to continue? [Y/n]
 </ul>
 <p>Release notes with details on each of these issues are hosted at <a href="https://cran.r-project.org/src/base/NEWS">cran.r-project.org/src/base/NEWS</a>. R release versions have 3 components corresponding to major.minor.patch changes. Generally 2 or 3 patches are released before the next minor increment - each ‘patch’ is released roughly every 3 months. R 3.2, for example, has consisted of 3 versions: 3.2.0, 3.2.1 and 3.2.2.</p>
 <ul>
-<li>On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with <code>apt-get upgrade</code>.</li>
-<li>On Mac, the latest version should be installed by the user from the <code>.pkg</code> files mentioned above.</li>
+<li><p>On Ubuntu-based systems, new versions of R should be automatically detected through the software management system, and can be installed with <code>apt-get upgrade</code>.</p></li>
+<li><p>On Mac, the latest version should be installed by the user from the <code>.pkg</code> files mentioned above.</p></li>
 <li><p>On Windows <strong>installr</strong> package makes updating easy:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># check and install the latest R version</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">installr<span class="op">::</span><span class="kw">updateR</span>() </a></code></pre></div></li>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="set-up.html#cb15-1"></a><span class="co"># check and install the latest R version</span></span>
+<span id="cb15-2"><a href="set-up.html#cb15-2"></a>installr<span class="op">::</span><span class="kw">updateR</span>() </span></code></pre></div></li>
 </ul>
 <p>For information about changes to expect in the next version, you can subscribe to the R’s NEWS RSS feed: <a href="http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss">developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss</a>. It’s a good way of keeping up-to-date.</p>
 </div>
 <div id="installing-r-packages" class="section level3">
 <h3><span class="header-section-number">2.3.3</span> Installing R packages</h3>
 <p>Large projects may need several packages to be installed. In this case, the required packages can be installed at once. Using the example of packages for handling spatial data, this can be done quickly and concisely with the following code:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">install.packages</span>(pkgs)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="set-up.html#cb16-1"></a>pkgs =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;raster&quot;</span>, <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;rgeos&quot;</span>) <span class="co"># package names</span></span>
+<span id="cb16-2"><a href="set-up.html#cb16-2"></a><span class="kw">install.packages</span>(pkgs)</span></code></pre></div>
 <p>In the above code all the required packages are installed with two not three lines, reducing typing. Note that we can now re-use the <code>pkgs</code> object to load them all:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="set-up.html#cb17-1"></a>inst =<span class="st"> </span><span class="kw">lapply</span>(pkgs, library, <span class="dt">character.only =</span> <span class="ot">TRUE</span>) <span class="co"># load them</span></span></code></pre></div>
 <p>In the above code <code>library(pkgs[i])</code> is executed for every package stored in the text string vector. We use <code>library</code> here instead of <code>require</code> because the former produces an error if the package is not available.</p>
 <p>Loading all packages at the beginning of a script is good practice as it ensures all dependencies have been installed <em>before</em> time is spent executing code. Storing package names in a character vector object such as <code>pkgs</code> is also useful because it allows us to refer back to them again and again.
 <!-- To provide another example, we can update only the packages named in `pkgs` with the following command: --></p>
@@ -563,16 +563,16 @@ Do you want to continue? [Y/n]
 <div id="deps" class="section level3">
 <h3><span class="header-section-number">2.3.4</span> Installing R packages with dependencies</h3>
 <p>Some packages have external dependencies (i.e. they call libraries outside R). On Unix-like systems, these are best installed onto the operating system, bypassing <code>install.packages</code>. This will ensure the necessary dependencies are installed and setup correctly alongside the R package. On Debian-based distributions such as Ubuntu, for example, packages with names starting with <code>r-cran-</code> can be searched for and installed as follows (see <a href="https://cran.r-project.org/bin/linux/ubuntu/">cran.r-project.org/bin/linux/ubuntu/</a> for a list of these):</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="ex">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="fu">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="set-up.html#cb18-1"></a><span class="ex">apt-cache</span> search r-cran- <span class="co"># search for available cran Debian packages</span></span>
+<span id="cb18-2"><a href="set-up.html#cb18-2"></a><span class="fu">sudo</span> apt-get-install r-cran-rgdal <span class="co"># install the rgdal package (with dependencies)</span></span></code></pre></div>
 <p>On Windows the <strong>installr</strong> package helps manage and update R packages with system-level dependencies. For example the <strong>Rtools</strong> package for compiling C/C++ code on Windows can be installed with the following command:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">installr<span class="op">::</span><span class="kw">install.rtools</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="set-up.html#cb19-1"></a>installr<span class="op">::</span><span class="kw">install.rtools</span>() </span></code></pre></div>
 </div>
 <div id="updating-r-packages" class="section level3">
 <h3><span class="header-section-number">2.3.5</span> Updating R packages</h3>
 <p>An efficient R set-up will contain up-to-date packages.
 This can be done <em>for all packages</em> with:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="set-up.html#cb20-1"></a><span class="kw">update.packages</span>() <span class="co"># update installed CRAN packages</span></span></code></pre></div>
 <p>The default for this function is for the <code>ask</code> argument to be set to <code>TRUE</code>, giving control over what is downloaded onto your system. This is generally desirable as updating dozens of large packages can consume a large proportion of available system resources.</p>
 <div class="rmdtip">
 <p>
@@ -612,7 +612,7 @@ The following are particularly important:</p>
 A concise way to load a ‘vanilla’ version of R, with all of the above options enabled is with an option of the same name:
 </p>
 </div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="ex">R</span> --vanilla</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="set-up.html#cb21-1"></a><span class="ex">R</span> --vanilla</span></code></pre></div>
 </div>
 <div id="an-overview-of-rs-startup-files" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> An overview of R’s startup files</h3>
@@ -638,18 +638,18 @@ Proceed with caution and, if you mess things up, just delete the offending files
 <p>Files in three folders are important in this process:</p>
 <ul>
 <li><p><code>R_HOME</code>, the directory in which R is installed. The <code>etc</code> sub-directory can contain start-up files read early on in the start-up process. Find out where your <code>R_HOME</code> is with the <code>R.home()</code> command.</p></li>
-<li><p><code>HOME</code>, the user’s home directory. Typically this is <code>/home/username</code> on Unix machines or <code>C:\Users\username</code> on Windows (since Windows 7). Ask R where your home directory is with, <code>Sys.getenv(&quot;HOME&quot;)</code>.</p></li>
+<li><p><code>HOME</code>, the user’s home directory. Typically this is <code>/home/username</code> on Unix machines or <code>C:\Users\username</code> on Windows (since Windows 7). Ask R where your home directory is with, <code>Sys.getenv("HOME")</code>.</p></li>
 <li><p>R’s current working directory. This is reported by <code>getwd()</code>.</p></li>
 </ul>
 <p>It is important to know the location of the <code>.Rprofile</code> and <code>.Renviron</code> set-up files that are being used out of these three options.
 R only uses one <code>.Rprofile</code> and one <code>.Renviron</code> in any session: if you have a <code>.Rprofile</code> file in your current project, R will ignore <code>.Rprofile</code> in <code>R_HOME</code> and <code>HOME</code>.
 Likewise, <code>.Rprofile</code> in <code>HOME</code> overrides <code>.Rprofile</code> in <code>R_HOME</code>.
 The same applies to <code>.Renviron</code>: you should remember that adding project specific environment variables with <code>.Renviron</code> will de-activate other <code>.Renviron</code> files.</p>
-<p>To create a project-specific start-up script, simply create a <code>.Rprofile</code> file in the project’s root directory and start adding R code, e.g. via <code>file.edit(&quot;.Rprofile&quot;)</code>.
+<p>To create a project-specific start-up script, simply create a <code>.Rprofile</code> file in the project’s root directory and start adding R code, e.g. via <code>file.edit(".Rprofile")</code>.
 Remember that this will make <code>.Rprofile</code> in the home directory be ignored.
 The following commands will open your <code>.Rprofile</code> from within an R editor:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>) <span class="co"># edit .Rprofile in HOME</span></a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">file.edit</span>(<span class="st">&quot;.Rprofile&quot;</span>) <span class="co"># edit project specific .Rprofile</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="set-up.html#cb22-1"></a><span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>) <span class="co"># edit .Rprofile in HOME</span></span>
+<span id="cb22-2"><a href="set-up.html#cb22-2"></a><span class="kw">file.edit</span>(<span class="st">&quot;.Rprofile&quot;</span>) <span class="co"># edit project specific .Rprofile</span></span></code></pre></div>
 <div class="rmdwarning">
 <p>
 File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as <code>C:\DATA\data.csv</code>, as provided by Windows, this will generate the error: <code>Error: unexpected input in “C:\”</code>. To overcome this issue R provides two functions, <code>file.path()</code> and <code>normalizePath()</code>. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: <code>file.path(“C:”, “DATA”, “data.csv”)</code>. The latter takes any input string for a file name and outputs a text string that is standard (canonical) for the operating system. <code>normalizePath(“C:/DATA/data.csv”)</code>, for example, outputs <code>C:\DATA\data.csv</code> on a Windows machine but <code>C:/DATA/data.csv</code> on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.
@@ -657,8 +657,8 @@ File paths provided by Windows operating systems will not always work in R. Spec
 </div>
 <p>Editing the <code>.Renviron</code> file in the same locations will have the same effect.
 The following code will create a user specific <code>.Renviron</code> file (where API keys and other cross-project environment variables can be stored), without overwriting any existing file.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="set-up.html#cb23-1"></a>user_renviron =<span class="st"> </span><span class="kw">path.expand</span>(<span class="kw">file.path</span>(<span class="st">&quot;~&quot;</span>, <span class="st">&quot;.Renviron&quot;</span>))</span>
+<span id="cb23-2"><a href="set-up.html#cb23-2"></a><span class="kw">file.edit</span>(user_renviron) <span class="co"># open with another text editor if this fails</span></span></code></pre></div>
 <div class="rmdtip">
 <p>
 The <strong>pathological</strong> package can help find where <code>.Rprofile</code> and <code>.Renviron</code> files are located on your system, thanks to the <code>os_path()</code> function. The output of <code>example(Startup)</code> is also instructive.
@@ -669,35 +669,35 @@ The <strong>pathological</strong> package can help find where <code>.Rprofile</c
 <div id="rprofile" class="section level3">
 <h3><span class="header-section-number">2.4.4</span> The <code>.Rprofile</code> file</h3>
 <p>By default, R looks for and runs <code>.Rprofile</code> files in the three locations described above, in a specific order. <code>.Rprofile</code> files are simply R scripts that run each time R runs and they can be found within <code>R_HOME</code>, <code>HOME</code> and the project’s home directory, found with <code>getwd()</code>. To check if you have a site-wide <code>.Rprofile</code>, which will run for all users on start-up, run:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">site_path =<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <span class="st">&quot;etc&quot;</span>, <span class="st">&quot;Rprofile.site&quot;</span>)</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="kw">file.exists</span>(fname)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="set-up.html#cb24-1"></a>site_path =<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)</span>
+<span id="cb24-2"><a href="set-up.html#cb24-2"></a>fname =<span class="st"> </span><span class="kw">file.path</span>(site_path, <span class="st">&quot;etc&quot;</span>, <span class="st">&quot;Rprofile.site&quot;</span>)</span>
+<span id="cb24-3"><a href="set-up.html#cb24-3"></a><span class="kw">file.exists</span>(fname)</span></code></pre></div>
 <p>The above code checks for the presence of <code>Rprofile.site</code> in that directory. As outlined above, the <code>.Rprofile</code> located in your home directory is user-specific. Again, we can test whether this file exists using</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="set-up.html#cb25-1"></a><span class="kw">file.exists</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</span></code></pre></div>
 <p>We can use R to create and edit <code>.Rprofile</code> (warning: do not overwrite your previous <code>.Rprofile</code> - we suggest you try a project-specific <code>.Rprofile</code> first):</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="set-up.html#cb26-1"></a><span class="kw">file.edit</span>(<span class="st">&quot;~/.Rprofile&quot;</span>)</span></code></pre></div>
 </div>
 <div id="an-example-.rprofile-file" class="section level3">
 <h3><span class="header-section-number">2.4.5</span> An example <code>.Rprofile</code> file</h3>
 <p>The example below provides a taster of what goes into <code>.Rprofile</code>.
 Note that this is simply a usual R script, but with an unusual name.
 The best way to understand what is going on is to create this same script, save it as <code>.Rprofile</code> in your current working directory and then restart your R session to observe what changes. To restart your R session from within RStudio you can click <code>Session &gt; Restart R</code> or use the keyboard shortcut <code>Ctrl+Shift+F10</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># A fun welcome message</span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">message</span>(<span class="st">&quot;Hi Robin, welcome to R&quot;</span>)</a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># Customise the R prompt that prefixes every command</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co"># (use &quot; &quot; for a blank prompt)</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4geo&gt; &quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="set-up.html#cb27-1"></a><span class="co"># A fun welcome message</span></span>
+<span id="cb27-2"><a href="set-up.html#cb27-2"></a><span class="kw">message</span>(<span class="st">&quot;Hi Robin, welcome to R&quot;</span>)</span>
+<span id="cb27-3"><a href="set-up.html#cb27-3"></a><span class="co"># Customise the R prompt that prefixes every command</span></span>
+<span id="cb27-4"><a href="set-up.html#cb27-4"></a><span class="co"># (use &quot; &quot; for a blank prompt)</span></span>
+<span id="cb27-5"><a href="set-up.html#cb27-5"></a><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4geo&gt; &quot;</span>)</span></code></pre></div>
 <p>To quickly explain each line of code: the first simply prints a message in the console each time a new R session is started. The latter modifies the console prompt in the console (set to <code>&gt;</code> by default). Note that simply adding more lines to the <code>.Rprofile</code> will set more features. An important aspect of <code>.Rprofile</code> (and <code>.Renviron</code>) is that <em>each line is run once and only once for each R session</em>. That means that the options set within <code>.Rprofile</code> can easily be changed during the session. The following command run mid-session, for example, will return the default prompt:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;&gt; &quot;</span>)</a></code></pre></div>
-<p>More details on these, and other potentially useful <code>.Rprofile</code> options are described subsequently. For more suggestions of useful startup settings, see Examples in <code>help(&quot;Startup&quot;)</code> and online resources such as those at <a href="http://www.statmethods.net/interface/customizing.html">statmethods.net</a>. The help pages for R options (accessible with <code>?options</code>) are also worth a read before writing your own <code>.Rprofile</code>.</p>
-<p>Ever been frustrated by unwanted <code>+</code> symbols that prevent copied and pasted multi-line functions from working? These potentially annoying <code>+</code>s can be eradicated by adding <code>options(continue = &quot;  &quot;)</code> to your <code>.Rprofile</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="set-up.html#cb28-1"></a><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;&gt; &quot;</span>)</span></code></pre></div>
+<p>More details on these, and other potentially useful <code>.Rprofile</code> options are described subsequently. For more suggestions of useful startup settings, see Examples in <code>help("Startup")</code> and online resources such as those at <a href="http://www.statmethods.net/interface/customizing.html">statmethods.net</a>. The help pages for R options (accessible with <code>?options</code>) are also worth a read before writing your own <code>.Rprofile</code>.</p>
+<p>Ever been frustrated by unwanted <code>+</code> symbols that prevent copied and pasted multi-line functions from working? These potentially annoying <code>+</code>s can be eradicated by adding <code>options(continue = "  ")</code> to your <code>.Rprofile</code>.</p>
 <div id="setting-options" class="section level4">
 <h4><span class="header-section-number">2.4.5.1</span> Setting options</h4>
 <p>The function <code>options</code>, used above, contains a number of default settings. Typing <code>options()</code> provides a good indication of what can be configured. Since <code>options()</code> are often related to personal preferences (with few implications for reproducibility), that you will want for many of your R sessions, <code>.Rprofile</code> in your home directory or in your project’s folder are sensible places to set them. Other illustrative options are shown below:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># With a customised prompt</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">show.signif.stars =</span> <span class="ot">FALSE</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)</a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="co"># With a longer prompt and empty &#39;continue&#39; indent (default is &quot;+ &quot;)</span></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4Geo&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="set-up.html#cb29-1"></a><span class="co"># With a customised prompt</span></span>
+<span id="cb29-2"><a href="set-up.html#cb29-2"></a><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">show.signif.stars =</span> <span class="ot">FALSE</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)</span>
+<span id="cb29-3"><a href="set-up.html#cb29-3"></a><span class="co"># With a longer prompt and empty &#39;continue&#39; indent (default is &quot;+ &quot;)</span></span>
+<span id="cb29-4"><a href="set-up.html#cb29-4"></a><span class="kw">options</span>(<span class="dt">prompt =</span> <span class="st">&quot;R4Geo&gt; &quot;</span>, <span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">continue =</span> <span class="st">&quot;  &quot;</span>)</span></code></pre></div>
 <p>The first option changes four default options in a single line.</p>
 <ul>
 <li>The R prompt, from the boring <code>&gt;</code> to the exciting <code>R&gt;</code>.</li>
@@ -710,29 +710,30 @@ The best way to understand what is going on is to create this same script, save 
 <div id="setting-the-cran-mirror" class="section level4">
 <h4><span class="header-section-number">2.4.5.2</span> Setting the CRAN mirror</h4>
 <p>To avoid setting the CRAN mirror each time you run <code>install.packages()</code> you can permanently set the mirror in your <code>.Rprofile</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># `local` creates a new, empty environment</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="co"># This avoids polluting .GlobalEnv with the object r</span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="kw">local</span>({</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4">  r =<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)             </a>
-<a class="sourceLine" id="cb30-5" data-line-number="5">  r[<span class="st">&quot;CRAN&quot;</span>] =<span class="st"> &quot;https://cran.rstudio.com/&quot;</span></a>
-<a class="sourceLine" id="cb30-6" data-line-number="6">  <span class="kw">options</span>(<span class="dt">repos =</span> r)</a>
-<a class="sourceLine" id="cb30-7" data-line-number="7">})</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="set-up.html#cb30-1"></a><span class="co"># `local` creates a new, empty environment</span></span>
+<span id="cb30-2"><a href="set-up.html#cb30-2"></a><span class="co"># This avoids polluting .GlobalEnv with the object r</span></span>
+<span id="cb30-3"><a href="set-up.html#cb30-3"></a><span class="kw">local</span>({</span>
+<span id="cb30-4"><a href="set-up.html#cb30-4"></a>  r =<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)             </span>
+<span id="cb30-5"><a href="set-up.html#cb30-5"></a>  r[<span class="st">&quot;CRAN&quot;</span>] =<span class="st"> &quot;https://cran.rstudio.com/&quot;</span></span>
+<span id="cb30-6"><a href="set-up.html#cb30-6"></a>  <span class="kw">options</span>(<span class="dt">repos =</span> r)</span>
+<span id="cb30-7"><a href="set-up.html#cb30-7"></a>})</span></code></pre></div>
 <p>The RStudio mirror is a virtual machine run by Amazon’s EC2 service, and it syncs with the main CRAN mirror in Austria once per day. Since RStudio is using Amazon’s CloudFront, the repository is automatically distributed around the world, so no matter where you are in the world, the data doesn’t need to travel very far, and is therefore fast to download.</p>
 </div>
 <div id="the-fortunes-package" class="section level4">
 <h4><span class="header-section-number">2.4.5.3</span> The <strong>fortunes</strong> package</h4>
 <p>This section illustrates the power of <code>.Rprofile</code> customisation with reference to apackage that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.</p>
 <p>The <strong>fortunes</strong> package contains a number of memorable quotes that the community has collected over many years, called R fortunes. Each fortune has a number. To get fortune number <span class="math inline">\(50\)</span>, for example, enter</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">50</span>)</a>
-<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="co">#&gt; To paraphrase provocatively, &#39;machine learning is statistics minus any checking</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4"><span class="co">#&gt; of models and assumptions&#39;.</span></a>
-<a class="sourceLine" id="cb31-5" data-line-number="5"><span class="co">#&gt;    -- Brian D. Ripley (about the difference between machine learning and</span></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6"><span class="co">#&gt;       statistics)</span></a>
-<a class="sourceLine" id="cb31-7" data-line-number="7"><span class="co">#&gt;       useR! 2004, Vienna (May 2004)</span></a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="set-up.html#cb31-1"></a>fortunes<span class="op">::</span><span class="kw">fortune</span>(<span class="dv">50</span>)</span>
+<span id="cb31-2"><a href="set-up.html#cb31-2"></a><span class="co">#&gt; Warning in seq.default(along = rownames(fortunes.data)): partial argument match of</span></span>
+<span id="cb31-3"><a href="set-up.html#cb31-3"></a><span class="co">#&gt; &#39;along&#39; to &#39;along.with&#39;</span></span>
+<span id="cb31-4"><a href="set-up.html#cb31-4"></a><span class="co">#&gt; </span></span>
+<span id="cb31-5"><a href="set-up.html#cb31-5"></a><span class="co">#&gt; To paraphrase provocatively, &#39;machine learning is statistics minus any checking of</span></span>
+<span id="cb31-6"><a href="set-up.html#cb31-6"></a><span class="co">#&gt; models and assumptions&#39;.</span></span>
+<span id="cb31-7"><a href="set-up.html#cb31-7"></a><span class="co">#&gt;    -- Brian D. Ripley (about the difference between machine learning and statistics)</span></span>
+<span id="cb31-8"><a href="set-up.html#cb31-8"></a><span class="co">#&gt;       useR! 2004, Vienna (May 2004)</span></span></code></pre></div>
 <p>It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to <code>.Rprofile</code>:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="cf">if</span>(<span class="kw">interactive</span>()) </a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">  <span class="kw">try</span>(fortunes<span class="op">::</span><span class="kw">fortune</span>(), <span class="dt">silent =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="set-up.html#cb32-1"></a><span class="cf">if</span>(<span class="kw">interactive</span>()) </span>
+<span id="cb32-2"><a href="set-up.html#cb32-2"></a>  <span class="kw">try</span>(fortunes<span class="op">::</span><span class="kw">fortune</span>(), <span class="dt">silent =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>The <code>interactive()</code> function tests whether R is being used interactively in a terminal. The <code>fortune()</code> function is called within <code>try()</code>. If the <strong>fortunes</strong> package is not available, we avoid raising an error and move on. By using <code>::</code> we avoid adding the <strong>fortunes</strong> package to our list of attached packages.</p>
 <div class="rmdtip">
 <p>
@@ -740,50 +741,50 @@ Typing <code>search()</code>, gives the list of attached packages. By using <cod
 </p>
 </div>
 <p>The function <code>.Last()</code>, if it exists in the <code>.Rprofile</code>, is always run at the end of the session. We can use it to install the <strong>fortunes</strong> package if needed. To load the package, we use <code>require()</code>, since if the package isn’t installed, the <code>require()</code> function returns <code>FALSE</code> and raises a warning.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">.Last =<span class="st"> </span><span class="cf">function</span>() {</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">  cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(<span class="op">!</span><span class="kw">require</span>(fortunes, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3">  <span class="cf">if</span>(cond) </a>
-<a class="sourceLine" id="cb33-4" data-line-number="4">    <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb33-5" data-line-number="5">  <span class="kw">message</span>(<span class="st">&quot;Goodbye at &quot;</span>, <span class="kw">date</span>(), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
-<a class="sourceLine" id="cb33-6" data-line-number="6">}</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="set-up.html#cb33-1"></a>.Last =<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb33-2"><a href="set-up.html#cb33-2"></a>  cond =<span class="st"> </span><span class="kw">suppressWarnings</span>(<span class="op">!</span><span class="kw">require</span>(fortunes, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb33-3"><a href="set-up.html#cb33-3"></a>  <span class="cf">if</span>(cond) </span>
+<span id="cb33-4"><a href="set-up.html#cb33-4"></a>    <span class="kw">try</span>(<span class="kw">install.packages</span>(<span class="st">&quot;fortunes&quot;</span>), <span class="dt">silent =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb33-5"><a href="set-up.html#cb33-5"></a>  <span class="kw">message</span>(<span class="st">&quot;Goodbye at &quot;</span>, <span class="kw">date</span>(), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-6"><a href="set-up.html#cb33-6"></a>}</span></code></pre></div>
 </div>
 <div id="useful-functions" class="section level4">
 <h4><span class="header-section-number">2.4.5.4</span> Useful functions</h4>
 <p>You can use <code>.Rprofile</code> to define new ‘helper’ functions or redefine existing ones so they’re faster to type.
 For example, we could load the following two functions for examining data frames:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># ht == headtail</span></a>
-<a class="sourceLine" id="cb34-2" data-line-number="2">ht =<span class="st"> </span><span class="cf">function</span>(d, <span class="dt">n=</span><span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</a>
-<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="co"># Show the first 5 rows &amp; first 5 columns of a data frame</span></a>
-<a class="sourceLine" id="cb34-4" data-line-number="4">hh =<span class="st"> </span><span class="cf">function</span>(d) d[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="set-up.html#cb34-1"></a><span class="co"># ht == headtail</span></span>
+<span id="cb34-2"><a href="set-up.html#cb34-2"></a>ht =<span class="st"> </span><span class="cf">function</span>(d, <span class="dt">n=</span><span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</span>
+<span id="cb34-3"><a href="set-up.html#cb34-3"></a><span class="co"># Show the first 5 rows &amp; first 5 columns of a data frame</span></span>
+<span id="cb34-4"><a href="set-up.html#cb34-4"></a>hh =<span class="st"> </span><span class="cf">function</span>(d) d[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</span></code></pre></div>
 <p>and a function for setting a nice plotting window:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">nice_par =<span class="st"> </span><span class="cf">function</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>, <span class="dv">0</span>), <span class="dt">tck =</span> <span class="fl">-0.01</span>, </a>
-<a class="sourceLine" id="cb35-2" data-line-number="2">                      <span class="dt">cex.axis =</span> <span class="fl">0.9</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), ...) {</a>
-<a class="sourceLine" id="cb35-3" data-line-number="3">    <span class="kw">par</span>(<span class="dt">mar =</span> mar, <span class="dt">mgp =</span> mgp, <span class="dt">tck =</span> tck, <span class="dt">cex.axis =</span> cex.axis, <span class="dt">las =</span> las, </a>
-<a class="sourceLine" id="cb35-4" data-line-number="4">        <span class="dt">mfrow =</span> mfrow, ...)</a>
-<a class="sourceLine" id="cb35-5" data-line-number="5">}</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="set-up.html#cb35-1"></a>nice_par =<span class="st"> </span><span class="cf">function</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>, <span class="dv">0</span>), <span class="dt">tck =</span> <span class="fl">-0.01</span>, </span>
+<span id="cb35-2"><a href="set-up.html#cb35-2"></a>                      <span class="dt">cex.axis =</span> <span class="fl">0.9</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), ...) {</span>
+<span id="cb35-3"><a href="set-up.html#cb35-3"></a>    <span class="kw">par</span>(<span class="dt">mar =</span> mar, <span class="dt">mgp =</span> mgp, <span class="dt">tck =</span> tck, <span class="dt">cex.axis =</span> cex.axis, <span class="dt">las =</span> las, </span>
+<span id="cb35-4"><a href="set-up.html#cb35-4"></a>        <span class="dt">mfrow =</span> mfrow, ...)</span>
+<span id="cb35-5"><a href="set-up.html#cb35-5"></a>}</span></code></pre></div>
 <p>Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don’t recommend loading it in your <code>.Rprofile</code>.
 Shortening long function names for interactive (but not reproducible code writing) is another option for using <code>.Rprofile</code> to increase efficiency.
 If you frequently use <code>View()</code>, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">v =<span class="st"> </span>utils<span class="op">::</span>View</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="set-up.html#cb36-1"></a>v =<span class="st"> </span>utils<span class="op">::</span>View</span></code></pre></div>
 <p>Also beware the dangers of loading many functions by default: it may make your code less portable.
 Another potentially useful setting to change in <code>.Rprofile</code> is R’s current working directory.
 If you want R to automatically set the working directory to the R folder of your project, for example, one would add the following line of code to the <strong>project</strong>-specific <code>.Rprofile</code>:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">setwd</span>(<span class="st">&quot;R&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="set-up.html#cb37-1"></a><span class="kw">setwd</span>(<span class="st">&quot;R&quot;</span>)</span></code></pre></div>
 </div>
 <div id="creating-hidden-environments-with-.rprofile" class="section level4">
 <h4><span class="header-section-number">2.4.5.5</span> Creating hidden environments with .Rprofile</h4>
 <p>Beyond making your code less portable, another downside of putting functions in your <code>.Rprofile</code> is that it can clutter-up your work space:
 when you run the <code>ls()</code> command, your <code>.Rprofile</code> functions will appear. Also if you run <code>rm(list = ls())</code>, your functions will be deleted. One neat trick to overcome this issue is to use hidden objects and environments. When an object name starts with <code>.</code>, by default it doesn’t appear in the output of the <code>ls()</code> function</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">.obj =<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="st">&quot;.obj&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">ls</span>()</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"><span class="co">#&gt; [1] FALSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="set-up.html#cb38-1"></a>.obj =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb38-2"><a href="set-up.html#cb38-2"></a><span class="st">&quot;.obj&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">ls</span>()</span>
+<span id="cb38-3"><a href="set-up.html#cb38-3"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>This concept also works with environments. In the <code>.Rprofile</code> file we can create a <em>hidden</em> environment</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">.env =<span class="st"> </span><span class="kw">new.env</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="set-up.html#cb39-1"></a>.env =<span class="st"> </span><span class="kw">new.env</span>()</span></code></pre></div>
 <p>and then add functions to this environment</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">.env<span class="op">$</span>ht =<span class="st"> </span><span class="cf">function</span>(d, <span class="dt">n =</span> <span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="set-up.html#cb40-1"></a>.env<span class="op">$</span>ht =<span class="st"> </span><span class="cf">function</span>(d, <span class="dt">n =</span> <span class="dv">6</span>) <span class="kw">rbind</span>(<span class="kw">head</span>(d, n), <span class="kw">tail</span>(d, n))</span></code></pre></div>
 <p>At the end of the <code>.Rprofile</code> file, we use <code>attach</code>, which makes it possible to refer to objects in the environment by their names alone.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">attach</span>(.env)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="set-up.html#cb41-1"></a><span class="kw">attach</span>(.env)</span></code></pre></div>
 <!--
 \sidenote{I also have a function that shows the size of
   objects in my R session (\url{http://stackoverflow.com/q/1358003/203420}).}-->
@@ -792,23 +793,23 @@ when you run the <code>ls()</code> command, your <code>.Rprofile</code> function
 <div id="renviron" class="section level3">
 <h3><span class="header-section-number">2.4.6</span> The <code>.Renviron</code> file</h3>
 <p>The <code>.Renviron</code> file is used to store system variables. It follows a similar start-up routine to the <code>.Rprofile</code> file: R first looks for a global <code>.Renviron</code> file, then for local versions. A typical use of the <code>.Renviron</code> file is to specify the <code>R_LIBS</code> path, which determines where new packages are installed:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Linux</span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="va">R_LIBS=</span>~/R/library</a>
-<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="co"># Windows</span></a>
-<a class="sourceLine" id="cb42-4" data-line-number="4"><span class="va">R_LIBS=</span>C:/R/library</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="set-up.html#cb42-1"></a><span class="co"># Linux</span></span>
+<span id="cb42-2"><a href="set-up.html#cb42-2"></a><span class="va">R_LIBS=</span>~/R/library</span>
+<span id="cb42-3"><a href="set-up.html#cb42-3"></a><span class="co"># Windows</span></span>
+<span id="cb42-4"><a href="set-up.html#cb42-4"></a><span class="va">R_LIBS=</span>C:/R/library</span></code></pre></div>
 <p>After setting this, <code>install.packages()</code> saves packages in the directory specified by <code>R_LIBS</code>.
 The location of this directory can be referred back to subsequently as follows:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">Sys.getenv</span>(<span class="st">&quot;R_LIBS_USER&quot;</span>)</a>
-<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="co">#&gt; [1] &quot;/home/travis/R/Library&quot;</span></a></code></pre></div>
-<p>All currently stored environment variables can be seen by calling <code>Sys.getenv()</code> with no arguments. Note that many environment variables are already pre-set and do not need to be specified in <code>.Renviron</code>. <code>HOME</code>, for example, which can be seen with <code>Sys.getenv(&quot;HOME&quot;)</code>, is taken from the operating system’s list of environment variables. A list of the most important environment variables that can affect R’s behaviour is documented in the little known help page <code>help(&quot;environment variables&quot;)</code>.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="set-up.html#cb43-1"></a><span class="kw">Sys.getenv</span>(<span class="st">&quot;R_LIBS_USER&quot;</span>)</span>
+<span id="cb43-2"><a href="set-up.html#cb43-2"></a><span class="co">#&gt; [1] &quot;/data/ncsg3/Rpackages/&quot;</span></span></code></pre></div>
+<p>All currently stored environment variables can be seen by calling <code>Sys.getenv()</code> with no arguments. Note that many environment variables are already pre-set and do not need to be specified in <code>.Renviron</code>. <code>HOME</code>, for example, which can be seen with <code>Sys.getenv("HOME")</code>, is taken from the operating system’s list of environment variables. A list of the most important environment variables that can affect R’s behaviour is documented in the little known help page <code>help("environment variables")</code>.</p>
 <p>To set or unset an environment variable for the duration of a session, use the following commands:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">Sys.setenv</span>(<span class="st">&quot;TEST&quot;</span> =<span class="st"> &quot;test-string&quot;</span>) <span class="co"># set an environment variable for the session</span></a>
-<a class="sourceLine" id="cb44-2" data-line-number="2"><span class="kw">Sys.unsetenv</span>(<span class="st">&quot;TEST&quot;</span>) <span class="co"># unset it</span></a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="set-up.html#cb44-1"></a><span class="kw">Sys.setenv</span>(<span class="st">&quot;TEST&quot;</span> =<span class="st"> &quot;test-string&quot;</span>) <span class="co"># set an environment variable for the session</span></span>
+<span id="cb44-2"><a href="set-up.html#cb44-2"></a><span class="kw">Sys.unsetenv</span>(<span class="st">&quot;TEST&quot;</span>) <span class="co"># unset it</span></span></code></pre></div>
 <p>Another common use of <code>.Renviron</code> is to store API keys and authentication tokens that will be available from one session to another.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>
 A common use case is setting the ‘envvar’ <code>GITHUB_PAT</code>, which will be detected by the <strong>devtools</strong> package via the function <code>github_pat()</code>. To take another example, the following line in <code>.Renviron</code> sets the <code>ZEIT_KEY</code> environment variable which is used in the <strong><a href="https://cran.r-project.org/web/packages/diezeit/">diezeit</a></strong> package:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="va">ZEIT_KEY=</span>PUT_YOUR_KEY_HERE</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="set-up.html#cb45-1"></a><span class="va">ZEIT_KEY=</span>PUT_YOUR_KEY_HERE</span></code></pre></div>
 <p>You will need to sign-in and start a new R session for the environment variable (accessed by <code>Sys.getenv()</code>) to be visible. To test if the example API key has been successfully added as an environment variable, run the following:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="set-up.html#cb46-1"></a><span class="kw">Sys.getenv</span>(<span class="st">&quot;ZEIT_KEY&quot;</span>)</span></code></pre></div>
 <p>Use of the <code>.Renviron</code> file for storing settings such as library paths and API keys is efficient because it reduces the need to update your settings for every R session. Furthermore, the same <code>.Renviron</code> file will work across different platforms so keep it stored safely.</p>
 <div id="example-.renviron-file" class="section level4">
 <h4><span class="header-section-number">2.4.6.1</span> Example <code>.Renviron</code> file</h4>
@@ -817,7 +818,7 @@ A common use case is setting the ‘envvar’ <code>GITHUB_PAT</code>, which wil
 <li><p><code>TMPDIR=/data/R_tmp/</code>. When R is running, it creates temporary copies. On my work machine, the default directory is a network drive.</p></li>
 <li><p><code>R_COMPILE_PKGS=3</code>. Byte compile all packages (covered in Chapter <a href="programming.html#programming">3</a>).</p></li>
 <li><p><code>R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library</code> I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoiding using this directory.</p></li>
-<li><p><code>R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods</code>. Explicitly state the packages to load. Note I don’t load the <code>datasets</code> package, but I ensure that <code>methods</code> is always loaded. Due to historical reasons, the <code>methods</code> package isn’t loaded by default in certain applications, e.g. <code>Rscript</code>.</p></li>
+<li><p><code>R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods</code>. Explicitly state the packages to load. Note I don’t load the <code>datasets</code> package, but I ensure that <code>methods</code> is always loaded. Due to historical reasons, the <code>methods</code> package isn’t loaded by default in certain applications, e.g. <code>Rscript</code>.</p></li>
 </ul>
 </div>
 <div id="exercises-3" class="section level4 unnumbered">
@@ -889,12 +890,12 @@ Figure 2.2: RStudio Panels
 Test out the multi-panel RStudio workflow by following the steps below:</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new folder for the input data using the <strong>Files pane</strong>.</p></li>
-<li><p>Type in <code>downl</code> in the <strong>Source pane</strong> and hit <code>Enter</code> to make the function <code>download.file()</code> autocomplete. Then type <code>&quot;</code>, which will autocomplete to <code>&quot;&quot;</code>, paste the URL of a file to download (e.g. <code>https://www.census.gov/2010census/csv/pop_change.csv</code>) and a file name (e.g. <code>pop_change.csv</code>).</p></li>
+<li><p>Type in <code>downl</code> in the <strong>Source pane</strong> and hit <code>Enter</code> to make the function <code>download.file()</code> autocomplete. Then type <code>"</code>, which will autocomplete to <code>""</code>, paste the URL of a file to download (e.g. <code>https://www.census.gov/2010census/csv/pop_change.csv</code>) and a file name (e.g. <code>pop_change.csv</code>).</p></li>
 <li><p>Execute the full command with <code>Ctrl-Enter</code>:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,</a>
-<a class="sourceLine" id="cb49-2" data-line-number="2">              <span class="st">&quot;extdata/pop_change.csv&quot;</span>)</a></code></pre></div></li>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="set-up.html#cb49-1"></a><span class="kw">download.file</span>(<span class="st">&quot;https://www.census.gov/2010census/csv/pop_change.csv&quot;</span>,</span>
+<span id="cb49-2"><a href="set-up.html#cb49-2"></a>              <span class="st">&quot;extdata/pop_change.csv&quot;</span>)</span></code></pre></div></li>
 <li><p>Write and execute a command to read-in the data, such as</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;extdata/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</a></code></pre></div></li>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="set-up.html#cb50-1"></a>pop_change =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;extdata/pop_change.csv&quot;</span>, <span class="dt">skip =</span> <span class="dv">2</span>)</span></code></pre></div></li>
 <li><p>Use the <strong>Environment pane</strong> to click on the data object <code>pop_change</code>. Note that this runs the command <code>View(pop_change)</code>, which launches an interactive data explore pane in the top left panel (see Figure <a href="set-up.html#fig:2-3">2.3</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:2-3"></span>
 <img src="figures/f2_3_view.png" alt="The data viewing tab in RStudio." width="100%" />
@@ -926,7 +927,7 @@ Most of these are self-explanatory but it is worth mentioning a few that can boo
 <h3><span class="header-section-number">2.5.4</span> Autocompletion</h3>
 <p>R provides some basic autocompletion functionality.
 Typing the beginning of a function name, for example <code>rn</code> (short for <code>rnorm()</code>), and hitting <code>Tab</code> twice will result in the full function names associated with this text string being printed.
-In this case two options would be displayed: <code>rnbinom</code> and <code>rnorm</code>, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing <code>te</code> in the console in a project which contains a file called <code>test.R</code> should result in the full name <code>&quot;test.R&quot;</code> being auto completed.
+In this case two options would be displayed: <code>rnbinom</code> and <code>rnorm</code>, providing a useful reminder to the user about what is available. The same applies to file names enclosed in quote marks: typing <code>te</code> in the console in a project which contains a file called <code>test.R</code> should result in the full name <code>"test.R"</code> being auto completed.
 RStudio builds on this functionality and takes it to a new level.</p>
 <div class="rmdtip">
 <p>
@@ -944,13 +945,13 @@ This is a good thing because R has no consistent function name style!</p>
 To test this functionality, try typing <code>US</code>, followed by the Tab key.
 After pressing down until <code>USArrests</code> is selected, press Enter so it autocompletes.
 Finally, typing <code>$</code> should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">USArrests<span class="op">$</span><span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="set-up.html#cb51-1"></a>USArrests<span class="op">$</span><span class="st"> </span><span class="co"># a dropdown menu of columns should appear in RStudio</span></span></code></pre></div>
 <p>To take a more complex example, variable names stored in the <code>data</code> slot of the class <code>SpatialPolygonsDataFrame</code> (a class defined by the foundational spatial package sp) are referred to in the long form
 <code>spdf@data$varname</code>.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>
 In this case <code>spdf</code> is the object name, <code>data</code> is the slot and <code>varname</code> is the variable name.
 RStudio makes such <code>S4</code> objects easier to use by enabling autocompletion of the short form <code>spdf$varname</code>.
 Another example is RStudio’s ability to find files hidden away in sub-folders.
-Typing <code>&quot;te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>.
+Typing <code>"te</code> will find <code>test.R</code> even if it is located in a sub-folder such as <code>R/test.R</code>.
 There are a number of other clever autocompletion tricks that can boost R’s productivity when using RStudio which are best found by experimenting and hitting <code>Tab</code> frequently during your R programming work.</p>
 </div>
 <div id="keyboard-shortcuts" class="section level3">
@@ -1004,17 +1005,17 @@ These tasks are implemented using RStudio’s simple project system, in which th
 </ul>
 <p>Each project is different but most contain input data, R code and outputs.
 To keep things tidy, we recommend a sub-directory structure resembling the following:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="ex">project/</span></a>
-<a class="sourceLine" id="cb53-2" data-line-number="2">  <span class="ex">-</span> README.Rmd <span class="co"># Project description</span></a>
-<a class="sourceLine" id="cb53-3" data-line-number="3">  <span class="ex">-</span> set-up.R  # Required packages</a>
-<a class="sourceLine" id="cb53-4" data-line-number="4">  <span class="ex">-</span> R/ <span class="co"># For R code</span></a>
-<a class="sourceLine" id="cb53-5" data-line-number="5">  <span class="ex">-</span> input <span class="co"># Data files</span></a>
-<a class="sourceLine" id="cb53-6" data-line-number="6">  <span class="ex">-</span> graphics/</a>
-<a class="sourceLine" id="cb53-7" data-line-number="7">  <span class="ex">-</span> output/ <span class="co"># Results</span></a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb53-1"><a href="set-up.html#cb53-1"></a><span class="ex">project/</span></span>
+<span id="cb53-2"><a href="set-up.html#cb53-2"></a>  <span class="ex">-</span> README.Rmd <span class="co"># Project description</span></span>
+<span id="cb53-3"><a href="set-up.html#cb53-3"></a>  <span class="ex">-</span> set-up.R  <span class="co"># Required packages</span></span>
+<span id="cb53-4"><a href="set-up.html#cb53-4"></a>  <span class="ex">-</span> R/ <span class="co"># For R code</span></span>
+<span id="cb53-5"><a href="set-up.html#cb53-5"></a>  <span class="ex">-</span> input <span class="co"># Data files</span></span>
+<span id="cb53-6"><a href="set-up.html#cb53-6"></a>  <span class="ex">-</span> graphics/</span>
+<span id="cb53-7"><a href="set-up.html#cb53-7"></a>  <span class="ex">-</span> output/ <span class="co"># Results</span></span></code></pre></div>
 <p>Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are ‘first class citizens’ within the project’s design, each with their own folder.</p>
 <p>Another approach to project management is to treat projects as R packages.
-This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013">2013</a>)</span> and, more recently <span class="citation">(H. Wickham <a href="#ref-Wickham_2015">2015</a><a href="#ref-Wickham_2015">b</a>)</span>. The <strong>devtools</strong> package helps manage R’s quirks, making the process much less painful.
-If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github(&quot;username/projectname&quot;)</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
+This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is <em>code development and sharing</em>, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in <span class="citation">(Cotton <a href="#ref-cotton_learning_2013" role="doc-biblioref">2013</a>)</span> and, more recently <span class="citation">(H. Wickham <a href="#ref-Wickham_2015" role="doc-biblioref">2015</a><a href="#ref-Wickham_2015" role="doc-biblioref">b</a>)</span>. The <strong>devtools</strong> package helps manage R’s quirks, making the process much less painful.
+If you use GitHub, the advantage of this approach is that anyone should be able to reproduce your working using <code>devtools::install_github("username/projectname")</code>, although the administrative overheads of creating an entire package for each small project will outweigh the benefits for many.</p>
 <p>Note that a <code>set-up.R</code> or even a <code>.Rprofile</code> file in the project’s root directory enable project-specific settings to be loaded each time people work on the project.
 As described in the previous section, <code>.Rprofile</code> can be used to tweak how R works at start-up.
 It is also a portable way to manage R’s configuration on a project-by-project basis.</p>
@@ -1038,12 +1039,12 @@ This should therefore be seen as an advanced section: if you are not interested 
 <p>The two open source alternative BLAS libraries are <a href="http://math-atlas.sourceforge.net/">ATLAS</a> and <a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a>. The <a href="https://software.intel.com/en-us/intel-mkl">Intel MKL</a> is another implementation,
 designed for Intel processors by Intel and used in Revolution R (described in the next section) but it requires licensing fees. The MKL library is provided with the Revolution analytics system. Depending on your application, by switching your BLAS library, linear algebra operations can run several times faster than with the base BLAS routines.</p>
 <p>If you use macOS or Linux, you can check whether you have a BLAS library setting with the following function, from <strong>benchmarkme</strong>:</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</a>
-<a class="sourceLine" id="cb54-2" data-line-number="2"><span class="kw">get_linear_algebra</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="set-up.html#cb54-1"></a><span class="kw">library</span>(<span class="st">&quot;benchmarkme&quot;</span>)</span>
+<span id="cb54-2"><a href="set-up.html#cb54-2"></a><span class="kw">get_linear_algebra</span>()</span></code></pre></div>
 <div id="testing-performance-gains-from-blas" class="section level3">
 <h3><span class="header-section-number">2.6.1</span> Testing performance gains from BLAS</h3>
 <p>As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6<sup>th</sup> generation Core i7 processor, before and after OpenBLAS was installed.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1">res =<span class="st"> </span><span class="kw">benchmark_std</span>() <span class="co"># run a suit of tests to test R&#39;s performance</span></a></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="set-up.html#cb55-1"></a>res =<span class="st"> </span><span class="kw">benchmark_std</span>() <span class="co"># run a suit of tests to test R&#39;s performance</span></span></code></pre></div>
 <p>It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure <a href="set-up.html#fig:blas-bench">2.4</a>. Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that ‘programming’ benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are not much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:blas-bench"></span>
@@ -1057,7 +1058,7 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <h3><span class="header-section-number">2.6.2</span> Other interpreters</h3>
 <p>The R <em>language</em> can be separated from the R <em>interpreter</em>. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.</p>
 <ul>
-<li><a href="https://mran.microsoft.com/open">Microsoft R Open</a>, formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.</li>
+<li><p><a href="https://mran.microsoft.com/open">Microsoft R Open</a>, formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.</p></li>
 <li><p><a href="https://github.com/rho-devel/rho">Rho</a> (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).</p></li>
 <li><p><a href="http://www.pqr-project.org/">pqrR</a> (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. <strong>pqR</strong> is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.</p></li>
 <li><p><a href="http://www.renjin.org/">Renjin</a> reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.</p></li>
@@ -1095,12 +1096,12 @@ Figure 2.4: Performance gains obtained changing the underlying BLAS library (tes
 <div class="footnotes">
 <hr />
 <ol start="1">
-<li id="fn1"><p>All CRAN packages are automatically tested on these systems, in addition to Solaris. R has also been reported to run on more exotic operating systems, including those used in smart phones and game consoles <span class="citation">(Peng <a href="#ref-peng_r_2014">2014</a>)</span>.<a href="set-up.html#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon <a href="#ref-sekhon2006art">2006</a>)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <strong>benchmarkme</strong> package also suggests that running code under the Linux OS is marginally faster.<a href="set-up.html#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="set-up.html#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette(&quot;api-packages&quot;)</code></a> from the <code>httr</code> package for more on this.<a href="set-up.html#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p>‘Slots’ are elements of an object (specifically, S4 objects) analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="set-up.html#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>OpenBLAS was installed on the computer via <code>sudo apt-get install libopenblas-base</code>, which was then automatically detected and used by R.<a href="set-up.html#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>All CRAN packages are automatically tested on these systems, in addition to Solaris. R has also been reported to run on more exotic operating systems, including those used in smart phones and game consoles <span class="citation">(Peng <a href="#ref-peng_r_2014" role="doc-biblioref">2014</a>)</span>.<a href="set-up.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Benchmarking conducted for a presentation “R on Different Platforms” at useR 2006 found that R was marginally faster on Windows than Linux set-ups. Similar results were reported in an academic paper, with R completing statistical analyses faster on a Linux than Mac OS’s <span class="citation">(Sekhon <a href="#ref-sekhon2006art" role="doc-biblioref">2006</a>)</span>. In 2015 <a href="http://blog.revolutionanalytics.com/2015/04/benchmarks-of-rro-on-osx-and-ubuntu.html">Revolution R</a> supported these results with slightly faster run times for certain benchmarks on Ubuntu than Mac systems. The data from the <strong>benchmarkme</strong> package also suggests that running code under the Linux OS is marginally faster.<a href="set-up.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>See <a href="http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/">jason-french.com/blog/2013/03/11/installing-r-in-linux/</a> for more information on installing R on a variety of Linux distributions.<a href="set-up.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>See <a href="https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html"><code>vignette("api-packages")</code></a> from the <code>httr</code> package for more on this.<a href="set-up.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>‘Slots’ are elements of an object (specifically, S4 objects) analogous to a column in a <code>data.frame</code> but referred to with <code>@</code> not <code>$</code>.<a href="set-up.html#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p>OpenBLAS was installed on the computer via <code>sudo apt-get install libopenblas-base</code>, which was then automatically detected and used by R.<a href="set-up.html#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

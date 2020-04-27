@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -411,15 +411,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">A</span> Building the book from source</h1>
 <p>The complete source of the book is available <a href="https://github.com/csgillespie/efficientR">online</a>. To build the book:</p>
 <ol style="list-style-type: decimal">
-<li>Install the latest version of R
+<li><p>Install the latest version of R</p>
 <ul>
 <li>If you are using RStudio, make sure that’s up-to-date as well</li>
 </ul></li>
 <li><p>Install the book dependencies.</p>
-<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb269-1" data-line-number="1"><span class="co"># Make sure you are using the latest version of `devtools`</span></a>
-<a class="sourceLine" id="cb269-2" data-line-number="2"><span class="co"># Older versions do not work.</span></a>
-<a class="sourceLine" id="cb269-3" data-line-number="3">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficientR&quot;</span>)</a></code></pre></div></li>
-<li>Clone the efficientR <a href="https://github.com/csgillespie/efficientR">repository</a></li>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="building-the-book-from-source.html#cb275-1"></a><span class="co"># Make sure you are using the latest version of `devtools`</span></span>
+<span id="cb275-2"><a href="building-the-book-from-source.html#cb275-2"></a><span class="co"># Older versions do not work.</span></span>
+<span id="cb275-3"><a href="building-the-book-from-source.html#cb275-3"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficientR&quot;</span>)</span></code></pre></div></li>
+<li><p>Clone the efficientR <a href="https://github.com/csgillespie/efficientR">repository</a></p></li>
 </ol>
 <ul>
 <li>See the chapter <a href="collaboration.html#collaboration">9</a> on Efficient collaboration for an introduction
@@ -434,9 +434,9 @@ to git and github.</li>
 <div id="package-dependencies" class="section level2">
 <h2><span class="header-section-number">A.1</span> Package dependencies</h2>
 <p>The book uses datasets stored in the <strong>efficient</strong> GitHub package, which can be installed (after <strong>devtools</strong> has been installed) as follows:</p>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb270-1" data-line-number="1"><span class="co"># Installs package dependencies shown below</span></a>
-<a class="sourceLine" id="cb270-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,</a>
-<a class="sourceLine" id="cb270-3" data-line-number="3">                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="building-the-book-from-source.html#cb276-1"></a><span class="co"># Installs package dependencies shown below</span></span>
+<span id="cb276-2"><a href="building-the-book-from-source.html#cb276-2"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,</span>
+<span id="cb276-3"><a href="building-the-book-from-source.html#cb276-3"></a>                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</span></code></pre></div>
 <p>The book depends on the following CRAN packages:</p>
 <table>
 <thead>
@@ -449,158 +449,163 @@ to git and github.</li>
 <tbody>
 <tr class="odd">
 <td align="left">assertive.reflection</td>
-<td align="left">Assertions for Checking the State of R <span class="citation">(Cotton <a href="#ref-R-assertive.reflection">2016</a><a href="#ref-R-assertive.reflection">a</a>)</span></td>
+<td align="left">Assertions for Checking the State of R <span class="citation">(Cotton <a href="#ref-R-assertive.reflection" role="doc-biblioref">2016</a><a href="#ref-R-assertive.reflection" role="doc-biblioref">a</a>)</span></td>
 <td align="left">0.0.4</td>
 </tr>
 <tr class="even">
 <td align="left">benchmarkme</td>
-<td align="left">Crowd Sourced System Benchmarks <span class="citation">(Gillespie <a href="#ref-R-benchmarkme">2017</a>)</span></td>
-<td align="left">0.6.0</td>
+<td align="left">Crowd Sourced System Benchmarks <span class="citation">(Gillespie <a href="#ref-R-benchmarkme" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">1.0.3</td>
 </tr>
 <tr class="odd">
 <td align="left">bookdown</td>
-<td align="left">Authoring Books and Technical Documents with R Markdown <span class="citation">(Xie <a href="#ref-R-bookdown">2018</a><a href="#ref-R-bookdown">a</a>)</span></td>
-<td align="left">0.6.2</td>
+<td align="left">Authoring Books and Technical Documents with R Markdown <span class="citation">(Xie <a href="#ref-R-bookdown" role="doc-biblioref">2020</a><a href="#ref-R-bookdown" role="doc-biblioref">a</a>)</span></td>
+<td align="left">0.18</td>
 </tr>
 <tr class="even">
 <td align="left">cranlogs</td>
-<td align="left">Download Logs from the ‘RStudio’ ‘CRAN’ Mirror <span class="citation">(Csardi <a href="#ref-R-cranlogs">2015</a>)</span></td>
-<td align="left">2.1.0</td>
+<td align="left">Download Logs from the ‘RStudio’ ‘CRAN’ Mirror <span class="citation">(Csárdi <a href="#ref-R-cranlogs" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">2.1.1</td>
 </tr>
 <tr class="odd">
 <td align="left">data.table</td>
-<td align="left">Extension of <code>data.frame</code> <span class="citation">(Dowle and Srinivasan <a href="#ref-R-data.table">2017</a>)</span></td>
-<td align="left">1.10.4.3</td>
+<td align="left">Extension of <code>data.frame</code> <span class="citation">(Dowle and Srinivasan <a href="#ref-R-data.table" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">1.12.8</td>
 </tr>
 <tr class="even">
 <td align="left">dbplyr</td>
-<td align="left">A ‘dplyr’ Back End for Databases <span class="citation">(H. Wickham and Ruiz <a href="#ref-R-dbplyr">2018</a>)</span></td>
-<td align="left">1.2.0</td>
+<td align="left">A ‘dplyr’ Back End for Databases <span class="citation">(H. Wickham and Ruiz <a href="#ref-R-dbplyr" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.4.3</td>
 </tr>
 <tr class="odd">
 <td align="left">devtools</td>
-<td align="left">Tools to Make Developing R Packages Easier <span class="citation">(H. Wickham and Chang <a href="#ref-R-devtools">2017</a>)</span></td>
-<td align="left">1.13.4</td>
+<td align="left">Tools to Make Developing R Packages Easier <span class="citation">(H. Wickham, Hester, and Chang <a href="#ref-R-devtools" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">2.3.0</td>
 </tr>
 <tr class="even">
 <td align="left">DiagrammeR</td>
-<td align="left">Graph/Network Visualization <span class="citation">(Sveidqvist et al. <a href="#ref-R-DiagrammeR">2017</a>)</span></td>
-<td align="left">0.9.2</td>
+<td align="left">Graph/Network Visualization <span class="citation">(Iannone <a href="#ref-R-DiagrammeR" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.0.5</td>
 </tr>
 <tr class="odd">
 <td align="left">dplyr</td>
-<td align="left">A Grammar of Data Manipulation <span class="citation">(H. Wickham et al. <a href="#ref-R-dplyr">2017</a>)</span></td>
-<td align="left">0.7.4</td>
+<td align="left">A Grammar of Data Manipulation <span class="citation">(H. Wickham, François, et al. <a href="#ref-R-dplyr" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">0.8.5</td>
 </tr>
 <tr class="even">
 <td align="left">drat</td>
-<td align="left">‘Drat’ R Archive Template <span class="citation">(Carl Boettiger et al. <a href="#ref-R-drat">2017</a>)</span></td>
-<td align="left">0.1.4</td>
+<td align="left">‘Drat’ R Archive Template <span class="citation">(Carl Boettiger et al. <a href="#ref-R-drat" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">0.1.5</td>
 </tr>
 <tr class="odd">
 <td align="left">efficient</td>
-<td align="left">Becoming an Efficient R Programmer <span class="citation">(Gillespie and Lovelace <a href="#ref-R-efficient">2018</a>)</span></td>
+<td align="left">Becoming an Efficient R Programmer <span class="citation">(Gillespie and Lovelace <a href="#ref-R-efficient" role="doc-biblioref">2020</a>)</span></td>
 <td align="left">0.1.3</td>
 </tr>
 <tr class="even">
 <td align="left">feather</td>
-<td align="left">R Bindings to the Feather ‘API’ <span class="citation">(H. Wickham <a href="#ref-R-feather">2016</a>)</span></td>
-<td align="left">0.3.1</td>
+<td align="left">R Bindings to the Feather ‘API’ <span class="citation">(Wickham <a href="#ref-R-feather" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">0.3.5</td>
 </tr>
 <tr class="odd">
 <td align="left">formatR</td>
-<td align="left">Format R Code Automatically <span class="citation">(Xie <a href="#ref-R-formatR">2017</a>)</span></td>
-<td align="left">1.5</td>
+<td align="left">Format R Code Automatically <span class="citation">(Xie <a href="#ref-R-formatR" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">1.7</td>
 </tr>
 <tr class="even">
 <td align="left">fortunes</td>
-<td align="left">R Fortunes <span class="citation">(Zeileis and R community <a href="#ref-R-fortunes">2016</a>)</span></td>
+<td align="left">R Fortunes <span class="citation">(Zeileis et al. <a href="#ref-R-fortunes" role="doc-biblioref">2016</a>)</span></td>
 <td align="left">1.5.4</td>
 </tr>
 <tr class="odd">
 <td align="left">geosphere</td>
-<td align="left">Spherical Trigonometry <span class="citation">(Hijmans <a href="#ref-R-geosphere">2017</a>)</span></td>
-<td align="left">1.5.7</td>
+<td align="left">Spherical Trigonometry <span class="citation">(Hijmans <a href="#ref-R-geosphere" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">1.5.10</td>
 </tr>
 <tr class="even">
 <td align="left">ggmap</td>
-<td align="left">Spatial Visualization with ggplot2 <span class="citation">(Kahle and Wickham <a href="#ref-R-ggmap">2016</a>)</span></td>
-<td align="left">2.6.1</td>
+<td align="left">Spatial Visualization with ggplot2 <span class="citation">(Kahle, Wickham, and Jackson <a href="#ref-R-ggmap" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">3.0.0</td>
 </tr>
 <tr class="odd">
 <td align="left">ggplot2</td>
-<td align="left">Create Elegant Data Visualisations Using the Grammar of Graphics <span class="citation">(H. Wickham and Chang <a href="#ref-R-ggplot2">2016</a>)</span></td>
-<td align="left">2.2.1</td>
+<td align="left">Create Elegant Data Visualisations Using the Grammar of Graphics <span class="citation">(H. Wickham, Chang, et al. <a href="#ref-R-ggplot2" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">3.3.0</td>
 </tr>
 <tr class="even">
 <td align="left">ggplot2movies</td>
-<td align="left">Movies Data <span class="citation">(H. Wickham <a href="#ref-R-ggplot2movies">2015</a><a href="#ref-R-ggplot2movies">a</a>)</span></td>
+<td align="left">Movies Data <span class="citation">(H. Wickham <a href="#ref-R-ggplot2movies" role="doc-biblioref">2015</a><a href="#ref-R-ggplot2movies" role="doc-biblioref">a</a>)</span></td>
 <td align="left">0.0.1</td>
 </tr>
 <tr class="odd">
 <td align="left">knitr</td>
-<td align="left">A General-Purpose Package for Dynamic Report Generation in R <span class="citation">(Xie <a href="#ref-R-knitr">2018</a><a href="#ref-R-knitr">b</a>)</span></td>
-<td align="left">1.19</td>
+<td align="left">A General-Purpose Package for Dynamic Report Generation in R <span class="citation">(Xie <a href="#ref-R-knitr" role="doc-biblioref">2020</a><a href="#ref-R-knitr" role="doc-biblioref">b</a>)</span></td>
+<td align="left">1.28</td>
 </tr>
 <tr class="even">
 <td align="left">lubridate</td>
-<td align="left">Make Dealing with Dates a Little Easier <span class="citation">(Spinu, Grolemund, and Wickham <a href="#ref-R-lubridate">2017</a>)</span></td>
-<td align="left">1.7.1</td>
+<td align="left">Make Dealing with Dates a Little Easier <span class="citation">(Spinu, Grolemund, and Wickham <a href="#ref-R-lubridate" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.7.8</td>
 </tr>
 <tr class="odd">
+<td align="left">maps</td>
+<td align="left">Draw Geographical Maps <span class="citation">(Richard A. Becker, Ray Brownrigg. Enhancements by Thomas P Minka, and Deckmyn. <a href="#ref-R-maps" role="doc-biblioref">2018</a>)</span></td>
+<td align="left">3.3.0</td>
+</tr>
+<tr class="even">
 <td align="left">microbenchmark</td>
-<td align="left">Accurate Timing Functions <span class="citation">(Mersmann <a href="#ref-R-microbenchmark">2018</a>)</span></td>
-<td align="left">1.4.4</td>
+<td align="left">Accurate Timing Functions <span class="citation">(Mersmann <a href="#ref-R-microbenchmark" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">1.4.7</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">profvis</td>
-<td align="left">Interactive Visualizations for Profiling R Code <span class="citation">(Chang and Luraschi <a href="#ref-R-profvis">2017</a>)</span></td>
-<td align="left">0.3.4</td>
+<td align="left">Interactive Visualizations for Profiling R Code <span class="citation">(Chang, Luraschi, and Mastny <a href="#ref-R-profvis" role="doc-biblioref">2019</a>)</span></td>
+<td align="left">0.3.6</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">pryr</td>
-<td align="left">Tools for Computing on the Language <span class="citation">(H. Wickham <a href="#ref-R-pryr">2017</a>)</span></td>
-<td align="left">0.1.3</td>
+<td align="left">Tools for Computing on the Language <span class="citation">(H. Wickham <a href="#ref-R-pryr" role="doc-biblioref">2018</a>)</span></td>
+<td align="left">0.1.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Rcpp</td>
-<td align="left">Seamless R and C++ Integration <span class="citation">(Eddelbuettel et al. <a href="#ref-R-Rcpp">2018</a>)</span></td>
-<td align="left">0.12.15</td>
+<td align="left">Seamless R and C++ Integration <span class="citation">(Eddelbuettel et al. <a href="#ref-R-Rcpp" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.0.4.6</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">readr</td>
-<td align="left">Read Rectangular Text Data <span class="citation">(H. Wickham, Hester, and Francois <a href="#ref-R-readr">2017</a>)</span></td>
-<td align="left">1.1.1</td>
+<td align="left">Read Rectangular Text Data <span class="citation">(H. Wickham, Hester, and Francois <a href="#ref-R-readr" role="doc-biblioref">2018</a>)</span></td>
+<td align="left">1.3.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">reticulate</td>
-<td align="left">Interface to ‘Python’ <span class="citation">(Allaire, Tang, and Geelnard <a href="#ref-R-reticulate">2018</a>)</span></td>
-<td align="left">1.4</td>
+<td align="left">Interface to ‘Python’ <span class="citation">(Ushey, Allaire, and Tang <a href="#ref-R-reticulate" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.15</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rio</td>
-<td align="left">A Swiss-Army Knife for Data I/O <span class="citation">(Chan and Leeper <a href="#ref-R-rio">2018</a>)</span></td>
-<td align="left">0.5.9</td>
+<td align="left">A Swiss-Army Knife for Data I/O <span class="citation">(Chan and Leeper <a href="#ref-R-rio" role="doc-biblioref">2018</a>)</span></td>
+<td align="left">0.5.16</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RSQLite</td>
-<td align="left">‘SQLite’ Interface for R <span class="citation">(Müller et al. <a href="#ref-R-RSQLite">2017</a>)</span></td>
-<td align="left">2.0</td>
-</tr>
-<tr class="odd">
-<td align="left">swirl</td>
-<td align="left">Learn R, in R <span class="citation">(Kross et al. <a href="#ref-R-swirl">2017</a>)</span></td>
-<td align="left">2.4.3</td>
+<td align="left">‘SQLite’ Interface for R <span class="citation">(Müller et al. <a href="#ref-R-RSQLite" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">2.2.0</td>
 </tr>
 <tr class="even">
-<td align="left">tibble</td>
-<td align="left">Simple Data Frames <span class="citation">(Müller and Wickham <a href="#ref-R-tibble">2018</a>)</span></td>
-<td align="left">1.4.2</td>
+<td align="left">swirl</td>
+<td align="left">Learn R, in R <span class="citation">(Kross et al. <a href="#ref-R-swirl" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">2.4.5</td>
 </tr>
 <tr class="odd">
+<td align="left">tibble</td>
+<td align="left">Simple Data Frames <span class="citation">(Müller and Wickham <a href="#ref-R-tibble" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">3.0.1</td>
+</tr>
+<tr class="even">
 <td align="left">tidyr</td>
-<td align="left">Easily Tidy Data with ‘spread()’ and ‘gather()’ Functions <span class="citation">(H. Wickham and Henry <a href="#ref-R-tidyr">2018</a>)</span></td>
-<td align="left">0.8.0</td>
+<td align="left">Tidy Messy Data <span class="citation">(H. Wickham and Henry <a href="#ref-R-tidyr" role="doc-biblioref">2020</a>)</span></td>
+<td align="left">1.0.2</td>
 </tr>
 </tbody>
 </table>
@@ -608,98 +613,101 @@ to git and github.</li>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-R-reticulate">
-<p>Allaire, JJ, Yuan Tang, and Marcus Geelnard. 2018. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate" class="uri">https://CRAN.R-project.org/package=reticulate</a>.</p>
-</div>
 <div id="ref-R-drat">
-<p>Carl Boettiger, Dirk Eddelbuettel with contributions by, Neal Fultz, Sebastian Gibb, Colin Gillespie, Jan Górecki, Matt Jones, Thomas Leeper, Steven Pav, and Jan Schulz. 2017. <em>Drat: ’Drat’ R Archive Template</em>. <a href="https://CRAN.R-project.org/package=drat" class="uri">https://CRAN.R-project.org/package=drat</a>.</p>
+<p>Carl Boettiger, Dirk Eddelbuettel with contributions by, Neal Fultz, Sebastian Gibb, Colin Gillespie, Jan Górecki, Matt Jones, Thomas Leeper, Steven Pav, Jan Schulz, and Christoph Stepper. 2019. <em>Drat: ’Drat’ R Archive Template</em>. <a href="http://dirk.eddelbuettel.com/code/drat.html">http://dirk.eddelbuettel.com/code/drat.html</a>.</p>
 </div>
 <div id="ref-R-rio">
-<p>Chan, Chung-hong, and Thomas J. Leeper. 2018. <em>Rio: A Swiss-Army Knife for Data I/O</em>. <a href="https://CRAN.R-project.org/package=rio" class="uri">https://CRAN.R-project.org/package=rio</a>.</p>
+<p>Chan, Chung-hong, and Thomas J. Leeper. 2018. <em>Rio: A Swiss-Army Knife for Data I/O</em>. <a href="https://CRAN.R-project.org/package=rio">https://CRAN.R-project.org/package=rio</a>.</p>
 </div>
 <div id="ref-R-profvis">
-<p>Chang, Winston, and Javier Luraschi. 2017. <em>Profvis: Interactive Visualizations for Profiling R Code</em>. <a href="https://CRAN.R-project.org/package=profvis" class="uri">https://CRAN.R-project.org/package=profvis</a>.</p>
+<p>Chang, Winston, Javier Luraschi, and Timothy Mastny. 2019. <em>Profvis: Interactive Visualizations for Profiling R Code</em>. <a href="https://rstudio.github.io/profvis/">https://rstudio.github.io/profvis/</a>.</p>
 </div>
 <div id="ref-R-assertive.reflection">
-<p>Cotton, Richard. 2016a. <em>Assertive.reflection: Assertions for Checking the State of R</em>. <a href="https://CRAN.R-project.org/package=assertive.reflection" class="uri">https://CRAN.R-project.org/package=assertive.reflection</a>.</p>
+<p>Cotton, Richard. 2016a. <em>Assertive.reflection: Assertions for Checking the State of R</em>. <a href="https://CRAN.R-project.org/package=assertive.reflection">https://CRAN.R-project.org/package=assertive.reflection</a>.</p>
 </div>
 <div id="ref-R-cranlogs">
-<p>Csardi, Gabor. 2015. <em>Cranlogs: Download Logs from the Rstudio ’Cran’ Mirror</em>. <a href="https://CRAN.R-project.org/package=cranlogs" class="uri">https://CRAN.R-project.org/package=cranlogs</a>.</p>
+<p>Csárdi, Gábor. 2019. <em>Cranlogs: Download Logs from the Rstudio ’Cran’ Mirror</em>. <a href="https://CRAN.R-project.org/package=cranlogs">https://CRAN.R-project.org/package=cranlogs</a>.</p>
 </div>
 <div id="ref-R-data.table">
-<p>Dowle, Matt, and Arun Srinivasan. 2017. <em>Data.table: Extension of ‘Data.frame‘</em>. <a href="https://CRAN.R-project.org/package=data.table" class="uri">https://CRAN.R-project.org/package=data.table</a>.</p>
+<p>Dowle, Matt, and Arun Srinivasan. 2019. <em>Data.table: Extension of ‘Data.frame‘</em>.</p>
 </div>
 <div id="ref-R-Rcpp">
-<p>Eddelbuettel, Dirk, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou, Nathan Russell, Douglas Bates, and John Chambers. 2018. <em>Rcpp: Seamless R and C++ Integration</em>. <a href="https://CRAN.R-project.org/package=Rcpp" class="uri">https://CRAN.R-project.org/package=Rcpp</a>.</p>
+<p>Eddelbuettel, Dirk, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou, Nathan Russell, Douglas Bates, and John Chambers. 2020. <em>Rcpp: Seamless R and C++ Integration</em>.</p>
 </div>
 <div id="ref-R-benchmarkme">
-<p>Gillespie, Colin. 2017. <em>Benchmarkme: Crowd Sourced System Benchmarks</em>. <a href="https://CRAN.R-project.org/package=benchmarkme" class="uri">https://CRAN.R-project.org/package=benchmarkme</a>.</p>
+<p>Gillespie, Colin. 2019. <em>Benchmarkme: Crowd Sourced System Benchmarks</em>. <a href="https://github.com/csgillespie/benchmarkme">https://github.com/csgillespie/benchmarkme</a>.</p>
 </div>
 <div id="ref-R-efficient">
-<p>Gillespie, Colin, and Robin Lovelace. 2018. <em>Efficient: Becoming an Efficient R Programmer</em>.</p>
+<p>Gillespie, Colin, and Robin Lovelace. 2020. <em>Efficient: Becoming an Efficient R Programmer</em>.</p>
 </div>
 <div id="ref-R-geosphere">
-<p>Hijmans, Robert J. 2017. <em>Geosphere: Spherical Trigonometry</em>. <a href="https://CRAN.R-project.org/package=geosphere" class="uri">https://CRAN.R-project.org/package=geosphere</a>.</p>
-</div>
-<div id="ref-R-ggmap">
-<p>Kahle, David, and Hadley Wickham. 2016. <em>Ggmap: Spatial Visualization with Ggplot2</em>. <a href="https://CRAN.R-project.org/package=ggmap" class="uri">https://CRAN.R-project.org/package=ggmap</a>.</p>
-</div>
-<div id="ref-R-swirl">
-<p>Kross, Sean, Nick Carchedi, Bill Bauer, and Gina Grdina. 2017. <em>Swirl: Learn R, in R</em>. <a href="https://CRAN.R-project.org/package=swirl" class="uri">https://CRAN.R-project.org/package=swirl</a>.</p>
-</div>
-<div id="ref-R-microbenchmark">
-<p>Mersmann, Olaf. 2018. <em>Microbenchmark: Accurate Timing Functions</em>. <a href="https://CRAN.R-project.org/package=microbenchmark" class="uri">https://CRAN.R-project.org/package=microbenchmark</a>.</p>
-</div>
-<div id="ref-R-tibble">
-<p>Müller, Kirill, and Hadley Wickham. 2018. <em>Tibble: Simple Data Frames</em>. <a href="https://CRAN.R-project.org/package=tibble" class="uri">https://CRAN.R-project.org/package=tibble</a>.</p>
-</div>
-<div id="ref-R-RSQLite">
-<p>Müller, Kirill, Hadley Wickham, David A. James, and Seth Falcon. 2017. <em>RSQLite: ’SQLite’ Interface for R</em>. <a href="https://CRAN.R-project.org/package=RSQLite" class="uri">https://CRAN.R-project.org/package=RSQLite</a>.</p>
-</div>
-<div id="ref-R-lubridate">
-<p>Spinu, Vitalie, Garrett Grolemund, and Hadley Wickham. 2017. <em>Lubridate: Make Dealing with Dates a Little Easier</em>. <a href="https://CRAN.R-project.org/package=lubridate" class="uri">https://CRAN.R-project.org/package=lubridate</a>.</p>
+<p>Hijmans, Robert J. 2019. <em>Geosphere: Spherical Trigonometry</em>. <a href="https://CRAN.R-project.org/package=geosphere">https://CRAN.R-project.org/package=geosphere</a>.</p>
 </div>
 <div id="ref-R-DiagrammeR">
-<p>Sveidqvist, Knut, Mike Bostock, Chris Pettitt, Mike Daines, and Richard Iannone. 2017. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR" class="uri">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
+<p>Iannone, Richard. 2020. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://github.com/rich-iannone/DiagrammeR">https://github.com/rich-iannone/DiagrammeR</a>.</p>
+</div>
+<div id="ref-R-ggmap">
+<p>Kahle, David, Hadley Wickham, and Scott Jackson. 2019. <em>Ggmap: Spatial Visualization with Ggplot2</em>. <a href="https://CRAN.R-project.org/package=ggmap">https://CRAN.R-project.org/package=ggmap</a>.</p>
+</div>
+<div id="ref-R-swirl">
+<p>Kross, Sean, Nick Carchedi, Bill Bauer, and Gina Grdina. 2020. <em>Swirl: Learn R, in R</em>. <a href="http://swirlstats.com">http://swirlstats.com</a>.</p>
+</div>
+<div id="ref-R-microbenchmark">
+<p>Mersmann, Olaf. 2019. <em>Microbenchmark: Accurate Timing Functions</em>. <a href="https://CRAN.R-project.org/package=microbenchmark">https://CRAN.R-project.org/package=microbenchmark</a>.</p>
+</div>
+<div id="ref-R-tibble">
+<p>Müller, Kirill, and Hadley Wickham. 2020. <em>Tibble: Simple Data Frames</em>.</p>
+</div>
+<div id="ref-R-RSQLite">
+<p>Müller, Kirill, Hadley Wickham, David A. James, and Seth Falcon. 2020. <em>RSQLite: ’SQLite’ Interface for R</em>.</p>
+</div>
+<div id="ref-R-maps">
+<p>Richard A. Becker, Original S code by, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P Minka, and Alex Deckmyn. 2018. <em>Maps: Draw Geographical Maps</em>. <a href="https://CRAN.R-project.org/package=maps">https://CRAN.R-project.org/package=maps</a>.</p>
+</div>
+<div id="ref-R-lubridate">
+<p>Spinu, Vitalie, Garrett Grolemund, and Hadley Wickham. 2020. <em>Lubridate: Make Dealing with Dates a Little Easier</em>.</p>
+</div>
+<div id="ref-R-reticulate">
+<p>Ushey, Kevin, JJ Allaire, and Yuan Tang. 2020. <em>Reticulate: Interface to ’Python’</em>. <a href="https://github.com/rstudio/reticulate">https://github.com/rstudio/reticulate</a>.</p>
 </div>
 <div id="ref-R-ggplot2movies">
-<p>Wickham, Hadley. 2015a. <em>Ggplot2movies: Movies Data</em>. <a href="https://CRAN.R-project.org/package=ggplot2movies" class="uri">https://CRAN.R-project.org/package=ggplot2movies</a>.</p>
-</div>
-<div id="ref-R-feather">
-<p>Wickham, Hadley. 2016. <em>Feather: R Bindings to the Feather ’Api’</em>. <a href="https://CRAN.R-project.org/package=feather" class="uri">https://CRAN.R-project.org/package=feather</a>.</p>
+<p>Wickham, Hadley. 2015a. <em>Ggplot2movies: Movies Data</em>. <a href="https://CRAN.R-project.org/package=ggplot2movies">https://CRAN.R-project.org/package=ggplot2movies</a>.</p>
 </div>
 <div id="ref-R-pryr">
-<p>Wickham, Hadley. 2017. <em>Pryr: Tools for Computing on the Language</em>. <a href="https://CRAN.R-project.org/package=pryr" class="uri">https://CRAN.R-project.org/package=pryr</a>.</p>
+<p>Wickham, Hadley. 2018. <em>Pryr: Tools for Computing on the Language</em>. <a href="https://CRAN.R-project.org/package=pryr">https://CRAN.R-project.org/package=pryr</a>.</p>
+</div>
+<div id="ref-R-feather">
+<p>Wickham, Hadley. 2019. <em>Feather: R Bindings to the Feather ’Api’</em>. <a href="https://CRAN.R-project.org/package=feather">https://CRAN.R-project.org/package=feather</a>.</p>
 </div>
 <div id="ref-R-ggplot2">
-<p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a>.</p>
-</div>
-<div id="ref-R-devtools">
-<p>Wickham, Hadley, and Winston Chang. 2017. <em>Devtools: Tools to Make Developing R Packages Easier</em>. <a href="https://CRAN.R-project.org/package=devtools" class="uri">https://CRAN.R-project.org/package=devtools</a>.</p>
+<p>Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen, Kohske Takahashi, Claus Wilke, Kara Woo, Hiroaki Yutani, and Dewey Dunnington. 2020. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>.</p>
 </div>
 <div id="ref-R-dplyr">
-<p>Wickham, Hadley, Romain Francois, Lionel Henry, and Kirill Müller. 2017. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>.</p>
+<p>Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2020. <em>Dplyr: A Grammar of Data Manipulation</em>.</p>
 </div>
 <div id="ref-R-tidyr">
-<p>Wickham, Hadley, and Lionel Henry. 2018. <em>Tidyr: Easily Tidy Data with ’Spread()’ and ’Gather()’ Functions</em>. <a href="https://CRAN.R-project.org/package=tidyr" class="uri">https://CRAN.R-project.org/package=tidyr</a>.</p>
+<p>Wickham, Hadley, and Lionel Henry. 2020. <em>Tidyr: Tidy Messy Data</em>.</p>
+</div>
+<div id="ref-R-devtools">
+<p>Wickham, Hadley, Jim Hester, and Winston Chang. 2020. <em>Devtools: Tools to Make Developing R Packages Easier</em>.</p>
 </div>
 <div id="ref-R-readr">
-<p>Wickham, Hadley, Jim Hester, and Romain Francois. 2017. <em>Readr: Read Rectangular Text Data</em>. <a href="https://CRAN.R-project.org/package=readr" class="uri">https://CRAN.R-project.org/package=readr</a>.</p>
+<p>Wickham, Hadley, Jim Hester, and Romain Francois. 2018. <em>Readr: Read Rectangular Text Data</em>. <a href="https://CRAN.R-project.org/package=readr">https://CRAN.R-project.org/package=readr</a>.</p>
 </div>
 <div id="ref-R-dbplyr">
-<p>Wickham, Hadley, and Edgar Ruiz. 2018. <em>Dbplyr: A ’Dplyr’ Back End for Databases</em>. <a href="https://CRAN.R-project.org/package=dbplyr" class="uri">https://CRAN.R-project.org/package=dbplyr</a>.</p>
+<p>Wickham, Hadley, and Edgar Ruiz. 2020. <em>Dbplyr: A ’Dplyr’ Back End for Databases</em>.</p>
 </div>
 <div id="ref-R-formatR">
-<p>Xie, Yihui. 2017. <em>FormatR: Format R Code Automatically</em>. <a href="https://CRAN.R-project.org/package=formatR" class="uri">https://CRAN.R-project.org/package=formatR</a>.</p>
+<p>Xie, Yihui. 2019. <em>FormatR: Format R Code Automatically</em>. <a href="https://CRAN.R-project.org/package=formatR">https://CRAN.R-project.org/package=formatR</a>.</p>
 </div>
 <div id="ref-R-bookdown">
-<p>Xie, Yihui. 2018a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://github.com/rstudio/bookdown" class="uri">https://github.com/rstudio/bookdown</a>.</p>
+<p>Xie, Yihui. 2020a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://github.com/rstudio/bookdown">https://github.com/rstudio/bookdown</a>.</p>
 </div>
 <div id="ref-R-knitr">
-<p>Xie, Yihui. 2018b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr" class="uri">https://CRAN.R-project.org/package=knitr</a>.</p>
+<p>Xie, Yihui. 2020b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>.</p>
 </div>
 <div id="ref-R-fortunes">
-<p>Zeileis, Achim, and the R community. 2016. <em>Fortunes: R Fortunes</em>. <a href="https://CRAN.R-project.org/package=fortunes" class="uri">https://CRAN.R-project.org/package=fortunes</a>.</p>
+<p>Zeileis, Achim, the R community. Contributions (fortunes and/or code) by Torsten Hothorn, Peter Dalgaard, Uwe Ligges, Kevin Wright, Martin Maechler, Kjetil Brinchmann Halvorsen, et al. 2016. <em>Fortunes: R Fortunes</em>. <a href="https://CRAN.R-project.org/package=fortunes">https://CRAN.R-project.org/package=fortunes</a>.</p>
 </div>
 </div>
             </section>
