@@ -8,10 +8,10 @@ update_website() {
   git config user.name "Colin Gillespie"
   git config user.email "csgillespie@gmail.com"
   git config --global push.default simple
-  git remote add upstream "https://$GH_TOKEN@github.com/csgillespie/efficientR.git"
-  git fetch upstream 2>err.txt
+  git remote add upstream "https://$GITHUB_PAT@github.com/csgillespie/efficientR.git"
+  git fetch --depth 1 upstream 2>err.txt
   git checkout gh-pages
-  
+
   cp -fvr $BASE_REPO/_book/* .
   git add *.html; git add libs/; git add figures/; git add style.css; git add images/;
   git add _main_files/*; git add *.json; git add main.md
