@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -418,9 +418,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>A working installation of R on your computer (see Section <a href="set-up.html#install-rstudio">2.5.1</a>).</p></li>
 <li><p>Install and load the <strong>microbenchmark</strong>, <strong>profvis</strong> and <strong>ggplot2</strong> packages (see Section <a href="set-up.html#installing-r-packages">2.3.3</a> for tips on installing packages and keeping them up-to-date). You can ensure these packages are installed by loading them as follows:</p></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1"></a><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</span>
-<span id="cb1-2"><a href="introduction.html#cb1-2"></a><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</span>
-<span id="cb1-3"><a href="introduction.html#cb1-3"></a><span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</a></code></pre></div>
 <p>The prerequisites needed to run the code contained in the entire book are covered in <a href="introduction.html#book-resources">1.7</a> at the end of this chapter.</p>
 </div>
 <div id="who-this-book-is-for-and-how-to-use-it" class="section level2">
@@ -439,7 +439,7 @@ For everyone, we recommend reading <em>Efficient R Programming</em> while you ha
 There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://cran.r-project.org/doc/contrib/Horton+Pruim+Kaplan_MOSAIC-StudentGuide.pdf">Student’s Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.
 </p>
 <p>
-R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = “dplyr”, “dplyr”)</code> to see the introductory vignette for the <strong>dplyr</strong> package.
+R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = “dplyr”, “dplyr”)</code> to see the introductory vignette for the <strong>dplyr</strong> package.
 </p>
 <p>
 Another early port of call should be the CRAN website. The <a href="https://cran.r-project.org/other-docs.html">Contributed Documentation</a> page contains a list of contributed resources, mainly tutorials, on subjects ranging from <a href="https://github.com/Robinlovelace/Creating-maps-in-R">map making</a> to <a href="https://cran.r-project.org/doc/contrib/Farnsworth-EconometricsInR.pdf">Econometrics</a> The new <a href="https://bookdown.org/">bookdown website</a> contains a list of complete (or near complete) books, which cover domains including <a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> and <a href="https://bookdown.org/yihui/bookdown/">Authoring Books with R Markdown</a>. We recommend keeping your eye on the ‘R-o-sphere’, e.g. via the <a href="http://r-bloggers.com/">R-Bloggers</a> website, popular Twitter feeds and <a href="https://www.r-project.org/mail.html">CRAN-affiliated email lists</a> for up-to-date materials that can be used in conjunction with this book.
@@ -452,7 +452,7 @@ Another early port of call should be the CRAN website. The <a href="https://cran
 <p><span class="math display">\[
 \eta = \frac{W}{Q}
 \]</span></p>
-<p>How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is <em>algorithmic efficiency</em>: how quickly the <em>computer</em> can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote from Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing <span class="citation">(Lovelace <a href="#ref-lovelace1842translator" role="doc-biblioref">1842</a>)</span>:</p>
+<p>How does this translate into programming? Efficient code can be defined narrowly or broadly. The first, narrower definition is <em>algorithmic efficiency</em>: how quickly the <em>computer</em> can undertake a piece of work given a particular piece of code. This concept dates back to the very origins of computing, as illustrated by the following quote from Ada Lovelace in her notes on the work of Charles Babbage, one of the pioneers of early computing <span class="citation">(Lovelace <a href="#ref-lovelace1842translator">1842</a>)</span>:</p>
 <blockquote>
 <p>In almost every computation a great variety of arrangements for the succession of the processes is possible, and various considerations must influence the selections amongst them for the purposes of a calculating engine. One essential object is to choose that arrangement which shall tend to reduce to a minimum the time necessary for completing the calculation.</p>
 </blockquote>
@@ -461,12 +461,12 @@ Another early port of call should be the CRAN website. The <a href="https://cran
 </div>
 <div id="what-is-efficient-r-programming" class="section level2">
 <h2><span class="header-section-number">1.3</span> What is efficient R programming?</h2>
-<p>The issue flagged by Ada of having a ‘great variety’ of ways to solve a problem is key to understanding how efficient R programming differs from efficient programming in other languages. R is notorious for allowing users to solve problems in many ways. This is due to R’s inherent flexibility, in which almost “anything can be modified after it is created” <span class="citation">(H. Wickham <a href="#ref-Wickham2014" role="doc-biblioref">2014</a><a href="#ref-Wickham2014" role="doc-biblioref">a</a>)</span>. R’s inventors, Ross Ihaka and Robert Gentleman, designed it to be this way: a cell in a data frame can be selected in multiple ways in <em>base R</em> alone (three of which are illustrated later in this Chapter, in Section <a href="introduction.html#benchmarking-example">1.6.2</a>). This is useful, allowing programmers to use the language as best suits their needs, but can be confusing for people looking for the ‘right’ way of doing things and can cause inefficiencies if you don’t understand the language well.</p>
+<p>The issue flagged by Ada of having a ‘great variety’ of ways to solve a problem is key to understanding how efficient R programming differs from efficient programming in other languages. R is notorious for allowing users to solve problems in many ways. This is due to R’s inherent flexibility, in which almost “anything can be modified after it is created” <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>. R’s inventors, Ross Ihaka and Robert Gentleman, designed it to be this way: a cell in a data frame can be selected in multiple ways in <em>base R</em> alone (three of which are illustrated later in this Chapter, in Section <a href="introduction.html#benchmarking-example">1.6.2</a>). This is useful, allowing programmers to use the language as best suits their needs, but can be confusing for people looking for the ‘right’ way of doing things and can cause inefficiencies if you don’t understand the language well.</p>
 <p>R’s notoriety for being able to solve a problem in multiple different ways has grown with the proliferation of community contributed packages. In this book we focus on the <em>best</em> way of solving problems, from an efficiency perspective. Often it is instructive to discover <em>why</em> a certain way of doing things is faster than others. However, if your aim is simply to <em>get stuff done</em>, you only need to know what is likely to be the most efficient way. In this way R’s flexibility can be inefficient: although it is likely easier to find <em>a</em> way of solving any given problem in R than other languages, solving the problem with R may make it harder to find <em>the best</em> way to solve that problem, as there are so many. This book tackles this issue head-on by recommending what we believe are the most efficient approaches. We hope you trust our views, based on years of R using and teaching, but we also hope that you challenge them at times and test them, with benchmarks, if you suspect there’s a better way of doing things (thanks to R’s flexibility and ability to interface with other languages there may well be).</p>
 <p>It is well known that R code can promote <em>algorithmic efficiency</em> compared with low level languages for certain tasks, especially if the code was written by someone who doesn’t fully understand the language. But it is worth highlighting the numerous ways that R <em>encourages</em> and <em>guides</em> efficiency, especially programmer efficiency:</p>
 <ul>
 <li>R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, FORTRAN and other languages behind the scenes.</li>
-<li>R is a functional and object orientated language <span class="citation">(H. Wickham <a href="#ref-Wickham2014" role="doc-biblioref">2014</a><a href="#ref-Wickham2014" role="doc-biblioref">a</a>)</span>. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code.</li>
+<li>R is a functional and object orientated language <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code.</li>
 <li>R uses RAM for memory. This may seem obvious but it’s worth saying: RAM is much faster than any hard disk system. Compared with databases, R is therefore very fast at common data manipulation, processing and modelling operations. RAM is now cheaper than ever, meaning the potential downside of this feature are further away than ever.</li>
 <li>R is supported by excellent Integrated Development Environments (IDEs). The environment in which you program can have a huge impact on <em>programmer efficiency</em> as it can provide supporting help quickly, allow for interactive plotting, and allow your R projects to be tightly integrated with other aspects of your project such as file management, version management and interactive visualisation systems, as discussed in <a href="set-up.html#rstudio">2.5</a>.</li>
 <li>R has a strong user community. This boosts efficiency because if you encounter a problem that has not yet been solved, you can simply ask the community. If it is a new, clearly stated and reproducible question asked on a popular forum such as <a href="http://stackoverflow.com/questions/tagged/r">StackOverflow</a> or an appropriate <a href="https://www.r-project.org/mail.html">R list</a>, you are likely to get a response from an accomplished R programmer within minutes. The obvious benefit of this crowd-sourced support system is that the efficiency benefits of the answer will from that moment be available to everyone.</li>
@@ -476,7 +476,7 @@ Another early port of call should be the CRAN website. The <a href="https://cran
 </div>
 <div id="why-efficiency" class="section level2">
 <h2><span class="header-section-number">1.4</span> Why efficiency?</h2>
-<p>Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: no. In an age of Big Data and stagnating computer clock speeds (see Chapter <a href="hardware.html#hardware">8</a>), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can “solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research” <span class="citation">(Visser et al. <a href="#ref-visser_speeding_2015" role="doc-biblioref">2015</a>)</span>.</p>
+<p>Computers are always getting more powerful. Does this not reduce the need for efficient computing? The answer is simple: no. In an age of Big Data and stagnating computer clock speeds (see Chapter <a href="hardware.html#hardware">8</a>), computational bottlenecks are more likely than ever before to hamper your work. An efficient programmer can “solve more complex tasks, ask more ambitious questions, and include more sophisticated analyses in their research” <span class="citation">(Visser et al. <a href="#ref-visser_speeding_2015">2015</a>)</span>.</p>
 <p>A concrete example illustrates the importance of efficiency in mission critical situations. Robin was working on a tight contract for the UK’s Department for Transport, to build the Propensity to Cycle Tool, an online application which had to be ready for national deployment in less than 4 months. For this work he developed the function, <code>line2route()</code> in the <strong>stplanr</strong> package, to generate routes via the (<a href="http://www.cyclestreets.net/">cyclestreets.net</a>) API.
 Hundreds of thousands of routes were needed but, to his dismay, code slowed to a standstill after only a few thousand routes. This endangered the contract. After eliminating other issues and via code profiling (covered in section <a href="performance.html#performance-profvis">7.2</a>), it was found that the slowdown was due to a bug in <code>line2route()</code>: it suffered from the ‘vector growing problem’, discussed in Section <a href="programming.html#memory-allocation">3.2.1</a>.</p>
 <p>The solution was simple. A <a href="https://github.com/ropensci/stplanr/commit/c834abf7d0020c6fbb33845572d6be4801f31f47">single commit</a> made <code>line2route()</code> more than <em>ten times faster</em> and substantially shorter. This potentially saved the project from failure. The moral of this story is that efficient programming is not merely a desirable skill: it can be <em>essential</em>.
@@ -488,7 +488,7 @@ Hundreds of thousands of routes were needed but, to his dismay, code slowed to a
 <p>The meaning of ‘efficient R code’, as opposed to generic ‘efficient code’, should be clear from for the preceding two sections. However, that does not mean that the skills and concepts covered in this book are not transferable to other languages and non-programming tasks. Likewise working on these <em>cross-transferable</em> skills will improve your R programming (as well as other aspects of your working life). Two of these skills are especially important: touch typing and use of a consistent style.</p>
 <div id="touch-typing" class="section level3">
 <h3><span class="header-section-number">1.5.1</span> Touch typing</h3>
-<p>The other side of the efficiency coin is programmer efficiency. There are many things that will help increase the productivity of yourself and your collaborators, not least following the advice of <span class="citation">Janert (<a href="#ref-janert2010data" role="doc-biblioref">2010</a>)</span> to ‘think more work less’. The evidence suggests that good diet, physical activity, plenty of sleep and a healthy work-life balance can all boost your speed and effectiveness at work <span class="citation">(Jensen <a href="#ref-jensen2011can" role="doc-biblioref">2011</a>; Pereira et al. <a href="#ref-pereira2015impact" role="doc-biblioref">2015</a>; Grant, Wallace, and Spurgeon <a href="#ref-grant2013exploration" role="doc-biblioref">2013</a>)</span>.</p>
+<p>The other side of the efficiency coin is programmer efficiency. There are many things that will help increase the productivity of yourself and your collaborators, not least following the advice of <span class="citation">Janert (<a href="#ref-janert2010data">2010</a>)</span> to ‘think more work less’. The evidence suggests that good diet, physical activity, plenty of sleep and a healthy work-life balance can all boost your speed and effectiveness at work <span class="citation">(Jensen <a href="#ref-jensen2011can">2011</a>; Pereira et al. <a href="#ref-pereira2015impact">2015</a>; Grant, Wallace, and Spurgeon <a href="#ref-grant2013exploration">2013</a>)</span>.</p>
 <p>While we recommend the reader to reflect on this evidence and their own well-being, this is not a self help book. It is about programming. However, there is one non-programming skill that <em>can</em> have a huge impact on productivity: touch typing. This skill can be relatively painless to learn, and can have a huge impact on your ability to write, modify and test R code quickly. Learning to touch type properly will pay off in small increments throughout the rest of your programming life (of course, the benefits are not constrained to R programming).</p>
 <p>The key difference between a touch typist and someone who constantly looks down at the keyboard, or who uses only two or three fingers for typing, is hand placement. Touch typing involves positioning your hands on the keyboard with each finger of both hands touching or hovering over a specific letter (figure <a href="introduction.html#fig:1-1">1.1</a>). This takes time and some discipline to learn. Fortunately there are many resources that will help you get in the habit of touch typing early, including open source software projects <a href="https://sourceforge.net/projects/klavaro/">Klavaro</a> and <a href="https://sourceforge.net/projects/typefaster/">TypeFaster</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:1-1"></span>
@@ -502,10 +502,10 @@ Figure 1.1: The starting position for touch typing, with the fingers over the �
 <h3><span class="header-section-number">1.5.2</span> Consistent style and code conventions</h3>
 <p>Getting into the habit of clear and consistent style when writing anything, be it code or poetry, will have benefits in many other projects, programming or non-programming. As outlined in Section <a href="collaboration.html#coding-style">9.2</a>, style is to some extent a personal preference. However, it is worth noting at the outset the conventions we use, in order to maximise readability. Throughout this book we use a consistent set of conventions to refer to code.</p>
 <ul>
-<li>Package names are in bold, e.g. <strong>dplyr</strong>.</li>
+<li>Package names are in bold, e.g. <strong>dplyr</strong>.</li>
 <li>Functions are in a code font, followed by parentheses, like <code>plot()</code>, or <code>median()</code>.</li>
 <li>Other R objects, such as data or function arguments, are in a code font, without parentheses, like <code>x</code> and <code>name</code>.</li>
-<li>Occasionally we’ll highlight the package of the function, using two colons, e.g. <code>microbenchmark::microbenchmark()</code>.
+<li>Occasionally we’ll highlight the package of the function, using two colons, e.g. <code>microbenchmark::microbenchmark()</code>.
 Note, this notation can be efficient if you only need to use a package’s function once, as it avoids loading the package with <code>library()</code>.</li>
 </ul>
 <p>The concepts of benchmarking and profiling are not R specific. However, they are done in a particular way in R, as outlined in the next section.</p>
@@ -523,14 +523,14 @@ Note, this notation can be efficient if you only need to use a package’s funct
 <div id="benchmarking-example" class="section level3">
 <h3><span class="header-section-number">1.6.2</span> Benchmarking example</h3>
 <p>A good example is testing different methods to look-up a single value in a data frame. Note that each argument in the benchmark below is a term to be evaluated (for multi-line benchmarks, the term to be evaluated can be surrounded by curly brackets, <code>{}</code>).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="introduction.html#cb2-1"></a><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</span>
-<span id="cb2-2"><a href="introduction.html#cb2-2"></a>df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">name =</span> letters[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>])</span>
-<span id="cb2-3"><a href="introduction.html#cb2-3"></a><span class="kw">microbenchmark</span>(df[<span class="dv">3</span>, <span class="dv">2</span>], df[<span class="dv">3</span>, <span class="st">&quot;name&quot;</span>], df<span class="op">$</span>name[<span class="dv">3</span>])</span>
-<span id="cb2-4"><a href="introduction.html#cb2-4"></a><span class="co"># Unit: microseconds</span></span>
-<span id="cb2-5"><a href="introduction.html#cb2-5"></a><span class="co">#          expr     min    lq  mean median    uq   max neval cld</span></span>
-<span id="cb2-6"><a href="introduction.html#cb2-6"></a><span class="co">#      df[3, 2]   17.99 18.96 20.16  19.38 19.77 35.14   100   b</span></span>
-<span id="cb2-7"><a href="introduction.html#cb2-7"></a><span class="co"># df[3, &quot;name&quot;]   17.97 19.13 21.45  19.64 20.15 74.00   100   b</span></span>
-<span id="cb2-8"><a href="introduction.html#cb2-8"></a><span class="co">#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a </span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">v =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">name =</span> letters[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">microbenchmark</span>(df[<span class="dv">3</span>, <span class="dv">2</span>], df[<span class="dv">3</span>, <span class="st">&quot;name&quot;</span>], df<span class="op">$</span>name[<span class="dv">3</span>])</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># Unit: microseconds</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#          expr     min    lq  mean median    uq   max neval cld</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#      df[3, 2]   17.99 18.96 20.16  19.38 19.77 35.14   100   b</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># df[3, &quot;name&quot;]   17.97 19.13 21.45  19.64 20.15 74.00   100   b</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a </span></a></code></pre></div>
 <p>The results summarise how long each query took: the minimum (<code>min</code>), lower and upper quartiles (<code>lq</code> and <code>uq</code> respectively) and the mean, median and maximum, for each of the number of evaluations (<code>neval</code>, with the default value of 100 used in this case). <code>cld</code> reports the relative rank of each row in the form of ‘compact letter display’: in this case <code>df$name[3]</code> performs best, with a rank of <code>a</code> and a mean time around 25% lower than the other two functions.</p>
 <p>When using <code>microbenchmark()</code>, you should pay careful attention to the units. In the above example, each function call takes approximately 20 <em>microseconds</em>, implying around 50,000 function calls could be done in a second. When comparing quick functions, the standard units are:</p>
 <ul>
@@ -539,11 +539,11 @@ Note, this notation can be efficient if you only need to use a package’s funct
 <li>nanoseconds (ns), one billion calls takes a second.</li>
 </ul>
 <p>We can set the units we want to use with the <code>unit</code> argument, e.g. the results are reported
-in seconds if we set <code>unit = "s"</code>.</p>
+in seconds if we set <code>unit = &quot;s&quot;</code>.</p>
 <p>When thinking about computational efficiency, there are (at least) two measures:</p>
 <ul>
-<li>Relative time: <code>df$name[3]</code> is 25% faster than <code>df[3, "name"]</code>;</li>
-<li>Absolute time: <code>df$name[3]</code> is 5 microseconds faster than <code>df[3, "name"]</code>.</li>
+<li>Relative time: <code>df$name[3]</code> is 25% faster than <code>df[3, &quot;name&quot;]</code>;</li>
+<li>Absolute time: <code>df$name[3]</code> is 5 microseconds faster than <code>df[3, &quot;name&quot;]</code>.</li>
 </ul>
 <p>Both measures are useful, but its important not to forget the underlying
 time scale: it makes little sense to optimise a function that takes <em>microseconds</em> to complete if there are operations that take <em>seconds</em> to complete in your code.</p>
@@ -552,22 +552,22 @@ time scale: it makes little sense to optimise a function that takes <em>microsec
 <h3><span class="header-section-number">1.6.3</span> Profiling</h3>
 <p>Benchmarking generally tests the execution time of one function against another. Profiling, on the other hand, is about testing large chunks of code.</p>
 <p>It is difficult to over-emphasise the importance of profiling for efficient R programming. Without a profile of what took longest, you will have only a vague idea of why your code is taking so long to run. The example below (which generates figure <a href="introduction.html#fig:1-3">1.3</a> an image of ice-sheet retreat from 1985 to 2015) shows how profiling can be used to identify bottlenecks in your R scripts:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="introduction.html#cb3-1"></a><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</span>
-<span id="cb3-2"><a href="introduction.html#cb3-2"></a><span class="kw">profvis</span>(<span class="dt">expr =</span> {</span>
-<span id="cb3-3"><a href="introduction.html#cb3-3"></a>  </span>
-<span id="cb3-4"><a href="introduction.html#cb3-4"></a>  <span class="co"># Stage 1: load packages</span></span>
-<span id="cb3-5"><a href="introduction.html#cb3-5"></a>  <span class="co"># library(&quot;rnoaa&quot;) # not necessary as data pre-saved</span></span>
-<span id="cb3-6"><a href="introduction.html#cb3-6"></a>  <span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb3-7"><a href="introduction.html#cb3-7"></a>  </span>
-<span id="cb3-8"><a href="introduction.html#cb3-8"></a>  <span class="co"># Stage 2: load and process data</span></span>
-<span id="cb3-9"><a href="introduction.html#cb3-9"></a>  out =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;extdata/out-ice.Rds&quot;</span>)</span>
-<span id="cb3-10"><a href="introduction.html#cb3-10"></a>  df =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">rbind_all</span>(out, <span class="dt">id =</span> <span class="st">&quot;Year&quot;</span>)</span>
-<span id="cb3-11"><a href="introduction.html#cb3-11"></a>  </span>
-<span id="cb3-12"><a href="introduction.html#cb3-12"></a>  <span class="co"># Stage 3: visualise output</span></span>
-<span id="cb3-13"><a href="introduction.html#cb3-13"></a>  <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(long, lat, <span class="dt">group =</span> <span class="kw">paste</span>(group, Year))) <span class="op">+</span></span>
-<span id="cb3-14"><a href="introduction.html#cb3-14"></a><span class="st">    </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Year)) </span>
-<span id="cb3-15"><a href="introduction.html#cb3-15"></a>  <span class="kw">ggsave</span>(<span class="st">&quot;figures/icesheet-test.png&quot;</span>)</span>
-<span id="cb3-16"><a href="introduction.html#cb3-16"></a>}, <span class="dt">interval =</span> <span class="fl">0.01</span>, <span class="dt">prof_output =</span> <span class="st">&quot;ice-prof&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">profvis</span>(<span class="dt">expr =</span> {</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  </a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="co"># Stage 1: load packages</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="co"># library(&quot;rnoaa&quot;) # not necessary as data pre-saved</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">  <span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">  </a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">  <span class="co"># Stage 2: load and process data</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">  out =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;extdata/out-ice.Rds&quot;</span>)</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">  df =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">rbind_all</span>(out, <span class="dt">id =</span> <span class="st">&quot;Year&quot;</span>)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">  </a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">  <span class="co"># Stage 3: visualise output</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">  <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(long, lat, <span class="dt">group =</span> <span class="kw">paste</span>(group, Year))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="st">    </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Year)) </a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">  <span class="kw">ggsave</span>(<span class="st">&quot;figures/icesheet-test.png&quot;</span>)</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">}, <span class="dt">interval =</span> <span class="fl">0.01</span>, <span class="dt">prof_output =</span> <span class="st">&quot;ice-prof&quot;</span>)</a></code></pre></div>
 <p>The result of this profiling exercise are displayed in figure <a href="introduction.html#fig:1-2">1.2</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:1-2"></span>
 <img src="figures/f1_2_profvis-ice.png" alt="Profiling results of loading and plotting NASA data on icesheet retreat." width="100%" />
@@ -581,48 +581,48 @@ Figure 1.2: Profiling results of loading and plotting NASA data on icesheet retr
 Figure 1.3: Visualisation of North Pole icesheet decline, generated using the code profiled using the profvis package.
 </p>
 </div>
-<p>For more information about profiling and benchmarking, please refer to the <a href="http://adv-r.had.co.nz/Profiling.html">Optimising code</a> chapter in <span class="citation">H. Wickham (<a href="#ref-Wickham2014" role="doc-biblioref">2014</a><a href="#ref-Wickham2014" role="doc-biblioref">a</a>)</span>, and Section <a href="performance.html#performance-profvis">7.2</a> in this book. We recommend reading these additional resources while performing benchmarks and profiles on your own code, for example, based on the exercises below.</p>
+<p>For more information about profiling and benchmarking, please refer to the <a href="http://adv-r.had.co.nz/Profiling.html">Optimising code</a> chapter in <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>, and Section <a href="performance.html#performance-profvis">7.2</a> in this book. We recommend reading these additional resources while performing benchmarks and profiles on your own code, for example, based on the exercises below.</p>
 <div id="exercises" class="section level4">
 <h4><span class="header-section-number">1.6.3.1</span> Exercises</h4>
 <p>Consider the following benchmark to evaluate different functions for calculating the cumulative sum of the whole numbers from 1 to 100:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="introduction.html#cb4-1"></a>x =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># initiate vector to cumulatively sum</span></span>
-<span id="cb4-2"><a href="introduction.html#cb4-2"></a></span>
-<span id="cb4-3"><a href="introduction.html#cb4-3"></a><span class="co"># Method 1: with a for loop (10 lines)</span></span>
-<span id="cb4-4"><a href="introduction.html#cb4-4"></a>cs_for =<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb4-5"><a href="introduction.html#cb4-5"></a>  <span class="cf">for</span>(i <span class="cf">in</span> x){</span>
-<span id="cb4-6"><a href="introduction.html#cb4-6"></a>    <span class="cf">if</span>(i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){</span>
-<span id="cb4-7"><a href="introduction.html#cb4-7"></a>      xc =<span class="st"> </span>x[i]</span>
-<span id="cb4-8"><a href="introduction.html#cb4-8"></a>    } <span class="cf">else</span> {</span>
-<span id="cb4-9"><a href="introduction.html#cb4-9"></a>      xc =<span class="st"> </span><span class="kw">c</span>(xc, <span class="kw">sum</span>(x[<span class="dv">1</span><span class="op">:</span>i]))</span>
-<span id="cb4-10"><a href="introduction.html#cb4-10"></a>    }</span>
-<span id="cb4-11"><a href="introduction.html#cb4-11"></a>  }</span>
-<span id="cb4-12"><a href="introduction.html#cb4-12"></a>  xc</span>
-<span id="cb4-13"><a href="introduction.html#cb4-13"></a>}</span>
-<span id="cb4-14"><a href="introduction.html#cb4-14"></a></span>
-<span id="cb4-15"><a href="introduction.html#cb4-15"></a><span class="co"># Method 2: with apply (3 lines)</span></span>
-<span id="cb4-16"><a href="introduction.html#cb4-16"></a>cs_apply =<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb4-17"><a href="introduction.html#cb4-17"></a>  <span class="kw">sapply</span>(x, <span class="cf">function</span>(x) <span class="kw">sum</span>(<span class="dv">1</span><span class="op">:</span>x))</span>
-<span id="cb4-18"><a href="introduction.html#cb4-18"></a>}</span>
-<span id="cb4-19"><a href="introduction.html#cb4-19"></a></span>
-<span id="cb4-20"><a href="introduction.html#cb4-20"></a><span class="co"># Method 3: cumsum (1 line, not shown)</span></span>
-<span id="cb4-21"><a href="introduction.html#cb4-21"></a><span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))</span>
-<span id="cb4-22"><a href="introduction.html#cb4-22"></a><span class="co">#&gt; Unit: nanoseconds</span></span>
-<span id="cb4-23"><a href="introduction.html#cb4-23"></a><span class="co">#&gt;         expr   min    lq   mean median    uq     max neval cld</span></span>
-<span id="cb4-24"><a href="introduction.html#cb4-24"></a><span class="co">#&gt;    cs_for(x) 90829 92042 129881  92817 94244 3722815   100   b</span></span>
-<span id="cb4-25"><a href="introduction.html#cb4-25"></a><span class="co">#&gt;  cs_apply(x) 66879 68497  85818  69170 70122 1656156   100   b</span></span>
-<span id="cb4-26"><a href="introduction.html#cb4-26"></a><span class="co">#&gt;    cumsum(x)   552   580    704    690   734    2589   100  a</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">x =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># initiate vector to cumulatively sum</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># Method 1: with a for loop (10 lines)</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">cs_for =<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="cf">for</span>(i <span class="cf">in</span> x){</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">    <span class="cf">if</span>(i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">      xc =<span class="st"> </span>x[i]</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">      xc =<span class="st"> </span><span class="kw">c</span>(xc, <span class="kw">sum</span>(x[<span class="dv">1</span><span class="op">:</span>i]))</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">    }</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">  }</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">  xc</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">}</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co"># Method 2: with apply (3 lines)</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">cs_apply =<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">  <span class="kw">sapply</span>(x, <span class="cf">function</span>(x) <span class="kw">sum</span>(<span class="dv">1</span><span class="op">:</span>x))</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">}</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co"># Method 3: cumsum (1 line, not shown)</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; Unit: nanoseconds</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt;         expr    min     lq   mean median     uq     max neval</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt;    cs_for(x) 116102 123832 190397 128550 137642 5882991   100</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt;  cs_apply(x)  83300  89758 128085  98333 107812 2728639   100</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt;    cumsum(x)    662    828   1253    990   1254   18950   100</span></a></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Which method is fastest and how many times faster is it?</p></li>
 <li><p>Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument <code>times = 1</code> so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the <em>relative</em> time difference increase or decrease? By how much?</p></li>
 <li><p>Test how long the different methods for subsetting the data frame <code>df</code>, presented in Section <a href="introduction.html#benchmarking-example">1.6.2</a>, take on your computer. Is it faster or slower at subsetting than the computer on which this book was compiled?</p></li>
 <li><p>Use <code>system.time()</code> and a <code>for()</code> loop to test how long it takes to perform the subsetting operation 50,000 times. Before testing this, do you think it will be more or less than 1 second, for each subsetting method? Hint: the test for the first method is shown below:</p></li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="introduction.html#cb5-1"></a><span class="co"># Test how long it takes to subset the data frame 50,000 times:</span></span>
-<span id="cb5-2"><a href="introduction.html#cb5-2"></a><span class="kw">system.time</span>(</span>
-<span id="cb5-3"><a href="introduction.html#cb5-3"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50000</span>){</span>
-<span id="cb5-4"><a href="introduction.html#cb5-4"></a>    df[<span class="dv">3</span>, <span class="dv">2</span>]</span>
-<span id="cb5-5"><a href="introduction.html#cb5-5"></a>  }</span>
-<span id="cb5-6"><a href="introduction.html#cb5-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Test how long it takes to subset the data frame 50,000 times:</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50000</span>){</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    df[<span class="dv">3</span>, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  }</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">)</a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Bonus exercise: try profiling a section of code you have written using <strong>profvis</strong>. Where are the bottlenecks? Were they where you expected?</li>
 </ol>
@@ -634,16 +634,16 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <div id="r-package" class="section level3">
 <h3><span class="header-section-number">1.7.1</span> R package</h3>
 <p>This book has an associated R package that contains data sets and functions referenced in the book. The package is hosted on <a href="https://github.com/csgillespie/efficient">github</a> and can be installed using the <strong>devtools</strong> package:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="introduction.html#cb6-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The package also contains solutions (as vignettes) to the exercises found in this book. They can be browsed with the following command:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1"></a><span class="kw">browseVignettes</span>(<span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">browseVignettes</span>(<span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
 <p>The following command will install all packages used to generate this book:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="introduction.html#cb8-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficientR&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficientR&quot;</span>)</a></code></pre></div>
 </div>
 <div id="online-version" class="section level3">
 <h3><span class="header-section-number">1.7.2</span> Online version</h3>
 <p>We are grateful to O’Reilly Press for allowing us to develop this book <a href="https://csgillespie.github.io/efficientR/">online</a>. The online version constitutes a substantial additional resource to supplement this book, and will continue to evolve in between reprints of the physical book. The book’s code also represents a substantial learning opportunity in itself as it was written using R Markdown and the <strong>bookdown</strong> package, allowing us to run the R code each time we compile the book to ensure that it works, and allowing others to contribute to its future longevity.
-To edit this chapter, for example, simply navigate to <a href="https://github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd">github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd</a> while logged into a <a href="https://help.github.com/articles/signing-up-for-a-new-github-account/">GitHub account</a>. The full source of the book is available at <a href="https://github.com/csgillespie/efficientR">https://github.com/csgillespie/efficientR</a> where we welcome comments/questions on the <a href="https://github.com/csgillespie/efficientR/issues">Issue Tracker</a> and Pull Requests.</p>
+To edit this chapter, for example, simply navigate to <a href="https://github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd">github.com/csgillespie/efficientR/edit/master/01-introduction.Rmd</a> while logged into a <a href="https://help.github.com/articles/signing-up-for-a-new-github-account/">GitHub account</a>. The full source of the book is available at <a href="https://github.com/csgillespie/efficientR" class="uri">https://github.com/csgillespie/efficientR</a> where we welcome comments/questions on the <a href="https://github.com/csgillespie/efficientR/issues">Issue Tracker</a> and Pull Requests.</p>
 
 </div>
 </div>
@@ -651,22 +651,22 @@ To edit this chapter, for example, simply navigate to <a href="https://github.co
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-grant2013exploration">
-<p>Grant, Christine A, Louise M Wallace, and Peter C Spurgeon. 2013. “An Exploration of the Psychological Factors Affecting Remote E-Worker’s Job Effectiveness, Well-Being and Work-Life Balance.” <em>Employee Relations</em> 35 (5): 527–46.</p>
+<p>Grant, Christine A, Louise M Wallace, and Peter C Spurgeon. 2013. “An Exploration of the Psychological Factors Affecting Remote E-Worker’s Job Effectiveness, Well-Being and Work-Life Balance.” <em>Employee Relations</em> 35 (5). Emerald Group Publishing Limited: 527–46.</p>
 </div>
 <div id="ref-janert2010data">
-<p>Janert, Philipp K. 2010. <em>Data Analysis with Open Source Tools</em>. "O’Reilly Media".</p>
+<p>Janert, Philipp K. 2010. <em>Data Analysis with Open Source Tools</em>. &quot;O’Reilly Media&quot;.</p>
 </div>
 <div id="ref-jensen2011can">
-<p>Jensen, Jørgen Dejgård. 2011. “Can Worksite Nutritional Interventions Improve Productivity and Firm Profitability? A Literature Review.” <em>Perspectives in Public Health</em> 131 (4): 184–92.</p>
+<p>Jensen, Jørgen Dejgård. 2011. “Can Worksite Nutritional Interventions Improve Productivity and Firm Profitability? A Literature Review.” <em>Perspectives in Public Health</em> 131 (4). SAGE Publications: 184–92.</p>
 </div>
 <div id="ref-lovelace1842translator">
 <p>Lovelace, Ada Countess. 1842. “Translators Notes to an Article on Babbages Analytical Engine.” <em>Scientific Memoirs</em> 3: 691–731.</p>
 </div>
 <div id="ref-pereira2015impact">
-<p>Pereira, Michelle Jessica, Brooke Kaye Coombes, Tracy Anne Comans, and Venerina Johnston. 2015. “The Impact of Onsite Workplace Health-Enhancing Physical Activity Interventions on Worker Productivity: A Systematic Review.” <em>Occupational and Environmental Medicine</em> 72 (6): 401–12.</p>
+<p>Pereira, Michelle Jessica, Brooke Kaye Coombes, Tracy Anne Comans, and Venerina Johnston. 2015. “The Impact of Onsite Workplace Health-Enhancing Physical Activity Interventions on Worker Productivity: A Systematic Review.” <em>Occupational and Environmental Medicine</em> 72 (6). BMJ Publishing Group Ltd: 401–12.</p>
 </div>
 <div id="ref-visser_speeding_2015">
-<p>Visser, Marco D., Sean M. McMahon, Cory Merow, Philip M. Dixon, Sydne Record, and Eelke Jongejans. 2015. “Speeding up Ecological and Evolutionary Computations in R; Essentials of High Performance Computing for Biologists.” Edited by Francis Ouellette. <em>PLOS Computational Biology</em> 11 (3): e1004140. <a href="https://doi.org/10.1371/journal.pcbi.1004140">https://doi.org/10.1371/journal.pcbi.1004140</a>.</p>
+<p>Visser, Marco D., Sean M. McMahon, Cory Merow, Philip M. Dixon, Sydne Record, and Eelke Jongejans. 2015. “Speeding up Ecological and Evolutionary Computations in R; Essentials of High Performance Computing for Biologists.” Edited by Francis Ouellette. <em>PLOS Computational Biology</em> 11 (3): e1004140. <a href="https://doi.org/10.1371/journal.pcbi.1004140" class="uri">https://doi.org/10.1371/journal.pcbi.1004140</a>.</p>
 </div>
 <div id="ref-Wickham2014">
 <p>Wickham, Hadley. 2014a. <em>Advanced R</em>. CRC Press.</p>

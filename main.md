@@ -105,7 +105,7 @@ If you're an R novice and fit into the final category, we recommend that this 'a
 
 <div class="rmdtip">
 <p>There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://cran.r-project.org/doc/contrib/Horton+Pruim+Kaplan_MOSAIC-StudentGuide.pdf">Student’s Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.</p>
-<p>R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = "dplyr", "dplyr")</code> to see the introductory vignette for the <strong>dplyr</strong> package.</p>
+<p>R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = &quot;dplyr&quot;, &quot;dplyr&quot;)</code> to see the introductory vignette for the <strong>dplyr</strong> package.</p>
 <p>Another early port of call should be the CRAN website. The <a href="https://cran.r-project.org/other-docs.html">Contributed Documentation</a> page contains a list of contributed resources, mainly tutorials, on subjects ranging from <a href="https://github.com/Robinlovelace/Creating-maps-in-R">map making</a> to <a href="https://cran.r-project.org/doc/contrib/Farnsworth-EconometricsInR.pdf">Econometrics</a> The new <a href="https://bookdown.org/">bookdown website</a> contains a list of complete (or near complete) books, which cover domains including <a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> and <a href="https://bookdown.org/yihui/bookdown/">Authoring Books with R Markdown</a>. We recommend keeping your eye on the ‘R-o-sphere’, e.g. via the <a href="http://r-bloggers.com/">R-Bloggers</a> website, popular Twitter feeds and <a href="https://www.r-project.org/mail.html">CRAN-affiliated email lists</a> for up-to-date materials that can be used in conjunction with this book.</p>
 </div>
 
@@ -299,10 +299,10 @@ cs_apply = function(x){
 # Method 3: cumsum (1 line, not shown)
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
-#>         expr   min    lq   mean median    uq     max neval cld
-#>    cs_for(x) 90829 92042 129881  92817 94244 3722815   100   b
-#>  cs_apply(x) 66879 68497  85818  69170 70122 1656156   100   b
-#>    cumsum(x)   552   580    704    690   734    2589   100  a
+#>         expr    min     lq   mean median     uq     max neval
+#>    cs_for(x) 116102 123832 190397 128550 137642 5882991   100
+#>  cs_apply(x)  83300  89758 128085  98333 107812 2728639   100
+#>    cumsum(x)    662    828   1253    990   1254   18950   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -413,7 +413,7 @@ Sys.info()
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
 
 <div class="rmdtip">
-<p>The <strong>assertive.reflection</strong> package can be used to report additional information about your computer’s operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.</p>
+<p>The <strong>assertive.reflection</strong> package can be used to report additional information about your computer’s operating system and R set-up with functions for asserting operating system and other system characteristics. The <code>assert_*()</code> functions work by testing the truth of the statement and erroring if the statement is untrue. On a Linux system <code>assert_is_linux()</code> will run silently, whereas <code>assert_is_windows()</code> will cause an error. The package can also test for the IDE you are using (e.g. <code>assert_is_rstudio()</code>), the capabilities of R (<code>assert_r_has_libcurl_capability()</code> etc.), and what OS tools are available (e.g. <code>assert_r_can_compile_code()</code>). These functions can be useful for running code that is designed only to run on one type of set-up.</p>
 </div>
 
 ### Operating system and resource monitoring
@@ -500,7 +500,7 @@ sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
 
 <div class="rmdnote">
-<p><code>apt-cache search "^r-.*" | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-\*</code>.</p>
+<p><code>apt-cache search &quot;^r-.*&quot; | sort</code> will display all R packages that can be installed from <code>apt</code> in Debian-based systems. In Fedora-based systems, the equivalent command is <code>yum list R-\*</code>.</p>
 </div>
 
 
@@ -684,7 +684,7 @@ file.edit(".Rprofile") # edit project specific .Rprofile
 ```
 
 <div class="rmdwarning">
-<p>File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as <code>C:\\DATA\\data.csv</code>, as provided by Windows, this will generate the error: <code>Error: unexpected input in "C:\\"</code>. To overcome this issue R provides two functions, <code>file.path()</code> and <code>normalizePath()</code>. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: <code>file.path("C:", "DATA", "data.csv")</code>. The latter takes any input string for a file name and outputs a text string that is standard (canonical) for the operating system. <code>normalizePath("C:/DATA/data.csv")</code>, for example, outputs <code>C:\\DATA\\data.csv</code> on a Windows machine but <code>C:/DATA/data.csv</code> on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.</p>
+<p>File paths provided by Windows operating systems will not always work in R. Specifically, if you use a path that contains single backslashes, such as <code>C:\\DATA\\data.csv</code>, as provided by Windows, this will generate the error: <code>Error: unexpected input in &quot;C:\\&quot;</code>. To overcome this issue R provides two functions, <code>file.path()</code> and <code>normalizePath()</code>. The former can be used to specify file locations without having to use symbols to represent relative file paths, as follows: <code>file.path(&quot;C:&quot;, &quot;DATA&quot;, &quot;data.csv&quot;)</code>. The latter takes any input string for a file name and outputs a text string that is standard (canonical) for the operating system. <code>normalizePath(&quot;C:/DATA/data.csv&quot;)</code>, for example, outputs <code>C:\\DATA\\data.csv</code> on a Windows machine but <code>C:/DATA/data.csv</code> on Unix-based platforms. Note that only the latter would work on both platforms so standard Unix file path notation is safe for all operating systems.</p>
 </div>
 
 Editing the `.Renviron` file in the same locations will have the same effect.
@@ -800,12 +800,11 @@ The **fortunes** package contains a number of memorable quotes that the communit
 
 ```r
 fortunes::fortune(50)
-#> Warning in seq.default(along = rownames(fortunes.data)): partial argument match of
-#> 'along' to 'along.with'
 #> 
-#> To paraphrase provocatively, 'machine learning is statistics minus any checking of
-#> models and assumptions'.
-#>    -- Brian D. Ripley (about the difference between machine learning and statistics)
+#> To paraphrase provocatively, 'machine learning is statistics minus any checking
+#> of models and assumptions'.
+#>    -- Brian D. Ripley (about the difference between machine learning and
+#>       statistics)
 #>       useR! 2004, Vienna (May 2004)
 ```
 
@@ -932,7 +931,7 @@ The location of this directory can be referred back to subsequently as follows:
 
 ```r
 Sys.getenv("R_LIBS_USER")
-#> [1] "/data/ncsg3/Rpackages/"
+#> [1] "/home/travis/R/Library"
 ```
 
 All currently stored environment variables can be seen by calling `Sys.getenv()` with no arguments. Note that many environment variables are already pre-set and do not need to be specified in `.Renviron`. `HOME`, for example, which can be seen with `Sys.getenv("HOME")`, is taken from the operating system's list of environment variables. A list of the most important environment variables that can affect R's behaviour is documented in the little known help page `help("environment variables")`.
@@ -1531,7 +1530,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   1.948   0.008   1.956
+#>   2.255   0.004   2.259
 ```
 
 In contrast a more R-centric approach would be
@@ -1549,14 +1548,6 @@ The `monte_carlo_vec()` function contains (at least) four aspects of vectorisati
   * Using `sum()` is quicker than an equivalent for loop.
 
 The function `monte_carlo_vec()` is around $30$ times faster than `monte_carlo()`.
-
-```
-#> Warning in plot.default(0, type = "n", xlim = c(0, 1), ylim = c(0, 1), axes = FALSE, :
-#> partial argument match of 'frame' to 'frame.plot'
-#> Warning in seq.default(xmin, xmax, length = length): partial argument match of 'length'
-#> to 'length.out'
-```
-
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
 <p class="caption">(\#fig:3-1)Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.</p>
@@ -1719,7 +1710,7 @@ If we sort `m` in the usual way, `sort(m)`, we perform standard alpha-numeric or
 fac_m = factor(m, levels = month.name)
 sort(fac_m)
 #> [1] January  March    December
-#> 12 Levels: January February March April May June July August September ... December
+#> 12 Levels: January February March April May June July August ... December
 ```
 
 #### Exercise {-}
@@ -1824,8 +1815,6 @@ We can use the `apply()` function to investigate voting patterns. The function `
 ```r
 popular = apply(ratings, 1, nnet::which.is.max)
 plot(table(popular))
-#> Warning in plot.table(tab, xlab = "Movie rating", ylab = "Proportion of votes", :
-#> partial argument match of 'frame' to 'frame.plot'
 ```
 
 <div class="figure" style="text-align: center">
@@ -1983,7 +1972,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x55699008d750>
+#> <bytecode: 0x311c238>
 #> <environment: namespace:base>
 ```
 
@@ -2034,12 +2023,6 @@ microbenchmark(times = 10, unit = "ms", # milliseconds
 ```
 
 The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (figure \@ref(fig:3-4)).
-
-
-```
-#> Warning in plot.default(0, type = "n", ylim = c(0, 200), xlim = c(10^2, : partial
-#> argument match of 'frame' to 'frame.plot'
-```
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
@@ -2178,12 +2161,6 @@ The up-to-date visualisation of this plan can be a powerful reminder to yourself
 Setting start dates and deadlines for each task will help prioritise the work and ensure you are on track.
 Breaking a large project into smaller chunks is highly recommended, making huge, complex tasks more achievable and modular [@PMBoK2000].
 'Chunking' the work will also make collaboration easier, as we shall see in Chapter 5.
-
-
-```
-#> Warning in plot.default(0.1, type = "n", ylim = c(0, 3), xlim = c(0, 4), : partial
-#> argument match of 'frame' to 'frame.plot'
-```
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/4-1-1.png" alt="Schematic illustrations of key project phases and levels of activity over time, based on @PMBoK2000." width="70%" />
@@ -2550,7 +2527,7 @@ df_co2_readr = data.table::fread("extdata/co2.csv")
 ```
 
 <div class="rmdnote">
-<p>Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv()</code> and <code>read.delim()</code> in fact are <em>wrappers</em> around <code>read.table()</code>. This can be seen in the source code of <code>read.csv()</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = ",")</code>.</p>
+<p>Note that a function ‘derived from’ another in this context means that it calls another function. The functions such as <code>read.csv()</code> and <code>read.delim()</code> in fact are <em>wrappers</em> around <code>read.table()</code>. This can be seen in the source code of <code>read.csv()</code>, for example, which shows that the function is roughly the equivalent of <code>read.table(file, header = TRUE, sep = &quot;,&quot;)</code>.</p>
 </div>
 
 Although this section is focussed on reading text files, it demonstrates the wider principle that the speed and flexibility advantages of additional read functions can be offset by the disadvantage of additional package dependencies (in terms of complexity and maintaining the code) for small datasets. The real benefits kick in on large datasets. Of course, there are some data types that *require* a certain package to load in R: the **readstata13** package, for example, was developed solely to read in `.dta` files generated by versions of Stata 13 and above.
@@ -2608,13 +2585,13 @@ voyages_readr = readr::read_tsv(fname)
 #> )
 #> See spec(...) for full column specifications.
 #> Warning: 77 parsing failures.
-#>  row   col           expected actual                                                      file
-#> 1023 hired 1/0/T/F/TRUE/FALSE 1664   '/data/ncsg3/Rpackages/efficient/extdata/voc_voyages.tsv'
-#> 1025 hired 1/0/T/F/TRUE/FALSE 1664   '/data/ncsg3/Rpackages/efficient/extdata/voc_voyages.tsv'
-#> 1030 hired 1/0/T/F/TRUE/FALSE 1664   '/data/ncsg3/Rpackages/efficient/extdata/voc_voyages.tsv'
-#> 1034 hired 1/0/T/F/TRUE/FALSE 1664/5 '/data/ncsg3/Rpackages/efficient/extdata/voc_voyages.tsv'
-#> 1035 hired 1/0/T/F/TRUE/FALSE 1665   '/data/ncsg3/Rpackages/efficient/extdata/voc_voyages.tsv'
-#> .... ..... .................. ...... .........................................................
+#>  row   col           expected actual                                                       file
+#> 1023 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1025 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1030 hired 1/0/T/F/TRUE/FALSE 1664   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1034 hired 1/0/T/F/TRUE/FALSE 1664/5 '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> 1035 hired 1/0/T/F/TRUE/FALSE 1665   '/home/travis/R/Library/efficient/extdata/voc_voyages.tsv'
+#> .... ..... .................. ...... ..........................................................
 #> See problems(...) for more details.
 ```
 
@@ -2623,8 +2600,7 @@ a warning is raised regarding row 2841 in the `built` variable. This is because 
 
 ```r
 voyages_base$built[2841] # a factor.
-#> [1] 1721-01-01
-#> 182 Levels:  1 784 1,86 1135 1594 1600 1612 1613 1614 1615 1619 1620 1621 1626 ... taken 1672
+#> [1] "1721-01-01"
 voyages_readr$built[2841] # an NA: text cannot be converted to numeric
 #> [1] "1721-01-01"
 ```
@@ -2645,9 +2621,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval cld
-#>     with_select  8.28  8.37  8.52   8.44  8.74  8.78     5  a 
-#>  without_select 12.47 12.57 12.86  12.73 12.79 13.74     5   b
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.6 10.8 10.9   10.8 11.2 11.2     5
+#>  without_select 18.5 18.9 19.1   19.0 19.3 19.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -2657,7 +2633,7 @@ Table: (\#tab:colclasses)Comparison of base, **readr** and **data.table** readin
 
 number    boatname    built       departure_date   Function   
 --------  ----------  ----------  ---------------  -----------
-integer   factor      factor      factor           base       
+integer   character   character   character        base       
 numeric   character   character   Date             readr      
 integer   character   character   character        data.table 
 
@@ -2817,8 +2793,9 @@ Raw data (i.e. data which has not been converted into R's native `.Rds` format) 
 
 ```r
 list.files(system.file("extdata", package = "readr"))
-#> [1] "challenge.csv"     "epa78.txt"         "example.log"       "fwf-sample.txt"   
-#> [5] "massey-rating.txt" "mtcars.csv"        "mtcars.csv.bz2"    "mtcars.csv.zip"
+#> [1] "challenge.csv"     "epa78.txt"         "example.log"      
+#> [4] "fwf-sample.txt"    "massey-rating.txt" "mtcars.csv"       
+#> [7] "mtcars.csv.bz2"    "mtcars.csv.zip"
 ```
 
 Further, to 'look around' to see what files are stored in a particular package, one could type the following, taking advantage of RStudio's intellisense file completion capabilities (using copy and paste to enter the file path):
@@ -3123,13 +3100,14 @@ There is much else to say on the topic but rather than repeat what has been said
 ```r
 head(pew, 10)
 #> # A tibble: 10 x 10
-#>   religion `<$10k` `$10--20k` `$20--30k` `$30--40k` `$40--50k` `$50--75k` `$75--100k`
-#>   <chr>      <int>      <int>      <int>      <int>      <int>      <int>       <int>
-#> 1 Agnostic      27         34         60         81         76        137         122
-#> 2 Atheist       12         27         37         52         35         70          73
-#> 3 Buddhist      27         21         30         34         33         58          62
-#> 4 Catholic     418        617        732        670        638       1116         949
-#> # … with 6 more rows, and 2 more variables: `$100--150k` <int>, `>150k` <int>
+#>   religion `<$10k` `$10--20k` `$20--30k` `$30--40k` `$40--50k` `$50--75k`
+#>   <chr>      <int>      <int>      <int>      <int>      <int>      <int>
+#> 1 Agnostic      27         34         60         81         76        137
+#> 2 Atheist       12         27         37         52         35         70
+#> 3 Buddhist      27         21         30         34         33         58
+#> 4 Catholic     418        617        732        670        638       1116
+#> # … with 6 more rows, and 3 more variables: `$75--100k` <int>,
+#> #   `$100--150k` <int>, `>150k` <int>
 data(lnd_geo_df)
 head(lnd_geo_df, 10)
 #>                    name_date population      x      y
@@ -3425,8 +3403,8 @@ Data aggregation involves creating summaries of data based on a grouping variabl
 # data available online, from github.com/csgillespie/efficient_pkg
 data(ghg_ems, package = "efficient")
 names(ghg_ems)
-#> [1] "Country"        "Year"           "Electricity"    "Manufacturing"  "Transportation"
-#> [6] "Other"          "Fugitive"
+#> [1] "Country"        "Year"           "Electricity"    "Manufacturing" 
+#> [5] "Transportation" "Other"          "Fugitive"
 nrow(ghg_ems)
 #> [1] 7896
 length(unique(ghg_ems$Country))
@@ -3502,64 +3480,122 @@ summarise(countries,
   # range
   dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
   )
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
-#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -Inf
-#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
+#> Warning in max(gini, na.rm = TRUE): no non-missing arguments to max; returning -
+#> Inf
+#> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
+#> Inf
 #> # A tibble: 176 x 7
 #>   Country       obs med_t10   sdev   n30  sdn30     dif
 #>   <chr>       <int>   <dbl>  <dbl> <int>  <dbl>   <dbl>
@@ -3728,7 +3764,7 @@ df_head = dbFetch(rs, n = 6) # extract first 6 row
 The above code chunk shows how the function `dbConnect` connects to an external database, in this case a SQLite database. The `username` and `password` arguments are used to establish the connection. Next we query which tables are available with `dbListTables`, query the database (without yet extracting the results to R) with `dbSendQuery` and, finally, load the results into R with `dbFetch`.
 
 <div class="rmdtip">
-<p>Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in <code>.Renviron</code>, described in Chapter 2. Assuming you had saved your password as the environment variable <code>PSWRD</code>, you could enter <code>pwd = Sys.getenv("PSWRD")</code> to minimise the risk of exposing your password through accidentally releasing the code or your session history.</p>
+<p>Be sure never to release your password by entering it directly into the command. Instead, we recommend saving sensitive information such as database passwords and API keys in <code>.Renviron</code>, described in Chapter 2. Assuming you had saved your password as the environment variable <code>PSWRD</code>, you could enter <code>pwd = Sys.getenv(&quot;PSWRD&quot;)</code> to minimise the risk of exposing your password through accidentally releasing the code or your session history.</p>
 </div>
 
 Recently there has been a shift to the 'noSQL' approach for storing large datasets.
@@ -3844,7 +3880,7 @@ aus3a = wb_ineq_dt[Country == "Australia"]
 ```
 
 <div class="rmdnote">
-<p>Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq[wb_ineq$Country == "Australia",]</code>.</p>
+<p>Note that the square brackets do not need a comma to refer to rows with <code>data.table</code> objects: in base R you would write <code>wb_ineq[wb_ineq$Country == &quot;Australia&quot;,]</code>.</p>
 </div>
 
 To boost performance, one can set 'keys', analogous to 'primary keys in databases'. These are '[supercharged rownames](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)' which order the table based on one or more variables. This allows a *binary search* algorithm to subset the rows of interest, which is much, much faster than the *vector scan* approach used in base R (see [`vignette("datatable-keys-fast-subset")`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)). **data.table** uses the key values for subsetting by default so the variable does not need to be mentioned again. Instead, using keys, the search criteria is provided as a list (invoked below with the concise `.()` syntax, which is synonymous with `list()`).
@@ -3858,12 +3894,6 @@ aus3b = wb_ineq_dt[.("Australia")]
 The result is the same, so why add the extra stage of setting the key? The reason is that this one-off sorting operation can lead to substantial performance gains in situations where repeatedly subsetting rows on large datasets consumes a large proportion of computational time in your workflow. This is illustrated in Figure \@ref(fig:6-2), which compares 4 methods of subsetting incrementally larger versions of the `wb_ineq` dataset. 
 
 
-
-
-```
-#> Warning in plot.default(0.1, type = "n", xlim = c(0, 400), ylim = c(0, 80), : partial
-#> argument match of 'frame' to 'frame.plot'
-```
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/6-2-1.png" alt="Benchmark illustrating the performance gains to be expected for different dataset sizes." width="70%" />
@@ -4043,13 +4073,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.254   0.092   2.346
+#>   2.540   0.168   2.708
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.140   0.028   0.169
+#>   0.155   0.072   0.227
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4062,7 +4092,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.366   0.101   0.466
+#>   0.446   0.204   0.650
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4165,9 +4195,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval cld
-#>  ex_mat[1, ] 0.00154 0.00189 0.0406 0.00252 0.00282 3.82   100  a 
-#>   ex_df[1, ] 0.35779 0.36740 0.4100 0.37299 0.37688 4.07   100   b
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00281 0.00336 0.0526 0.00466 0.00713 4.71   100
+#>   ex_df[1, ] 0.48548 0.49510 0.5640 0.50779 0.52220 5.62   100
 ```
 
 <div class="rmdtip">
@@ -4179,7 +4209,7 @@ microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 Numbers in R are usually stored in [double-precision floating-point format](https://goo.gl/ZA5R8a), which is described in detail in @Braun2007 and @Goldberg1991. The term 'double' refers to the fact that on $32$ bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around $17$ decimal places.
 
 <div class="rmdnote">
-<p>When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">\(2\)</span>, instead it’s <strong>almost</strong> <span class="math inline">\(2\)</span>. Using <code>sprintf("%.17f", y)</code> will give you the true value of <code>y</code> (to 17 decimal places).</p>
+<p>When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline">\(2\)</span>, instead it’s <strong>almost</strong> <span class="math inline">\(2\)</span>. Using <code>sprintf(&quot;%.17f&quot;, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).</p>
 </div>
 
 Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code so we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the `head` function
@@ -4316,7 +4346,7 @@ no_of_cores = detectCores()
 ```
 
 <div class="rmdnote">
-<p>The value returned by <code>detectCores()</code> turns out to be operating system and chip maker dependent - see <code>help("detectCores")</code> for full details. For most standard machines, <code>detectCores()</code> returns the number of simultaneous threads.</p>
+<p>The value returned by <code>detectCores()</code> turns out to be operating system and chip maker dependent - see <code>help(&quot;detectCores&quot;)</code> for full details. For most standard machines, <code>detectCores()</code> returns the number of simultaneous threads.</p>
 </div>
 
 
@@ -4487,7 +4517,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f09361bc530>, x, y)
+#> .Call(<pointer: 0x7f9469a73bc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
@@ -4876,8 +4906,6 @@ However it is common that all slots are already taken. This means that to upgrad
 
 ```r
 fortunes::fortune(192)
-#> Warning in seq.default(along = rownames(fortunes.data)): partial argument match of
-#> 'along' to 'along.with'
 #> 
 #> RAM is cheap and thinking hurts.
 #>    -- Uwe Ligges (about memory requirements in R)
@@ -4889,13 +4917,12 @@ It is a testament to the design of R that it is still relevant and its popularit
 
 ```r
 fortunes::fortune(21)
-#> Warning in seq.default(along = rownames(fortunes.data)): partial argument match of
-#> 'along' to 'along.with'
 #> 
-#> I seem to recall that we were targetting 512k Macintoshes. In our dreams we might have
-#> seen 16Mb Sun.
-#>    -- Ross Ihaka (in reply to the question whether R&R thought when they started out
-#>       that they would see R using 16G memory on a dual Opteron computer)
+#> I seem to recall that we were targetting 512k Macintoshes. In our dreams we
+#> might have seen 16Mb Sun.
+#>    -- Ross Ihaka (in reply to the question whether R&R thought when they
+#>       started out that they would see R using 16G memory on a dual Opteron
+#>       computer)
 #>       R-help (November 2003)
 ```
 
@@ -4963,24 +4990,12 @@ These exercises aim to condense the previous section into the key points.
 
 The central processing unit (CPU), or the processor, is the brains of a computer. The CPU is responsible for performing numerical calculations. The faster the processor, the faster R will run. The clock speed (or clock rate, measured in hertz) is the frequency with which the CPU executes instructions. The faster the clock speed, the more instructions a CPU can execute in a section. CPU clock speed for a single CPU has been fairly static in the last couple of years, hovering around 3.4GHz (see figure \@ref(fig:8-3)).
 
-
-```
-#> Warning in plot.default(0.1, type = "n", ylim = c(0.9, 10000), xlim = c(1980, : partial
-#> argument match of 'frame' to 'frame.plot'
-```
-
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/8-3-1.png" alt="CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed." width="70%" />
 <p class="caption">(\#fig:8-3)CPU clock speed. The data for this figure was collected from web-forum and wikipedia. It is intended to indicate general trends in CPU speed.</p>
 </div>
 
 Unfortunately we can't simply use clock speeds to compare CPUs, since the internal architecture of a CPU plays a crucial role in determining the CPU performance. The R package **benchmarkme** provides functions for benchmarking your system and contains data from previous benchmarks. Figure \@ref(fig:8-4) shows the relative performance for over $150$ CPUs.
-
-
-```
-#> Warning in plot.default(0.1, type = "n", ylim = c(0.95, 100), xlim = c(0, : partial
-#> argument match of 'frame' to 'frame.plot'
-```
 
 <div class="figure" style="text-align: center">
 <img src="_main_files/figure-html/8-4-1.png" alt="CPU benchmarks from the R package, **benchmarkme**. Each point represents an individual CPU result." width="70%" />
@@ -5176,7 +5191,7 @@ For this reason, giving a clear and consistent name to your objects, especially 
 In functions the required arguments should always be first, followed by optional arguments. The special `...` argument should be last. If your argument has a boolean value, use `TRUE`/`FALSE` instead of `T`/`F` for clarity. 
 
 <div class="rmdwarning">
-<p>It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.</p>
+<p>It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.</p>
 </div>
 
 While it's possible to write arguments that depend on other arguments, try to avoid using this idiom
@@ -5451,7 +5466,7 @@ To search *all R packages*, including those you have not installed locally, for 
 Some packages contain vignettes. These are pieces of ['long-form' documentation](http://r-pkgs.had.co.nz/vignettes.html) that allow package authors to go into detail explaining how the package works [@Wickham_2015]. In general they are high quality. Because they can be used to illustrate real world use cases, vignettes can be the best way to understand functions in the context of broader explanations and longer examples than are provided in function help pages. Although many packages lack vignettes, they deserve a sub-section of their own because they can boost the efficiency with which package functions are used, in an integrated workflow.
 
 <div class="rmdnote">
-<p>If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use <code>devtools::use_vignette()</code>. To add a vignette to the <strong>efficient</strong> package used in this book, for example, you could clone the repo, e.g. using the command <code>git clone git@github.com:csgillespie/efficient</code>. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called “efficient-learning” with the following command: <code>use_vignette("efficient-learning")</code>.</p>
+<p>If you are frustrated because a certain package lacks a vignette, you can create one. This can be a great way of learning about and consolidating your knowledge of a package. To create a vignette, first download the source code of a package and then use <code>devtools::use_vignette()</code>. To add a vignette to the <strong>efficient</strong> package used in this book, for example, you could clone the repo, e.g. using the command <code>git clone git@github.com:csgillespie/efficient</code>. Once you have opened the repo as a project, e.g. in RStudio, you could create a vignette called “efficient-learning” with the following command: <code>use_vignette(&quot;efficient-learning&quot;)</code>.</p>
 </div>
 
 To browse any vignettes associated with a particular package, we can use the handy function `browseVignettes()`:

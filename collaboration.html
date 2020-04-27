@@ -54,9 +54,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -65,16 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +83,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -433,7 +433,7 @@ chapter are <strong>lubridate</strong> and <strong>dplyr</strong>. These package
 <div id="coding-style" class="section level2">
 <h2><span class="header-section-number">9.2</span> Coding style</h2>
 <p>To be a successful programmer you need to use a consistent programming style.
-There is no single ‘correct’ style, but using multiple styles in the same project is wrong <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012" role="doc-biblioref">2012</a>)</span>. To some extent good style is subjective and down to personal taste. There are, however, general principles that
+There is no single ‘correct’ style, but using multiple styles in the same project is wrong <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span>. To some extent good style is subjective and down to personal taste. There are, however, general principles that
 most programmers agree on, such as:</p>
 <ul>
 <li>Use modular code;</li>
@@ -449,53 +449,53 @@ The style followed in this book is based on a combination of Hadley Wickham’s 
 <div id="reformatting-code-with-rstudio" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Reformatting code with RStudio</h3>
 <p>RStudio can automatically clean up poorly indented and formatted code. To do this, select the lines that need to be formatted (e.g. via <code>Ctrl+A</code> to select the entire script) then automatically indent it with <code>Ctrl+I</code>. The shortcut <code>Ctrl+Shift+A</code> will reformat the code, adding spaces for maximum readability. An example is provided below.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="collaboration.html#cb246-1"></a><span class="co"># Poorly indented/formatted code</span></span>
-<span id="cb246-2"><a href="collaboration.html#cb246-2"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)){</span>
-<span id="cb246-3"><a href="collaboration.html#cb246-3"></a>x=<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)</span>
-<span id="cb246-4"><a href="collaboration.html#cb246-4"></a>y=x[<span class="dv">2</span>]}</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb240-1" data-line-number="1"><span class="co"># Poorly indented/formatted code</span></a>
+<a class="sourceLine" id="cb240-2" data-line-number="2"><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)){</a>
+<a class="sourceLine" id="cb240-3" data-line-number="3">x=<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb240-4" data-line-number="4">y=x[<span class="dv">2</span>]}</a></code></pre></div>
 <p>This code chunk works but is not pleasant to read. RStudio automatically indents the code after the <code>if</code> statement as follows.</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="collaboration.html#cb247-1"></a><span class="co"># Automatically indented code (Ctrl+I in RStudio)</span></span>
-<span id="cb247-2"><a href="collaboration.html#cb247-2"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)){</span>
-<span id="cb247-3"><a href="collaboration.html#cb247-3"></a>  x=<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)</span>
-<span id="cb247-4"><a href="collaboration.html#cb247-4"></a>  y=x[<span class="dv">2</span>]}</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" data-line-number="1"><span class="co"># Automatically indented code (Ctrl+I in RStudio)</span></a>
+<a class="sourceLine" id="cb241-2" data-line-number="2"><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)){</a>
+<a class="sourceLine" id="cb241-3" data-line-number="3">  x=<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb241-4" data-line-number="4">  y=x[<span class="dv">2</span>]}</a></code></pre></div>
 <p>This is a start, but it’s still not easy to read. This can be fixed in RStudio as illustrated below (these options can be seen in the Code menu, accessed with <code>Alt+C</code> on Windows/Linux computers).</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="collaboration.html#cb248-1"></a><span class="co"># Automatically reformat the code (Ctrl+Shift+A in RStudio)</span></span>
-<span id="cb248-2"><a href="collaboration.html#cb248-2"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)) {</span>
-<span id="cb248-3"><a href="collaboration.html#cb248-3"></a>  x =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>)</span>
-<span id="cb248-4"><a href="collaboration.html#cb248-4"></a>  y =<span class="st"> </span>x[<span class="dv">2</span>]</span>
-<span id="cb248-5"><a href="collaboration.html#cb248-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb242-1" data-line-number="1"><span class="co"># Automatically reformat the code (Ctrl+Shift+A in RStudio)</span></a>
+<a class="sourceLine" id="cb242-2" data-line-number="2"><span class="cf">if</span>(<span class="op">!</span><span class="kw">exists</span>(<span class="st">&quot;x&quot;</span>)) {</a>
+<a class="sourceLine" id="cb242-3" data-line-number="3">  x =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb242-4" data-line-number="4">  y =<span class="st"> </span>x[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb242-5" data-line-number="5">}</a></code></pre></div>
 <p>Note that some aspects of style are subjective: we would not leave a space after the <code>if</code> and <code>)</code>.</p>
 </div>
 <div id="file-names" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> File names</h3>
-<p>File names should use the <code>.R</code> extension and should be lower case (e.g. <code>load.R</code>). Avoid spaces. Use a dash or underscore to separate words.</p>
-<div class="sourceCode" id="cb249"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb249-1"><a href="collaboration.html#cb249-1"></a><span class="co"># Good names</span></span>
-<span id="cb249-2"><a href="collaboration.html#cb249-2"></a><span class="ex">normalise.R</span></span>
-<span id="cb249-3"><a href="collaboration.html#cb249-3"></a><span class="ex">load.R</span></span>
-<span id="cb249-4"><a href="collaboration.html#cb249-4"></a><span class="co"># Bad names</span></span>
-<span id="cb249-5"><a href="collaboration.html#cb249-5"></a><span class="ex">Normalise.r</span></span>
-<span id="cb249-6"><a href="collaboration.html#cb249-6"></a><span class="ex">load</span> data.R</span></code></pre></div>
+<p>File names should use the <code>.R</code> extension and should be lower case (e.g. <code>load.R</code>). Avoid spaces. Use a dash or underscore to separate words.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb243-1" data-line-number="1"><span class="co"># Good names</span></a>
+<a class="sourceLine" id="cb243-2" data-line-number="2"><span class="ex">normalise.R</span></a>
+<a class="sourceLine" id="cb243-3" data-line-number="3"><span class="ex">load.R</span></a>
+<a class="sourceLine" id="cb243-4" data-line-number="4"><span class="co"># Bad names</span></a>
+<a class="sourceLine" id="cb243-5" data-line-number="5"><span class="ex">Normalise.r</span></a>
+<a class="sourceLine" id="cb243-6" data-line-number="6"><span class="ex">load</span> data.R</a></code></pre></div>
 <p>Section 1.1 of <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure">Writing R Extensions</a> provides more detailed guidance on file names, such as avoiding non-English alphabetic characters since they cannot be guaranteed to work across locales. While the guidelines are strict, the guidance aids in making your scripts more portable.</p>
 </div>
 <div id="loading-packages" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> Loading packages</h3>
 <p>Library function calls should be at the top of your script. When loading an essential package, use <code>library</code> instead of <code>require</code> since a missing package will then raise an error. If a package isn’t essential, use <code>require</code> and appropriately capture the warning raised. Package names should be surrounded with speech marks.</p>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="collaboration.html#cb250-1"></a><span class="co"># Good</span></span>
-<span id="cb250-2"><a href="collaboration.html#cb250-2"></a><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</span>
-<span id="cb250-3"><a href="collaboration.html#cb250-3"></a><span class="co"># Non-standard evaluation</span></span>
-<span id="cb250-4"><a href="collaboration.html#cb250-4"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb244-1" data-line-number="1"><span class="co"># Good</span></a>
+<a class="sourceLine" id="cb244-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb244-3" data-line-number="3"><span class="co"># Non-standard evaluation</span></a>
+<a class="sourceLine" id="cb244-4" data-line-number="4"><span class="kw">library</span>(dplyr)</a></code></pre></div>
 <p>Avoid listing every package you may need, instead just include the packages you actually use. If you find that you are loading many packages, consider putting all packages in a file called <code>packages.R</code> and using <code>source</code> appropriately.</p>
 </div>
 <div id="commenting" class="section level3">
 <h3><span class="header-section-number">9.2.4</span> Commenting</h3>
 <p>Comments can greatly improve the efficiency of collaborative projects by helping everyone to understand what each line of code is doing. However comments should be used carefully: plastering your script with comments does not necessarily make it more efficient, and too many comments can be inefficient. Updating heavily commented code can be a pain, for example: not only will you have to change all the R code, you’ll also have to rewrite or delete all the comments!</p>
 <p>Ensure that your comments are meaningful. Avoid using verbose English to explain standard R code. The comment below, for example, adds no useful information because it is obvious by reading the code that <code>x</code> is being set to 1:</p>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="collaboration.html#cb251-1"></a><span class="co"># Setting x equal to 1</span></span>
-<span id="cb251-2"><a href="collaboration.html#cb251-2"></a>x =<span class="st"> </span><span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb245-1" data-line-number="1"><span class="co"># Setting x equal to 1</span></a>
+<a class="sourceLine" id="cb245-2" data-line-number="2">x =<span class="st"> </span><span class="dv">1</span></a></code></pre></div>
 <p>Instead, comments should provide context. Imagine <code>x</code> was being used as a counter (in which case it should probably have a more meaningful name, like <code>counter</code>, but we’ll continue to use <code>x</code> for illustrative purposes). In that case the comment could explain your intention for its future use:</p>
-<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="collaboration.html#cb252-1"></a><span class="co"># Initialize counter</span></span>
-<span id="cb252-2"><a href="collaboration.html#cb252-2"></a>x =<span class="st"> </span><span class="dv">1</span></span></code></pre></div>
-<p>The example above illustrates that comments are more useful if they provide context and explain the programmer’s intention <span class="citation">(McConnell <a href="#ref-Mcconnell2004" role="doc-biblioref">2004</a>)</span>. Each comment line should begin with a single hash (<code>#</code>), followed by a space. Comments can be toggled (turned on and off) in this way with <code>Ctl+Shift+C</code> in RStudio. The double hash (<code>##</code>) can be reserved for R output. If you follow your comment with four dashes (<code># ----</code>) RStudio will enable code folding until the next instance of this.</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb246-1" data-line-number="1"><span class="co"># Initialize counter</span></a>
+<a class="sourceLine" id="cb246-2" data-line-number="2">x =<span class="st"> </span><span class="dv">1</span></a></code></pre></div>
+<p>The example above illustrates that comments are more useful if they provide context and explain the programmer’s intention <span class="citation">(McConnell <a href="#ref-Mcconnell2004">2004</a>)</span>. Each comment line should begin with a single hash (<code>#</code>), followed by a space. Comments can be toggled (turned on and off) in this way with <code>Ctl+Shift+C</code> in RStudio. The double hash (<code>##</code>) can be reserved for R output. If you follow your comment with four dashes (<code># ----</code>) RStudio will enable code folding until the next instance of this.</p>
 </div>
 <div id="object-names" class="section level3">
 <h3><span class="header-section-number">9.2.5</span> Object names</h3>
@@ -507,11 +507,11 @@ The style followed in this book is based on a combination of Hadley Wickham’s 
 </ul>
 </blockquote>
 <p>It is important for objects and functions to be named consistently and sensibly. To take a silly example, imagine if all objects in your projects were called <code>x</code>, <code>xx</code>, <code>xxx</code> etc. The code would run fine. However, it would be hard for other people, and a future you, to figure out what was going on, especially when you got to the object <code>xxxxxxxxxx</code>!</p>
-<p>For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where <code>x</code> could be acceptable). Following discussion in <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012" role="doc-biblioref">2012</a>)</span> and elsewhere, suggest an <code>underscore_separated</code> style for function and object names<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a>. Unless you are creating an S3 object, avoid using a <code>.</code> in the name (this will help avoid confusing Python programmers!). Names should be concise yet meaningful.</p>
+<p>For this reason, giving a clear and consistent name to your objects, especially if they are going to be used many times in your script, can boost project efficiency (if an object is only used once, its name is less important, a case where <code>x</code> could be acceptable). Following discussion in <span class="citation">(Bååth <a href="#ref-ba_aa_ath_state_2012">2012</a>)</span> and elsewhere, suggest an <code>underscore_separated</code> style for function and object names<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a>. Unless you are creating an S3 object, avoid using a <code>.</code> in the name (this will help avoid confusing Python programmers!). Names should be concise yet meaningful.</p>
 <p>In functions the required arguments should always be first, followed by optional arguments. The special <code>...</code> argument should be last. If your argument has a boolean value, use <code>TRUE</code>/<code>FALSE</code> instead of <code>T</code>/<code>F</code> for clarity.</p>
 <div class="rmdwarning">
 <p>
-It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.
+It’s tempting to use <code>T</code>/<code>F</code> as shortcuts. But it is easy to accidentally redefine these variables, e.g. <code>F = 10</code>. R raises an error if you try to redefine <code>TRUE</code>/<code>FALSE</code>.
 </p>
 </div>
 <p>While it’s possible to write arguments that depend on other arguments, try to avoid using this idiom
@@ -521,28 +521,28 @@ Where possible, avoid using names of existing functions.</p>
 <div id="example-package" class="section level3">
 <h3><span class="header-section-number">9.2.6</span> Example package</h3>
 <p>The <code>lubridate</code> package is a good example of a package that has a consistent naming system, to make it easy for users to guess its features and behaviour. Dates are encoded in a variety of ways, but the <code>lubridate</code> package has a neat set of functions consisting of the three letters, <strong>y</strong>ear, <strong>m</strong>onth and <strong>d</strong>ay. For example,</p>
-<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="collaboration.html#cb253-1"></a><span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)</span>
-<span id="cb253-2"><a href="collaboration.html#cb253-2"></a><span class="kw">ymd</span>(<span class="st">&quot;2012-01-02&quot;</span>)</span>
-<span id="cb253-3"><a href="collaboration.html#cb253-3"></a><span class="kw">dmy</span>(<span class="st">&quot;02-01-2012&quot;</span>)</span>
-<span id="cb253-4"><a href="collaboration.html#cb253-4"></a><span class="kw">mdy</span>(<span class="st">&quot;01-02-2012&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;lubridate&quot;</span>)</a>
+<a class="sourceLine" id="cb247-2" data-line-number="2"><span class="kw">ymd</span>(<span class="st">&quot;2012-01-02&quot;</span>)</a>
+<a class="sourceLine" id="cb247-3" data-line-number="3"><span class="kw">dmy</span>(<span class="st">&quot;02-01-2012&quot;</span>)</a>
+<a class="sourceLine" id="cb247-4" data-line-number="4"><span class="kw">mdy</span>(<span class="st">&quot;01-02-2012&quot;</span>)</a></code></pre></div>
 </div>
 <div id="assignment" class="section level3">
 <h3><span class="header-section-number">9.2.7</span> Assignment</h3>
 <p>The two most common ways of assigning objects to values in R is with <code>&lt;-</code> and <code>=</code>. In most (but not all) contexts, they can be used interchangeably. Regardless of which operator you prefer, consistency is key, particularly when working in a group. In this book we use the <code>=</code> operator for assignment, as it’s faster to type and more consistent with other languages.</p>
 <p>The one place where a difference occurs is during function calls. Consider the following piece of code used for timing random number generation</p>
-<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="collaboration.html#cb254-1"></a><span class="kw">system.time</span>(expr1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">10e5</span>))</span>
-<span id="cb254-2"><a href="collaboration.html#cb254-2"></a><span class="kw">system.time</span>(<span class="dt">expr2 =</span> <span class="kw">rnorm</span>(<span class="fl">10e5</span>)) <span class="co"># error</span></span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb248-1" data-line-number="1"><span class="kw">system.time</span>(expr1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">10e5</span>))</a>
+<a class="sourceLine" id="cb248-2" data-line-number="2"><span class="kw">system.time</span>(<span class="dt">expr2 =</span> <span class="kw">rnorm</span>(<span class="fl">10e5</span>)) <span class="co"># error</span></a></code></pre></div>
 <p>The first lines will run correctly <strong>and</strong> create a variable called <code>expr1</code>. The second line will raise an error. When we use <code>=</code> in a function call, it changes from an <em>assignment</em> operator to an <em>argument passing</em> operator. For further information about assignment, see <code>?assignOps</code>.</p>
 </div>
 <div id="spacing" class="section level3">
 <h3><span class="header-section-number">9.2.8</span> Spacing</h3>
-<p>Consistent spacing is an easy way of making your code more readable. Even a simple command such as <code>x = x + 1</code> takes a bit more time to understand when the spacing is removed, i.e. <code>x=x+1</code>. You should add a space around the operators <code>+</code>, <code>-</code>, <code>\</code> and <code>*</code>. Include a space around the assignment operators, <code>&lt;-</code> and <code>=</code>. Additionally, add a space around any comparison operators such as <code>==</code> and <code>&lt;</code>. The latter rule helps avoid bugs</p>
-<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="collaboration.html#cb255-1"></a><span class="co"># Bug. x now equals 1</span></span>
-<span id="cb255-2"><a href="collaboration.html#cb255-2"></a>x[x&lt;-<span class="dv">1</span>]</span>
-<span id="cb255-3"><a href="collaboration.html#cb255-3"></a><span class="co"># Correct. Selecting values less than -1</span></span>
-<span id="cb255-4"><a href="collaboration.html#cb255-4"></a>x[x <span class="op">&lt;</span><span class="st"> </span><span class="dv">-1</span>]</span></code></pre></div>
+<p>Consistent spacing is an easy way of making your code more readable. Even a simple command such as <code>x = x + 1</code> takes a bit more time to understand when the spacing is removed, i.e. <code>x=x+1</code>. You should add a space around the operators <code>+</code>, <code>-</code>, <code>\</code> and <code>*</code>. Include a space around the assignment operators, <code>&lt;-</code> and <code>=</code>. Additionally, add a space around any comparison operators such as <code>==</code> and <code>&lt;</code>. The latter rule helps avoid bugs</p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb249-1" data-line-number="1"><span class="co"># Bug. x now equals 1</span></a>
+<a class="sourceLine" id="cb249-2" data-line-number="2">x[x&lt;-<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb249-3" data-line-number="3"><span class="co"># Correct. Selecting values less than -1</span></a>
+<a class="sourceLine" id="cb249-4" data-line-number="4">x[x <span class="op">&lt;</span><span class="st"> </span><span class="dv">-1</span>]</a></code></pre></div>
 <p>The exceptions to the space rule are <code>:</code>, <code>::</code> and <code>:::</code>, as well as <code>$</code> and <code>@</code> symbols for selecting sub-parts of objects. As with English, add a space after a comma, e.g.</p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="collaboration.html#cb256-1"></a>z[z<span class="op">$</span>colA <span class="op">&gt;</span><span class="st"> </span><span class="dv">1990</span>, ]</span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb250-1" data-line-number="1">z[z<span class="op">$</span>colA <span class="op">&gt;</span><span class="st"> </span><span class="dv">1990</span>, ]</a></code></pre></div>
 </div>
 <div id="indentation" class="section level3">
 <h3><span class="header-section-number">9.2.9</span> Indentation</h3>
@@ -551,19 +551,19 @@ Where possible, avoid using names of existing functions.</p>
 <div id="curly-braces" class="section level3">
 <h3><span class="header-section-number">9.2.10</span> Curly braces</h3>
 <p>Consider the following code:</p>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="collaboration.html#cb257-1"></a><span class="co"># Bad style, fails</span></span>
-<span id="cb257-2"><a href="collaboration.html#cb257-2"></a><span class="cf">if</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>)</span>
-<span id="cb257-3"><a href="collaboration.html#cb257-3"></a>{ </span>
-<span id="cb257-4"><a href="collaboration.html#cb257-4"></a>y} </span>
-<span id="cb257-5"><a href="collaboration.html#cb257-5"></a><span class="cf">else</span> {</span>
-<span id="cb257-6"><a href="collaboration.html#cb257-6"></a>  x}</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb251-1" data-line-number="1"><span class="co"># Bad style, fails</span></a>
+<a class="sourceLine" id="cb251-2" data-line-number="2"><span class="cf">if</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb251-3" data-line-number="3">{ </a>
+<a class="sourceLine" id="cb251-4" data-line-number="4">y} </a>
+<a class="sourceLine" id="cb251-5" data-line-number="5"><span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb251-6" data-line-number="6">  x}</a></code></pre></div>
 <p>Typing this straight into R will result in an error. An opening curly brace, <code>{</code> should not go on its own line and should always be followed by a line break. A closing curly brace should always go on its own line (unless it’s followed by an <code>else</code>, in which case the <code>else</code> should go on its own line). The code inside curly braces should be indented (and RStudio will enforce this rule), as shown below.</p>
-<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="collaboration.html#cb258-1"></a><span class="co"># Good style</span></span>
-<span id="cb258-2"><a href="collaboration.html#cb258-2"></a><span class="cf">if</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>){</span>
-<span id="cb258-3"><a href="collaboration.html#cb258-3"></a>  x</span>
-<span id="cb258-4"><a href="collaboration.html#cb258-4"></a>} <span class="cf">else</span> {</span>
-<span id="cb258-5"><a href="collaboration.html#cb258-5"></a>  y</span>
-<span id="cb258-6"><a href="collaboration.html#cb258-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb252-1" data-line-number="1"><span class="co"># Good style</span></a>
+<a class="sourceLine" id="cb252-2" data-line-number="2"><span class="cf">if</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>){</a>
+<a class="sourceLine" id="cb252-3" data-line-number="3">  x</a>
+<a class="sourceLine" id="cb252-4" data-line-number="4">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb252-5" data-line-number="5">  y</a>
+<a class="sourceLine" id="cb252-6" data-line-number="6">}</a></code></pre></div>
 <div id="exercises-21" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <p>Look at the difference between your style and RStudio’s based on a representative R script that you have written (see Section <a href="collaboration.html#coding-style">9.2</a>). What are the similarities? What are the differences? Are you consistent? Write these down and think about how you can use the results to improve your coding style.</p>
@@ -601,7 +601,7 @@ Figure 9.2: The Git history navigation interface
 <h3><span class="header-section-number">9.3.3</span> GitHub</h3>
 <p>GitHub is an online platform that makes sharing your work and collaborative code easy. There are alternatives such as <a href="https://about.gitlab.com/">GitLab</a>. The focus here is on GitHub as it’s by far the most popular among R developers. Also, through the command <code>devtools::install_github()</code>, preview versions of a package can be installed and updated in an instant. This makes ‘GitHub packages’ a great way to access the latest functionality. And GitHub makes it easy to get your work ‘out there’ to the world for efficiently collaborating with others, without the restraints placed on CRAN packages.</p>
 <p>To install the GitHub version of the <strong>benchmarkme</strong> package, for example one would enter</p>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="collaboration.html#cb259-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/benchmarkme&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb253-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/benchmarkme&quot;</span>)</a></code></pre></div>
 <p>Note that <code>csgillespie</code> is the GitHub user and <code>benchmarkme</code> is the package name. Replacing <code>csgillespie</code> with <code>robinlovelace</code> in the above code would install Robin’s version of the package. This is useful for fast collaboration with many people, but you must remember that GitHub packages will not update automatically with the command <code>update.packages</code> (see <a href="set-up.html#updating-r-packages">2.3.5</a>).</p>
 <div class="rmdwarning">
 <p>
@@ -613,7 +613,7 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 <h3><span class="header-section-number">9.3.4</span> Branches, forks, pulls and clones</h3>
 <p>Git is a large program which takes a long time to learn in depth. However, getting to grips with the basics of some of its more advanced functions can make you a more efficient collaborator. Using and merging branches, for example, allows you to test new features in a self-contained environment before it is used in production (e.g. when shifting to an updated version of a package which is not backwards compatible). Instead of bogging you down with a comprehensive discussion of what is possible, this section cuts to the most important features for collaboration: branches, forks, fetches and clones. For a more detailed description of Git’s powerful functionality, we recommend Jenny Byran’s <a href="http://happygitwithr.com/">book</a>, “Happy Git and GitHub for the useR”.</p>
 <p>Branches are distinct versions of your repository. Git allows you to jump seamlessly between different versions of your entire project. To create a new branch called test, you need to enter the shell and use the Git command line:</p>
-<div class="sourceCode" id="cb260"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb260-1"><a href="collaboration.html#cb260-1"></a><span class="fu">git</span> checkout -b test</span></code></pre></div>
+<div class="sourceCode" id="cb254"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb254-1" data-line-number="1"><span class="fu">git</span> checkout -b test</a></code></pre></div>
 <p>This is the equivalent of entering two commands: <code>git branch test</code> to create the branch and then <code>git checkout test</code> to <em>checkout</em> that branch. Checkout means switch into that branch. Any changes will not affect your previous branch. In RStudio you can jump quickly between branches using the drop down menu in the top right of the Git pane. This is illustrated in figure <a href="collaboration.html#fig:9-1">9.1</a>: see the <code>master</code> text followed by a down arrow. Clicking on this will allow you to select other branches.</p>
 <p>Forks are like branches but they exist on other people’s computers. You can fork a repository on GitHub easily, as described on the site’s <a href="https://help.github.com/articles/fork-a-repo/">help pages</a>. If you want an exact copy of this repository (including the commit history) you can <em>clone</em> this fork to your computer using the command <code>git clone</code> or by using a Git GUI such as GitHub Desktop. This is preferable from a collaboration perspective compared to cloning the repository directly, because any changes can be pushed back online easily if you are working from your own fork. You cannot push to forks that you have not created. If you want your work to be incorporated into the original fork you can use a <em>pull request</em>. Note: if you don’t need the project’s entire commit history, you can simply download a zip file containing the latest version of the repository from GitHub (see at the top right of any GitHub repository).</p>
 <p>A pull request (PR) is a mechanism on GitHub by which your code can be added to an existing project. One of the most useful features of a PR from a collaboration perspective is that it provides an opportunity for others to comment on your code, line by line, before it gets merged. This is all done online on GitHub, as discussed in <a href="https://help.github.com/articles/merging-a-pull-request/">GitHub’s online help</a>. Following feedback, you may want to refactor code, written by you or others.</p>
@@ -638,7 +638,7 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-ba_aa_ath_state_2012">
-<p>Bååth, Rasmus. 2012. “The State of Naming Conventions in R.” <em>The R Journal</em> 4 (2): 74–75. <a href="https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf">https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf</a>.</p>
+<p>Bååth, Rasmus. 2012. “The State of Naming Conventions in R.” <em>The R Journal</em> 4 (2): 74–75. <a href="https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf" class="uri">https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf</a>.</p>
 </div>
 <div id="ref-Mcconnell2004">
 <p>McConnell, Steve. 2004. <em>Code Complete</em>. Pearson Education.</p>
@@ -647,8 +647,8 @@ Warning: although GitHub is fantastic for collaboration, it can end up creating 
 <div class="footnotes">
 <hr />
 <ol start="24">
-<li id="fn24"><p>One notable exception are packages in Bioconductor, where variable names are <code>camelCase</code>. In this case, you should match the existing style.<a href="collaboration.html#fnref24" class="footnote-back">↩︎</a></p></li>
-<li id="fn27"><p>This section is being written with small teams in mind. Larger teams should consult a more detailed text on code review.<a href="collaboration.html#fnref27" class="footnote-back">↩︎</a></p></li>
+<li id="fn24"><p>One notable exception are packages in Bioconductor, where variable names are <code>camelCase</code>. In this case, you should match the existing style.<a href="collaboration.html#fnref24" class="footnote-back">↩</a></p></li>
+<li id="fn27"><p>This section is being written with small teams in mind. Larger teams should consult a more detailed text on code review.<a href="collaboration.html#fnref27" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
