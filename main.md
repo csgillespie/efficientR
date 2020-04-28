@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-04-27"
+date: "2020-04-28"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -300,9 +300,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 116102 123832 190397 128550 137642 5882991   100
-#>  cs_apply(x)  83300  89758 128085  98333 107812 2728639   100
-#>    cumsum(x)    662    828   1253    990   1254   18950   100
+#>    cs_for(x) 115329 125580 192153 132442 142361 5836350   100
+#>  cs_apply(x)  83418  90362 126335  98532 108461 2601022   100
+#>    cumsum(x)    657    790   1426    944   1220   35922   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1530,7 +1530,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.255   0.004   2.259
+#>   2.200   0.004   2.205
 ```
 
 In contrast a more R-centric approach would be
@@ -1972,7 +1972,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x311c238>
+#> <bytecode: 0x1fb8238>
 #> <environment: namespace:base>
 ```
 
@@ -2621,9 +2621,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.6 10.8 10.9   10.8 11.2 11.2     5
-#>  without_select 18.5 18.9 19.1   19.0 19.3 19.7     5
+#>            expr   min   lq mean median   uq  max neval
+#>     with_select  9.83 10.0 10.2   10.3 10.4 10.5     5
+#>  without_select 16.95 17.2 17.4   17.2 17.2 18.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -3742,7 +3742,7 @@ Thus fuzzy matching is still a laborious process that must be complemented by hu
 ## Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
-R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in the README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in the README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/readme/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
 
 **RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`) and nowadays its main use is to provide an R interface to
 SQL Server databases which lack a **DBI** interface.
@@ -4073,13 +4073,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.540   0.168   2.708
+#>   2.485   0.248   2.735
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.155   0.072   0.227
+#>   0.171   0.056   0.228
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4092,7 +4092,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.446   0.204   0.650
+#>   0.456   0.199   0.656
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4196,8 +4196,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00281 0.00336 0.0526 0.00466 0.00713 4.71   100
-#>   ex_df[1, ] 0.48548 0.49510 0.5640 0.50779 0.52220 5.62   100
+#>  ex_mat[1, ] 0.00284 0.00353 0.0528 0.00465 0.00642 4.72   100
+#>   ex_df[1, ] 0.47478 0.49948 0.5672 0.50959 0.52646 5.67   100
 ```
 
 <div class="rmdtip">
@@ -4517,7 +4517,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f9469a73bc0>, x, y)
+#> .Call(<pointer: 0x7f5179ee1bc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
