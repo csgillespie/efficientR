@@ -11,9 +11,12 @@ RUN Rscript -e "remotes::install_github('r-hub/sysreqs')" \
 
 # RUN apt install -y r-cran-tidyverse r-cran-bh
 RUN R -e "remotes::install_github('csgillespie/efficientR')"
-COPY . ${HOME}
-# RUN chown -R ${NB_USER} ${HOME}
-# USER ${NB_USER}
+RUN wget https://github.com/csgillespie/efficientR/archive/master.zip
+RUN unzip master.zip
+# COPY * /home/rstudio
+RUN cp -Rv efficientR-master /home/rstudio/efficientR
+RUN chown -Rv rstudio /home/rstudio
+USER ${NB_USER}
 
 
 
