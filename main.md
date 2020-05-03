@@ -67,7 +67,7 @@ knit: "bookdown::preview_chapter"
 
 # Introduction {#introduction}
 
-This chapter introduces the book. It describes the wide range of people it was written for, in terms of R and programming experience, and how you can get the most out of it. Anyone setting out to improve efficiency should have an understanding of precisely what they mean by the term, and this is discussed, with reference to *algorithmic* and *programmer* efficiency in Section \@ref(what-is-efficiency), and with reference to R in particular in \@ref(what-is-efficient-r-programming). It may seem obvious, but it's also worth thinking about *why* anyone would bother with efficient code now that powerful computers are cheap and accessible. This is covered in Section \@ref(why-efficiency).
+This chapter introduces the book, describing the wide range of people it was written for, in terms of R and programming experience, and how you can get the most out of it. Anyone setting out to improve efficiency should have an understanding of precisely what they mean by the term, and this is discussed, with reference to *algorithmic* and *programmer* efficiency in Section \@ref(what-is-efficiency), and with reference to R in particular in \@ref(what-is-efficient-r-programming). It may seem obvious, but it's also worth thinking about *why* anyone would bother with efficient code now that powerful computers are cheap and accessible. This is covered in Section \@ref(why-efficiency).
 
 This book happily is not completely R-specific. Non R programming skills that are needed for efficient R programming, which you will develop during the course of following this book, are covered in Section \@ref(cross-transferable-skills-for-efficiency). Unusually for a book about programming, this section introduces touch typing and consistency: cross-transferable skills that should improve your efficiency beyond programming. However, this is first and foremost a book about programming and it wouldn't be so without code examples in every chapter. Despite being more conceptual and discursive, this opening chapter is no exception: its penultimate section (\@ref(benchmarking-and-profiling)) describes these two essential tools in the efficient R programmer's toolbox, and how to use them with a couple of illustrative examples. The final thing to say at the outset is how to use this book in conjunction with the book's associated package and its source code. This is covered in Section \@ref(book-resources).
 
@@ -300,9 +300,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 113057 118720 179838 124100 133202 5405291   100
-#>  cs_apply(x)  83050  85592 118891  93278 101554 2419513   100
-#>    cumsum(x)    643    808   1122    943   1146   12150   100
+#>    cs_for(x) 111995 117666 176904 123326 130262 5282683   100
+#>  cs_apply(x)  82210  85098 117140  90220  98901 2378411   100
+#>    cumsum(x)    651    818   1140    988   1088   14806   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1530,7 +1530,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   1.954   0.008   1.962
+#>   1.897   0.004   1.901
 ```
 
 In contrast a more R-centric approach would be
@@ -1972,7 +1972,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x1f63890>
+#> <bytecode: 0x20b8890>
 #> <environment: namespace:base>
 ```
 
@@ -2621,9 +2621,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.25  9.28  9.43    9.3  9.56  9.78     5
-#>  without_select 14.68 14.77 15.41   15.0 15.29 17.32     5
+#>            expr   min    lq  mean median   uq   max neval
+#>     with_select  9.33  9.33  9.47   9.33  9.6  9.78     5
+#>  without_select 14.66 14.77 15.16  15.03 15.1 16.26     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4073,13 +4073,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.373   0.236   2.609
+#>   2.364   0.248   2.612
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.159   0.068   0.227
+#>   0.154   0.073   0.226
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4092,7 +4092,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.478   0.167   0.645
+#>   0.464   0.176   0.640
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4196,8 +4196,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00239 0.00292 0.0495 0.00386 0.00536 4.52   100
-#>   ex_df[1, ] 0.47747 0.48767 0.5477 0.49543 0.50557 5.38   100
+#>  ex_mat[1, ] 0.00251 0.00293 0.0496 0.00443 0.00624 4.47   100
+#>   ex_df[1, ] 0.49702 0.51505 0.5795 0.52504 0.53984 5.60   100
 ```
 
 <div class="rmdtip">
@@ -4517,7 +4517,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7ff668634bc0>, x, y)
+#> .Call(<pointer: 0x7f6d74239bc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
