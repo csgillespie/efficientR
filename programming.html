@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-04-28" />
+<meta name="date" content="2020-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -587,7 +587,7 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">N =<span class="st"> </span><span class="dv">500000</span></a>
 <a class="sourceLine" id="cb68-2" data-line-number="2"><span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))</a>
 <a class="sourceLine" id="cb68-3" data-line-number="3"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   2.200   0.004   2.205</span></a></code></pre></div>
+<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   2.076   0.012   2.089</span></a></code></pre></div>
 <p>In contrast a more R-centric approach would be</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N))<span class="op">/</span>N</a></code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -914,7 +914,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</a>
 <a class="sourceLine" id="cb97-2" data-line-number="2"><span class="co">#&gt; function (x, ...) </span></a>
 <a class="sourceLine" id="cb97-3" data-line-number="3"><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb97-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x1fb8238&gt;</span></a>
+<a class="sourceLine" id="cb97-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x2301890&gt;</span></a>
 <a class="sourceLine" id="cb97-5" data-line-number="5"><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

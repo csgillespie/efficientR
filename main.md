@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-04-28"
+date: "2020-05-03"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -300,9 +300,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 115329 125580 192153 132442 142361 5836350   100
-#>  cs_apply(x)  83418  90362 126335  98532 108461 2601022   100
-#>    cumsum(x)    657    790   1426    944   1220   35922   100
+#>    cs_for(x) 113728 119560 183505 126052 133390 5543473   100
+#>  cs_apply(x)  82796  85304 118441  92114 102251 2435238   100
+#>    cumsum(x)    639    793   1120    900   1080   15643   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -471,7 +471,7 @@ How do the system output logs (results) on your system compare to those presente
 It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package.  For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
 
 <div class="rmdtip">
-<p>Previous R versions can be installed from CRAN’s archive or previous R releases. The binary versions for all OSs can be found at <a href="https://cran.r-project.org/bin/">cran.r-project.org/bin/</a>. To download binary versions for Ubuntu ‘Wily’, for example, see <a href="https://cran.r-project.org/bin/linux/ubuntu/wily/">cran.r-project.org/bin/linux/ubuntu/wily/</a>. To ‘pin’ specific versions of R packages you can use the <strong>packrat</strong> package. For more on pinning R versions and R packages see articles on RStudio’s website <a href="https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R">Using-Different-Versions-of-R</a> and <a href="https://rstudio.github.io/packrat/">rstudio.github.io/packrat/</a>.</p>
+<p>Previous R versions can be installed from CRAN’s archive or previous R releases. The binary versions for all OSs can be found at <a href="https://cran.r-project.org/bin/">cran.r-project.org/bin/</a>. To download binary versions for Ubuntu ‘Xenial’, for example, see <a href="https://cran.r-project.org/bin/linux/ubuntu/xenial/">cran.r-project.org/bin/linux/ubuntu/xenial/</a>. To ‘pin’ specific versions of R packages you can use the <strong>packrat</strong> package. For more on pinning R versions and R packages see articles on RStudio’s website <a href="https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R">Using-Different-Versions-of-R</a> and <a href="https://rstudio.github.io/packrat/">rstudio.github.io/packrat/</a>.</p>
 </div>
 
 ### Installing R
@@ -1530,7 +1530,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.200   0.004   2.205
+#>   2.076   0.012   2.089
 ```
 
 In contrast a more R-centric approach would be
@@ -1972,7 +1972,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x1fb8238>
+#> <bytecode: 0x2301890>
 #> <environment: namespace:base>
 ```
 
@@ -2621,9 +2621,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min   lq mean median   uq  max neval
-#>     with_select  9.83 10.0 10.2   10.3 10.4 10.5     5
-#>  without_select 16.95 17.2 17.4   17.2 17.2 18.7     5
+#>            expr  min lq mean median   uq  max neval
+#>     with_select  9.9 10 10.1   10.1 10.2 10.4     5
+#>  without_select 16.9 17 17.5   17.3 17.4 18.7     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4073,13 +4073,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.485   0.248   2.735
+#>    2.39    0.26    2.65
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.171   0.056   0.228
+#>   0.175   0.052   0.227
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4092,7 +4092,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.456   0.199   0.656
+#>   0.459   0.184   0.643
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4196,8 +4196,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00284 0.00353 0.0528 0.00465 0.00642 4.72   100
-#>   ex_df[1, ] 0.47478 0.49948 0.5672 0.50959 0.52646 5.67   100
+#>  ex_mat[1, ] 0.00243 0.00313 0.0491 0.00397 0.00536 4.47   100
+#>   ex_df[1, ] 0.47513 0.49019 0.5519 0.49908 0.50923 5.43   100
 ```
 
 <div class="rmdtip">
@@ -4517,7 +4517,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f5179ee1bc0>, x, y)
+#> .Call(<pointer: 0x7fa08e77fbc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
