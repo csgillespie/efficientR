@@ -1,6 +1,7 @@
 ## Efficient R programming by Colin Gillespie and Robin Lovelace
 
 [![Build Status](https://travis-ci.org/csgillespie/efficientR.png?branch=master)](https://travis-ci.org/csgillespie/efficientR) 
+[![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/csgillespie/efficientR/master?urlpath=rstudio)
 
 ![alt text](figures/f0_front_scale.png)
 
