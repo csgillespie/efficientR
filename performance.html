@@ -521,13 +521,13 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb184-3" data-line-number="3">  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb184-4" data-line-number="4">})</a>
 <a class="sourceLine" id="cb184-5" data-line-number="5"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb184-6" data-line-number="6"><span class="co">#&gt;    2.39    0.26    2.65</span></a>
+<a class="sourceLine" id="cb184-6" data-line-number="6"><span class="co">#&gt;   2.440   0.236   2.677</span></a>
 <a class="sourceLine" id="cb184-7" data-line-number="7"><span class="kw">system.time</span>({</a>
 <a class="sourceLine" id="cb184-8" data-line-number="8">  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </a>
 <a class="sourceLine" id="cb184-9" data-line-number="9">  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></a>
 <a class="sourceLine" id="cb184-10" data-line-number="10">})</a>
 <a class="sourceLine" id="cb184-11" data-line-number="11"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb184-12" data-line-number="12"><span class="co">#&gt;   0.175   0.052   0.227</span></a>
+<a class="sourceLine" id="cb184-12" data-line-number="12"><span class="co">#&gt;   0.136   0.092   0.227</span></a>
 <a class="sourceLine" id="cb184-13" data-line-number="13"><span class="kw">identical</span>(result1, result2)</a>
 <a class="sourceLine" id="cb184-14" data-line-number="14"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
@@ -535,7 +535,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb185-2" data-line-number="2">  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb185-3" data-line-number="3">})</a>
 <a class="sourceLine" id="cb185-4" data-line-number="4"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb185-5" data-line-number="5"><span class="co">#&gt;   0.459   0.184   0.643</span></a>
+<a class="sourceLine" id="cb185-5" data-line-number="5"><span class="co">#&gt;   0.473   0.176   0.649</span></a>
 <a class="sourceLine" id="cb185-6" data-line-number="6"><span class="kw">identical</span>(result1, result3)</a>
 <a class="sourceLine" id="cb185-7" data-line-number="7"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 </div>
@@ -603,8 +603,8 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 <a class="sourceLine" id="cb192-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</a>
 <a class="sourceLine" id="cb192-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
 <a class="sourceLine" id="cb192-4" data-line-number="4"><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></a>
-<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00243 0.00313 0.0491 0.00397 0.00536 4.47   100</span></a>
-<a class="sourceLine" id="cb192-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.47513 0.49019 0.5519 0.49908 0.50923 5.43   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00258 0.00317 0.0509 0.00414 0.00557 4.63   100</span></a>
+<a class="sourceLine" id="cb192-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.47633 0.48656 0.5504 0.49498 0.51113 5.39   100</span></a></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -815,7 +815,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1">add_cpp</a>
 <a class="sourceLine" id="cb212-2" data-line-number="2"><span class="co">#&gt; function (x, y) </span></a>
-<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7fa08e77fbc0&gt;, x, y)</span></a></code></pre></div>
+<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7f83e62babc0&gt;, x, y)</span></a></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb213-2" data-line-number="2"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
