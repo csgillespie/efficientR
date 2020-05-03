@@ -104,7 +104,7 @@ For everyone, we recommend reading *Efficient R Programming* while you have an a
 If you're an R novice and fit into the final category, we recommend that this 'active R project' is not an important deliverable, but another R resource. While this book is generic, it is likely that your usage of R will be largely domain-specific. For this reason we recommend reading it alongside teaching material in your chosen area. Furthermore, we advocate that all readers use this book alongside other R resources such as the numerous, vignettes, tutorials and online articles that the R community has produced (described in the *tip* below). At a bare minimum you should be familiar with data frames, looping and simple plots.
 
 <div class="rmdtip">
-<p>There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://cran.r-project.org/doc/contrib/Horton+Pruim+Kaplan_MOSAIC-StudentGuide.pdf">Student’s Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.</p>
+<p>There are many places to find generic and domain specific R teaching materials. For complete R and programming beginners, there are a number of introductory resources, such as the excellent <a href="https://github.com/ProjectMOSAIC/LittleBooks/tree/master/StudentGuide">Student’s Guide to R</a> and the more technical <a href="https://cran.r-project.org/other-docs.html">IcebreakeR</a> tutorial.</p>
 <p>R also comes pre-installed with guidance, revealed by entering <code>help.start()</code> into the R console, including the classic official guide <em>An Introduction to R</em> which is excellent but daunting to many. Entering <code>vignette()</code> will display a list of guides packaged <em>within your R installation</em> (and hence free from the need of an internet connection). To see the vignette for a specific topic, just enter the vignette’s name into the same command, e.g. <code>vignette(package = &quot;dplyr&quot;, &quot;dplyr&quot;)</code> to see the introductory vignette for the <strong>dplyr</strong> package.</p>
 <p>Another early port of call should be the CRAN website. The <a href="https://cran.r-project.org/other-docs.html">Contributed Documentation</a> page contains a list of contributed resources, mainly tutorials, on subjects ranging from <a href="https://github.com/Robinlovelace/Creating-maps-in-R">map making</a> to <a href="https://cran.r-project.org/doc/contrib/Farnsworth-EconometricsInR.pdf">Econometrics</a>. The new <a href="https://bookdown.org/">bookdown website</a> contains a list of complete (or near complete) books, which cover domains including <a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> and <a href="https://bookdown.org/yihui/bookdown/">Authoring Books with R Markdown</a>. We recommend keeping your eye on the ‘R-o-sphere’, e.g. via the <a href="http://r-bloggers.com/">R-Bloggers</a> website, popular Twitter feeds and <a href="https://www.r-project.org/mail.html">CRAN-affiliated email lists</a> for up-to-date materials that can be used in conjunction with this book.</p>
 </div>
@@ -300,9 +300,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 114125 119039 181730 123593 131112 5589220   100
-#>  cs_apply(x)  83137  85254 118881  92865 100720 2449992   100
-#>    cumsum(x)    641    800   1259    909   1040   21420   100
+#>    cs_for(x) 113689 120595 185173 125636 134932 5736149   100
+#>  cs_apply(x)  82543  85612 121528  94411 104080 2539900   100
+#>    cumsum(x)    641    796   1150    910   1082   18617   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1530,7 +1530,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.162   0.009   2.170
+#>    2.17    0.00    2.17
 ```
 
 In contrast a more R-centric approach would be
@@ -1972,7 +1972,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x20d7890>
+#> <bytecode: 0x157c890>
 #> <environment: namespace:base>
 ```
 
@@ -2621,9 +2621,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min   lq mean median   uq  max neval
-#>     with_select  9.96 10.2 10.4   10.3 10.6 10.9     5
-#>  without_select 17.14 17.7 17.9   17.9 18.4 18.6     5
+#>            expr  min    lq mean median   uq  max neval
+#>     with_select  9.9  9.99 10.1   10.0 10.2 10.3     5
+#>  without_select 16.9 16.93 17.4   17.2 17.7 18.4     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4073,13 +4073,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.416   0.272   2.686
+#>   2.419   0.264   2.684
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.155   0.072   0.227
+#>   0.139   0.088   0.227
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4092,7 +4092,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.464   0.184   0.649
+#>   0.490   0.164   0.654
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4196,8 +4196,8 @@ data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
 #>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00256 0.00323 0.0504 0.00424 0.00542 4.59   100
-#>   ex_df[1, ] 0.47907 0.48897 0.5517 0.49997 0.51265 5.47   100
+#>  ex_mat[1, ] 0.00245 0.00312 0.0511 0.00493 0.00634 4.59   100
+#>   ex_df[1, ] 0.50486 0.51949 0.5858 0.52889 0.54374 5.56   100
 ```
 
 <div class="rmdtip">
@@ -4517,7 +4517,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7fa2428c5bc0>, x, y)
+#> .Call(<pointer: 0x7f23e366ebc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
