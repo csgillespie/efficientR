@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-05-03"
+date: "2020-05-05"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -27,19 +27,17 @@ Get a hard copy from: [Amazon (UK)](https://alexa.design/2pmrqBj), [Amazon (USA)
 
 ## Authors {-}
 
-[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/) is Senior lecturer (Associate
-professor) at Newcastle University, UK. His research interests are high performance
-statistical computing and Bayesian statistics. He is regularly employed as a
-consultant by [Jumping Rivers](https://www.jumpingrivers.com/) and has been teaching R
-since 2005 at a variety of levels, ranging from beginning to advanced programming.
+[Colin Gillespie](http://www.mas.ncl.ac.uk/~ncsg3/) is Senior Lecturer (Associate
+Professor) at Newcastle University, UK.
+He is an Executive Editor of the [R Journal](https://journal.r-project.org/board.html), with research interests including high performance
+statistical computing and Bayesian statistics. Colin founded the [Jumping Rivers](https://www.jumpingrivers.com/) consultancy and has been teaching R
+since 2005 at all levels, from beginning to advanced programming.
 
-[Robin Lovelace](http://robinlovelace.net/) is a researcher at the Leeds Institute for Transport Studies ([ITS](http://www.its.leeds.ac.uk/)) and the Leeds Institute for Data Analytics ([LIDA](http://lida.leeds.ac.uk/about-lida/contact/)). Robin has many years using R for academic
-research and has taught numerous R courses at all levels. He has developed a number of popular R resources, including
-[Introduction to Visualising Spatial Data in R](https://github.com/Robinlovelace/Creating-maps-in-R)
-and
-[Spatial Microsimulation with R](https://github.com/Robinlovelace/spatial-microsim-book)
-[@lovelace_spatial_2016]. These skills have been applied on a number of projects with real-world applications, including the [Propensity to Cycle Tool](http://www.pct.bike/), a nationally scalable interactive online mapping
-application, and the [**stplanr**](https://github.com/ropensci/stplanr) package.
+[Robin Lovelace](http://robinlovelace.net/) is Associate Professor at the Institute for Transport Studies ([ITS](http://www.its.leeds.ac.uk/)) and Leeds Institute for Data Analytics ([LIDA](http://lida.leeds.ac.uk/about-lida/contact/)), University of Leeds, UK. 
+His research focuses on geocomputation and reproducible data science for evidence-based policy-making. 
+Decarbonising the global economy while improving health and environmental outcomes is a major problem solving challenge.
+Robin's research supports solutions by generating evidence and tools enabling evidence-based investment in efficient and healthy modes of transport at local, city and national scales. 
+Robin is the Lead Developer of the award-winning Propensity to Cycle Tool (publicly available at [www.pct.bike](https://www.pct.bike/)), conveyor of the Transport Data Science module and workshop series, and co-author of popular [packages](https://cran.r-project.org/web/checks/check_results_rob00x_at_gmail.com.html), papers, and [books](https://www.google.com/search?tbm=bks&q=robin+lovelace), including [Geocomputation with R](https://geocompr.robinlovelace.net/).
 
 # Preface {-}
 
@@ -300,9 +298,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 113689 120595 185173 125636 134932 5736149   100
-#>  cs_apply(x)  82543  85612 121528  94411 104080 2539900   100
-#>    cumsum(x)    641    796   1150    910   1082   18617   100
+#>    cs_for(x) 113522 122125 187040 128062 136352 5670943   100
+#>  cs_apply(x)  82066  89658 127457  99849 109955 2568065   100
+#>    cumsum(x)    647    808   1278    966   1250   21541   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1530,7 +1528,7 @@ In R this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>    2.17    0.00    2.17
+#>   2.225   0.008   2.234
 ```
 
 In contrast a more R-centric approach would be
@@ -1972,7 +1970,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x157c890>
+#> <bytecode: 0x2939890>
 #> <environment: namespace:base>
 ```
 
@@ -2621,9 +2619,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr  min    lq mean median   uq  max neval
-#>     with_select  9.9  9.99 10.1   10.0 10.2 10.3     5
-#>  without_select 16.9 16.93 17.4   17.2 17.7 18.4     5
+#>            expr  min   lq mean median   uq  max neval
+#>     with_select 10.4 10.6 10.8   10.6 11.0 11.2     5
+#>  without_select 18.2 18.8 18.8   18.8 18.9 19.2     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4073,13 +4071,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.419   0.264   2.684
+#>   2.479   0.248   2.727
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.139   0.088   0.227
+#>   0.142   0.084   0.226
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4092,7 +4090,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.490   0.164   0.654
+#>   0.450   0.204   0.654
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4195,9 +4193,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00245 0.00312 0.0511 0.00493 0.00634 4.59   100
-#>   ex_df[1, ] 0.50486 0.51949 0.5858 0.52889 0.54374 5.56   100
+#>         expr    min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0026 0.00336 0.0508 0.00448 0.00698 4.56   100
+#>   ex_df[1, ] 0.4783 0.49265 0.5597 0.50327 0.51702 5.51   100
 ```
 
 <div class="rmdtip">
@@ -4517,7 +4515,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f23e366ebc0>, x, y)
+#> .Call(<pointer: 0x7fc3738afbc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
