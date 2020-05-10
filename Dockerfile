@@ -26,4 +26,3 @@ RUN dpkg -i rstudio-server-*-amd64.deb && \
 RUN echo '{' >> /etc/rstudio/rstudio-prefs.json
 RUN echo '    "rmd_chunk_output_inline": false' >> /etc/rstudio/rstudio-prefs.json
 RUN echo '}' >> /etc/rstudio/rstudio-prefs.json
-
