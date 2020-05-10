@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-05" />
+<meta name="date" content="2020-05-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -413,7 +413,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="prerequisites-3" class="section level3 unnumbered">
 <h3>Prerequisites</h3>
 <p>This chapter focuses on workflow. For project planning and management, we’ll use the <strong>DiagrammeR</strong> package. For project reporting we’ll focus on R Markdown and <strong>knitr</strong> which are bundled with RStudio (but can be installed independently if needed). We’ll suggest other packages that are worth investigating, but are not required for this particular chapter.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a></code></pre></div>
 </div>
 <div id="top-5-tips-for-efficient-workflow" class="section level2">
 <h2><span class="header-section-number">4.1</span> Top 5 tips for efficient workflow</h2>
@@ -515,12 +515,12 @@ While these are useful, they cannot compete with the dedicated project managemen
 </ul>
 <p>The small example below (which provides the basis for creating charts like Figure <a href="workflow.html#fig:4-2">4.2</a>) illustrates how <strong>DiagrammeR</strong> can take simple text inputs to create informative up-to-date Gantt charts.
 Such charts can greatly help with the planning and task management of long and complex R projects, as long as they do not take away valuable programming time from core project objectives.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a>
-<a class="sourceLine" id="cb106-2" data-line-number="2"><span class="co"># Define the Gantt chart and plot the result (not shown)</span></a>
-<a class="sourceLine" id="cb106-3" data-line-number="3"><span class="kw">mermaid</span>(<span class="st">&quot;gantt</span></a>
-<a class="sourceLine" id="cb106-4" data-line-number="4"><span class="st">        Section Initiation</span></a>
-<a class="sourceLine" id="cb106-5" data-line-number="5"><span class="st">        Planning           :a1, 2016-01-01, 10d</span></a>
-<a class="sourceLine" id="cb106-6" data-line-number="6"><span class="st">        Data processing    :after a1  , 30d&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;DiagrammeR&quot;</span>)</a>
+<a class="sourceLine" id="cb105-2" data-line-number="2"><span class="co"># Define the Gantt chart and plot the result (not shown)</span></a>
+<a class="sourceLine" id="cb105-3" data-line-number="3"><span class="kw">mermaid</span>(<span class="st">&quot;gantt</span></a>
+<a class="sourceLine" id="cb105-4" data-line-number="4"><span class="st">        Section Initiation</span></a>
+<a class="sourceLine" id="cb105-5" data-line-number="5"><span class="st">        Planning           :a1, 2016-01-01, 10d</span></a>
+<a class="sourceLine" id="cb105-6" data-line-number="6"><span class="st">        Data processing    :after a1  , 30d&quot;</span>)</a></code></pre></div>
 <p>In the above code <code>gantt</code> defines the subsequent data layout.
 <code>Section</code> refers to the project’s section (useful for large projects, with milestones) and each new line refers to a discrete task.
 <code>Planning</code>, for example, has the code <code>a</code>, begins on the first day of 2016 and lasts for 10 days. See <a href="http://knsv.github.io/mermaid/gantt.html">knsv.github.io/mermaid/gantt.html</a> for more detailed documentation.</p>
@@ -540,38 +540,38 @@ Such charts can greatly help with the planning and task management of long and c
 <p>A good example of the importance of prior planning to minimise effort and reduce technical debt is package selection. An inefficient, poorly supported or simply outdated package can waste hours. When a more appropriate alternative is available this waste can be prevented by prior planning. There are many poor packages on CRAN and much duplication so it’s easy to go wrong. Just because a certain package <em>can</em> solve a particular problem, doesn’t mean that it <em>should</em>.</p>
 <p>Used well, however, packages can greatly improve productivity: not reinventing the wheel is part of the ethos of open source software. If someone has already solved a particular technical problem, you don’t have to re-write their code, allowing you to focus on solving the applied problem. Furthermore, because R packages are generally (but not always) written by competent programmers and subject to user feedback, they may work faster and more effectively than the hastily prepared code you may have written. All R code is open source and potentially subject to peer review. A prerequisite of publishing an R package is that developer contact details must be provided, and many packages provide a site for issue tracking. Furthermore, R packages can increase programmer productivity by dramatically reducing the amount of code they need to write because all the code is <em>packaged</em> in functions behind the scenes.</p>
 <p>Let’s take an example. Imagine for a project you would like to find the distance between sets of points (origins, <code>o</code> and destinations, <code>d</code>) on the Earth’s surface. Background reading shows that a good approximation of ‘great circle’ distance, which accounts for the curvature of the Earth, can be made by using the Haversine formula, which you duly implement, involving much trial and error:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="co"># Function to convert degrees to radians</span></a>
-<a class="sourceLine" id="cb107-2" data-line-number="2">deg2rad =<span class="st"> </span><span class="cf">function</span>(deg) deg <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">180</span></a>
-<a class="sourceLine" id="cb107-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb107-4" data-line-number="4"><span class="co"># Create origins and destinations</span></a>
-<a class="sourceLine" id="cb107-5" data-line-number="5">o =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.55</span>, <span class="dt">lat =</span> <span class="fl">53.80</span>)</a>
-<a class="sourceLine" id="cb107-6" data-line-number="6">d =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.61</span>, <span class="dt">lat =</span> <span class="fl">54.98</span>)</a>
-<a class="sourceLine" id="cb107-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb107-8" data-line-number="8"><span class="co"># Convert to radians</span></a>
-<a class="sourceLine" id="cb107-9" data-line-number="9">o_rad =<span class="st"> </span><span class="kw">deg2rad</span>(o)</a>
-<a class="sourceLine" id="cb107-10" data-line-number="10">d_rad =<span class="st"> </span><span class="kw">deg2rad</span>(d)</a>
-<a class="sourceLine" id="cb107-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb107-12" data-line-number="12"><span class="co"># Find difference in degrees</span></a>
-<a class="sourceLine" id="cb107-13" data-line-number="13">delta_lon =<span class="st"> </span>(o_rad[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb107-14" data-line-number="14">delta_lat =<span class="st"> </span>(o_rad[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb107-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb107-16" data-line-number="16"><span class="co"># Calculate distance with Haversine formula</span></a>
-<a class="sourceLine" id="cb107-17" data-line-number="17">a =<span class="st"> </span><span class="kw">sin</span>(delta_lat <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">cos</span>(o_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(d_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(delta_lon <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb107-18" data-line-number="18">c =<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">asin</span>(<span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">sqrt</span>(a)))</a>
-<a class="sourceLine" id="cb107-19" data-line-number="19">(<span class="dt">d_hav1 =</span> <span class="dv">6371</span> <span class="op">*</span><span class="st"> </span>c) <span class="co"># multiply by Earth&#39;s diameter</span></a>
-<a class="sourceLine" id="cb107-20" data-line-number="20"><span class="co">#&gt; [1] 131</span></a></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="co"># Function to convert degrees to radians</span></a>
+<a class="sourceLine" id="cb106-2" data-line-number="2">deg2rad =<span class="st"> </span><span class="cf">function</span>(deg) deg <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">180</span></a>
+<a class="sourceLine" id="cb106-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb106-4" data-line-number="4"><span class="co"># Create origins and destinations</span></a>
+<a class="sourceLine" id="cb106-5" data-line-number="5">o =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.55</span>, <span class="dt">lat =</span> <span class="fl">53.80</span>)</a>
+<a class="sourceLine" id="cb106-6" data-line-number="6">d =<span class="st"> </span><span class="kw">c</span>(<span class="dt">lon =</span> <span class="fl">-1.61</span>, <span class="dt">lat =</span> <span class="fl">54.98</span>)</a>
+<a class="sourceLine" id="cb106-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb106-8" data-line-number="8"><span class="co"># Convert to radians</span></a>
+<a class="sourceLine" id="cb106-9" data-line-number="9">o_rad =<span class="st"> </span><span class="kw">deg2rad</span>(o)</a>
+<a class="sourceLine" id="cb106-10" data-line-number="10">d_rad =<span class="st"> </span><span class="kw">deg2rad</span>(d)</a>
+<a class="sourceLine" id="cb106-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb106-12" data-line-number="12"><span class="co"># Find difference in degrees</span></a>
+<a class="sourceLine" id="cb106-13" data-line-number="13">delta_lon =<span class="st"> </span>(o_rad[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb106-14" data-line-number="14">delta_lat =<span class="st"> </span>(o_rad[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>d_rad[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb106-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb106-16" data-line-number="16"><span class="co"># Calculate distance with Haversine formula</span></a>
+<a class="sourceLine" id="cb106-17" data-line-number="17">a =<span class="st"> </span><span class="kw">sin</span>(delta_lat <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">cos</span>(o_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(d_rad[<span class="dv">2</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(delta_lon <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb106-18" data-line-number="18">c =<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">asin</span>(<span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">sqrt</span>(a)))</a>
+<a class="sourceLine" id="cb106-19" data-line-number="19">(<span class="dt">d_hav1 =</span> <span class="dv">6371</span> <span class="op">*</span><span class="st"> </span>c) <span class="co"># multiply by Earth&#39;s diameter</span></a>
+<a class="sourceLine" id="cb106-20" data-line-number="20"><span class="co">#&gt; [1] 131</span></a></code></pre></div>
 <p>This method works but it takes time to write, test and debug. Much better to package it up into a function. Or even better, use a function that someone else has written and put in a package:</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co"># Find great circle distance with geosphere</span></a>
-<a class="sourceLine" id="cb108-2" data-line-number="2">(<span class="dt">d_hav2 =</span> geosphere<span class="op">::</span><span class="kw">distHaversine</span>(o, d))</a>
-<a class="sourceLine" id="cb108-3" data-line-number="3"><span class="co">#&gt; [1] 131415</span></a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="co"># Find great circle distance with geosphere</span></a>
+<a class="sourceLine" id="cb107-2" data-line-number="2">(<span class="dt">d_hav2 =</span> geosphere<span class="op">::</span><span class="kw">distHaversine</span>(o, d))</a>
+<a class="sourceLine" id="cb107-3" data-line-number="3"><span class="co">#&gt; [1] 131415</span></a></code></pre></div>
 <p>The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subsetting stages and small, similar functions (e.g. <code>sin</code> and <code>asin</code>) which are easy to confuse. The other is one line of simple code. The package method using <strong>geosphere</strong> took perhaps 100<sup>th</sup> of the time <em>and</em> gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?</p>
 <div id="searching-for-r-packages" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Searching for R packages</h3>
 <p>Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, <code>haversine formula R</code>, returned a link to the <strong>geosphere</strong> package in the second result (a <a href="http://www.r-bloggers.com/great-circle-distance-calculations-in-r/">hardcoded implementation</a> was first).</p>
 <p>Beyond Google, there are also several sites for searching for packages and functions.
 <a href="http://www.rdocumentation.org/">rdocumentation.org</a> provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for <code>haversine</code> in the Description field yielded 10 results from 8 packages: R has at least <em>8</em> implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with <code>RSiteSearch()</code>, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="co"># Search CRAN for mentions of haversine</span></a>
-<a class="sourceLine" id="cb109-2" data-line-number="2"><span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co"># Search CRAN for mentions of haversine</span></a>
+<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</a></code></pre></div>
 </div>
 <div id="how-to-select-a-package" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> How to select a package</h3>
@@ -636,8 +636,8 @@ This note briefly explains R Markdown for the un-initiated. R markdown is a form
 (1:5)^2
 ```</code></pre>
 <p>in an R Markdown document. The <code>eval = TRUE</code> in the code indicates that the code should be evaluated while <code>echo = TRUE</code> controls whether the R code is displayed. When we compile the document, we get</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="co">#&gt; [1]  1  4  9 16 25</span></a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb110-2" data-line-number="2"><span class="co">#&gt; [1]  1  4  9 16 25</span></a></code></pre></div>
 <p>R Markdown via <strong>knitr</strong> provides a wide range of options to customise what is displayed and evaluated. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a <code>.Rmd</code> file, for example, simply enter <code>Ctrl/Cmd+Alt+I</code> on Windows or Linux or select the option from the Code drop down menu.</p>
 <p>Once your document has compiled it should appear on your screen in the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the <a href="https://rpubs.com">rpubs</a> website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).

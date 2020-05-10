@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-05" />
+<meta name="date" content="2020-05-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -433,10 +433,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of every variable used, give you the burdensome responsibility of memory management and have to be compiled. The advantage of such languages, compared with R, is that they are faster to run. The disadvantage is that they take longer to learn and can not be run interactively.</p>
 <div class="rmdnote">
 <p>
-The wikipedia page on compiler optimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).
+The Wikipedia page on compiler optimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).
 </p>
 </div>
-<p>R users don’t tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run 100’s of times slower, so it’s important to understand the causes of slow code. These are covered in <span class="citation">Burns (<a href="#ref-Burns2011">2011</a>)</span>, which should be considered essential reading for any aspiring R programmers.</p>
+<p>R users don’t tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run hundreds of times slower, so it’s important to understand the causes of slow code. These are covered in <span class="citation">Burns (<a href="#ref-Burns2011">2011</a>)</span>, which should be considered essential reading for any aspiring R programmers.</p>
 <p>Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function <code>runif()</code> only contains a single line that consists of a call to <code>C_runif()</code>.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="cf">function</span> (n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) </a>
 <a class="sourceLine" id="cb57-2" data-line-number="2">  <span class="kw">.Call</span>(C_runif, n, min, max)</a></code></pre></div>
@@ -470,7 +470,7 @@ Everything in R is a function call. When we execute <code>1 + 1</code>, we are a
 You should also consider pre-allocating memory for data frames and lists. Never grow an object. A good rule of thumb is to compare your objects before and after a <code>for</code> loop; have they increased in length?
 </p>
 </div>
-<p>Let’s consider three methods of creating a sequence of numbers. <strong>Method 1</strong> creates an empty vector and gradually increases (or grows) the length of the vector</p>
+<p>Let’s consider three methods of creating a sequence of numbers. <strong>Method 1</strong> creates an empty vector and gradually increases (or grows) the length of the vector:</p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">method1 =<span class="st"> </span><span class="cf">function</span>(n) {</a>
 <a class="sourceLine" id="cb60-2" data-line-number="2">  vec =<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Or vec = c()</span></a>
 <a class="sourceLine" id="cb60-3" data-line-number="3">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
@@ -484,14 +484,14 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 <a class="sourceLine" id="cb61-4" data-line-number="4">    vec[i] =<span class="st"> </span>i</a>
 <a class="sourceLine" id="cb61-5" data-line-number="5">  vec</a>
 <a class="sourceLine" id="cb61-6" data-line-number="6">}</a></code></pre></div>
-<p><strong>Method 3</strong> directly creates the final object</p>
+<p><strong>Method 3</strong> directly creates the final object:</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">method3 =<span class="st"> </span><span class="cf">function</span>(n) <span class="kw">seq_len</span>(n)</a></code></pre></div>
 <p>To compare the three methods we use the <code>microbenchmark()</code> function from the previous chapter</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;s&quot;</span>, </a>
 <a class="sourceLine" id="cb63-2" data-line-number="2">               <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</a></code></pre></div>
-<p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour whilst method <span class="math inline">\(2\)</span> takes <span class="math inline">\(2\)</span> seconds and method <span class="math inline">\(3\)</span> is almost instantaneous. Rememberthe golden rule; access the underlying C/Fortran code as quickly as possible.</p>
+<p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, Method 1 takes around an hour whilst Method 2 takes <span class="math inline">\(2\)</span> seconds and Method 3 is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
-<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, method <span class="math inline">\(1\)</span> takes around an hour while the other methods take less than <span class="math inline">\(3\)</span> seconds.</caption>
+<caption>Time in seconds to create sequences. When <span class="math inline">\(n=10^7\)</span>, Method 1 takes around an hour while the other methods take less than <span class="math inline">\(3\)</span> seconds.</caption>
 <thead>
 <tr class="header">
 <th><span class="math inline">\(n\)</span></th>
@@ -548,7 +548,7 @@ Using <code>1:length(x)</code> can lead to hard-to-find bugs when <code>x</code>
 <li>It’s neater.</li>
 <li>It doesn’t contain a bug when <code>x</code> is of length <span class="math inline">\(0\)</span>.</li>
 </ul>
-<p>As with the general example in section <a href="programming.html#general">3.2</a>, the slowdown isn’t due to the <code>for</code> loop. Instead, it’s because there are many more functions calls.</p>
+<p>As with the general example in Section <a href="programming.html#general">3.2</a>, the slowdown isn’t due to the <code>for</code> loop. Instead, it’s because there are many more function calls.</p>
 <div id="exercises-7" class="section level4 unnumbered">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
@@ -583,12 +583,12 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 <a class="sourceLine" id="cb67-8" data-line-number="8">  }</a>
 <a class="sourceLine" id="cb67-9" data-line-number="9">  <span class="kw">return</span>(hits <span class="op">/</span><span class="st"> </span>N)</a>
 <a class="sourceLine" id="cb67-10" data-line-number="10">}</a></code></pre></div>
-<p>In R this takes a few seconds</p>
+<p>In R, this takes a few seconds</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">N =<span class="st"> </span><span class="dv">500000</span></a>
 <a class="sourceLine" id="cb68-2" data-line-number="2"><span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))</a>
 <a class="sourceLine" id="cb68-3" data-line-number="3"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   1.921   0.008   1.929</span></a></code></pre></div>
-<p>In contrast a more R-centric approach would be</p>
+<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   1.941   0.012   1.953</span></a></code></pre></div>
+<p>In contrast, a more R-centric approach would be</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N))<span class="op">/</span>N</a></code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
 <ul>
@@ -599,16 +599,16 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 </ul>
 The function <code>monte_carlo_vec()</code> is around <span class="math inline">\(30\)</span> times faster than <code>monte_carlo()</code>.
 <div class="figure" style="text-align: center"><span id="fig:3-1"></span>
-<img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
+<img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve, throw random points at the graph and count the number of points that lie under the curve." width="70%" />
 <p class="caption">
-Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.
+Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the curve, throw random points at the graph and count the number of points that lie under the curve.
 </p>
 </div>
 </div>
 </div>
 <div id="exercise-1" class="section level3 unnumbered">
 <h3>Exercise</h3>
-<p>Verify that <code>monte_carlo_vec()</code> is faster than <code>monte_carlo()</code>. How does this relate to the number of darts, i.e. the size of <code>N</code>, that is used</p>
+<p>Verify that <code>monte_carlo_vec()</code> is faster than <code>monte_carlo()</code>. How does this relate to the number of darts, i.e. the size of <code>N</code>, that is used?</p>
 </div>
 </div>
 <div id="communicating-with-the-user" class="section level2">
@@ -634,7 +634,7 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 <p>We can use this information in a standard conditional statement</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="cf">if</span>(<span class="kw">class</span>(bad) <span class="op">==</span><span class="st"> &quot;try-error&quot;</span>)</a>
 <a class="sourceLine" id="cb73-2" data-line-number="2">  <span class="co"># Do something </span></a></code></pre></div>
-<p>Further details on error handling, as well as some excellent advice on general debugging techniques, are given in <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>.</p>
+<p>Further details on error handling, as well as some excellent advice on general debugging techniques, are given in <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>.</p>
 </div>
 <div id="warnings-warning" class="section level3 unnumbered">
 <h3>Warnings: <code>warning()</code></h3>
@@ -670,7 +670,7 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 <a class="sourceLine" id="cb74-10" data-line-number="10">  <span class="kw">invisible</span>(model)</a>
 <a class="sourceLine" id="cb74-11" data-line-number="11">}</a></code></pre></div>
 <p>When the function is called, a scatter graph is plotted with the line of best fit, but the output is invisible. However when we assign the function to an object, i.e. <code>out = regression_plot(x, y)</code> the variable <code>out</code> contains the output of the <code>lm()</code> call.</p>
-<p>Another example is <code>hist()</code>. Typically we don’t want anything displayed in the console when we call the function</p>
+<p>Another example is the histogram function <code>hist()</code>. Typically we don’t want anything displayed in the console when we call the function</p>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1"><span class="kw">hist</span>(x)</a></code></pre></div>
 <p>However if we assign the output to an object, <code>out = hist(x)</code>, the object <code>out</code> is actually a list containing, <em>inter alia</em>, information on the mid-points, breaks and counts.</p>
 </div>
@@ -694,7 +694,7 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="kw">boxplot</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">factor</span>(type, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Small&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;Large&quot;</span>)))</a></code></pre></div>
 <div class="rmdwarning">
 <p>
-Most users interact with factors via the <code>read.csv()</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv()</code>, we use the <code>stringsAsFactors = FALSE</code> argument. Although this argument can add in the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.
+Most users interact with factors via the <code>read.csv()</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv()</code>, we use the <code>stringsAsFactors = FALSE</code> argument. Although this argument can be added to the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.
 </p>
 </div>
 </div>
@@ -716,7 +716,7 @@ Most users interact with factors via the <code>read.csv()</code> function where 
 </div>
 <div id="the-apply-family" class="section level2">
 <h2><span class="header-section-number">3.5</span> The apply family</h2>
-<p>The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in <a href="programming.html#tab:apply-family">3.1</a>, with a short description. In general, all the apply functions have similar properties:</p>
+<p>The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in Table <a href="programming.html#tab:apply-family">3.1</a>, with a short description. In general, all the apply functions have similar properties:</p>
 <ul>
 <li>Each function takes at least two arguments: an object and another function. The function is passed as an argument.</li>
 <li>Every apply function has the dots, <code>...</code>, argument that is used to pass on arguments to the function that is given as an argument.</li>
@@ -727,10 +727,6 @@ Most users interact with factors via the <code>read.csv()</code> function where 
 Most people rarely use the other apply functions. For example, I have only used <code>eapply()</code> once. Students in my class uploaded R scripts. Using <code>source()</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply()</code>. Using separate environments, avoided object name clashes.
 </p>
 </div>
-<pre><code>#&gt; Warning: `frame_data()` is deprecated as of lifecycle 2.0.0.
-#&gt; Please use `tribble()` instead.
-#&gt; This warning is displayed once every 8 hours.
-#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <table>
 <caption><span id="tab:apply-family">Table 3.1: </span>The apply family of functions from base R.</caption>
 <thead>
@@ -772,48 +768,48 @@ Most people rarely use the other apply functions. For example, I have only used 
 </table>
 <p>The <code>apply()</code> function is used to apply a function to each row or column of a matrix. In many data science
 problems, this is a common task. For example, to calculate the standard deviation of the rows we have</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
-<a class="sourceLine" id="cb82-2" data-line-number="2"><span class="co"># MARGIN=1: corresponds to rows</span></a>
-<a class="sourceLine" id="cb82-3" data-line-number="3">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</a></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
+<a class="sourceLine" id="cb81-2" data-line-number="2"><span class="co"># MARGIN=1: corresponds to rows</span></a>
+<a class="sourceLine" id="cb81-3" data-line-number="3">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</a></code></pre></div>
 <p>The first argument of <code>apply()</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">col_med =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</a></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">col_med =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</a></code></pre></div>
 <p>Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the <code>na.rm</code> argument to the <code>sd</code> function, we have</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The <code>apply()</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
 <p>The <code>lapply()</code> function is similar to <code>apply()</code>; with the key difference being that the input type is a vector or list and the return type is a list. Essentially, we apply a function to each element of a list or vector. The functions <code>sapply()</code> and <code>vapply()</code> are similar to <code>lapply()</code>, but the return type is not necessary a list.</p>
 <div id="example-the-movies-data-set" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Example: the movies data set</h3>
-<p>The internet movie <a href="http://imdb.com/">database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon. The <strong>ggplot2movies</strong> package contains about sixty thousand movies stored as a data frame</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1"><span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>)</a></code></pre></div>
+<p>The <a href="http://imdb.com/">Internet Movie Database</a> is a website that collects movie data supplied by studios and fans. It is one of the largest movie databases on the web and is maintained by Amazon. The <strong>ggplot2movies</strong> package contains about sixty thousand movies stored as a data frame</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>)</a></code></pre></div>
 <p>Movies are rated between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span> by fans. Columns <span class="math inline">\(7\)</span> to <span class="math inline">\(16\)</span> of the <code>movies</code> data set gives the percentage of voters for a particular rating.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1">ratings =<span class="st"> </span>movies[, <span class="dv">7</span><span class="op">:</span><span class="dv">16</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1">ratings =<span class="st"> </span>movies[, <span class="dv">7</span><span class="op">:</span><span class="dv">16</span>]</a></code></pre></div>
 <p>For example, 4.5% of voters, rated the first movie a rating of <span class="math inline">\(1\)</span></p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">ratings[<span class="dv">1</span>, ]</a>
-<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="co">#&gt; # A tibble: 1 x 10</span></a>
-<a class="sourceLine" id="cb87-3" data-line-number="3"><span class="co">#&gt;      r1    r2    r3    r4    r5    r6    r7    r8    r9   r10</span></a>
-<a class="sourceLine" id="cb87-4" data-line-number="4"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb87-5" data-line-number="5"><span class="co">#&gt; 1   4.5   4.5   4.5   4.5  14.5  24.5  24.5  14.5   4.5   4.5</span></a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1">ratings[<span class="dv">1</span>, ]</a>
+<a class="sourceLine" id="cb86-2" data-line-number="2"><span class="co">#&gt; # A tibble: 1 x 10</span></a>
+<a class="sourceLine" id="cb86-3" data-line-number="3"><span class="co">#&gt;      r1    r2    r3    r4    r5    r6    r7    r8    r9   r10</span></a>
+<a class="sourceLine" id="cb86-4" data-line-number="4"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb86-5" data-line-number="5"><span class="co">#&gt; 1   4.5   4.5   4.5   4.5  14.5  24.5  24.5  14.5   4.5   4.5</span></a></code></pre></div>
 <p>We can use the <code>apply()</code> function to investigate voting patterns. The function <code>nnet::which.is.max()</code> finds the maximum position in a vector, but breaks ties at random; <code>which.max()</code> just returns the first value. Using <code>apply()</code>, we can easily determine the most popular rating for each movie and plot the results</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">popular =<span class="st"> </span><span class="kw">apply</span>(ratings, <span class="dv">1</span>, nnet<span class="op">::</span>which.is.max)</a>
-<a class="sourceLine" id="cb88-2" data-line-number="2"><span class="kw">plot</span>(<span class="kw">table</span>(popular))</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:3-3"></span>
-<img src="_main_files/figure-html/3-3-1.png" alt="Movie voting preferences." width="70%" />
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">popular =<span class="st"> </span><span class="kw">apply</span>(ratings, <span class="dv">1</span>, nnet<span class="op">::</span>which.is.max)</a>
+<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="kw">plot</span>(<span class="kw">table</span>(popular))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:3-2"></span>
+<img src="_main_files/figure-html/3-2-1.png" alt="Movie voting preferences." width="70%" />
 <p class="caption">
 Figure 3.2: Movie voting preferences.
 </p>
 </div>
-<p>Figure @(fig:3-3) highlights that voting patterns are clearly not uniform between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span>. The most popular vote is the highest rating, <span class="math inline">\(10\)</span>. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at <span class="math inline">\(1\)</span>). Rating a movie <span class="math inline">\(7\)</span> is also a popular choice (search the web for “most popular number” and <span class="math inline">\(7\)</span> dominates the rankings.)</p>
+<p>Figure <a href="programming.html#fig:3-2">3.2</a> highlights that voting patterns are clearly not uniform between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span>. The most popular vote is the highest rating, <span class="math inline">\(10\)</span>. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at <span class="math inline">\(1\)</span>). Rating a movie <span class="math inline">\(7\)</span> is also a popular choice (search the web for “most popular number” and <span class="math inline">\(7\)</span> dominates the rankings).</p>
 </div>
 <div id="type-consistency" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Type consistency</h3>
-<p>When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example the functions <code>sapply()</code> and <code>[.data.frame()</code> aren’t type consistent</p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</a>
-<a class="sourceLine" id="cb89-2" data-line-number="2">zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()</a>
-<a class="sourceLine" id="cb89-3" data-line-number="3"><span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span></a>
-<a class="sourceLine" id="cb89-4" data-line-number="4"><span class="kw">sapply</span>(zero_cols, class) <span class="co"># a list</span></a>
-<a class="sourceLine" id="cb89-5" data-line-number="5">two_cols[, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]          <span class="co"># a data.frame</span></a>
-<a class="sourceLine" id="cb89-6" data-line-number="6">two_cols[, <span class="dv">1</span>]            <span class="co"># an integer vector</span></a></code></pre></div>
-<p>This can cause unexpected problems. The functions <code>lapply()</code> and <code>vapply()</code> are type consistent. Likewise for <code>dplyr::select()</code> and <code>dplyr:filter()</code>. The <strong>purrr</strong> package has some type consistent alternatives to base R functions. For example, <code>map_dbl()</code> etc. to replace <code>Map()</code> and <code>flatten_df()</code> to replace <code>unlist()</code>.</p>
+<p>When programming, it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example, the functions <code>sapply()</code> and <code>[.data.frame()</code> aren’t type consistent</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">two_cols =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">y =</span> letters[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</a>
+<a class="sourceLine" id="cb88-2" data-line-number="2">zero_cols =<span class="st"> </span><span class="kw">data.frame</span>()</a>
+<a class="sourceLine" id="cb88-3" data-line-number="3"><span class="kw">sapply</span>(two_cols, class)  <span class="co"># a character vector</span></a>
+<a class="sourceLine" id="cb88-4" data-line-number="4"><span class="kw">sapply</span>(zero_cols, class) <span class="co"># a list</span></a>
+<a class="sourceLine" id="cb88-5" data-line-number="5">two_cols[, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]          <span class="co"># a data.frame</span></a>
+<a class="sourceLine" id="cb88-6" data-line-number="6">two_cols[, <span class="dv">1</span>]            <span class="co"># an integer vector</span></a></code></pre></div>
+<p>This can cause unexpected problems. The functions <code>lapply()</code> and <code>vapply()</code> are type consistent. Likewise for <code>dplyr::select()</code> and <code>dplyr:filter()</code>. The <strong>purrr</strong> package has some type consistent alternatives to base R functions. For example, <code>map_dbl()</code> (and other <code>map_*</code> functions) to replace <code>Map()</code> and <code>flatten_df()</code> to replace <code>unlist()</code>.</p>
 <div id="other-resources" class="section level4 unnumbered">
 <h4>Other resources</h4>
 <p>Almost every R book has a section on the apply function. Below, we’ve given the resources we feel are most helpful.</p>
@@ -821,7 +817,7 @@ Figure 3.2: Movie voting preferences.
 <li>Each function has a number of examples in the associated help page. You can directly access the examples using the <code>example()</code> function, e.g. to run the <code>apply()</code> examples, use <code>example(&quot;apply&quot;)</code>.</li>
 <li>There is a very detailed StackOverflow <a href="http://stackoverflow.com/q/3505701/203420">answer</a> which describes when, where and how to use each of the functions.</li>
 <li>In a similar vein, Neil Saunders has a nice blog <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">post</a> giving an overview of the functions.</li>
-<li>The apply functions are an example of functional programming. Chapter 16 of <em>R for data Science</em> describes the interplay between loops and functional programming in more detail <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span>, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
+<li>The apply functions are an example of functional programming. Chapter 16 of <em>R for Data Science</em> <span class="citation">(Grolemund and Wickham <a href="#ref-grolemund_r_2016">2016</a>)</span> describes the interplay between loops and functional programming in more detail, while <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> gives a more in-depth description of the topic.</li>
 </ul>
 </div>
 <div id="exercises-9" class="section level4 unnumbered">
@@ -837,33 +833,33 @@ the <code>drop</code> argument.</p></li>
 <div id="caching-variables" class="section level2">
 <h2><span class="header-section-number">3.6</span> Caching variables</h2>
 <p>A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing <code>sd(x)</code> in multiple function calls with the object <code>sd_x</code> that is defined once and reused. For example, suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the entire data set</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1"><span class="kw">apply</span>(x, <span class="dv">2</span>, <span class="cf">function</span>(i) <span class="kw">mean</span>(i) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x))</a></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="kw">apply</span>(x, <span class="dv">2</span>, <span class="cf">function</span>(i) <span class="kw">mean</span>(i) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x))</a></code></pre></div>
 <p>This is inefficient since the value of <code>sd(x)</code> is constant and thus recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">sd_x =<span class="st"> </span><span class="kw">sd</span>(x)</a>
-<a class="sourceLine" id="cb91-2" data-line-number="2"><span class="kw">apply</span>(x, <span class="dv">2</span>, <span class="cf">function</span>(i) <span class="kw">mean</span>(i) <span class="op">/</span><span class="st"> </span>sd_x)</a></code></pre></div>
-<p>If we compare the two methods on a <span class="math inline">\(100\)</span> row by <span class="math inline">\(1000\)</span> column matrix, the cached version is around <span class="math inline">\(100\)</span> times faster (figure <a href="programming.html#fig:3-5">3.3</a>).</p>
-<div class="figure" style="text-align: center"><span id="fig:3-5"></span>
-<img src="_main_files/figure-html/3-5-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1">sd_x =<span class="st"> </span><span class="kw">sd</span>(x)</a>
+<a class="sourceLine" id="cb90-2" data-line-number="2"><span class="kw">apply</span>(x, <span class="dv">2</span>, <span class="cf">function</span>(i) <span class="kw">mean</span>(i) <span class="op">/</span><span class="st"> </span>sd_x)</a></code></pre></div>
+<p>If we compare the two methods on a <span class="math inline">\(100\)</span> row by <span class="math inline">\(1000\)</span> column matrix, the cached version is around <span class="math inline">\(100\)</span> times faster (Figure <a href="programming.html#fig:3-4">3.3</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:3-4"></span>
+<img src="_main_files/figure-html/3-4-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
 <p class="caption">
 Figure 3.3: Performance gains obtained from caching the standard deviation in a <span class="math inline">\(100\)</span> by <span class="math inline">\(1000\)</span> matrix.
 </p>
 </div>
 <p>A more advanced form of caching is to use the <strong>memoise</strong> package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The <strong>memoise</strong> package allows us to easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the <strong>memoise</strong> function.</p>
-<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1"><span class="co"># Argument indicates row to remove</span></a>
-<a class="sourceLine" id="cb92-2" data-line-number="2">plot_mpg =<span class="st"> </span><span class="cf">function</span>(row_to_remove) {</a>
-<a class="sourceLine" id="cb92-3" data-line-number="3">  <span class="kw">data</span>(mpg, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)</a>
-<a class="sourceLine" id="cb92-4" data-line-number="4">  mpg =<span class="st"> </span>mpg[<span class="op">-</span>row_to_remove, ]</a>
-<a class="sourceLine" id="cb92-5" data-line-number="5">  <span class="kw">plot</span>(mpg<span class="op">$</span>cty, mpg<span class="op">$</span>hwy)</a>
-<a class="sourceLine" id="cb92-6" data-line-number="6">  <span class="kw">lines</span>(<span class="kw">lowess</span>(mpg<span class="op">$</span>cty, mpg<span class="op">$</span>hwy), <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb92-7" data-line-number="7">}</a></code></pre></div>
-<p>We can use <strong>memoise</strong> speed up by caching results. A quick benchmark</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)</a>
-<a class="sourceLine" id="cb93-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb93-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb93-4" data-line-number="4"><span class="co">#&gt;            expr   min    lq  mean median    uq   max neval cld</span></a>
-<a class="sourceLine" id="cb93-5" data-line-number="5"><span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a </span></a>
-<a class="sourceLine" id="cb93-6" data-line-number="6"><span class="co">#&gt;    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b</span></a></code></pre></div>
+<p>The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a Shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="co"># Argument indicates row to remove</span></a>
+<a class="sourceLine" id="cb91-2" data-line-number="2">plot_mpg =<span class="st"> </span><span class="cf">function</span>(row_to_remove) {</a>
+<a class="sourceLine" id="cb91-3" data-line-number="3">  <span class="kw">data</span>(mpg, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)</a>
+<a class="sourceLine" id="cb91-4" data-line-number="4">  mpg =<span class="st"> </span>mpg[<span class="op">-</span>row_to_remove, ]</a>
+<a class="sourceLine" id="cb91-5" data-line-number="5">  <span class="kw">plot</span>(mpg<span class="op">$</span>cty, mpg<span class="op">$</span>hwy)</a>
+<a class="sourceLine" id="cb91-6" data-line-number="6">  <span class="kw">lines</span>(<span class="kw">lowess</span>(mpg<span class="op">$</span>cty, mpg<span class="op">$</span>hwy), <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb91-7" data-line-number="7">}</a></code></pre></div>
+<p>We can use <strong>memoise</strong> to speed up repeated function calls by caching results. A quick benchmark</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">m_plot_mpg =<span class="st"> </span><span class="kw">memoise</span>(plot_mpg)</a>
+<a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb92-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
+<a class="sourceLine" id="cb92-4" data-line-number="4"><span class="co">#&gt;            expr   min    lq  mean median    uq   max neval cld</span></a>
+<a class="sourceLine" id="cb92-5" data-line-number="5"><span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a </span></a>
+<a class="sourceLine" id="cb92-6" data-line-number="6"><span class="co">#&gt;    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b</span></a></code></pre></div>
 <p>suggests that we can obtain a <span class="math inline">\(100\)</span>-fold speed-up.</p>
 <div id="exercise-3" class="section level4 unnumbered">
 <h4>Exercise</h4>
@@ -873,26 +869,26 @@ Figure 3.3: Performance gains obtained from caching the standard deviation in a 
 <h3><span class="header-section-number">3.6.1</span> Function closures</h3>
 <div class="rmdwarning">
 <p>
-The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation"><span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span> for a detailed introduction.
+The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation"><span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span> for a detailed introduction.
 </p>
 </div>
 <p>More advanced caching is available using <em>function closures</em>. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in <code>.GlobalEnv</code>. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function closure</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1"><span class="co"># &lt;&lt;- assigns values to the parent environment</span></a>
-<a class="sourceLine" id="cb94-2" data-line-number="2">stop_watch =<span class="st"> </span><span class="cf">function</span>() {</a>
-<a class="sourceLine" id="cb94-3" data-line-number="3">  start_time =<span class="st"> </span>stop_time =<span class="st"> </span><span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb94-4" data-line-number="4">  start =<span class="st"> </span><span class="cf">function</span>() start_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
-<a class="sourceLine" id="cb94-5" data-line-number="5">  stop =<span class="st"> </span><span class="cf">function</span>() {</a>
-<a class="sourceLine" id="cb94-6" data-line-number="6">    stop_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
-<a class="sourceLine" id="cb94-7" data-line-number="7">    <span class="kw">difftime</span>(stop_time, start_time)</a>
-<a class="sourceLine" id="cb94-8" data-line-number="8">  }</a>
-<a class="sourceLine" id="cb94-9" data-line-number="9">  <span class="kw">list</span>(<span class="dt">start =</span> start, <span class="dt">stop =</span> stop)</a>
-<a class="sourceLine" id="cb94-10" data-line-number="10">}</a>
-<a class="sourceLine" id="cb94-11" data-line-number="11">watch =<span class="st"> </span><span class="kw">stop_watch</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1"><span class="co"># &lt;&lt;- assigns values to the parent environment</span></a>
+<a class="sourceLine" id="cb93-2" data-line-number="2">stop_watch =<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb93-3" data-line-number="3">  start_time =<span class="st"> </span>stop_time =<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb93-4" data-line-number="4">  start =<span class="st"> </span><span class="cf">function</span>() start_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
+<a class="sourceLine" id="cb93-5" data-line-number="5">  stop =<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb93-6" data-line-number="6">    stop_time &lt;&lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
+<a class="sourceLine" id="cb93-7" data-line-number="7">    <span class="kw">difftime</span>(stop_time, start_time)</a>
+<a class="sourceLine" id="cb93-8" data-line-number="8">  }</a>
+<a class="sourceLine" id="cb93-9" data-line-number="9">  <span class="kw">list</span>(<span class="dt">start =</span> start, <span class="dt">stop =</span> stop)</a>
+<a class="sourceLine" id="cb93-10" data-line-number="10">}</a>
+<a class="sourceLine" id="cb93-11" data-line-number="11">watch =<span class="st"> </span><span class="kw">stop_watch</span>()</a></code></pre></div>
 <p>The object <code>watch</code> is a list, that contains two functions. One function for starting the timer</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">watch<span class="op">$</span><span class="kw">start</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">watch<span class="op">$</span><span class="kw">start</span>()</a></code></pre></div>
 <p>the other for stopping the timer</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">watch<span class="op">$</span><span class="kw">stop</span>()</a></code></pre></div>
-<p>Without using function closures, the stop-watch function would be longer, more complex and therefore more inefficient. When used properly function closures are very useful programming tools for writing concise code.</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">watch<span class="op">$</span><span class="kw">stop</span>()</a></code></pre></div>
+<p>Without using function closures, the stop-watch function would be longer, more complex and therefore more inefficient. When used properly, function closures are very useful programming tools for writing concise code.</p>
 <div id="exercise-4" class="section level4 unnumbered">
 <h4>Exercise</h4>
 <ol style="list-style-type: decimal">
@@ -901,7 +897,7 @@ The following section is meant to provide an introduction to function closures w
 </ol>
 <div class="rmdnote">
 <p>
-A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute, <code>plot(height, weight)</code> R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is powerful concept that enables us to simplify code. More detail is given in the “Non-standard evaluation” of <span class="citation"><span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span>.
+A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute <code>plot(height, weight)</code>, R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is a powerful concept that enables us to simplify code. More detail is given about “Non-standard evaluation” in <span class="citation"><span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span></span>.
 </p>
 </div>
 </div>
@@ -911,39 +907,39 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <h2><span class="header-section-number">3.7</span> The byte compiler</h2>
 <p>The <strong>compiler</strong> package, written by R Core member Luke Tierney has been part of R since version 2.13.0. The <strong>compiler</strong> package allows R functions to be compiled, resulting in a byte code version that may run faster<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>. The compilation process eliminates a number of costly operations the interpreter has to perform, such as variable lookup.</p>
 <p>Since R 2.14.0, all of the standard functions and packages in base R are pre-compiled into byte-code. This is illustrated by the base function <code>mean()</code>:</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</a>
-<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="co">#&gt; function (x, ...) </span></a>
-<a class="sourceLine" id="cb97-3" data-line-number="3"><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb97-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x2f1f890&gt;</span></a>
-<a class="sourceLine" id="cb97-5" data-line-number="5"><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</a>
+<a class="sourceLine" id="cb96-2" data-line-number="2"><span class="co">#&gt; function (x, ...) </span></a>
+<a class="sourceLine" id="cb96-3" data-line-number="3"><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></a>
+<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x3003890&gt;</span></a>
+<a class="sourceLine" id="cb96-5" data-line-number="5"><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
 <h3><span class="header-section-number">3.7.1</span> Example: the mean function</h3>
 <p>The <strong>compiler</strong> package comes with R, so we just need to load the package in the usual way</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;compiler&quot;</span>)</a></code></pre></div>
 <p>Next we create an inefficient function for calculating the mean. This function takes in a vector, calculates the length and then updates the <code>m</code> variable.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb99-2" data-line-number="2">  m =<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb99-3" data-line-number="3">  n =<span class="st"> </span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb99-4" data-line-number="4">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
-<a class="sourceLine" id="cb99-5" data-line-number="5">    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</a>
-<a class="sourceLine" id="cb99-6" data-line-number="6">  m</a>
-<a class="sourceLine" id="cb99-7" data-line-number="7">}</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb98-2" data-line-number="2">  m =<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb98-3" data-line-number="3">  n =<span class="st"> </span><span class="kw">length</span>(x)</a>
+<a class="sourceLine" id="cb98-4" data-line-number="4">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
+<a class="sourceLine" id="cb98-5" data-line-number="5">    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</a>
+<a class="sourceLine" id="cb98-6" data-line-number="6">  m</a>
+<a class="sourceLine" id="cb98-7" data-line-number="7">}</a></code></pre></div>
 <p>This is clearly a bad function and we should just use the <code>mean()</code> function, but it’s a useful comparison. Compiling the function is straightforward</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">cmp_mean_r =<span class="st"> </span><span class="kw">cmpfun</span>(mean_r)</a></code></pre></div>
 <p>Then we use the <code>microbenchmark()</code> function to compare the three variants</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1"><span class="co"># Generate some data</span></a>
-<a class="sourceLine" id="cb101-2" data-line-number="2">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb101-3" data-line-number="3"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="co"># milliseconds</span></a>
-<a class="sourceLine" id="cb101-4" data-line-number="4">          <span class="kw">mean_r</span>(x), <span class="kw">cmp_mean_r</span>(x), <span class="kw">mean</span>(x))</a>
-<a class="sourceLine" id="cb101-5" data-line-number="5"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb101-6" data-line-number="6"><span class="co">#&gt;           expr   min    lq  mean median    uq  max neval cld</span></a>
-<a class="sourceLine" id="cb101-7" data-line-number="7"><span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span></a>
-<a class="sourceLine" id="cb101-8" data-line-number="8"><span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span></a>
-<a class="sourceLine" id="cb101-9" data-line-number="9"><span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></a></code></pre></div>
-<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean()</code> function is faster, but compiling does make a significant difference (figure <a href="programming.html#fig:3-4">3.4</a>).</p>
-<div class="figure" style="text-align: center"><span id="fig:3-4"></span>
-<img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1"><span class="co"># Generate some data</span></a>
+<a class="sourceLine" id="cb100-2" data-line-number="2">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb100-3" data-line-number="3"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="co"># milliseconds</span></a>
+<a class="sourceLine" id="cb100-4" data-line-number="4">          <span class="kw">mean_r</span>(x), <span class="kw">cmp_mean_r</span>(x), <span class="kw">mean</span>(x))</a>
+<a class="sourceLine" id="cb100-5" data-line-number="5"><span class="co">#&gt; Unit: milliseconds</span></a>
+<a class="sourceLine" id="cb100-6" data-line-number="6"><span class="co">#&gt;           expr   min    lq  mean median    uq  max neval cld</span></a>
+<a class="sourceLine" id="cb100-7" data-line-number="7"><span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span></a>
+<a class="sourceLine" id="cb100-8" data-line-number="8"><span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span></a>
+<a class="sourceLine" id="cb100-9" data-line-number="9"><span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></a></code></pre></div>
+<p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean()</code> function is faster, but compiling does make a significant difference (Figure <a href="programming.html#fig:3-3">3.4</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:3-3"></span>
+<img src="_main_files/figure-html/3-3-1.png" alt="Comparison of mean functions." width="70%" />
 <p class="caption">
 Figure 3.4: Comparison of mean functions.
 </p>
@@ -954,17 +950,17 @@ Figure 3.4: Comparison of mean functions.
 <p>There are a number of ways to compile code. The easiest is to compile individual functions using <code>cmpfun()</code>, but this obviously doesn’t scale. If you create a package, you can automatically compile the package on installation by adding</p>
 <pre><code>ByteCompile: true</code></pre>
 <p>to the <code>DESCRIPTION</code> file. Most R packages installed using <code>install.packages()</code> are not compiled. We can enable (or force) packages to be compiled by starting R with the environment variable <code>R_COMPILE_PKGS</code> set to a positive integer value and specify that we install the package from <code>source</code>, i.e.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1">## Windows users will need Rtools</a>
-<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">## Windows users will need Rtools</a>
+<a class="sourceLine" id="cb102-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
 <p>Or if we want to avoid altering the <code>.Renviron</code> file, we can specify an additional argument</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </a></code></pre></div>
 <p>A final option is to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
 <div class="rmdtip">
 <p>
 We recommend setting the compile level to the maximum value of 3.
 </p>
 </div>
-<p>The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code speed gains will be small <span class="citation">(R Core Team <a href="#ref-team2016installation">2016</a>)</span>.</p>
+<p>The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code, speed gains will be small <span class="citation">(R Core Team <a href="#ref-team2016installation">2016</a>)</span>.</p>
 <div class="rmdwarning">
 <p>
 Not all packages work if compiled on installation.

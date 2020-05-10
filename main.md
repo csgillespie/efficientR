@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-05-05"
+date: "2020-05-10"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -131,7 +131,7 @@ R's notoriety for being able to solve a problem in multiple different ways has g
 
 It is well known that R code can promote *algorithmic efficiency* compared with low level languages for certain tasks, especially if the code was written by someone who doesn't fully understand the language. But it is worth highlighting the numerous ways that R *encourages* and *guides* efficiency, especially programmer efficiency:
 
-- R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, FORTRAN and other languages behind the scenes.
+- R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, Fortran and other languages behind the scenes.
 - R is a functional and object orientated language [@Wickham2014]. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code. 
 - R uses RAM for memory. This may seem obvious but it's worth saying: RAM is much faster than any hard disk system. Compared with databases, R is therefore very fast at common data manipulation, processing and modelling operations. RAM is now cheaper than ever, meaning the potential downside of this feature is further away than ever.
 - R is supported by excellent Integrated Development Environments (IDEs). The environment in which you program can have a huge impact on *programmer efficiency* as it can provide supporting help quickly, allow for interactive plotting, and allow your R projects to be tightly integrated with other aspects of your project such as file management, version management and interactive visualisation systems, as discussed in \@ref(rstudio).
@@ -298,9 +298,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 112068 117849 175878 121766 128362 5291988   100
-#>  cs_apply(x)  81593  84494 116621  89054 101793 2351470   100
-#>    cumsum(x)    654    779   1089    903   1008   13980   100
+#>    cs_for(x) 112133 118830 178537 122862 132746 5257408   100
+#>  cs_apply(x)  82591  85435 117067  92092  99982 2306642   100
+#>    cumsum(x)    660    814   1193    916   1030   14015   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1338,10 +1338,10 @@ We also use the **pryr** and **microbenchmark** packages in the exercises.
 Low level languages like C and Fortran demand more from the programmer. They force you to declare the type of every variable used, give you the burdensome responsibility of memory management and have to be compiled. The advantage of such languages, compared with R, is that they are faster to run. The disadvantage is that they take longer to learn and can not be run interactively.
 
 <div class="rmdnote">
-<p>The wikipedia page on compiler optimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).</p>
+<p>The Wikipedia page on compiler optimisations gives a nice overview of standard optimisation techniques (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler" class="uri">https://en.wikipedia.org/wiki/Optimizing_compiler</a>).</p>
 </div>
 
-R users don't tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run 100's of times slower, so it's important to understand the causes of slow code. These are covered in @Burns2011, which should be considered essential reading for any aspiring R programmers.
+R users don't tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run hundreds of times slower, so it's important to understand the causes of slow code. These are covered in @Burns2011, which should be considered essential reading for any aspiring R programmers.
 
 Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function `runif()` only contains a single line that consists of a call to `C_runif()`.
 
@@ -1391,7 +1391,7 @@ Another general technique is to be careful with memory allocation. If possible p
 <p>You should also consider pre-allocating memory for data frames and lists. Never grow an object. A good rule of thumb is to compare your objects before and after a <code>for</code> loop; have they increased in length?</p>
 </div>
 
-Let's consider three methods of creating a sequence of numbers. __Method 1__ creates an empty vector and gradually increases (or grows) the length of the vector
+Let's consider three methods of creating a sequence of numbers. __Method 1__ creates an empty vector and gradually increases (or grows) the length of the vector:
 
 
 ```r
@@ -1415,7 +1415,7 @@ method2 = function(n) {
 }
 ```
 
-__Method 3__ directly creates the final object
+__Method 3__ directly creates the final object:
 
 
 ```r
@@ -1430,7 +1430,7 @@ microbenchmark(times = 100, unit = "s",
                method1(n), method2(n), method3(n))
 ```
 
-The table below shows the timing in seconds on my machine for these three methods for a selection of values of `n`. The relationships for varying `n` are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When $n=10^7$, method $1$ takes around an hour whilst method $2$ takes $2$ seconds and method $3$ is almost instantaneous. Rememberthe golden rule; access the underlying C/Fortran code as quickly as possible.
+The table below shows the timing in seconds on my machine for these three methods for a selection of values of `n`. The relationships for varying `n` are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When $n=10^7$, Method 1 takes around an hour whilst Method 2 takes $2$ seconds and Method 3 is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.
 
 $n$ | Method 1 | Method 2 | Method 3 
 ----|----------|----------|---------
@@ -1438,7 +1438,7 @@ $10^5$ | $\phantom{000}0.21$    | $0.02$ | $0.00$
 $10^6$ | $\phantom{00}25.50$    | $0.22$ | $0.00$
 $10^7$ | $3827.00$              | $2.21$ | $0.00$
 
-Table: Time in seconds to create sequences. When $n=10^7$, method $1$ takes around an hour while the other methods take less than $3$ seconds.
+Table: Time in seconds to create sequences. When $n=10^7$, Method 1 takes around an hour while the other methods take less than $3$ seconds.
 
 ### Vectorised code
 
@@ -1479,7 +1479,7 @@ Writing code this way has a number of benefits.
   * It's neater.
   * It doesn't contain a bug when `x` is of length $0$.
   
-As with the general example in section \@ref(general), the slowdown isn't due to the `for` loop. Instead, it's because there are many more functions calls.
+As with the general example in Section \@ref(general), the slowdown isn't due to the `for` loop. Instead, it's because there are many more function calls.
 
 #### Exercises {-}
 
@@ -1519,17 +1519,17 @@ monte_carlo = function(N) {
 }
 ```
 
-In R this takes a few seconds
+In R, this takes a few seconds
 
 
 ```r
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   1.921   0.008   1.929
+#>   1.941   0.012   1.953
 ```
 
-In contrast a more R-centric approach would be
+In contrast, a more R-centric approach would be
 
 
 ```r
@@ -1545,13 +1545,13 @@ The `monte_carlo_vec()` function contains (at least) four aspects of vectorisati
 
 The function `monte_carlo_vec()` is around $30$ times faster than `monte_carlo()`.
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve." width="70%" />
-<p class="caption">(\#fig:3-1)Example of Monte-Carlo integration. To estimate the area under the curve throw random points at the graph and count the number of points that lie under the curve.</p>
+<img src="_main_files/figure-html/3-1-1.png" alt="Example of Monte-Carlo integration. To estimate the area under the curve, throw random points at the graph and count the number of points that lie under the curve." width="70%" />
+<p class="caption">(\#fig:3-1)Example of Monte-Carlo integration. To estimate the area under the curve, throw random points at the graph and count the number of points that lie under the curve.</p>
 </div>
 
 ### Exercise {-}
 
-Verify that `monte_carlo_vec()` is faster than `monte_carlo()`. How does this relate to the number of darts, i.e. the size of `N`, that is used
+Verify that `monte_carlo_vec()` is faster than `monte_carlo()`. How does this relate to the number of darts, i.e. the size of `N`, that is used?
 
 ## Communicating with the user
 
@@ -1598,7 +1598,7 @@ if(class(bad) == "try-error")
   # Do something 
 ```
 
-Further details on error handling, as well as some excellent advice on general debugging techniques, are given in [@Wickham2014].
+Further details on error handling, as well as some excellent advice on general debugging techniques, are given in @Wickham2014.
 
 ### Warnings: `warning()` {-}
 
@@ -1641,7 +1641,7 @@ regression_plot = function(x, y, ...) {
 
 When the function is called, a scatter graph is plotted with the line of best fit, but the output is invisible. However when we assign the function to an object, i.e.  `out = regression_plot(x, y)` the variable `out` contains the output of the `lm()` call.
 
-Another example is `hist()`. Typically we don't want anything displayed in the console when we call the function
+Another example is the histogram function `hist()`. Typically we don't want anything displayed in the console when we call the function
 
 
 ```r
@@ -1686,7 +1686,7 @@ boxplot(y ~ factor(type, levels = c("Small", "Medium", "Large")))
 ```
 
 <div class="rmdwarning">
-<p>Most users interact with factors via the <code>read.csv()</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv()</code>, we use the <code>stringsAsFactors = FALSE</code> argument. Although this argument can add in the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.</p>
+<p>Most users interact with factors via the <code>read.csv()</code> function where character columns are automatically converted to factors. This feature can be irritating if our data is messy and we want to clean and recode variables. Typically when reading in data via <code>read.csv()</code>, we use the <code>stringsAsFactors = FALSE</code> argument. Although this argument can be added to the global <code>options()</code> list and placed in the <code>.Rprofile</code>, this leads to non-portable code, so should be avoided.</p>
 </div>
 
 ### Fixed set of categories
@@ -1717,7 +1717,7 @@ Factors are slightly more space efficient than characters. Create a character ve
 
 ## The apply family
 
-The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in \@ref(tab:apply-family), with a short description. In general, all the apply functions have similar properties:
+The apply functions can be an alternative to writing for loops. The general idea is to apply (or map) a function to each element of an object. For example, you can apply a function to each row or column of a matrix. A list of available functions is given in Table \@ref(tab:apply-family), with a short description. In general, all the apply functions have similar properties:
 
   * Each function takes at least two arguments: an object and another function. The function is passed as an argument.
   * Every apply function has the dots, `...`, argument that is used to pass on arguments to the function that is given as an argument.
@@ -1727,15 +1727,6 @@ Using apply functions when possible, can lead to more succinct and idiomatic R c
 <div class="rmdnote">
 <p>Most people rarely use the other apply functions. For example, I have only used <code>eapply()</code> once. Students in my class uploaded R scripts. Using <code>source()</code>, I was able to read in the scripts to a separate environment. I then applied a marking scheme to each environment using <code>eapply()</code>. Using separate environments, avoided object name clashes.</p>
 </div>
-
-
-```
-#> Warning: `frame_data()` is deprecated as of lifecycle 2.0.0.
-#> Please use `tribble()` instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_warnings()` to see where this warning was generated.
-```
-
 
 
 Table: (\#tab:apply-family)The apply family of functions from base R.
@@ -1780,7 +1771,7 @@ The `lapply()` function is similar to `apply()`; with the key difference being t
 
 ### Example: the movies data set
 
-The internet movie [database](http://imdb.com/) is a website that collects movie data supplied by studios and fans. It is one of the largest movies databases on the web and is maintained by Amazon. The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
+The [Internet Movie Database](http://imdb.com/) is a website that collects movie data supplied by studios and fans. It is one of the largest movie databases on the web and is maintained by Amazon. The **ggplot2movies** package contains about sixty thousand movies stored as a data frame
 
 
 ```r
@@ -1814,15 +1805,15 @@ plot(table(popular))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/3-3-1.png" alt="Movie voting preferences." width="70%" />
-<p class="caption">(\#fig:3-3)Movie voting preferences.</p>
+<img src="_main_files/figure-html/3-2-1.png" alt="Movie voting preferences." width="70%" />
+<p class="caption">(\#fig:3-2)Movie voting preferences.</p>
 </div>
 
-Figure \@(fig:3-3) highlights that voting patterns are clearly not uniform between $1$ and $10$. The most popular vote is the highest rating, $10$. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at $1$).  Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings.)
+Figure \@ref(fig:3-2) highlights that voting patterns are clearly not uniform between $1$ and $10$. The most popular vote is the highest rating, $10$. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at $1$).  Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings).
 
 ### Type consistency
 
-When programming it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example the functions `sapply()` and `[.data.frame()` aren't type consistent
+When programming, it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example, the functions `sapply()` and `[.data.frame()` aren't type consistent
 
 
 ```r
@@ -1834,7 +1825,7 @@ two_cols[, 1:2]          # a data.frame
 two_cols[, 1]            # an integer vector
 ```
 
-This can cause unexpected problems. The functions `lapply()` and `vapply()` are type consistent. Likewise for `dplyr::select()` and `dplyr:filter()`. The **purrr** package has some type consistent alternatives to base R functions. For example, `map_dbl()` etc. to replace `Map()` and `flatten_df()` to replace `unlist()`.
+This can cause unexpected problems. The functions `lapply()` and `vapply()` are type consistent. Likewise for `dplyr::select()` and `dplyr:filter()`. The **purrr** package has some type consistent alternatives to base R functions. For example, `map_dbl()` (and other `map_*` functions) to replace `Map()` and `flatten_df()` to replace `unlist()`.
 
 #### Other resources {-}
 
@@ -1843,7 +1834,7 @@ Almost every R book has a section on the apply function. Below, we've given the 
   * Each function has a number of examples in the associated help page. You can directly access the examples using the `example()` function, e.g. to run the `apply()` examples, use `example("apply")`.
   * There is a very detailed StackOverflow [answer](http://stackoverflow.com/q/3505701/203420) which describes when, where and how to use each of the functions.
   * In a similar vein, Neil Saunders has a nice blog [post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/) giving an overview of the functions.
-  * The apply functions are an example of functional programming. Chapter 16 of _R for data Science_ describes the interplay between loops and functional programming in more detail [@grolemund_r_2016], while @Wickham2014 gives a more in-depth description of the topic.
+  * The apply functions are an example of functional programming. Chapter 16 of _R for Data Science_ [@grolemund_r_2016] describes the interplay between loops and functional programming in more detail, while @Wickham2014 gives a more in-depth description of the topic.
 
 #### Exercises {-}
 
@@ -1869,16 +1860,16 @@ sd_x = sd(x)
 apply(x, 2, function(i) mean(i) / sd_x)
 ```
 
-If we compare the two methods on a $100$ row by $1000$ column matrix, the cached version is around $100$ times faster (figure \@ref(fig:3-5)).
+If we compare the two methods on a $100$ row by $1000$ column matrix, the cached version is around $100$ times faster (Figure \@ref(fig:3-4)).
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/3-5-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
-<p class="caption">(\#fig:3-5)Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.</p>
+<img src="_main_files/figure-html/3-4-1.png" alt="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix." width="70%" />
+<p class="caption">(\#fig:3-4)Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.</p>
 </div>
 
 A more advanced form of caching is to use the **memoise** package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The **memoise** package allows us to easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the **memoise** function.
 
-The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be
+The classic memoise example is the factorial function. Another example is to limit use to a web resource. For example, suppose we are developing a Shiny (an interactive graphic) application where the user can fit a regression line to data. The user can remove points and refit the line. An example function would be
 
 
 ```r
@@ -1891,7 +1882,7 @@ plot_mpg = function(row_to_remove) {
 }
 ```
 
-We can use **memoise** speed up by caching results. A quick benchmark
+We can use **memoise** to speed up repeated function calls by caching results. A quick benchmark
 
 
 ```r
@@ -1912,7 +1903,7 @@ Construct a box plot of timings for the standard plotting function and the memoi
 ### Function closures
 
 <div class="rmdwarning">
-<p>The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation">[@Wickham2014]</span> for a detailed introduction.</p>
+<p>The following section is meant to provide an introduction to function closures with example use cases. See <span class="citation">@Wickham2014</span> for a detailed introduction.</p>
 </div>
 
 More advanced caching is available using _function closures_. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in `.GlobalEnv`. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function  closure
@@ -1946,7 +1937,7 @@ the other for stopping the timer
 watch$stop()
 ```
 
-Without using function closures, the stop-watch function would be longer, more complex and therefore more inefficient. When used properly function closures are very useful  programming tools for writing concise code.
+Without using function closures, the stop-watch function would be longer, more complex and therefore more inefficient. When used properly, function closures are very useful  programming tools for writing concise code.
 
 #### Exercise {-}
 
@@ -1954,7 +1945,7 @@ Without using function closures, the stop-watch function would be longer, more c
 1. Many stop-watches have the ability to measure not only your overall time but also your individual laps. Add a `lap()` function to the `stop_watch()` function that will record individual times, while still keeping track of the overall time.
 
 <div class="rmdnote">
-<p>A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute, <code>plot(height, weight)</code> R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is powerful concept that enables us to simplify code. More detail is given in the “Non-standard evaluation” of <span class="citation">[@Wickham2014]</span>.</p>
+<p>A related idea to function closures, is non-standard evaluation (NSE), or programming on the language. NSE crops up all the time in R. For example, when we execute <code>plot(height, weight)</code>, R automatically labels the x- and y-axis of the plot with <code>height</code> and <code>weight</code>. This is a powerful concept that enables us to simplify code. More detail is given about “Non-standard evaluation” in <span class="citation">@Wickham2014</span>.</p>
 </div>
 
 ## The byte compiler
@@ -1968,7 +1959,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x2f1f890>
+#> <bytecode: 0x3003890>
 #> <environment: namespace:base>
 ```
 
@@ -2018,11 +2009,11 @@ microbenchmark(times = 10, unit = "ms", # milliseconds
 #>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  
 ```
 
-The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (figure \@ref(fig:3-4)).
+The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (Figure \@ref(fig:3-3)).
 
 <div class="figure" style="text-align: center">
-<img src="_main_files/figure-html/3-4-1.png" alt="Comparison of mean functions." width="70%" />
-<p class="caption">(\#fig:3-4)Comparison of mean functions.</p>
+<img src="_main_files/figure-html/3-3-1.png" alt="Comparison of mean functions." width="70%" />
+<p class="caption">(\#fig:3-3)Comparison of mean functions.</p>
 </div>
 
 ### Compiling code
@@ -2054,12 +2045,11 @@ A final option is to use just-in-time (JIT) compilation. The `enableJIT()` funct
 <p>We recommend setting the compile level to the maximum value of 3.</p>
 </div>
 
-The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code speed gains will be small [@team2016installation].
+The impact of compiling on install will vary from package to package: for packages that already have lots of pre-compiled code, speed gains will be small [@team2016installation].
 
 <div class="rmdwarning">
 <p>Not all packages work if compiled on installation.</p>
 </div>
-
 
 <!--chapter:end:03-programming.Rmd-->
 
@@ -2617,9 +2607,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq mean median   uq  max neval
-#>     with_select  9.83  9.94 11.5   12.0 12.7 13.2     5
-#>  without_select 15.72 16.45 17.2   17.5 17.6 18.8     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.39  9.41  9.52   9.45  9.49  9.85     5
+#>  without_select 15.04 15.43 15.79  15.47 15.65 17.36     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4069,13 +4059,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.336   0.268   2.603
+#>   2.407   0.212   2.618
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.142   0.084   0.226
+#>   0.165   0.060   0.226
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4088,7 +4078,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.455   0.188   0.643
+#>   0.459   0.184   0.642
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4191,9 +4181,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00259 0.00305 0.0503 0.00415 0.00588 4.54   100
-#>   ex_df[1, ] 0.47396 0.49062 0.5618 0.50171 0.51746 5.13   100
+#>         expr     min    lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00234 0.003 0.0513 0.00471 0.00581 4.66   100
+#>   ex_df[1, ] 0.50790 0.521 0.5871 0.53339 0.54210 5.46   100
 ```
 
 <div class="rmdtip">
@@ -4513,7 +4503,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f14c77f8bc0>, x, y)
+#> .Call(<pointer: 0x7f80e1e0ebc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way

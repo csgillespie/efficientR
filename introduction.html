@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-05" />
+<meta name="date" content="2020-05-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -465,7 +465,7 @@ Another early port of call should be the CRAN website. The <a href="https://cran
 <p>R’s notoriety for being able to solve a problem in multiple different ways has grown with the proliferation of community contributed packages. In this book we focus on the <em>best</em> way of solving problems, from an efficiency perspective. Often it is instructive to discover <em>why</em> a certain way of doing things is faster than others. However, if your aim is simply to <em>get stuff done</em>, you only need to know what is likely to be the most efficient way. In this way R’s flexibility can be inefficient: although it is likely easier to find <em>a</em> way of solving any given problem in R than other languages, solving the problem with R may make it harder to find <em>the best</em> way to solve that problem, as there are so many. This book tackles this issue head-on by recommending what we believe are the most efficient approaches. We hope you trust our views, based on years of R using and teaching, but we also hope that you challenge them at times and test them, with benchmarks, if you suspect there’s a better way of doing things (thanks to R’s flexibility and ability to interface with other languages there may well be).</p>
 <p>It is well known that R code can promote <em>algorithmic efficiency</em> compared with low level languages for certain tasks, especially if the code was written by someone who doesn’t fully understand the language. But it is worth highlighting the numerous ways that R <em>encourages</em> and <em>guides</em> efficiency, especially programmer efficiency:</p>
 <ul>
-<li>R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, FORTRAN and other languages behind the scenes.</li>
+<li>R is not compiled but it calls compiled code. This means that you get the best of both worlds: R thankfully removes the laborious stage of compiling your code before being able to run it, but provides impressive speed gains by calling compiled C, Fortran and other languages behind the scenes.</li>
 <li>R is a functional and object orientated language <span class="citation">(H. Wickham <a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>. This means that it is possible to write complex and flexible functions in R that get a huge amount of work done with a single line of code.</li>
 <li>R uses RAM for memory. This may seem obvious but it’s worth saying: RAM is much faster than any hard disk system. Compared with databases, R is therefore very fast at common data manipulation, processing and modelling operations. RAM is now cheaper than ever, meaning the potential downside of this feature is further away than ever.</li>
 <li>R is supported by excellent Integrated Development Environments (IDEs). The environment in which you program can have a huge impact on <em>programmer efficiency</em> as it can provide supporting help quickly, allow for interactive plotting, and allow your R projects to be tightly integrated with other aspects of your project such as file management, version management and interactive visualisation systems, as discussed in <a href="set-up.html#rstudio">2.5</a>.</li>
@@ -608,9 +608,9 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <a class="sourceLine" id="cb4-21" data-line-number="21"><span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))</a>
 <a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; Unit: nanoseconds</span></a>
 <a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt;         expr    min     lq   mean median     uq     max neval</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt;    cs_for(x) 112068 117849 175878 121766 128362 5291988   100</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt;  cs_apply(x)  81593  84494 116621  89054 101793 2351470   100</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt;    cumsum(x)    654    779   1089    903   1008   13980   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt;    cs_for(x) 112133 118830 178537 122862 132746 5257408   100</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt;  cs_apply(x)  82591  85435 117067  92092  99982 2306642   100</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt;    cumsum(x)    660    814   1193    916   1030   14015   100</span></a></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Which method is fastest and how many times faster is it?</p></li>
 <li><p>Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument <code>times = 1</code> so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the <em>relative</em> time difference increase or decrease? By how much?</p></li>
