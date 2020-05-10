@@ -516,7 +516,7 @@ This converts a table with 18 rows and 10 columns into a tidy dataset with 162 r
 <a class="sourceLine" id="cb138-3" data-line-number="3">pewt =<span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">data =</span> pew, <span class="op">-</span>religion, <span class="dt">names_to =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;count&quot;</span>)</a>
 <a class="sourceLine" id="cb138-4" data-line-number="4"><span class="kw">dim</span>(pewt)</a>
 <a class="sourceLine" id="cb138-5" data-line-number="5"><span class="co">#&gt; [1] 162   3</span></a>
-<a class="sourceLine" id="cb138-6" data-line-number="6">pewt[<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">50</span>),]</a>
+<a class="sourceLine" id="cb138-6" data-line-number="6">pewt[<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">50</span>), ]</a>
 <a class="sourceLine" id="cb138-7" data-line-number="7"><span class="co">#&gt; # A tibble: 4 x 3</span></a>
 <a class="sourceLine" id="cb138-8" data-line-number="8"><span class="co">#&gt;   religion                        income   count</span></a>
 <a class="sourceLine" id="cb138-9" data-line-number="9"><span class="co">#&gt;   &lt;chr&gt;                           &lt;chr&gt;    &lt;int&gt;</span></a>
@@ -825,8 +825,8 @@ Note: <strong>stringr</strong> does not include a direct replacement for <code>g
 <a class="sourceLine" id="cb144-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;ghg_ems&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a>
 <a class="sourceLine" id="cb144-3" data-line-number="3">top_table =</a>
 <a class="sourceLine" id="cb144-4" data-line-number="4"><span class="st">  </span>ghg_ems <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb144-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb144-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(Country) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb144-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">grepl</span>(<span class="st">&quot;World|Europe&quot;</span>, Country)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb144-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(Country) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb144-7" data-line-number="7"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Mean =</span> <span class="kw">mean</span>(Transportation),</a>
 <a class="sourceLine" id="cb144-8" data-line-number="8">            <span class="dt">Growth =</span> <span class="kw">diff</span>(<span class="kw">range</span>(Transportation))) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb144-9" data-line-number="9"><span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, Growth) <span class="op">%&gt;%</span></a>
@@ -910,10 +910,10 @@ These are shown in the chapter’s <a href="https://github.com/csgillespie/effic
 <div id="chaining-operations" class="section level3">
 <h3><span class="header-section-number">6.4.4</span> Chaining operations</h3>
 <p>Another interesting feature of <strong>dplyr</strong> is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end-up with very long commands with many functions nested inside each other to answer relatively simple questions. Combined with the <code>group_by()</code> function, pipes can help condense thousands of lines of data into something human readable. Here’s how you could use the chains to summarize average Gini indexes per decade, for example:</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb151-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb151-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">decade =</span> <span class="kw">floor</span>(<span class="kw">as.numeric</span>(Year) <span class="op">/</span><span class="st"> </span><span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb151-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(decade) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb151-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb151-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">decade =</span> <span class="kw">floor</span>(<span class="kw">as.numeric</span>(Year) <span class="op">/</span><span class="st"> </span><span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb151-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(decade) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb151-5" data-line-number="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">mean</span>(gini, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb151-6" data-line-number="6"><span class="co">#&gt; # A tibble: 6 x 2</span></a>
 <a class="sourceLine" id="cb151-7" data-line-number="7"><span class="co">#&gt;   decade `mean(gini, na.rm = TRUE)`</span></a>
@@ -932,7 +932,7 @@ By way of explanation, this is what happened:</p>
 <li>The mean value per decade was calculated, illustrating how average income inequality was greatest in 1990 but has since decreased slightly.</li>
 </ol>
 <p>Let’s ask another question to see how the <strong>dplyr</strong> chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here’s how chains can help organise the analysis needed to answer this question step-by-step:</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb152-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;g&quot;</span>, Country)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb152-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(Year) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb152-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">gini =</span> <span class="kw">mean</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></a>
@@ -981,8 +981,8 @@ By way of explanation, this is what happened:</p>
 <a class="sourceLine" id="cb154-8" data-line-number="8"><span class="co">#&gt; 4 Afghanistan AFG   1977  YR1977         NA    NA    NA       NA         NA</span></a>
 <a class="sourceLine" id="cb154-9" data-line-number="9"><span class="co">#&gt; # … with 6,921 more rows</span></a></code></pre></div>
 <p>followed by:</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb155-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini) </a>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1">wb_ineq <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb155-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(Year, gini)</a>
 <a class="sourceLine" id="cb155-3" data-line-number="3"><span class="co">#&gt; # A tibble: 6,925 x 2</span></a>
 <a class="sourceLine" id="cb155-4" data-line-number="4"><span class="co">#&gt;   Year   gini</span></a>
 <a class="sourceLine" id="cb155-5" data-line-number="5"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;</span></a>
@@ -1056,7 +1056,7 @@ The example above relates to a wider programming issue: how much work should one
 <a class="sourceLine" id="cb159-6" data-line-number="6">  <span class="dt">sdev =</span> <span class="kw">sd</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
 <a class="sourceLine" id="cb159-7" data-line-number="7">  <span class="co"># number with gini &gt; 30</span></a>
 <a class="sourceLine" id="cb159-8" data-line-number="8">  <span class="dt">n30 =</span> <span class="kw">sum</span>(gini <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span>, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb159-9" data-line-number="9">  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[ gini <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span> ], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb159-9" data-line-number="9">  <span class="dt">sdn30 =</span> <span class="kw">sd</span>(gini[gini <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span>], <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>),</a>
 <a class="sourceLine" id="cb159-10" data-line-number="10">  <span class="co"># range</span></a>
 <a class="sourceLine" id="cb159-11" data-line-number="11">  <span class="dt">dif =</span> <span class="kw">max</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(gini, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb159-12" data-line-number="12">  )</a>
@@ -1276,8 +1276,10 @@ Ensure that both joining variables have the same class (combining <code>characte
 <p>It is clear from the output that some of the non-matches (e.g. the European Union) are not countries at all. However, others, such as ‘Gambia, The’ and the United States clearly should have matches. <em>Fuzzy matching</em> can help find which countries <em>do</em> match, as illustrated with the first non-matching country below:</p>
 <div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">(<span class="dt">unmatched_country =</span> unmatched_countries_ghg_ems[<span class="dv">1</span>])</a>
 <a class="sourceLine" id="cb165-2" data-line-number="2"><span class="co">#&gt; [1] &quot;Antigua &amp; Barbuda&quot;</span></a>
-<a class="sourceLine" id="cb165-3" data-line-number="3">unmatched_world_selection =<span class="st"> </span><span class="kw">agrep</span>(<span class="dt">pattern =</span> unmatched_country, unique_countries_world, <span class="dt">max.distance =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb165-4" data-line-number="4">unmatched_world_countries =<span class="st"> </span>unique_countries_world[unmatched_world_selection]</a></code></pre></div>
+<a class="sourceLine" id="cb165-3" data-line-number="3">unmatched_world_selection =<span class="st"> </span><span class="kw">agrep</span>(<span class="dt">pattern =</span> unmatched_country,</a>
+<a class="sourceLine" id="cb165-4" data-line-number="4">                                  unique_countries_world,</a>
+<a class="sourceLine" id="cb165-5" data-line-number="5">                                  <span class="dt">max.distance =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb165-6" data-line-number="6">unmatched_world_countries =<span class="st"> </span>unique_countries_world[unmatched_world_selection]</a></code></pre></div>
 <p>What just happened? We verified that the first unmatching country in the <code>ghg_ems</code> dataset was not in the <code>world</code> country names. So we used the more powerful <code>agrep</code> to search for fuzzy matches (with the <code>max.distance</code> argument set to <code>10</code>. The results show that the country <code>Antigua &amp; Barbuda</code> from the <code>ghg_ems</code> data matches <em>two</em> countries in the <code>world</code> dataset. We can update the names in the dataset we are joining to accordingly:</p>
 <div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">world<span class="op">$</span>Country[world<span class="op">$</span>Country <span class="op">%in%</span><span class="st"> </span>unmatched_world_countries] =</a>
 <a class="sourceLine" id="cb166-2" data-line-number="2"><span class="st">  </span>unmatched_countries_ghg_ems[<span class="dv">1</span>]</a></code></pre></div>
@@ -1336,11 +1338,11 @@ When you want your SQL command to be executed, use <code>collect(rm_world)</code
 <p>Follow the worked example below to create and query a database on land prices in the UK using <strong>dplyr</strong> as a front end to an SQLite database.
 The first stage is to read-in the data:</p>
 <div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="co"># See help(&quot;land_df&quot;, package=&quot;efficient&quot;) for details</span></a>
-<a class="sourceLine" id="cb171-2" data-line-number="2"><span class="kw">data</span>(land_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb171-2" data-line-number="2"><span class="kw">data</span>(land_df, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
 <p>The next stage is to create an SQLite database to hold the data:</p>
 <div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1"><span class="co"># install.packages(&quot;RSQLite&quot;) # Requires RSQLite package</span></a>
 <a class="sourceLine" id="cb172-2" data-line-number="2">my_db =<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;land.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb172-3" data-line-number="3">land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, land_df, <span class="dt">indexes =</span> <span class="kw">list</span>(<span class="st">&quot;postcode&quot;</span>, <span class="st">&quot;price&quot;</span>)) </a></code></pre></div>
+<a class="sourceLine" id="cb172-3" data-line-number="3">land_sqlite =<span class="st"> </span><span class="kw">copy_to</span>(my_db, land_df, <span class="dt">indexes =</span> <span class="kw">list</span>(<span class="st">&quot;postcode&quot;</span>, <span class="st">&quot;price&quot;</span>))</a></code></pre></div>
 <p>What class is the new object <code>land_sqlite</code>?</p>
 <p>Why did we use the <code>indexes</code> argument?</p>
 <p>From the above code we can see that we have created a <code>tbl</code>. This can be accessed using <strong>dplyr</strong> in the same way as any data frame can. Now we can query the data. You can use SQL code to query the database directly or use standard <strong>dplyr</strong> verbs on the table.</p>
@@ -1348,7 +1350,7 @@ The first stage is to read-in the data:</p>
 <a class="sourceLine" id="cb173-2" data-line-number="2"><span class="kw">tbl</span>(my_db, <span class="kw">sql</span>(<span class="st">&#39;SELECT &quot;price&quot;, &quot;postcode&quot;, &quot;old/new&quot;  FROM land_df&#39;</span>))</a>
 <a class="sourceLine" id="cb173-3" data-line-number="3"><span class="co">#&gt; Source:   query [?? x 3]</span></a>
 <a class="sourceLine" id="cb173-4" data-line-number="4"><span class="co">#&gt; Database: sqlite 3.8.6 [land.sqlite3]</span></a>
-<a class="sourceLine" id="cb173-5" data-line-number="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb173-5" data-line-number="5"><span class="co">#&gt;</span></a>
 <a class="sourceLine" id="cb173-6" data-line-number="6"><span class="co">#&gt;    price postcode `old/new`</span></a>
 <a class="sourceLine" id="cb173-7" data-line-number="7"><span class="co">#&gt;    &lt;int&gt;    &lt;chr&gt;     &lt;chr&gt;</span></a>
 <a class="sourceLine" id="cb173-8" data-line-number="8"><span class="co">#&gt; 1  84000  CW9 5EU         N</span></a>

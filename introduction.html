@@ -530,7 +530,7 @@ Note, this notation can be efficient if you only need to use a package’s funct
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#          expr     min    lq  mean median    uq   max neval cld</span></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#      df[3, 2]   17.99 18.96 20.16  19.38 19.77 35.14   100   b</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># df[3, &quot;name&quot;]   17.97 19.13 21.45  19.64 20.15 74.00   100   b</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a </span></a></code></pre></div>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a</span></a></code></pre></div>
 <p>The results summarise how long each query took: the minimum (<code>min</code>), lower and upper quartiles (<code>lq</code> and <code>uq</code>, respectively) and the mean, median and maximum, for each of the number of evaluations (<code>neval</code>, with the default value of 100 used in this case). <code>cld</code> reports the relative rank of each row in the form of ‘compact letter display’: in this case <code>df$name[3]</code> performs best, with a rank of <code>a</code> and a mean time around 25% lower than the other two functions.</p>
 <p>When using <code>microbenchmark()</code>, you should pay careful attention to the units. In the above example, each function call takes approximately 20 <em>microseconds</em>, implying around 50,000 function calls could be done in a second. When comparing quick functions, the standard units are:</p>
 <ul>
@@ -554,18 +554,18 @@ time scale: it makes little sense to optimise a function that takes <em>microsec
 <p>It is difficult to over-emphasise the importance of profiling for efficient R programming. Without a profile of what took longest, you will have only a vague idea of why your code is taking so long to run. The example below (which generates Figure <a href="introduction.html#fig:1-3">1.3</a>, an image of ice-sheet retreat from 1985 to 2015) shows how profiling can be used to identify bottlenecks in your R scripts:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">profvis</span>(<span class="dt">expr =</span> {</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">  </a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="co"># Stage 1: load packages</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="co"># library(&quot;rnoaa&quot;) # not necessary as data pre-saved</span></a>
 <a class="sourceLine" id="cb3-6" data-line-number="6">  <span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">  </a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8">  <span class="co"># Stage 2: load and process data</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9">  out =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;extdata/out-ice.Rds&quot;</span>)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10">  df =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">rbind_all</span>(out, <span class="dt">id =</span> <span class="st">&quot;Year&quot;</span>)</a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">  </a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12">  <span class="co"># Stage 3: visualise output</span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13">  <span class="kw">ggplot</span>(df, <span class="kw">aes</span>(long, lat, <span class="dt">group =</span> <span class="kw">paste</span>(group, Year))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="st">    </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Year)) </a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="st">    </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Year))</a>
 <a class="sourceLine" id="cb3-15" data-line-number="15">  <span class="kw">ggsave</span>(<span class="st">&quot;figures/icesheet-test.png&quot;</span>)</a>
 <a class="sourceLine" id="cb3-16" data-line-number="16">}, <span class="dt">interval =</span> <span class="fl">0.01</span>, <span class="dt">prof_output =</span> <span class="st">&quot;ice-prof&quot;</span>)</a></code></pre></div>
 <p>The result of this profiling exercise are displayed in Figure <a href="introduction.html#fig:1-2">1.2</a>.</p>
@@ -588,9 +588,9 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">x =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># initiate vector to cumulatively sum</span></a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># Method 1: with a for loop (10 lines)</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">cs_for =<span class="st"> </span><span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="cf">for</span>(i <span class="cf">in</span> x){</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">    <span class="cf">if</span>(i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">cs_for =<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="cf">for</span> (i <span class="cf">in</span> x) {</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">    <span class="cf">if</span> (i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</a>
 <a class="sourceLine" id="cb4-7" data-line-number="7">      xc =<span class="st"> </span>x[i]</a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">    } <span class="cf">else</span> {</a>
 <a class="sourceLine" id="cb4-9" data-line-number="9">      xc =<span class="st"> </span><span class="kw">c</span>(xc, <span class="kw">sum</span>(x[<span class="dv">1</span><span class="op">:</span>i]))</a>
@@ -600,7 +600,7 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <a class="sourceLine" id="cb4-13" data-line-number="13">}</a>
 <a class="sourceLine" id="cb4-14" data-line-number="14"></a>
 <a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co"># Method 2: with apply (3 lines)</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">cs_apply =<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">cs_apply =<span class="st"> </span><span class="cf">function</span>(x) {</a>
 <a class="sourceLine" id="cb4-17" data-line-number="17">  <span class="kw">sapply</span>(x, <span class="cf">function</span>(x) <span class="kw">sum</span>(<span class="dv">1</span><span class="op">:</span>x))</a>
 <a class="sourceLine" id="cb4-18" data-line-number="18">}</a>
 <a class="sourceLine" id="cb4-19" data-line-number="19"></a>
@@ -608,9 +608,9 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <a class="sourceLine" id="cb4-21" data-line-number="21"><span class="kw">microbenchmark</span>(<span class="kw">cs_for</span>(x), <span class="kw">cs_apply</span>(x), <span class="kw">cumsum</span>(x))</a>
 <a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; Unit: nanoseconds</span></a>
 <a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt;         expr    min     lq   mean median     uq     max neval</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt;    cs_for(x) 112133 118830 178537 122862 132746 5257408   100</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt;  cs_apply(x)  82591  85435 117067  92092  99982 2306642   100</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt;    cumsum(x)    660    814   1193    916   1030   14015   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt;    cs_for(x) 113163 119426 181673 123842 132613 5472546   100</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt;  cs_apply(x)  81782  87010 118941  91682 102250 2345399   100</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt;    cumsum(x)    649    812   1088    915   1048   13846   100</span></a></code></pre></div>
 <ol style="list-style-type: decimal">
 <li><p>Which method is fastest and how many times faster is it?</p></li>
 <li><p>Run the same benchmark, but with the results reported in seconds, on a vector of all the whole numbers from 1 to 50,000. Hint: also use the argument <code>times = 1</code> so that each command is only run once to ensure the results complete (even with a single evaluation the benchmark may take up to or more than a minute to complete, depending on your system). Does the <em>relative</em> time difference increase or decrease? By how much?</p></li>
@@ -619,7 +619,7 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 </ol>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Test how long it takes to subset the data frame 50,000 times:</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">system.time</span>(</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50000</span>){</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50000</span>) {</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">    df[<span class="dv">3</span>, <span class="dv">2</span>]</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">  }</a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">)</a></code></pre></div>
@@ -636,7 +636,7 @@ Figure 1.3: Visualisation of North Pole icesheet decline, generated using the co
 <p>This book has an associated R package that contains datasets and functions referenced in the book. The package is hosted on <a href="https://github.com/csgillespie/efficient">github</a> and can be installed using the <strong>devtools</strong> package:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The package also contains solutions (as vignettes) to the exercises found in this book. They can be browsed with the following command:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">browseVignettes</span>(<span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a></code></pre></div>
 <p>The following command will install all packages used to generate this book:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficientR&quot;</span>)</a></code></pre></div>
 </div>

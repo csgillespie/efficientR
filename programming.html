@@ -438,13 +438,13 @@ The Wikipedia page on compiler optimisations gives a nice overview of standard o
 </div>
 <p>R users don’t tend to worry about data types. This is advantageous in terms of creating concise code, but can result in R programs that are slow. While optimisations such as going parallel can double speed, poor code can easily run hundreds of times slower, so it’s important to understand the causes of slow code. These are covered in <span class="citation">Burns (<a href="#ref-Burns2011">2011</a>)</span>, which should be considered essential reading for any aspiring R programmers.</p>
 <p>Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function <code>runif()</code> only contains a single line that consists of a call to <code>C_runif()</code>.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="cf">function</span> (n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>) </a>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="cf">function</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb57-2" data-line-number="2">  <span class="kw">.Call</span>(C_runif, n, min, max)</a></code></pre></div>
 <p>A <strong>golden rule</strong> in R programming is to access the underlying C/Fortran routines as quickly as possible; the fewer functions calls required to achieve this, the better. For example, suppose <code>x</code> is a standard vector of length <code>n</code>. Then</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">x =<span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a></code></pre></div>
 <p>involves a single function call to the <code>+</code> function. Whereas the <code>for</code> loop</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) </a>
-<a class="sourceLine" id="cb59-2" data-line-number="2">  x[i] =<span class="st"> </span>x[i] <span class="op">+</span><span class="st"> </span><span class="dv">1</span> </a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
+<a class="sourceLine" id="cb59-2" data-line-number="2">  x[i] =<span class="st"> </span>x[i] <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a></code></pre></div>
 <p>has</p>
 <ul>
 <li><code>n</code> function calls to <code>+</code>;</li>
@@ -473,21 +473,21 @@ You should also consider pre-allocating memory for data frames and lists. Never 
 <p>Let’s consider three methods of creating a sequence of numbers. <strong>Method 1</strong> creates an empty vector and gradually increases (or grows) the length of the vector:</p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">method1 =<span class="st"> </span><span class="cf">function</span>(n) {</a>
 <a class="sourceLine" id="cb60-2" data-line-number="2">  vec =<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Or vec = c()</span></a>
-<a class="sourceLine" id="cb60-3" data-line-number="3">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
+<a class="sourceLine" id="cb60-3" data-line-number="3">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
 <a class="sourceLine" id="cb60-4" data-line-number="4">    vec =<span class="st"> </span><span class="kw">c</span>(vec, i)</a>
 <a class="sourceLine" id="cb60-5" data-line-number="5">  vec</a>
 <a class="sourceLine" id="cb60-6" data-line-number="6">}</a></code></pre></div>
 <p><strong>Method 2</strong> creates an object of the final length and then changes the values in the object by subscripting:</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">method2 =<span class="st"> </span><span class="cf">function</span>(n) {</a>
 <a class="sourceLine" id="cb61-2" data-line-number="2">  vec =<span class="st"> </span><span class="kw">numeric</span>(n)</a>
-<a class="sourceLine" id="cb61-3" data-line-number="3">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
+<a class="sourceLine" id="cb61-3" data-line-number="3">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
 <a class="sourceLine" id="cb61-4" data-line-number="4">    vec[i] =<span class="st"> </span>i</a>
 <a class="sourceLine" id="cb61-5" data-line-number="5">  vec</a>
 <a class="sourceLine" id="cb61-6" data-line-number="6">}</a></code></pre></div>
 <p><strong>Method 3</strong> directly creates the final object:</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">method3 =<span class="st"> </span><span class="cf">function</span>(n) <span class="kw">seq_len</span>(n)</a></code></pre></div>
 <p>To compare the three methods we use the <code>microbenchmark()</code> function from the previous chapter</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;s&quot;</span>, </a>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;s&quot;</span>,</a>
 <a class="sourceLine" id="cb63-2" data-line-number="2">               <span class="kw">method1</span>(n), <span class="kw">method2</span>(n), <span class="kw">method3</span>(n))</a></code></pre></div>
 <p>The table below shows the timing in seconds on my machine for these three methods for a selection of values of <code>n</code>. The relationships for varying <code>n</code> are all roughly linear on a log-log scale, but the timings between methods are drastically different. Notice that the timings are no longer trivial. When <span class="math inline">\(n=10^7\)</span>, Method 1 takes around an hour whilst Method 2 takes <span class="math inline">\(2\)</span> seconds and Method 3 is almost instantaneous. Remember the golden rule; access the underlying C/Fortran code as quickly as possible.</p>
 <table>
@@ -533,7 +533,7 @@ Technically <code>x = 1</code> creates a vector of length <span class="math inli
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">x =<span class="st"> </span><span class="kw">runif</span>(n) <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a></code></pre></div>
 <p>performs two vectorised operations. First <code>runif()</code> returns <code>n</code> random numbers. Second we add <code>1</code> to each element of the vector. In general it is a good idea to exploit vectorised functions. Consider this piece of R code that calculates the sum of <span class="math inline">\(\log(x)\)</span></p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">log_sum =<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x))</a>
+<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x))</a>
 <a class="sourceLine" id="cb65-3" data-line-number="3">  log_sum =<span class="st"> </span>log_sum <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(x[i])</a></code></pre></div>
 <div class="rmdwarning">
 <p>
@@ -587,9 +587,9 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">N =<span class="st"> </span><span class="dv">500000</span></a>
 <a class="sourceLine" id="cb68-2" data-line-number="2"><span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))</a>
 <a class="sourceLine" id="cb68-3" data-line-number="3"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   1.941   0.012   1.953</span></a></code></pre></div>
+<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   2.034   0.003   2.038</span></a></code></pre></div>
 <p>In contrast, a more R-centric approach would be</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N))<span class="op">/</span>N</a></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N)) <span class="op">/</span><span class="st"> </span>N</a></code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
 <ul>
 <li>The <code>runif()</code> function call is now fully vectorised;</li>
@@ -632,8 +632,8 @@ Figure 3.1: Example of Monte-Carlo integration. To estimate the area under the c
 <a class="sourceLine" id="cb72-5" data-line-number="5"><span class="co">#&gt; attr(,&quot;condition&quot;)</span></a>
 <a class="sourceLine" id="cb72-6" data-line-number="6"><span class="co">#&gt; &lt;simpleError in 1 + &quot;1&quot;: non-numeric argument to binary operator&gt;</span></a></code></pre></div>
 <p>We can use this information in a standard conditional statement</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="cf">if</span>(<span class="kw">class</span>(bad) <span class="op">==</span><span class="st"> &quot;try-error&quot;</span>)</a>
-<a class="sourceLine" id="cb73-2" data-line-number="2">  <span class="co"># Do something </span></a></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">class</span>(bad) <span class="op">==</span><span class="st"> &quot;try-error&quot;</span>)</a>
+<a class="sourceLine" id="cb73-2" data-line-number="2">  <span class="co"># Do something</span></a></code></pre></div>
 <p>Further details on error handling, as well as some excellent advice on general debugging techniques, are given in <span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span>.</p>
 </div>
 <div id="warnings-warning" class="section level3 unnumbered">
@@ -660,9 +660,9 @@ Warnings can be hidden using <code>suppressWarnings()</code>.
 <p>The <code>invisible()</code> function allows you to return a temporarily invisible copy of an object. This is particularly useful for functions that return values which can be assigned, but are not printed when they are not assigned. For example suppose we have a function that plots the data and fits a straight line</p>
 <div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">regression_plot =<span class="st"> </span><span class="cf">function</span>(x, y, ...) {</a>
 <a class="sourceLine" id="cb74-2" data-line-number="2">  <span class="co"># Plot and pass additional arguments to default plot method</span></a>
-<a class="sourceLine" id="cb74-3" data-line-number="3">  <span class="kw">plot</span>(x, y, ...) </a>
-<a class="sourceLine" id="cb74-4" data-line-number="4">  </a>
-<a class="sourceLine" id="cb74-5" data-line-number="5">  <span class="co"># Fit regression model </span></a>
+<a class="sourceLine" id="cb74-3" data-line-number="3">  <span class="kw">plot</span>(x, y, ...)</a>
+<a class="sourceLine" id="cb74-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb74-5" data-line-number="5">  <span class="co"># Fit regression model</span></a>
 <a class="sourceLine" id="cb74-6" data-line-number="6">  model =<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)</a>
 <a class="sourceLine" id="cb74-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb74-8" data-line-number="8">  <span class="co"># Add line of best fit to the plot</span></a>
@@ -768,7 +768,7 @@ Most people rarely use the other apply functions. For example, I have only used 
 </table>
 <p>The <code>apply()</code> function is used to apply a function to each row or column of a matrix. In many data science
 problems, this is a common task. For example, to calculate the standard deviation of the rows we have</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;ex_mat&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;efficient&quot;</span>)</a>
 <a class="sourceLine" id="cb81-2" data-line-number="2"><span class="co"># MARGIN=1: corresponds to rows</span></a>
 <a class="sourceLine" id="cb81-3" data-line-number="3">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</a></code></pre></div>
 <p>The first argument of <code>apply()</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
@@ -858,7 +858,7 @@ Figure 3.3: Performance gains obtained from caching the standard deviation in a 
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">unit =</span> <span class="st">&quot;ms&quot;</span>, <span class="kw">m_plot_mpg</span>(<span class="dv">10</span>), <span class="kw">plot_mpg</span>(<span class="dv">10</span>))</a>
 <a class="sourceLine" id="cb92-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
 <a class="sourceLine" id="cb92-4" data-line-number="4"><span class="co">#&gt;            expr   min    lq  mean median    uq   max neval cld</span></a>
-<a class="sourceLine" id="cb92-5" data-line-number="5"><span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a </span></a>
+<a class="sourceLine" id="cb92-5" data-line-number="5"><span class="co">#&gt;  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a</span></a>
 <a class="sourceLine" id="cb92-6" data-line-number="6"><span class="co">#&gt;    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b</span></a></code></pre></div>
 <p>suggests that we can obtain a <span class="math inline">\(100\)</span>-fold speed-up.</p>
 <div id="exercise-3" class="section level4 unnumbered">
@@ -910,7 +910,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</a>
 <a class="sourceLine" id="cb96-2" data-line-number="2"><span class="co">#&gt; function (x, ...) </span></a>
 <a class="sourceLine" id="cb96-3" data-line-number="3"><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x3003890&gt;</span></a>
+<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x2656890&gt;</span></a>
 <a class="sourceLine" id="cb96-5" data-line-number="5"><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">
@@ -921,7 +921,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</a>
 <a class="sourceLine" id="cb98-2" data-line-number="2">  m =<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb98-3" data-line-number="3">  n =<span class="st"> </span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb98-4" data-line-number="4">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
+<a class="sourceLine" id="cb98-4" data-line-number="4">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n))</a>
 <a class="sourceLine" id="cb98-5" data-line-number="5">    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</a>
 <a class="sourceLine" id="cb98-6" data-line-number="6">  m</a>
 <a class="sourceLine" id="cb98-7" data-line-number="7">}</a></code></pre></div>
@@ -935,8 +935,8 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <a class="sourceLine" id="cb100-5" data-line-number="5"><span class="co">#&gt; Unit: milliseconds</span></a>
 <a class="sourceLine" id="cb100-6" data-line-number="6"><span class="co">#&gt;           expr   min    lq  mean median    uq  max neval cld</span></a>
 <a class="sourceLine" id="cb100-7" data-line-number="7"><span class="co">#&gt;      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c</span></a>
-<a class="sourceLine" id="cb100-8" data-line-number="8"><span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b </span></a>
-<a class="sourceLine" id="cb100-9" data-line-number="9"><span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  </span></a></code></pre></div>
+<a class="sourceLine" id="cb100-8" data-line-number="8"><span class="co">#&gt;  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b</span></a>
+<a class="sourceLine" id="cb100-9" data-line-number="9"><span class="co">#&gt;        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a</span></a></code></pre></div>
 <p>The compiled function is around seven times faster than the uncompiled function. Of course the native <code>mean()</code> function is faster, but compiling does make a significant difference (Figure <a href="programming.html#fig:3-3">3.4</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:3-3"></span>
 <img src="_main_files/figure-html/3-3-1.png" alt="Comparison of mean functions." width="70%" />
@@ -953,7 +953,7 @@ Figure 3.4: Comparison of mean functions.
 <div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">## Windows users will need Rtools</a>
 <a class="sourceLine" id="cb102-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
 <p>Or if we want to avoid altering the <code>.Renviron</code> file, we can specify an additional argument</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">INSTALL_opts =</span> <span class="st">&quot;--byte-compile&quot;</span>)</a></code></pre></div>
 <p>A final option is to use just-in-time (JIT) compilation. The <code>enableJIT()</code> function disables JIT compilation if the argument is <code>0</code>. Arguments <code>1</code>, <code>2</code>, or <code>3</code> implement different levels of optimisation. JIT can also be enabled by setting the environment variable <code>R_ENABLE_JIT</code>, to one of these values.</p>
 <div class="rmdtip">
 <p>

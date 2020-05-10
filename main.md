@@ -207,7 +207,7 @@ microbenchmark(df[3, 2], df[3, "name"], df$name[3])
 #          expr     min    lq  mean median    uq   max neval cld
 #      df[3, 2]   17.99 18.96 20.16  19.38 19.77 35.14   100   b
 # df[3, "name"]   17.97 19.13 21.45  19.64 20.15 74.00   100   b
-#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a 
+#    df$name[3]   12.48 13.81 15.81  14.48 15.14 67.24   100   a
 ```
 
 The results summarise how long each query took: the minimum (`min`), lower and upper quartiles (`lq` and `uq`, respectively) and the mean, median and maximum, for each of the number of evaluations (`neval`, with the default value of 100 used in this case). `cld` reports the relative rank of each row in the form of 'compact letter display': in this case `df$name[3]` performs best, with a rank of `a` and a mean time around 25% lower than the other two functions.
@@ -239,18 +239,18 @@ It is difficult to over-emphasise the importance of profiling for efficient R pr
 ```r
 library("profvis")
 profvis(expr = {
-  
+
   # Stage 1: load packages
   # library("rnoaa") # not necessary as data pre-saved
   library("ggplot2")
-  
+
   # Stage 2: load and process data
   out = readRDS("extdata/out-ice.Rds")
   df = dplyr::rbind_all(out, id = "Year")
-  
+
   # Stage 3: visualise output
   ggplot(df, aes(long, lat, group = paste(group, Year))) +
-    geom_path(aes(colour = Year)) 
+    geom_path(aes(colour = Year))
   ggsave("figures/icesheet-test.png")
 }, interval = 0.01, prof_output = "ice-prof")
 ```
@@ -278,9 +278,9 @@ Consider the following benchmark to evaluate different functions for calculating
 x = 1:100 # initiate vector to cumulatively sum
 
 # Method 1: with a for loop (10 lines)
-cs_for = function(x){
-  for(i in x){
-    if(i == 1){
+cs_for = function(x) {
+  for (i in x) {
+    if (i == 1) {
       xc = x[i]
     } else {
       xc = c(xc, sum(x[1:i]))
@@ -290,7 +290,7 @@ cs_for = function(x){
 }
 
 # Method 2: with apply (3 lines)
-cs_apply = function(x){
+cs_apply = function(x) {
   sapply(x, function(x) sum(1:x))
 }
 
@@ -298,9 +298,9 @@ cs_apply = function(x){
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 112133 118830 178537 122862 132746 5257408   100
-#>  cs_apply(x)  82591  85435 117067  92092  99982 2306642   100
-#>    cumsum(x)    660    814   1193    916   1030   14015   100
+#>    cs_for(x) 113163 119426 181673 123842 132613 5472546   100
+#>  cs_apply(x)  81782  87010 118941  91682 102250 2345399   100
+#>    cumsum(x)    649    812   1088    915   1048   13846   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -317,7 +317,7 @@ microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 ```r
 # Test how long it takes to subset the data frame 50,000 times:
 system.time(
-  for(i in 1:50000){
+  for (i in 1:50000) {
     df[3, 2]
   }
 )
@@ -340,7 +340,7 @@ The package also contains solutions (as vignettes) to the exercises found in thi
 
 
 ```r
-browseVignettes(package="efficient")
+browseVignettes(package = "efficient")
 ```
 
 The following command will install all packages used to generate this book:
@@ -404,8 +404,8 @@ Basic OS-specific information can be queried from within R using `Sys.info()`:
 
 ```r
 Sys.info()
-#R> sysname     release                machine      user 
-#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin" 
+#R> sysname     release                machine      user
+#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin"
 ```
 
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
@@ -451,7 +451,7 @@ How do the system output logs (results) on your system compare to those presente
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
     # 3: Find the median of each column using many cores
-    r2 = parallel::mclapply(X, median) 
+    r2 = parallel::mclapply(X, median)
     ```
 
 <div class="rmdnote">
@@ -534,7 +534,7 @@ Release notes with details on each of these issues are hosted at [cran.r-project
     
     ```r
     # check and install the latest R version
-    installr::updateR() 
+    installr::updateR()
     ```
     
 For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up-to-date.
@@ -579,7 +579,7 @@ On Windows the **installr** package helps manage and update R packages with syst
 
 
 ```r
-installr::install.rtools() 
+installr::install.rtools()
 ```
 
 ### Updating R packages
@@ -778,7 +778,7 @@ To avoid setting the CRAN mirror each time you run `install.packages()` you can 
 # `local` creates a new, empty environment
 # This avoids polluting .GlobalEnv with the object r
 local({
-  r = getOption("repos")             
+  r = getOption("repos")           
   r["CRAN"] = "https://cran.rstudio.com/"
   options(repos = r)
 })
@@ -807,7 +807,7 @@ It is easy to make R print out one of these nuggets of truth each time you start
 
 
 ```r
-if(interactive()) 
+if (interactive())
   try(fortunes::fortune(), silent = TRUE)
 ```
 
@@ -823,7 +823,7 @@ The function `.Last()`, if it exists in the `.Rprofile`, is always run at the en
 ```r
 .Last = function() {
   cond = suppressWarnings(!require(fortunes, quietly = TRUE))
-  if(cond) 
+  if (cond)
     try(install.packages("fortunes"), silent = TRUE)
   message("Goodbye at ", date(), "\n")
 }
@@ -847,9 +847,9 @@ and a function for setting a nice plotting window:
 
 
 ```r
-nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01, 
+nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
                       cex.axis = 0.9, las = 1, mfrow = c(1, 1), ...) {
-    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las, 
+    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las,
         mfrow = mfrow, ...)
 }
 ```
@@ -1347,7 +1347,7 @@ Ultimately calling an R function always ends up calling some underlying C/Fortra
 
 
 ```r
-function (n, min = 0, max = 1) 
+function(n, min = 0, max = 1)
   .Call(C_runif, n, min, max)
 ```
 
@@ -1362,8 +1362,8 @@ involves a single function call to the `+` function. Whereas the `for` loop
 
 
 ```r
-for(i in seq_len(n)) 
-  x[i] = x[i] + 1 
+for (i in seq_len(n))
+  x[i] = x[i] + 1
 ```
 
 has
@@ -1397,7 +1397,7 @@ Let's consider three methods of creating a sequence of numbers. __Method 1__ cre
 ```r
 method1 = function(n) {
   vec = NULL # Or vec = c()
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     vec = c(vec, i)
   vec
 }
@@ -1409,7 +1409,7 @@ __Method 2__ creates an object of the final length and then changes the values i
 ```r
 method2 = function(n) {
   vec = numeric(n)
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     vec[i] = i
   vec
 }
@@ -1426,7 +1426,7 @@ To compare the three methods we use the `microbenchmark()` function from the pre
 
 
 ```r
-microbenchmark(times = 100, unit = "s", 
+microbenchmark(times = 100, unit = "s",
                method1(n), method2(n), method3(n))
 ```
 
@@ -1458,7 +1458,7 @@ performs two vectorised operations. First `runif()` returns `n` random numbers. 
 
 ```r
 log_sum = 0
-for(i in 1:length(x))
+for (i in 1:length(x))
   log_sum = log_sum + log(x[i])
 ```
 
@@ -1526,14 +1526,14 @@ In R, this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   1.941   0.012   1.953
+#>   2.034   0.003   2.038
 ```
 
 In contrast, a more R-centric approach would be
 
 
 ```r
-monte_carlo_vec = function(N) sum(runif(N)^2 > runif(N))/N
+monte_carlo_vec = function(N) sum(runif(N)^2 > runif(N)) / N
 ```
 
 The `monte_carlo_vec()` function contains (at least) four aspects of vectorisation
@@ -1594,8 +1594,8 @@ We can use this information in a standard conditional statement
 
 
 ```r
-if(class(bad) == "try-error")
-  # Do something 
+if (class(bad) == "try-error")
+  # Do something
 ```
 
 Further details on error handling, as well as some excellent advice on general debugging techniques, are given in @Wickham2014.
@@ -1628,9 +1628,9 @@ The `invisible()` function allows you to return a temporarily invisible copy of 
 ```r
 regression_plot = function(x, y, ...) {
   # Plot and pass additional arguments to default plot method
-  plot(x, y, ...) 
-  
-  # Fit regression model 
+  plot(x, y, ...)
+
+  # Fit regression model
   model = lm(y ~ x)
 
   # Add line of best fit to the plot
@@ -1746,7 +1746,7 @@ problems, this is a common task. For example, to calculate the standard deviatio
 
 
 ```r
-data("ex_mat", package="efficient")
+data("ex_mat", package = "efficient")
 # MARGIN=1: corresponds to rows
 row_sd = apply(ex_mat, 1, sd)
 ```
@@ -1890,7 +1890,7 @@ m_plot_mpg = memoise(plot_mpg)
 microbenchmark(times = 10, unit = "ms", m_plot_mpg(10), plot_mpg(10))
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval cld
-#>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a 
+#>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a
 #>    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b
 ```
 
@@ -1959,7 +1959,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x3003890>
+#> <bytecode: 0x2656890>
 #> <environment: namespace:base>
 ```
 
@@ -1981,7 +1981,7 @@ Next we create an inefficient function for calculating the mean. This function t
 mean_r = function(x) {
   m = 0
   n = length(x)
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     m = m + x[i] / n
   m
 }
@@ -2005,8 +2005,8 @@ microbenchmark(times = 10, unit = "ms", # milliseconds
 #> Unit: milliseconds
 #>           expr   min    lq  mean median    uq  max neval cld
 #>      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c
-#>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b 
-#>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  
+#>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b
+#>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a
 ```
 
 The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (Figure \@ref(fig:3-3)).
@@ -2036,7 +2036,7 @@ Or if we want to avoid altering the `.Renviron` file, we can specify an addition
 
 
 ```r
-install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile") 
+install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile")
 ```
 
 A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement different levels of optimisation. JIT can also be enabled by setting the environment variable `R_ENABLE_JIT`, to one of these values.
@@ -2608,8 +2608,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval
-#>     with_select  9.39  9.41  9.52   9.45  9.49  9.85     5
-#>  without_select 15.04 15.43 15.79  15.47 15.65 17.36     5
+#>     with_select  9.36  9.37  9.55   9.42  9.65  9.94     5
+#>  without_select 15.12 15.36 15.90  15.53 15.87 17.60     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -2949,7 +2949,7 @@ dim(pew)
 pewt = pivot_longer(data = pew, -religion, names_to = "income", values_to = "count")
 dim(pewt)
 #> [1] 162   3
-pewt[c(1:3, 50),]
+pewt[c(1:3, 50), ]
 #> # A tibble: 4 x 3
 #>   religion                        income   count
 #>   <chr>                           <chr>    <int>
@@ -3161,8 +3161,8 @@ library("dplyr")
 data("ghg_ems", package = "efficient")
 top_table =
   ghg_ems %>%
-  filter(!grepl("World|Europe", Country)) %>% 
-  group_by(Country) %>% 
+  filter(!grepl("World|Europe", Country)) %>%
+  group_by(Country) %>%
   summarise(Mean = mean(Transportation),
             Growth = diff(range(Transportation))) %>%
   top_n(3, Growth) %>%
@@ -3272,10 +3272,10 @@ Another interesting feature of **dplyr** is its ability to chain operations toge
 
 
 ```r
-wb_ineq %>% 
-  select(Year, gini) %>% 
-  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>% 
-  group_by(decade) %>% 
+wb_ineq %>%
+  select(Year, gini) %>%
+  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>%
+  group_by(decade) %>%
   summarise(mean(gini, na.rm = TRUE))
 #> # A tibble: 6 x 2
 #>   decade `mean(gini, na.rm = TRUE)`
@@ -3299,7 +3299,7 @@ Let's ask another question to see how the **dplyr** chaining workflow can be use
 
 
 ```r
-wb_ineq %>% 
+wb_ineq %>%
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
@@ -3364,8 +3364,8 @@ followed by:
 
 
 ```r
-wb_ineq %>% 
-  select(Year, gini) 
+wb_ineq %>%
+  select(Year, gini)
 #> # A tibble: 6,925 x 2
 #>   Year   gini
 #>   <chr> <dbl>
@@ -3462,7 +3462,7 @@ summarise(countries,
   sdev = sd(gini, na.rm  = TRUE),
   # number with gini > 30
   n30 = sum(gini > 30, na.rm  = TRUE),
-  sdn30 = sd(gini[ gini > 30 ], na.rm  = TRUE),
+  sdn30 = sd(gini[gini > 30], na.rm  = TRUE),
   # range
   dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
   )
@@ -3709,7 +3709,9 @@ It is clear from the output that some of the non-matches (e.g. the European Unio
 ```r
 (unmatched_country = unmatched_countries_ghg_ems[1])
 #> [1] "Antigua & Barbuda"
-unmatched_world_selection = agrep(pattern = unmatched_country, unique_countries_world, max.distance = 10)
+unmatched_world_selection = agrep(pattern = unmatched_country,
+                                  unique_countries_world,
+                                  max.distance = 10)
 unmatched_world_countries = unique_countries_world[unmatched_world_selection]
 ```
 
@@ -3806,7 +3808,7 @@ The first stage is to read-in the data:
 
 ```r
 # See help("land_df", package="efficient") for details
-data(land_df, package="efficient")
+data(land_df, package = "efficient")
 ```
 
 The next stage is to create an SQLite database to hold the data:
@@ -3815,7 +3817,7 @@ The next stage is to create an SQLite database to hold the data:
 ```r
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
-land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price")) 
+land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price"))
 ```
 
 What class is the new object `land_sqlite`?
@@ -3830,7 +3832,7 @@ From the above code we can see that we have created a `tbl`. This can be accesse
 tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
 #> Source:   query [?? x 3]
 #> Database: sqlite 3.8.6 [land.sqlite3]
-#> 
+#>
 #>    price postcode `old/new`
 #>    <int>    <chr>     <chr>
 #> 1  84000  CW9 5EU         N
@@ -4059,13 +4061,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.407   0.212   2.618
+#>   2.399   0.232   2.632
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.165   0.060   0.226
+#>   0.163   0.063   0.227
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4078,7 +4080,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.459   0.184   0.642
+#>   0.467   0.180   0.647
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4181,9 +4183,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min    lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00234 0.003 0.0513 0.00471 0.00581 4.66   100
-#>   ex_df[1, ] 0.50790 0.521 0.5871 0.53339 0.54210 5.46   100
+#>         expr     min      lq   mean  median      uq max neval
+#>  ex_mat[1, ] 0.00251 0.00294 0.0517 0.00404 0.00622 4.7   100
+#>   ex_df[1, ] 0.46987 0.48493 0.5552 0.49576 0.52160 5.3   100
 ```
 
 <div class="rmdtip">
@@ -4503,7 +4505,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f80e1e0ebc0>, x, y)
+#> .Call(<pointer: 0x7f37f5d0ebc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
