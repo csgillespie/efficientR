@@ -3,7 +3,7 @@ knit: "bookdown::preview_chapter"
 ---
 
 ```{r, echo=FALSE}
-rm(list=ls())
+rm(list = ls())
 ```
 
 # Efficient input/output {#input-output}
@@ -123,7 +123,7 @@ For files beyond $100$ MB in size `fread()` and `read_csv()` can be expected to 
 (ref:5-1) Benchmarks of base, data.table and readr approches for reading csv files, using the functions read.csv(), fread() and read_csv(), respectively. The facets ranging from $2$ to $200$ represent the number of columns in the csv file.
 
 ```{r 5-1, fig.cap="(ref:5-1)", echo=FALSE, warning=FALSE, message=FALSE, out.width="90%", fig.align="center"}
-local(source("code/05-io_f1.R", local=TRUE))
+local(source("code/05-io_f1.R", local = TRUE))
 ```
 
 When tested on a large ($4$GB) `.csv` file it was found that `fread()` and `read_csv()` were almost identical in load times and that `read.csv()` took around $5$ times longer. This consumed more than $10$GB of RAM, making it unsuitable to run on many computers (see Section \@ref(ram) for more on memory). Note that both **readr** and base methods can be made significantly faster by pre-specifying the column types at the outset (see below). Further details are provided by the help in `?read.table`.
@@ -181,7 +181,8 @@ vcols = as.data.frame(rbind(
   sapply(voyages_dt, class)))
 vcols = dplyr::select(vcols, number, boatname, built, departure_date)
 vcols$Function = c("base", "readr", "data.table")
-knitr::kable(vcols, caption = "Comparison of base, **readr** and **data.table** reading in the voyages data set.")
+cap = "Comparison of base, **readr** and **data.table** reading in the voyages data set."
+knitr::kable(vcols, caption = cap)
 ```
 
 Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
@@ -200,8 +201,9 @@ An additional difference is that `read_csv()` creates data frames of class `tbl_
 The wider point associated with these tests is that functions that save time can also lead to additional considerations or complexities for your workflow. Taking a look at what is going on 'under the hood' of fast functions to increase speed, as we have done in this section, can help understand the knock-on consequences of choosing fast functions over slower functions from base R. 
 
 ```{r, eval=FALSE, tidy=FALSE, echo=FALSE}
-# # This was a final sentence from the previous paragraph that I've removed for now: 
-# In some cases there will be no knock-on consequences of using faster functions provided by packages but you should be aware that it is a possibility. 
+# # This was a final sentence from the previous paragraph that I've removed for now:
+# In some cases there will be no knock-on consequences of using faster functions provided
+# by packages but you should be aware that it is a possibility.
 # I've removed this for now as it's such a large and unwieldy dataset
 url = "http://download.cms.gov/nppes/NPPES_Data_Dissemination_Aug_2015.zip"
 download.file(url, "largefile.zip") # takes many minutes
@@ -278,7 +280,7 @@ In terms of file size, Rds files perform the best, occupying just over a quarter
 (ref:5-2) Comparison of the performance of binary formats for reading and writing datasets with 20 column with the plain text format CSV. The functions used to read the files were read.csv(), readRDS() and feather::read_feather() respectively.  The functions used to write the files were write.csv(), saveRDS() and feather::write_feather().
 
 ```{r 5-2, echo=FALSE, fig.cap="(ref:5-2)", out.width="90%", fig.align="center", message=FALSE}
-local(source("code/05-io_f2.R", local=TRUE))
+local(source("code/05-io_f2.R", local = TRUE))
 ```
 
 The results of this simple disk usage benchmark show that saving data in a compressed binary format can save space and if your data will be shared on-line, reduce data download time and bandwidth usage. But how does each method compare from a computational efficiency perspective? The read and write times for each file format are illustrated in the middle and right hand panels of \@ref(fig:5-2).

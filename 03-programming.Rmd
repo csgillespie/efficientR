@@ -41,7 +41,7 @@ R users don't tend to worry about data types. This is advantageous in terms of c
 Ultimately calling an R function always ends up calling some underlying C/Fortran code. For example the base R function `runif()` only contains a single line that consists of a call to `C_runif()`.
 
 ```{r eval=TRUE, results="hide"}
-function (n, min = 0, max = 1) 
+function(n, min = 0, max = 1)
   .Call(C_runif, n, min, max)
 ```
 
@@ -56,8 +56,8 @@ x = x + 1
 involves a single function call to the `+` function. Whereas the `for` loop
 
 ```{r bad_loop}
-for(i in seq_len(n)) 
-  x[i] = x[i] + 1 
+for (i in seq_len(n))
+  x[i] = x[i] + 1
 ```
 
 has
@@ -90,7 +90,7 @@ Let's consider three methods of creating a sequence of numbers. __Method 1__ cre
 ```{r echo=TRUE, tidy=FALSE}
 method1 = function(n) {
   vec = NULL # Or vec = c()
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     vec = c(vec, i)
   vec
 }
@@ -101,7 +101,7 @@ __Method 2__ creates an object of the final length and then changes the values i
 ```{r echo=TRUE, tidy=FALSE}
 method2 = function(n) {
   vec = numeric(n)
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     vec[i] = i
   vec
 }
@@ -116,7 +116,7 @@ method3 = function(n) seq_len(n)
 To compare the three methods we use the `microbenchmark()` function from the previous chapter
 
 ```{r tidy=FALSE,eval=FALSE}
-microbenchmark(times = 100, unit = "s", 
+microbenchmark(times = 100, unit = "s",
                method1(n), method2(n), method3(n))
 ```
 
@@ -147,7 +147,7 @@ performs two vectorised operations. First `runif()` returns `n` random numbers. 
 
 ```{r eval=FALSE, echo=TRUE, tidy=FALSE}
 log_sum = 0
-for(i in 1:length(x))
+for (i in 1:length(x))
   log_sum = log_sum + log(x[i])
 ```
 
@@ -216,7 +216,7 @@ system.time(monte_carlo(N))
 In contrast, a more R-centric approach would be
 
 ```{r echo=TRUE}
-monte_carlo_vec = function(N) sum(runif(N)^2 > runif(N))/N
+monte_carlo_vec = function(N) sum(runif(N)^2 > runif(N)) / N
 ```
 
 The `monte_carlo_vec()` function contains (at least) four aspects of vectorisation
@@ -228,7 +228,7 @@ The `monte_carlo_vec()` function contains (at least) four aspects of vectorisati
 
 The function `monte_carlo_vec()` is around $30$ times faster than `monte_carlo()`.
 ```{r 3-1, fig.cap="Example of Monte-Carlo integration. To estimate the area under the curve, throw random points at the graph and count the number of points that lie under the curve.", echo=FALSE,fig.width=6, fig.height=4, fig.align="center", out.width="70%"}
-local(source("code/03-programming_f1.R", local=TRUE))
+local(source("code/03-programming_f1.R", local = TRUE))
 ```
 
 ### Exercise {-}
@@ -266,8 +266,8 @@ bad
 We can use this information in a standard conditional statement
 
 ```{r eval=FALSE}
-if(class(bad) == "try-error")
-  # Do something 
+if (class(bad) == "try-error")
+  # Do something
 ```
 
 Further details on error handling, as well as some excellent advice on general debugging techniques, are given in @Wickham2014.
@@ -299,9 +299,9 @@ The `invisible()` function allows you to return a temporarily invisible copy of 
 ```{r}
 regression_plot = function(x, y, ...) {
   # Plot and pass additional arguments to default plot method
-  plot(x, y, ...) 
-  
-  # Fit regression model 
+  plot(x, y, ...)
+
+  # Fit regression model
   model = lm(y ~ x)
 
   # Add line of best fit to the plot
@@ -344,7 +344,7 @@ Factors can be used for ordering in graphics. For instance, suppose we have a da
 ```{r fig.keep="none", echo=6}
 set.seed(1)
 level = c("Small", "Medium", "Large")
-type = rep(level, each=30)
+type = rep(level, each = 30)
 y = rnorm(90)
 type_factor = factor(type, levels = level)
 boxplot(y ~ type)
@@ -410,14 +410,14 @@ dd = tibble::tribble(
 "`mapply`", "Apply a function to multiple list or vector arguments",
 "`rapply`", "Recursively apply a function to a list",
 "`tapply`", "Apply a function over a ragged array")
-knitr::kable(dd, caption="The apply family of functions from base R.", row.names = FALSE)
+knitr::kable(dd, caption = "The apply family of functions from base R.", row.names = FALSE)
 ```
 
 The `apply()` function is used to apply a function to each row or column of a matrix. In many data science
 problems, this is a common task. For example, to calculate the standard deviation of the rows we have
 
 ```{r, results="hide"}
-data("ex_mat", package="efficient")
+data("ex_mat", package = "efficient")
 # MARGIN=1: corresponds to rows
 row_sd = apply(ex_mat, 1, sd)
 ```
@@ -463,7 +463,7 @@ We can use the `apply()` function to investigate voting patterns. The function `
 ```{r, 3-2, fig.keep="last", echo=1:2, fig.height=4, fig.width=6, fig.cap="Movie voting preferences.", fig.align="center", out.width="70%"}
 popular = apply(ratings, 1, nnet::which.is.max)
 plot(table(popular))
-local(source("code/03-programming_f3.R", local=TRUE))
+local(source("code/03-programming_f3.R", local = TRUE))
 ```
 
 Figure \@ref(fig:3-2) highlights that voting patterns are clearly not uniform between $1$ and $10$. The most popular vote is the highest rating, $10$. Clearly if you went to the trouble of voting for a movie, it was either very good, or very bad (there is also a peak at $1$).  Rating a movie $7$ is also a popular choice (search the web for "most popular number" and $7$ dominates the rankings).
@@ -504,7 +504,7 @@ the `drop` argument.
 A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing `sd(x)` in multiple function calls with the object `sd_x` that is defined once and reused. For example,  suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the  entire data set
 
 ```{r, echo=-1, results="hide"}
-x = matrix(rnorm(100), ncol=10)
+x = matrix(rnorm(100), ncol = 10)
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
@@ -518,7 +518,7 @@ apply(x, 2, function(i) mean(i) / sd_x)
 If we compare the two methods on a $100$ row by $1000$ column matrix, the cached version is around $100$ times faster (Figure \@ref(fig:3-4)).
 
 ```{r, 3-4, fig.keep="last", echo=FALSE, fig.height=4, fig.width=6, fig.cap="Performance gains obtained from caching the standard deviation in a $100$ by $1000$ matrix.", fig.align="center", out.width="70%"}
-local(source("code/03-programming_f5.R", local=TRUE))
+local(source("code/03-programming_f5.R", local = TRUE))
 ```
 
 A more advanced form of caching is to use the **memoise** package. If a function is called multiple times with the same input, it may be possible to speed things up by keeping a cache of known answers that it can retrieve. The **memoise** package allows us to easily store the value of function call and returns the cached result when the function is called again with the same arguments. This package trades off memory versus speed, since the memoised function stores all previous inputs and outputs. To cache a function, we simply pass the function to the **memoise** function.
@@ -542,7 +542,7 @@ m_plot_mpg = memoise(plot_mpg)
 microbenchmark(times = 10, unit = "ms", m_plot_mpg(10), plot_mpg(10))
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq   max neval cld
-#>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a 
+#>  m_plot_mpg(10)  0.04 4e-02  0.07  8e-02 8e-02   0.1    10  a
 #>    plot_mpg(10) 40.20 1e+02 95.52  1e+02 1e+02 107.1    10   b
 ```
 
@@ -623,7 +623,7 @@ Next we create an inefficient function for calculating the mean. This function t
 mean_r = function(x) {
   m = 0
   n = length(x)
-  for(i in seq_len(n))
+  for (i in seq_len(n))
     m = m + x[i] / n
   m
 }
@@ -645,14 +645,14 @@ microbenchmark(times = 10, unit = "ms", # milliseconds
 #> Unit: milliseconds
 #>           expr   min    lq  mean median    uq  max neval cld
 #>      mean_r(x) 0.358 0.361 0.370  0.363 0.367 0.43    10   c
-#>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b 
-#>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a  
+#>  cmp_mean_r(x) 0.050 0.051 0.052  0.051 0.051 0.07    10  b
+#>        mean(x) 0.005 0.005 0.008  0.007 0.008 0.03    10 a
 ```
 
 The compiled function is around seven times faster than the uncompiled function. Of course the native `mean()` function is faster, but compiling does make a significant difference (Figure \@ref(fig:3-3)).
 
 ```{r 3-3, echo=FALSE, fig.height=4, fig.width=6, fig.cap="Comparison of mean functions.", eval=TRUE, fig.align="center", out.width="70%"}
-local(source("code/03-programming_f4.R", local=TRUE))
+local(source("code/03-programming_f4.R", local = TRUE))
 ```
 
 ### Compiling code
@@ -673,7 +673,7 @@ install.packages("ggplot2", type = "source")
 Or if we want to avoid altering the `.Renviron` file, we can specify an additional argument
 
 ```{r eval=FALSE}
-install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile") 
+install.packages("ggplot2", type = "source", INSTALL_opts = "--byte-compile")
 ```
 
 A final option is to use just-in-time (JIT) compilation. The `enableJIT()` function disables JIT compilation if the argument is `0`. Arguments `1`, `2`, or `3` implement different levels of optimisation. JIT can also be enabled by setting the environment variable `R_ENABLE_JIT`, to one of these values.

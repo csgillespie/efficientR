@@ -3,8 +3,8 @@ knit: "bookdown::preview_chapter"
 ---
 
 ```{r echo=FALSE}
-rm(list=ls())
-data("USArrests", package="datasets")
+rm(list = ls())
+data("USArrests", package = "datasets")
 ```
 
 # Efficient set-up {#set-up}
@@ -45,8 +45,8 @@ Basic OS-specific information can be queried from within R using `Sys.info()`:
 
 ```{r, eval=FALSE}
 Sys.info()
-#R> sysname     release                machine      user 
-#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin" 
+#R> sysname     release                machine      user
+#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin"
 ```
 
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
@@ -90,7 +90,7 @@ How do the system output logs (results) on your system compare to those presente
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
     # 3: Find the median of each column using many cores
-    r2 = parallel::mclapply(X, median) 
+    r2 = parallel::mclapply(X, median)
     ```
 
 ```{block type='rmdnote'}
@@ -107,9 +107,9 @@ system.time(parallel::parLapply(X, median))
 identical(r1, r2)
 # Answers:
 # 1: The RAM use should jump up by 1 Gb or so and one processor should max out.
-# 
+#
 # 2: One processor should max out.
-# 
+#
 # 3: A few processors should max out, it should run quicker
 ```
 
@@ -180,7 +180,7 @@ Release notes with details on each of these issues are hosted at [cran.r-project
 
     ```{r, eval=FALSE}
     # check and install the latest R version
-    installr::updateR() 
+    installr::updateR()
     ```
     
 For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up-to-date.
@@ -221,7 +221,7 @@ sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies
 On Windows the **installr** package helps manage and update R packages with system-level dependencies. For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
 
 ```{r, eval=FALSE}
-installr::install.rtools() 
+installr::install.rtools()
 ```
 
 ### Updating R packages
@@ -412,7 +412,7 @@ To avoid setting the CRAN mirror each time you run `install.packages()` you can 
 # `local` creates a new, empty environment
 # This avoids polluting .GlobalEnv with the object r
 local({
-  r = getOption("repos")             
+  r = getOption("repos")           
   r["CRAN"] = "https://cran.rstudio.com/"
   options(repos = r)
 })
@@ -433,7 +433,7 @@ fortunes::fortune(50)
 It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to `.Rprofile`:
 
 ```{r results="hide"}
-if(interactive()) 
+if (interactive())
   try(fortunes::fortune(), silent = TRUE)
 ```
 
@@ -448,7 +448,7 @@ The function `.Last()`, if it exists in the `.Rprofile`, is always run at the en
 ```{r, eval=FALSE}  
 .Last = function() {
   cond = suppressWarnings(!require(fortunes, quietly = TRUE))
-  if(cond) 
+  if (cond)
     try(install.packages("fortunes"), silent = TRUE)
   message("Goodbye at ", date(), "\n")
 }
@@ -470,9 +470,9 @@ hh = function(d) d[1:5, 1:5]
 and a function for setting a nice plotting window:
 
 ```{r, eval=FALSE}  
-nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01, 
+nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
                       cex.axis = 0.9, las = 1, mfrow = c(1, 1), ...) {
-    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las, 
+    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las,
         mfrow = mfrow, ...)
 }
 ```
@@ -739,7 +739,7 @@ After pressing down until `USArrests` is selected, press Enter so it autocomplet
 Finally, typing `$` should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.
 
 ```{r, eval=FALSE, echo=2}
-data("USArrests", package="datasets")
+data("USArrests", package = "datasets")
 USArrests$ # a dropdown menu of columns should appear in RStudio
 ```
 
@@ -880,7 +880,7 @@ It was found that the installation of OpenBLAS led to a 2-fold speed-up (from ar
 (ref:blas-bench) Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).
 
 ```{r blas-bench, fig.width=6, fig.height=4, echo=FALSE, out.width="70%", fig.align="center", fig.cap="(ref:blas-bench)"}
-local(source("code/02-blas.R", local=TRUE))
+local(source("code/02-blas.R", local = TRUE))
 ```
 
 ### Other interpreters
