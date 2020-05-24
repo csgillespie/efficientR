@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7 Efficient optimisation | Efficient R programming</title>
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7 Efficient optimisation | Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-10" />
+<meta name="date" content="2020-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -521,13 +521,13 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb183-3" data-line-number="3">  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb183-4" data-line-number="4">})</a>
 <a class="sourceLine" id="cb183-5" data-line-number="5"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb183-6" data-line-number="6"><span class="co">#&gt;   2.456   0.252   2.707</span></a>
+<a class="sourceLine" id="cb183-6" data-line-number="6"><span class="co">#&gt;   2.416   0.192   2.610</span></a>
 <a class="sourceLine" id="cb183-7" data-line-number="7"><span class="kw">system.time</span>({</a>
 <a class="sourceLine" id="cb183-8" data-line-number="8">  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </a>
 <a class="sourceLine" id="cb183-9" data-line-number="9">  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></a>
 <a class="sourceLine" id="cb183-10" data-line-number="10">})</a>
 <a class="sourceLine" id="cb183-11" data-line-number="11"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb183-12" data-line-number="12"><span class="co">#&gt;   0.167   0.060   0.227</span></a>
+<a class="sourceLine" id="cb183-12" data-line-number="12"><span class="co">#&gt;   0.166   0.060   0.226</span></a>
 <a class="sourceLine" id="cb183-13" data-line-number="13"><span class="kw">identical</span>(result1, result2)</a>
 <a class="sourceLine" id="cb183-14" data-line-number="14"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
@@ -535,7 +535,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb184-2" data-line-number="2">  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb184-3" data-line-number="3">})</a>
 <a class="sourceLine" id="cb184-4" data-line-number="4"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb184-5" data-line-number="5"><span class="co">#&gt;   0.448   0.204   0.652</span></a>
+<a class="sourceLine" id="cb184-5" data-line-number="5"><span class="co">#&gt;   0.459   0.188   0.648</span></a>
 <a class="sourceLine" id="cb184-6" data-line-number="6"><span class="kw">identical</span>(result1, result3)</a>
 <a class="sourceLine" id="cb184-7" data-line-number="7"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 </div>
@@ -602,9 +602,9 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 <div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
 <a class="sourceLine" id="cb191-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</a>
 <a class="sourceLine" id="cb191-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb191-4" data-line-number="4"><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></a>
-<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00268 0.00322 0.0504 0.00457 0.00612 4.54   100</span></a>
-<a class="sourceLine" id="cb191-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.48190 0.49208 0.5597 0.50231 0.51552 5.37   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb191-4" data-line-number="4"><span class="co">#&gt;         expr    min      lq   mean  median      uq  max neval</span></a>
+<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.0025 0.00314 0.0511 0.00416 0.00538 4.65   100</span></a>
+<a class="sourceLine" id="cb191-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.4716 0.48960 0.5548 0.50098 0.51388 5.33   100</span></a></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -652,7 +652,7 @@ integer). This gives a tiny speed boost (around 0.1 microseconds!)</p>
 </div>
 <div id="sparse-matrices" class="section level3 unnumbered">
 <h3>Sparse matrices</h3>
-<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>.</p>
+<p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>.</p>
 <p>As an example, suppose we have a large matrix where the diagonal elements are non-zero:</p>
 <div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)</a>
 <a class="sourceLine" id="cb196-2" data-line-number="2">N =<span class="st"> </span><span class="dv">10000</span></a>
@@ -683,7 +683,7 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 <div id="example-optimising-the-move_square-function" class="section level2">
 <h2><span class="header-section-number">7.4</span> Example: Optimising the <code>move_square()</code> function</h2>
-<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that our main bottleneck in simulating the game of Monopoly is the <code>move_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a>:</p>
+<p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that our main bottleneck in simulating the game of Monopoly is the <code>move_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>:</p>
 <ul>
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
 <div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
@@ -724,7 +724,7 @@ The value returned by <code>detectCores()</code> turns out to be operating syste
 </div>
 <div id="example-snakes-and-ladders" class="section level3">
 <h3><span class="header-section-number">7.5.2</span> Example: Snakes and Ladders</h3>
-<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a></p>
+<p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a></p>
 <p>The following code illustrates how to simulate <code>N</code> games using <code>sapply()</code>:</p>
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1">N =<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span></a>
 <a class="sourceLine" id="cb201-2" data-line-number="2"><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
@@ -734,7 +734,7 @@ Begin by making a cluster object:</p>
 <a class="sourceLine" id="cb202-2" data-line-number="2">cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</a></code></pre></div>
 <p>Then simply swap <code>sapply()</code> for <code>parSapply()</code>:</p>
 <div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1"><span class="kw">parSapply</span>(cl, <span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
-<p>Not stopping the clusters can lead to memory leaks,<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> so it is important to stop the created clusters as illustrated below:</p>
+<p>Not stopping the clusters can lead to memory leaks,<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> so it is important to stop the created clusters as illustrated below:</p>
 <div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1"><span class="kw">stopCluster</span>(cl)</a></code></pre></div>
 <p>and used a four (or more) core, then we would
 obtain a four-fold speed up (we set <code>makeCluster(4)</code>).</p>
@@ -815,7 +815,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" data-line-number="1">add_cpp</a>
 <a class="sourceLine" id="cb211-2" data-line-number="2"><span class="co">#&gt; function (x, y) </span></a>
-<a class="sourceLine" id="cb211-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7f3ca5e0dbc0&gt;, x, y)</span></a></code></pre></div>
+<a class="sourceLine" id="cb211-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7f0d61f99bc0&gt;, x, y)</span></a></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb212-2" data-line-number="2"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
@@ -1036,11 +1036,11 @@ Figure 7.6: Comparison of mean functions.
 </div>
 <div class="footnotes">
 <hr />
-<ol start="20">
-<li id="fn20"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref20" class="footnote-back">↩</a></p></li>
-<li id="fn21"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref21" class="footnote-back">↩</a></p></li>
-<li id="fn22"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref22" class="footnote-back">↩</a></p></li>
-<li id="fn23"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref23" class="footnote-back">↩</a></p></li>
+<ol start="19">
+<li id="fn19"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref19" class="footnote-back">↩</a></p></li>
+<li id="fn20"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref20" class="footnote-back">↩</a></p></li>
+<li id="fn21"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref21" class="footnote-back">↩</a></p></li>
+<li id="fn22"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref22" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

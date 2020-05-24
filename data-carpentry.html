@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Efficient data carpentry | Efficient R programming</title>
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Efficient data carpentry | Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-10" />
+<meta name="date" content="2020-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -879,9 +879,9 @@ In base R the equivalent function would be <code>names(x)[1:2] = c(&quot;x&quot;
 <div id="changing-column-classes" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> Changing column classes</h3>
 <p>The <em>class</em> of R objects is critical to performance.
-If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object).<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a></p>
+If a class is incorrectly specified (e.g. if numbers are treated as factors or characters) this will lead to incorrect results. The class of all columns in a data frame can be queried using the function <code>str()</code> (short for display the <strong>str</strong>ucture of an object).<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a></p>
 <p>Visual inspection of the data (e.g. via <code>View(wb_ineq)</code>) clearly shows that all columns except for 1 to 4 (<code>Country</code>, <code>Country Code</code>, <code>Year</code> and <code>Year Code</code>) should be numeric.
-The class of numeric variables can be altered one-by one using <code>mutate()</code> as follows (which would set the <code>gini</code> column to be of class <code>numeric</code> if it weren’t already):<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a></p>
+The class of numeric variables can be altered one-by one using <code>mutate()</code> as follows (which would set the <code>gini</code> column to be of class <code>numeric</code> if it weren’t already):<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a></p>
 <div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1">wb_ineq =<span class="st"> </span><span class="kw">mutate</span>(wb_ineq, <span class="dt">gini =</span> <span class="kw">as.numeric</span>(gini))</a></code></pre></div>
 <p>However the purpose of programming languages is to <em>automate</em> tasks and reduce typing.
 The following code chunk ensures the numeric variables in the <code>cols_to_change</code> object are <code>numeric</code> using the same function (<code>vars()</code> is a helper function to select variables and also words with <strong>dplyr</strong> functions such as <code>contains()</code> which select all columns containing a given text string):</p>
@@ -904,7 +904,7 @@ These are shown in the chapter’s <a href="https://github.com/csgillespie/effic
 <p><strong>dplyr</strong> offers an alternative way of filtering data, using <code>filter()</code>.</p>
 <div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1"><span class="co"># Base R: wb_ineq[wb_ineq$Country == &quot;Australia&quot;,]</span></a>
 <a class="sourceLine" id="cb150-2" data-line-number="2">aus2 =<span class="st"> </span><span class="kw">filter</span>(wb_ineq, Country <span class="op">==</span><span class="st"> &quot;Australia&quot;</span>)</a></code></pre></div>
-<p><code>filter()</code> is slightly more flexible than <code>[</code>: <code>filter(wb_ineq, code == &quot;AUS&quot;, Year == 1974)</code> works as well as <code>filter(wb_ineq, code == &quot;AUS&quot; &amp; Year == 1974)</code>, and takes any number of conditions (see <code>?filter</code>). <code>filter()</code> is slightly faster than base R.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> By avoiding the <code>$</code> symbol, <strong>dplyr</strong> makes subsetting code concise and consistent with other <strong>dplyr</strong> functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of <strong>dplyr</strong>. In the next section we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.</p>
+<p><code>filter()</code> is slightly more flexible than <code>[</code>: <code>filter(wb_ineq, code == &quot;AUS&quot;, Year == 1974)</code> works as well as <code>filter(wb_ineq, code == &quot;AUS&quot; &amp; Year == 1974)</code>, and takes any number of conditions (see <code>?filter</code>). <code>filter()</code> is slightly faster than base R.<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> By avoiding the <code>$</code> symbol, <strong>dplyr</strong> makes subsetting code concise and consistent with other <strong>dplyr</strong> functions. The first argument is a data frame and subsequent raw variable names can be treated as vector objects: a defining feature of <strong>dplyr</strong>. In the next section we’ll learn how this syntax can be used alongside the <code>%&gt;%</code> ‘pipe’ command to write clear data manipulation commands.</p>
 <p>There are <strong>dplyr</strong> equivalents of many base R functions but these usually work slightly differently. The <strong>dplyr</strong> equivalent of <code>aggregate</code>, for example is to use the grouping function <code>group_by</code> in combination with the general purpose function <code>summarise</code> (not to be confused with <code>summary</code> in base R), as we shall see in Section <a href="data-carpentry.html#data-aggregation">6.4.5</a>.</p>
 </div>
 <div id="chaining-operations" class="section level3">
@@ -1019,7 +1019,7 @@ By way of explanation, this is what happened:</p>
 <!-- ```{r} -->
 <!-- head(e_ems[order(e_ems$x),], 3) -->
 <!-- ``` -->
-<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a></p>
+<p>To aggregate the dataset using <strong>dplyr</strong> package, you divide the task in two: to <em>group</em> the dataset first and then to summarise, as illustrated below.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a></p>
 <div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
 <a class="sourceLine" id="cb157-2" data-line-number="2"><span class="kw">group_by</span>(ghg_ems, Country) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb157-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_eco2 =</span> <span class="kw">mean</span>(Electricity, <span class="dt">na.rm  =</span> <span class="ot">TRUE</span>))</a>
@@ -1365,7 +1365,7 @@ The first stage is to read-in the data:</p>
 <div id="data-processing-with-data.table" class="section level2">
 <h2><span class="header-section-number">6.7</span> Data processing with data.table</h2>
 <p><strong>data.table</strong> is a mature package for fast data processing that presents an alternative to <strong>dplyr</strong>. There is some controversy about which is more appropriate for different
-tasks.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>
+tasks.<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>
 Which is more efficient to some extent depends on personal preferences and what you are used to.
 Both are powerful and efficient packages that take time to learn, so it is best to learn one and stick with it, rather than have the duality of using two for similar purposes. There are situations in which one works better than another: <strong>dplyr</strong> provides a more consistent and flexible interface (e.g. with its interface to databases, demonstrated in the previous section) so for most purposes we recommend learning <strong>dplyr</strong> first if you are new to both packages. <strong>dplyr</strong> can also be used to work with the <code>data.table</code> class used by the <strong>data.table</strong> package so you can get the best of both worlds.</p>
 <p><strong>data.table</strong> is faster than <strong>dplyr</strong> for some operations and offers some functionality unavailable in other packages, moreover it has a mature and advanced user community. <strong>data.table</strong> supports <a href="https://www.r-bloggers.com/understanding-data-table-rolling-joins/">rolling joins</a> (which allow rows in one table to be selected based on proximity between shared variables (typically time) and <a href="http://www.w3resource.com/sql/joins/perform-a-non-equi-join.php">non-equi joins</a> (where join criteria can be inequalities rather than equal to).</p>
@@ -1421,11 +1421,13 @@ Figure 6.1: Benchmark illustrating the performance gains to be expected for diff
 </div>
 <div class="footnotes">
 <hr />
-<ol start="15">
-<li id="fn15"><p><code>str(wb_ineq)</code> is another way to see the contents of an object, but produces more verbose output.<a href="data-carpentry.html#fnref15" class="footnote-back">↩</a></p></li>
-<li id="fn17"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="data-carpentry.html#fnref17" class="footnote-back">↩</a></p></li>
-<li id="fn18"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="data-carpentry.html#fnref18" class="footnote-back">↩</a></p></li>
-<li id="fn19"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the StackOverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="data-carpentry.html#fnref19" class="footnote-back">↩</a></p></li>
+<ol start="14">
+<li id="fn14"><p><code>str(wb_ineq)</code> is another way to see the contents of an object, but produces more verbose output.<a href="data-carpentry.html#fnref14" class="footnote-back">↩</a></p></li>
+<li id="fn15"><p>
+The base R equivalent of this is <code>wb_ineq$gini = as.numeric(wb_ineq$gini)</code>.<a href="data-carpentry.html#fnref15" class="footnote-back">↩</a></p></li>
+<li id="fn16"><p>Note that <code>filter</code> is also the name of a function used in the base <strong>stats</strong> library. Usually packages avoid using names already taken in base R but this is an exception.<a href="data-carpentry.html#fnref16" class="footnote-back">↩</a></p></li>
+<li id="fn17"><p>The equivalent code in base R is: <code>e_ems = aggregate(ghg_ems$Electricity, list(ghg_ems$Country),                   mean, na.rm  = TRUE, data = ghg_ems) nrow(e_ems)</code>.<a href="data-carpentry.html#fnref17" class="footnote-back">↩</a></p></li>
+<li id="fn18"><p>One <a href="http://stackoverflow.com/questions/21435339">question</a> on the StackOverflow website titled ‘data.table vs dplyr’ illustrates this controversy and delves into the philosophy underlying each approach.<a href="data-carpentry.html#fnref18" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

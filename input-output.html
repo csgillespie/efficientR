@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Efficient input/output | Efficient R programming</title>
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Efficient input/output | Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-10" />
+<meta name="date" content="2020-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -549,9 +549,9 @@ Figure 5.1: Benchmarks of base, data.table and readr approches for reading csv f
 <a class="sourceLine" id="cb123-3" data-line-number="3">  <span class="dt">without_select =</span> data.table<span class="op">::</span><span class="kw">fread</span>(fname)</a>
 <a class="sourceLine" id="cb123-4" data-line-number="4">)</a>
 <a class="sourceLine" id="cb123-5" data-line-number="5"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb123-6" data-line-number="6"><span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span></a>
-<a class="sourceLine" id="cb123-7" data-line-number="7"><span class="co">#&gt;     with_select 10.6 10.6 10.8   10.7 10.9 11.1     5</span></a>
-<a class="sourceLine" id="cb123-8" data-line-number="8"><span class="co">#&gt;  without_select 18.2 18.8 18.8   18.8 18.8 19.2     5</span></a></code></pre></div>
+<a class="sourceLine" id="cb123-6" data-line-number="6"><span class="co">#&gt;            expr   min    lq  mean median    uq  max neval</span></a>
+<a class="sourceLine" id="cb123-7" data-line-number="7"><span class="co">#&gt;     with_select  9.43  9.46  9.61   9.49  9.64 10.0     5</span></a>
+<a class="sourceLine" id="cb123-8" data-line-number="8"><span class="co">#&gt;  without_select 15.34 15.72 16.12  15.80 15.96 17.8     5</span></a></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv()</code> and <code>fread()</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>
@@ -615,7 +615,7 @@ A more efficient, robust and scalable way to work with large datasets is via dat
 <h2><span class="header-section-number">5.4</span> Binary file formats</h2>
 <p>There are limitations to plain text files. Even the trusty CSV format is “restricted to tabular data, lacks type-safety, and has limited precision for numeric values” <span class="citation">(Eddelbuettel, Stokely, and Ooms <a href="#ref-JSSv071i02">2016</a>)</span>.
 Once you have read-in the raw data (e.g. from a plain text file) and tidied it (covered in the next chapter), it is common to want to save it for future use. Saving it after tidying is recommended, to reduce the chance of having to run all the data cleaning code again. We recommend saving tidied versions of large datasets in one of the binary formats covered in this section: this will decrease read/write times and file sizes, making your data more
-portable.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a></p>
+portable.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
 <p>Unlike plain text files, data stored in binary formats cannot be read by humans. This allows space-efficient data compression but means that the files will be less language agnostic. R’s native file format, <code>.Rds</code>, for example may be difficult to read and write using external programs such as Python or LibreOffice Calc. This section provides an overview of binary file formats in R, with benchmarks to show how they compare with the plain text format <code>.csv</code> covered in the previous section.</p>
 <div id="native-binary-formats-rdata-or-rds" class="section level3">
 <h3><span class="header-section-number">5.4.1</span> Native binary formats: Rdata or Rds?</h3>
@@ -717,8 +717,8 @@ Figure 5.3: Discovering files in R packages using RStudio’s ‘intellisense’
 </div>
 <div class="footnotes">
 <hr />
-<ol start="14">
-<li id="fn14"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than <span class="math inline">\(100\)</span> times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-output.html#fnref14" class="footnote-back">↩</a></p></li>
+<ol start="13">
+<li id="fn13"><p>Geographical data, for example, can be slow to read in external formats. A large <code>.shp</code> or <code>.geojson</code> file can take more than <span class="math inline">\(100\)</span> times longer to load than an equivalent <code>.Rds</code> or <code>.Rdata</code> file.<a href="input-output.html#fnref13" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
