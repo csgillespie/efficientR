@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-05-24" />
+<meta name="date" content="2020-05-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -567,11 +567,30 @@ Such charts can greatly help with the planning and task management of long and c
 <p>The difference between the hard-coded method and the package method is striking. One is 7 lines of tricky R code involving many subsetting stages and small, similar functions (e.g. <code>sin</code> and <code>asin</code>) which are easy to confuse. The other is one line of simple code. The package method using <strong>geosphere</strong> took perhaps 100<sup>th</sup> of the time <em>and</em> gave a more accurate result (because it uses a more accurate estimate of the diameter of the Earth). This means that a couple of minutes searching for a package to estimate great circle distances would have been time well spent at the outset of this project. But how do you search for packages?</p>
 <div id="searching-for-r-packages" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Searching for R packages</h3>
-<p>Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, <code>haversine formula R</code>, returned a link to the <strong>geosphere</strong> package in the second result (a <a href="http://www.r-bloggers.com/great-circle-distance-calculations-in-r/">hardcoded implementation</a> was first).</p>
-<p>Beyond Google, there are also several sites for searching for packages and functions.
-<a href="http://www.rdocumentation.org/">rdocumentation.org</a> provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for <code>haversine</code> in the Description field yielded 10 results from 8 packages: R has at least <em>8</em> implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with <code>RSiteSearch()</code>, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:</p>
+<p>Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, <a href="https://www.google.com/search?q=haversine+formula+R"><code>haversine formula R</code></a>, returned links to various packages and a <a href="http://www.r-bloggers.com/great-circle-distance-calculations-in-r/">blog post on a base R implementation</a>.</p>
+<p>Searching on sites dedicated to R can yield more specific and useful results.
+The <a href="https://r-pkg.org/">r-pkg.org</a> website provides a simple yet effective online search system.
+Entering <code>haversine</code> into its search bar yields the URL <a href="https://r-pkg.org/search.html?q=haversine">r-pkg.org/search.html?q=haversine</a>, which contains links to relevant packages.</p>
+<p>Furthermore, undertaking searches for particular functions and packages from within R can save time and avoid the distractions of online searches via a web browser.
+You can search <em>currently installed</em> packages with the command <code>??haversine</code>, although this will not help you find pacakges you’ve yet to install.
+A simple solution is the <code>RSiteSearch()</code> function from the base R <strong>utils</strong> package opens a url in your browser linking to a number of functions (49 at the time of writing) mentioning the text string, with the following command:</p>
 <div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co"># Search CRAN for mentions of haversine</span></a>
 <a class="sourceLine" id="cb108-2" data-line-number="2"><span class="kw">RSiteSearch</span>(<span class="st">&quot;haversine&quot;</span>)</a></code></pre></div>
+<p>To get more functionality, various packages dedicated to searching for R packages have been developed.
+<strong>pkgsearch</strong> is a popular package that provides many options for searching for packages, and a basic example is shown below.
+The results show that 4 relevant packages were identified and ranked, simplifying the search process.</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">haversine_pkgs =<span class="st"> </span>pkgsearch<span class="op">::</span><span class="kw">pkg_search</span>(<span class="dt">query =</span> <span class="st">&quot;haversine&quot;</span>)</a>
+<a class="sourceLine" id="cb109-2" data-line-number="2">haversine_pkgs</a></code></pre></div>
+<pre><code>- &quot;haversine&quot; ---------------------------------------------------------------------------- 4 packages in 0.007 seconds -
+  #     package       version by                 @ title                                                    
+ 1  100 hans          0.1     Alex Hallam       8M Haversines are not Slow                                  
+ 2   40 geodist       0.0.4   Mark Padgham      6d Fast, Dependency-Free Geodesic Distance Calculations     
+ 3   12 geosed        0.1.1   Shant Sukljian    9M Smallest Enclosing Disc for Latitude and Longitude Points
+ 4   11 leaderCluster 1.2     Taylor B. Arnold  5y Leader Clustering Algorithm     </code></pre>
+<!-- Commented-out in favour of the seer packge (RL 2020-05) -->
+<!-- To rapidly find *packages* mentioning a particular search topic, the **packagefinder** package is recommended. -->
+<!-- It rapidly identifies and ranks packages based on a search criteria, yielding the following results at the time of writing: -->
+<p>Another website offering search functionality is <a href="http://www.rdocumentation.org/">rdocumentation.org</a>, which provides a search engine to pinpoint the function or package you need. The search for <code>haversine</code> in the Description field yielded 50+ results from more than a dozen packages (as of summer 2020) packages: the community has contributed to many implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section.</p>
 </div>
 <div id="how-to-select-a-package" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> How to select a package</h3>
@@ -636,8 +655,8 @@ This note briefly explains R Markdown for the un-initiated. R markdown is a form
 (1:5)^2
 ```</code></pre>
 <p>in an R Markdown document. The <code>eval = TRUE</code> in the code indicates that the code should be evaluated while <code>echo = TRUE</code> controls whether the R code is displayed. When we compile the document, we get</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb110-2" data-line-number="2"><span class="co">#&gt; [1]  1  4  9 16 25</span></a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb112-2" data-line-number="2"><span class="co">#&gt; [1]  1  4  9 16 25</span></a></code></pre></div>
 <p>R Markdown via <strong>knitr</strong> provides a wide range of options to customise what is displayed and evaluated. When you adapt to this workflow it is highly efficient, especially as RStudio provides a number of shortcuts that make it easy to create and modify code chunks. To create a chunk while editing a <code>.Rmd</code> file, for example, simply enter <code>Ctrl/Cmd+Alt+I</code> on Windows or Linux or select the option from the Code drop down menu.</p>
 <p>Once your document has compiled it should appear on your screen in the file format requested. If a html file has been generated (as is the default), RStudio provides a feature that allows you to put it up online rapidly.
 This is done using the <a href="https://rpubs.com">rpubs</a> website, a store of a huge number of dynamic documents (which could be a good source of inspiration for your publications).

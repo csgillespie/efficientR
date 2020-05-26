@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-05-24"
+date: "2020-05-26"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -298,9 +298,9 @@ cs_apply = function(x) {
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 114680 118964 182463 123102 132243 5548424   100
-#>  cs_apply(x)  83316  85314 118461  91154  99766 2434592   100
-#>    cumsum(x)    648    797   1153    926   1094   19192   100
+#>    cs_for(x) 113175 119066 181617 123658 131551 5620658   100
+#>  cs_apply(x)  82164  85865 118775  92869 100855 2409753   100
+#>    cumsum(x)    647    786   1212    930   1079   19874   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1526,7 +1526,7 @@ In R, this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.125   0.008   2.134
+#>    2.14    0.00    2.13
 ```
 
 In contrast, a more R-centric approach would be
@@ -1959,7 +1959,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x218f710>
+#> <bytecode: 0x216c710>
 #> <environment: namespace:base>
 ```
 
@@ -2261,16 +2261,50 @@ The difference between the hard-coded method and the package method is striking.
 
 ### Searching for R packages
 
-Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere** package in the second result (a [hardcoded implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
+Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, [`haversine formula R`](https://www.google.com/search?q=haversine+formula+R), returned links to various packages and a [blog post on a base R implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/).
 
-Beyond Google, there are also several sites for searching for packages and functions.
-[rdocumentation.org](http://www.rdocumentation.org/) provides a multi-field search environment to pinpoint the function or package you need. Amazingly, the search for `haversine` in the Description field yielded 10 results from 8 packages: R has at least *8* implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (40) and vignettes (2) that mention the text string:
+Searching on sites dedicated to R can yield more specific and useful results.
+The [r-pkg.org](https://r-pkg.org/) website provides a simple yet effective online search system.
+Entering `haversine` into its search bar yields the URL [r-pkg.org/search.html?q=haversine](https://r-pkg.org/search.html?q=haversine), which contains links to relevant packages.
+
+Furthermore, undertaking searches for particular functions and packages from within R can save time and avoid the distractions of online searches via a web browser.
+You can search *currently installed* packages with the command `??haversine`, although this will not help you find pacakges you've yet to install.
+A simple solution is the `RSiteSearch()` function from the base R **utils** package opens a url in your browser linking to a number of functions (49 at the time of writing) mentioning the text string, with the following command:
 
 
 ```r
 # Search CRAN for mentions of haversine
 RSiteSearch("haversine")
 ```
+
+To get more functionality, various packages dedicated to searching for R packages have been developed.
+**pkgsearch** is a popular package that provides many options for searching for packages, and a basic example is shown below.
+The results show that 4 relevant packages were identified and ranked, simplifying the search process.
+
+
+```r
+haversine_pkgs = pkgsearch::pkg_search(query = "haversine")
+haversine_pkgs
+```
+
+```
+- "haversine" ---------------------------------------------------------------------------- 4 packages in 0.007 seconds -
+  #     package       version by                 @ title                                                    
+ 1  100 hans          0.1     Alex Hallam       8M Haversines are not Slow                                  
+ 2   40 geodist       0.0.4   Mark Padgham      6d Fast, Dependency-Free Geodesic Distance Calculations     
+ 3   12 geosed        0.1.1   Shant Sukljian    9M Smallest Enclosing Disc for Latitude and Longitude Points
+ 4   11 leaderCluster 1.2     Taylor B. Arnold  5y Leader Clustering Algorithm     
+ ```
+
+
+<!-- Commented-out in favour of the seer packge (RL 2020-05) -->
+<!-- To rapidly find *packages* mentioning a particular search topic, the **packagefinder** package is recommended. -->
+<!-- It rapidly identifies and ranks packages based on a search criteria, yielding the following results at the time of writing: -->
+
+
+
+
+Another website offering search functionality is [rdocumentation.org](http://www.rdocumentation.org/), which provides a search engine to pinpoint the function or package you need. The search for `haversine` in the Description field yielded 50+ results from more than a dozen packages (as of summer 2020) packages: the community has contributed to many implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. 
 
 ### How to select a package
 
@@ -2608,8 +2642,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr   min    lq  mean median    uq  max neval
-#>     with_select  9.43  9.46  9.61   9.49  9.64 10.0     5
-#>  without_select 15.34 15.72 16.12  15.80 15.96 17.8     5
+#>     with_select  9.59  9.66  9.93   9.79  9.93 10.7     5
+#>  without_select 15.81 16.27 16.86  16.71 17.15 18.3     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4061,13 +4095,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.416   0.192   2.610
+#>   2.406   0.256   2.660
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.166   0.060   0.226
+#>   0.149   0.076   0.225
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4080,7 +4114,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.459   0.188   0.648
+#>   0.420   0.224   0.643
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4183,9 +4217,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr    min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.0025 0.00314 0.0511 0.00416 0.00538 4.65   100
-#>   ex_df[1, ] 0.4716 0.48960 0.5548 0.50098 0.51388 5.33   100
+#>         expr     min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.00256 0.00296 0.0496 0.00401 0.00587 4.49   100
+#>   ex_df[1, ] 0.48174 0.49241 0.5529 0.50218 0.51245 5.34   100
 ```
 
 <div class="rmdtip">
@@ -4505,7 +4539,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f0d61f99bc0>, x, y)
+#> .Call(<pointer: 0x7fa5780eabc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
@@ -5446,7 +5480,7 @@ To search *all R packages*, including those you have not installed locally, for 
 
 <div class="figure" style="text-align: center">
 <img src="figures/pf10_1_package-autocompletion.png" alt="Package name autocompletion in action in RStudio for packages beginning with 'geo'." width="100%" />
-<p class="caption">(\#fig:unnamed-chunk-319)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
+<p class="caption">(\#fig:unnamed-chunk-321)Package name autocompletion in action in RStudio for packages beginning with 'geo'.</p>
 </div>
 
 ### Finding and using vignettes
