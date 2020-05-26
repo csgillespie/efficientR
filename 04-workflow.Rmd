@@ -206,15 +206,51 @@ The difference between the hard-coded method and the package method is striking.
 
 ### Searching for R packages
 
-Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess; if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, `haversine formula R`, returned a link to the **geosphere** package in the second result (a [hardcoded implementation](https://www.r-bloggers.com/great-circle-distance-calculations-in-r/) was first).
+Building on the example above, how can one find out if there is a package to solve your particular problem? The first stage is to guess: if it is a common problem, someone has probably tried to solve it. The second stage is to search. A simple Google query, [`haversine formula R`](https://www.google.com/search?q=haversine+formula+R), returned links to various packages and a [blog post on a base R implementation](http://www.r-bloggers.com/great-circle-distance-calculations-in-r/).
 
-Beyond Google, there are also several sites for searching for packages and functions.
-[rdocumentation.org](http://www.rdocumentation.org/) provides a search environment to pinpoint the function or package you need. Amazingly, the search for `haversine` yielded 52 different packages: R has at least *52* implementations or mentions of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. There is also a way to find the function from within R, with `RSiteSearch()`, which opens a url in your browser linking to a number of functions (69) across 34 different packages that mention the text string:
+Searching on sites dedicated to R can yield more specific and useful results.
+The [r-pkg.org](https://r-pkg.org/) website provides a simple yet effective online search system.
+Entering `haversine` into its search bar yields the URL [r-pkg.org/search.html?q=haversine](https://r-pkg.org/search.html?q=haversine), which contains links to relevant packages.
+
+Furthermore, undertaking searches for particular functions and packages from within R can save time and avoid the distractions of online searches via a web browser.
+You can search *currently installed* packages with the command `??haversine`, although this will not help you find pacakges you've yet to install.
+A simple solution is the `RSiteSearch()` function from the base R **utils** package opens a url in your browser linking to a number of functions (49 at the time of writing) mentioning the text string, with the following command:
 
 ```{r, eval=FALSE}
 # Search CRAN for mentions of haversine
 RSiteSearch("haversine")
 ```
+
+To get more functionality, various packages dedicated to searching for R packages have been developed.
+**pkgsearch** is a popular package that provides many options for searching for packages, and a basic example is shown below.
+The results show that 4 relevant packages were identified and ranked, simplifying the search process.
+
+```{r, eval=FALSE}
+haversine_pkgs = pkgsearch::pkg_search(query = "haversine")
+haversine_pkgs
+```
+
+```
+- "haversine" ---------------------------------------------------------------------------- 4 packages in 0.007 seconds -
+  #     package       version by                 @ title                                                    
+ 1  100 hans          0.1     Alex Hallam       8M Haversines are not Slow                                  
+ 2   40 geodist       0.0.4   Mark Padgham      6d Fast, Dependency-Free Geodesic Distance Calculations     
+ 3   12 geosed        0.1.1   Shant Sukljian    9M Smallest Enclosing Disc for Latitude and Longitude Points
+ 4   11 leaderCluster 1.2     Taylor B. Arnold  5y Leader Clustering Algorithm     
+ ```
+
+
+<!-- Commented-out in favour of the seer packge (RL 2020-05) -->
+<!-- To rapidly find *packages* mentioning a particular search topic, the **packagefinder** package is recommended. -->
+<!-- It rapidly identifies and ranks packages based on a search criteria, yielding the following results at the time of writing: -->
+
+```{r, eval=FALSE, echo=FALSE}
+haversine_pkgs = tibble::as.tibble(packagefinder::findPackage("haversine"))
+haversine_pkgs
+```
+
+
+Another website offering search functionality is [rdocumentation.org](http://www.rdocumentation.org/), which provides a search engine to pinpoint the function or package you need. The search for `haversine` in the Description field yielded 50+ results from more than a dozen packages (as of summer 2020) packages: the community has contributed to many implementations of the Haversine formula! This shows the importance of careful package selection as there are often many packages that do the same job, as we see in the next section. 
 
 ### How to select a package
 
@@ -225,9 +261,9 @@ An additional factor has been the growth in collaboration and peer review in pac
 Performance, stability and ease of use should be high on the priority list when choosing which package to use.
 Another more subtle factor is that some packages work better together than others.
 The 'R package ecosystem' is composed of interrelated packages.
-Knowing something of these inter-dependencies can help select a 'package suite' when the project demands a number of diverse, yet interrelated, programming tasks.
-The 'tidyverse', for example, contains many interrelated packages that work well together, such as **readr**, **tidyr**, and **dplyr**.^[An excellent overview of the 'tidyverse', formerly now as the 'hadleyverse' and its benefits is available from [barryrowlingson.github.io/hadleyverse](https://barryrowlingson.github.io/hadleyverse).]
-These may be used together to read-in, tidy and then process the data, as outlined in the subsequent sections.
+Knowing something of these inter-dependencies can help select a 'package suite' when the project demands a number of diverse yet interrelated programming tasks.
+The [**tidyverse**](https://www.tidyverse.org/), for example, is a 'metapackage' with interrelated packages that work well together, such as **readr**, **tidyr**, and **dplyr**.
+These can be used together to read-in, tidy and then process data, as outlined in the subsequent sections.
 
 There is no 'hard and fast' rule about which package you should use and new packages are emerging all the time.
 The ultimate test will be empirical evidence:
