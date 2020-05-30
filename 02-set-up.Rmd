@@ -3,8 +3,8 @@ knit: "bookdown::preview_chapter"
 ---
 
 ```{r echo=FALSE}
-rm(list=ls())
-data("USArrests", package="datasets")
+rm(list = ls())
+data("USArrests", package = "datasets")
 ```
 
 # Efficient set-up {#set-up}
@@ -45,8 +45,8 @@ Basic OS-specific information can be queried from within R using `Sys.info()`:
 
 ```{r, eval=FALSE}
 Sys.info()
-#R> sysname     release                machine      user 
-#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin" 
+#R> sysname     release                machine      user
+#R> "Linux"     "4.2.0-35-generic"     "x86_64"     "robin"
 ```
 
 Translated into English, the above output means that R is running on a 64 bit (`x86_64`) Linux distribution (`4.2.0-35-generic` is the Linux version) and that the current user is `robin`. Four other pieces of information (not shown) are also produced by the command, the meaning of which is well documented in a help file revealed by entering `?Sys.info` in the R console.
@@ -71,9 +71,9 @@ knitr::include_graphics("figures/f2_1_sysmon.png")
 
 System monitoring is a complex topic that spills over into system administration and server management. Fortunately there are many tools designed to ease monitoring on all major operating systems.
 
-- On Linux, the shell command `top` displays key resource use figures for most distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as `nethogs` monitor internet usage.
-- On Mac the **Activity Monitor** provides similar functionality. This can be initiated from the Utilities folder in Launchpad.
-- On Windows the **Task Manager** provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
+- On Linux, the shell command `top` displays key resource use figures for most distributions. `htop` and Gnome's **System Monitor** (`gnome-system-monitor`, see Figure \@ref(fig:2-1)) are more refined alternatives which use command-line and graphical user interfaces respectively. A number of options such as `nethogs` monitor internet usage.
+- On Mac, the **Activity Monitor** provides similar functionality. This can be initiated from the Utilities folder in Launchpad.
+- On Windows, the **Task Manager** provides key information on RAM and CPU use by process. This can be started in modern Windows versions by typing `Ctrl-Alt-Del` or by clicking the task bar and 'Start Task Manager'.
 
 #### Exercises {-}
 
@@ -90,7 +90,7 @@ How do the system output logs (results) on your system compare to those presente
     # 2: Find the median of each column using a single core
     r1 = lapply(X, median)
     # 3: Find the median of each column using many cores
-    r2 = parallel::mclapply(X, median) 
+    r2 = parallel::mclapply(X, median)
     ```
 
 ```{block type='rmdnote'}
@@ -107,18 +107,18 @@ system.time(parallel::parLapply(X, median))
 identical(r1, r2)
 # Answers:
 # 1: The RAM use should jump up by 1 Gb or so and one processor should max out.
-# 
+#
 # 2: One processor should max out.
-# 
+#
 # 3: A few processors should max out, it should run quicker
 ```
 
 ## R version
 
-It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package.  For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
+It is important to be aware that R is an evolving software project, whose behaviour changes over time. In general, base R is very conservative about making changes that break backwards compatibility. However, packages occasionally change substantially from one release to the next; typically it depends on the age of the package.  For most use cases we recommend always using the most up-to-date version of R and packages, so you have the latest code. In some circumstances (e.g. on a production server or working in a team) you may alternatively want to use specific versions which have been tested, to ensure stability. Keeping packages up-to-date is desirable because new code tends to be more efficient, intuitive, robust and feature rich. This section explains how.
 
 ```{block, packrat, type='rmdtip'}
-Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at [cran.r-project.org/bin/](https://cran.r-project.org/bin/). To download binary versions for Ubuntu 'Wily', for example, see [cran.r-project.org/bin/linux/ubuntu/wily/](https://cran.r-project.org/bin/linux/ubuntu/wily/). To 'pin' specific versions of R packages you can use the **packrat** package. For more on pinning R versions and R packages see articles on RStudio's website [Using-Different-Versions-of-R](https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R) and [rstudio.github.io/packrat/](https://rstudio.github.io/packrat/).
+Previous R versions can be installed from CRAN's archive or previous R releases. The binary versions for all OSs can be found at [cran.r-project.org/bin/](https://cran.r-project.org/bin/). To download binary versions for Ubuntu 'Xenial', for example, see [cran.r-project.org/bin/linux/ubuntu/xenial/](https://cran.r-project.org/bin/linux/ubuntu/xenial/). To 'pin' specific versions of R packages you can use the **packrat** package. For more on pinning R versions and R packages see articles on RStudio's website [Using-Different-Versions-of-R](https://support.rstudio.com/hc/en-us/articles/200486138-Using-Different-Versions-of-R) and [rstudio.github.io/packrat/](https://rstudio.github.io/packrat/).
 ```
 
 ### Installing R
@@ -137,17 +137,14 @@ deb http://cran.rstudio.com/bin/linux/ubuntu xenial/
 
 `http://cran.rstudio.com` is the mirror (which can be replaced by any listed at [cran.r-project.org/mirrors.html](https://cran.r-project.org/mirrors.html)) and `xenial` is the release. See the [Debian](https://cran.r-project.org/bin/linux/debian/) and [Ubuntu](https://cran.r-project.org/bin/linux/ubuntu/) installation pages on CRAN from further details.
 
-Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`, `r-base` and other `r-` packages can be installed using the `apt` system. The following two commands, for example, would install the base R package (a 'bare-bones' install) and the package **rcurl**, which has an external dependency:
+Once the appropriate repository has been added and the system updated (e.g. with `sudo apt-get update`), `r-base` and other `r-` packages can be installed using the `apt` system. The following two commands, for example, would install the base R package (a 'bare-bones' install) and the package **rcurl**, which has an external dependency:
 
 ```{r, eval=FALSE, engine='bash'}
 sudo apt-get install r-cran-base # install base R
 sudo apt-get install r-cran-rcurl # install the rcurl package
 ```
 
-```{block type='rmdnote'}
 `apt-cache search "^r-.*" | sort` will display all R packages that can be installed from `apt` in Debian-based systems. In Fedora-based systems, the equivalent command is `yum list R-\*`.
-```
-
 
 Typical output from the second command is illustrated below:
 
@@ -183,7 +180,7 @@ Release notes with details on each of these issues are hosted at [cran.r-project
 
     ```{r, eval=FALSE}
     # check and install the latest R version
-    installr::updateR() 
+    installr::updateR()
     ```
     
 For information about changes to expect in the next version, you can subscribe to the R's NEWS RSS feed:  [developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss](http://developer.r-project.org/blosxom.cgi/R-devel/NEWS/index.rss).  It's a good way of keeping up-to-date.
@@ -224,7 +221,7 @@ sudo apt-get-install r-cran-rgdal # install the rgdal package (with dependencies
 On Windows the **installr** package helps manage and update R packages with system-level dependencies. For example the **Rtools** package for compiling C/C++ code on Windows can be installed with the following command:
 
 ```{r, eval=FALSE}
-installr::install.rtools() 
+installr::install.rtools()
 ```
 
 ### Updating R packages
@@ -415,7 +412,7 @@ To avoid setting the CRAN mirror each time you run `install.packages()` you can 
 # `local` creates a new, empty environment
 # This avoids polluting .GlobalEnv with the object r
 local({
-  r = getOption("repos")             
+  r = getOption("repos")           
   r["CRAN"] = "https://cran.rstudio.com/"
   options(repos = r)
 })
@@ -425,7 +422,7 @@ The RStudio mirror is a virtual machine run by Amazon's EC2 service, and it sync
 
 #### The **fortunes** package
 
-This section illustrates the power of `.Rprofile` customisation with reference to apackage that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.
+This section illustrates the power of `.Rprofile` customisation with reference to a package that was developed for fun. The code below could easily be altered to automatically connect to a database, or ensure that the latest packages have been downloaded.
 
 The **fortunes** package contains a number of memorable quotes that the community has collected over many years, called R fortunes. Each fortune has a number. To get fortune number $50$, for example, enter
 
@@ -436,7 +433,7 @@ fortunes::fortune(50)
 It is easy to make R print out one of these nuggets of truth each time you start a session, by adding the following to `.Rprofile`:
 
 ```{r results="hide"}
-if(interactive()) 
+if (interactive())
   try(fortunes::fortune(), silent = TRUE)
 ```
 
@@ -451,7 +448,7 @@ The function `.Last()`, if it exists in the `.Rprofile`, is always run at the en
 ```{r, eval=FALSE}  
 .Last = function() {
   cond = suppressWarnings(!require(fortunes, quietly = TRUE))
-  if(cond) 
+  if (cond)
     try(install.packages("fortunes"), silent = TRUE)
   message("Goodbye at ", date(), "\n")
 }
@@ -464,6 +461,7 @@ For example, we could load the following two functions for examining data frames
 
 ```{r}  
 # ht == headtail
+# Show the first 6 rows & last 6 rows of a data frame
 ht = function(d, n=6) rbind(head(d, n), tail(d, n))
 # Show the first 5 rows & first 5 columns of a data frame
 hh = function(d) d[1:5, 1:5]
@@ -472,9 +470,9 @@ hh = function(d) d[1:5, 1:5]
 and a function for setting a nice plotting window:
 
 ```{r, eval=FALSE}  
-nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01, 
+nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
                       cex.axis = 0.9, las = 1, mfrow = c(1, 1), ...) {
-    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las, 
+    par(mar = mar, mgp = mgp, tck = tck, cex.axis = cex.axis, las = las,
         mfrow = mfrow, ...)
 }
 ```
@@ -482,7 +480,7 @@ nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
 Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
 Shortening long function names for interactive (but not reproducible code writing) is another option for using `.Rprofile` to increase efficiency.
-If you frequently use `View()`, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less.)
+If you frequently use `View()`, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less).
 
 ```{r, eval=FALSE}
 v = utils::View
@@ -577,7 +575,7 @@ My `.Renviron` file has grown over the years. I often switch between my desktop 
   
   * `R_COMPILE_PKGS=3`. Byte compile all packages (covered in Chapter \@ref(programming)).
   
-  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoiding using this directory.
+  * `R_LIBS_SITE=/usr/lib/R/site-library:/usr/lib/R/library` I explicitly state where to look for packages. My University has a site-wide directory that contains out of date packages. I want to avoid using this directory.
 
   * `R_DEFAULT_PACKAGES=utils,grDevices,graphics,stats,methods`. Explicitly state the packages to load. Note I don't load the `datasets` package, but I ensure that `methods` is always loaded. Due to historical reasons, the `methods` package isn't loaded by default in certain applications, e.g. `Rscript`.
 
@@ -616,16 +614,16 @@ It is therefore worth reading through this section in parallel with using RStudi
 RStudio is a mature, feature rich and powerful Integrated Development Environment (IDE) optimised for R programming and has become popular among R developers. The Open Source Edition is completely open source (as can be seen from the project's GitHub repo). It can be installed on all major OSs from the RStudio website [rstudio.com](https://www.rstudio.com/products/rstudio/download/).
 
 If you already have RStudio and would like to update it, simply click `Help > Check for Updates` in the menu.
-For fast and efficient work keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse.
+For fast and efficient work, keyboard shortcuts should be used wherever possible, reducing the reliance on the mouse.
 RStudio has many keyboard shortcuts that will help with this.
 To get into good habits early, try accessing the RStudio Update interface without touching the mouse.
-On Linux and Windows dropdown menus are activated with the `Alt` button, so the menu item can be found with:
+On Linux and Windows, dropdown menus are activated with the `Alt` button, so the menu item can be found with:
 
 ```
 Alt+H U
 ```
 
-On Mac it works differently.
+On Mac, it works differently.
 `Cmd+?` should activate a search across menu items, allowing the same operation can be achieved with:
 
 ```
@@ -642,13 +640,13 @@ The Mac equivalent is usually found by simply replacing `Ctrl` and `Alt` with th
 
 RStudio has four main window 'panes' (see Figure \@ref(fig:2-2)), each of which serves a range of purposes:
 
- - The **Source pane**, for editing, saving, and dispatching R code to the console (top left). Note that this pane does not exist by default when you start RStudio: it appears when you open an R script, e.g. via `File -> New File -> R Script`. A common task in this pane is to send code on the current line to the console, via `Ctrl/Cmd-Enter`.
+ - The **Source pane**, for editing, saving, and dispatching R code to the console (top left). Note that this pane does not exist by default when you start RStudio: it appears when you open an R script, e.g. via `File -> New File -> R Script`. A common task in this pane is to send code on the current line to the console, via `Ctrl/Cmd+Enter`.
  
  - The **Console pane**. Any code entered here is processed by R, line by line. This pane is ideal for interactively testing ideas before saving the final results in the Source pane above.
  
  - The **Environment pane** (top right) contains information about the current objects loaded in the workspace including their class, dimension (if they are a data frame) and name. This pane also contains tabbed sub-panes with a searchable history that was dispatched to the console and (if applicable to the project) Build and Git options.
  
- - The **Files pane** (bottom right) contains a simple file browser, a Plots tab, Help and Package tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML 'widgets'.
+ - The **Files pane** (bottom right) contains a simple file browser, a Plots tab, Packages and Help tabs and a Viewer for visualising interactive R output such as those produced by the leaflet package and HTML 'widgets'.
  
 ```{r 2-2, fig.cap="RStudio Panels", echo=FALSE, out.width="100%"}
 knitr::include_graphics("figures/f2_2_rstudio.png")
@@ -665,7 +663,7 @@ Test out the multi-panel RStudio workflow by following the steps below:
 
 2. Type in `downl` in the **Source pane** and hit `Enter` to make the function `download.file()` autocomplete. Then type `"`, which will autocomplete to `""`, paste the URL of a file to download (e.g. `https://www.census.gov/2010census/csv/pop_change.csv`) and a file name (e.g. `pop_change.csv`).
 
-3. Execute the full command with `Ctrl-Enter`:
+3. Execute the full command with `Ctrl+Enter`:
 
     ```{r, eval=FALSE}
     download.file("https://www.census.gov/2010census/csv/pop_change.csv",
@@ -704,7 +702,7 @@ Most of these are self-explanatory but it is worth mentioning a few that can boo
 
 - R version settings allow RStudio to 'point' to different R versions/interpreters, which may be faster for some projects.
 
-- `Restore .RData`: Unticking this default preventing loading previously creating R objects. This will make starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this reason we recommend you untick this box.
+- `Restore .RData`: Unticking this default prevents loading previously created R objects. This will make starting R quicker and also reduce the chance of getting bugs due to previously created objects. For this reason we recommend you untick this box.
 
 - Code editing options can make RStudio adapt to your coding style, for example, by preventing the autocompletion of braces, which some experienced programmers may find annoying. Enabling `Vim mode` makes RStudio act as a (partial) Vim emulator.
 
@@ -741,11 +739,11 @@ After pressing down until `USArrests` is selected, press Enter so it autocomplet
 Finally, typing `$` should leave the following text on the screen and the four columns should be shown in a drop-down box, ready for you to select the variable of interest with the down arrow.
 
 ```{r, eval=FALSE, echo=2}
-data("USArrests", package="datasets")
+data("USArrests", package = "datasets")
 USArrests$ # a dropdown menu of columns should appear in RStudio
 ```
 
-To take a more complex example, variable names stored in the `data` slot of the class `SpatialPolygonsDataFrame` (a class defined by the foundational spatial package sp) are referred to in the long form
+To take a more complex example, variable names stored in the `data` slot of the class `SpatialPolygonsDataFrame` (a class defined by the foundational spatial package **sp**) are referred to in the long form
 `spdf@data$varname`.^['Slots' are elements of an object (specifically, S4 objects) analogous to a column in a `data.frame` but referred to with `@` not `$`.]
 In this case `spdf` is the object name, `data` is the slot and `varname` is the variable name.
 RStudio makes such `S4` objects easier to use by enabling autocompletion of the short form `spdf$varname`.
@@ -767,8 +765,7 @@ It is worth spending time identifying which of these could be useful in your wor
 The power of these autocompletion capabilities can be further enhanced by setting your own keyboard shortcuts.
 However, as with setting `.Rprofile` and `.Renviron` settings, this risks reducing the portability of your workflow.
 
-Some more [useful](http://stronginstruments.com/2014/11/26/rstudio-shortcuts-windows-for-cleaner-and-faster-coding/) shortcuts are listed below.
-There are many more gems to find that could boost your R writing productivity:
+Some more useful shortcuts are listed below:
 
 - `Ctrl+Z/Shift+Z`: Undo/Redo.
 - `Ctrl+Enter`: Execute the current line or code selection in the Source pane.
@@ -790,7 +787,7 @@ Doing so will minimise the probability of confusion in your workflow (e.g. by us
 The details provided in the Environment tab include the object's dimension and some additional details depending on the object's class (e.g. size in MB for large datasets).
 
 A very useful feature of RStudio is its advanced viewing functionality.
-This is triggered either by executing `View(object)` or by double clicking on the object name in the Environment tab.
+This is triggered either by executing `View(object)` or by clicking on the object name in the Environment tab.
 Although you cannot edit data in the Viewer (this should be considered a good thing from a data integrity perspective), recent versions of RStudio provide an efficient search mechanism to rapidly filter and view the records that are of most interest (see Figure \@ref(fig:2-3)).
 
 ### Project management
@@ -800,13 +797,13 @@ This menu may be small and simple, but it is hugely efficient in terms of organi
 
 The idea of RStudio projects is that the bulk of R programming work is part of a wider task, which will likely consist of input data, R code, graphical and numerical outputs and documents describing the work.
 It is possible to scatter each of these elements at random across your hard-discs but this is not recommended.
-Instead, the concept of projects encourages reproducible working, such that anyone who opens the particular project folder that you are working from should be able to repeat your analyses and replicate your results.
+Instead, the concept of projects encourages reproducible work, such that anyone who opens the particular project folder that you are working from should be able to repeat your analyses and replicate your results.
 
 It is therefore *highly recommended* that you use projects to organise your work. It could save hours in the long-run.
 Organizing data, code and outputs also makes sense from a portability perspective: if you copy the folder (e.g. via GitHub) you can work on it from any computer without worrying about having the right files on your current machine.
 These tasks are implemented using RStudio's simple project system, in which the following things happen each time you open an existing project:
 
-- The working directory automatically switches to the project's folder. This enables data and script files to be referred to using relative file paths, which are much shorter than absolute file paths. This means that switching directory using `setwd()`, a common source of error for R users, is rarely if ever needed.
+- The working directory automatically switches to the project's folder. This enables data and script files to be referred to using relative file paths, which are much shorter than absolute file paths. This means that switching directory using `setwd()`, a common source of error for R users, is rarely, if ever, needed.
 
 - The last previously open file is loaded into the Source pane. The history of R commands executed in previous sessions is also loaded into the History tab. This assists with continuity between one session and the next.
 
@@ -827,7 +824,7 @@ project/
   - output/ # Results
 ```
 
-Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system figures and project outputs are 'first class citizens' within the project's design, each with their own folder.
+Proper use of projects ensures that all R source files are neatly stashed in one folder with a meaningful structure. This way data and documentation can be found where one would expect them. Under this system, figures and project outputs are 'first class citizens' within the project's design, each with their own folder.
 
 Another approach to project management is to treat projects as R packages.
 This is not recommended for most use cases, as it places restrictions on where you can put files. However, if the aim is *code development and sharing*, creating a small R package may be the way forward, even if you never intend to submit it on CRAN. Creating R packages is easier than ever before, as documented in [@cotton_learning_2013] and, more recently [@Wickham_2015]. The **devtools** package helps manage R's quirks, making the process much less painful.
@@ -848,7 +845,7 @@ Another capability that RStudio has is excellent debugging support. Rather than 
 
 1. Try modifying the look and appearance of your RStudio setup.
 
-2. What is the keyboard shortcut to show the other shortcut? (Hint: it begins with `Alt+Shift` on Linux and Windows.)
+2. What is the keyboard shortcut to show the other shortcuts? (Hint: it begins with `Alt+Shift` on Linux and Windows.)
 
 3. Try as many of the shortcuts revealed by the previous step as you like. Write down the ones that you think will save you time, perhaps on a post-it note to go on your computer.
 
@@ -873,31 +870,31 @@ get_linear_algebra()
 ### Testing performance gains from BLAS
 
 As an illustrative test of the performance gains offered by BLAS, the following test was run on a new laptop running Ubuntu 15.10 on a 6^th^ generation Core i7 processor, before and after OpenBLAS was installed.^[OpenBLAS was installed on the computer via `sudo apt-get install libopenblas-base`, which was then automatically detected and used by R.]
-  		  
+
 ```{r, eval=FALSE}
 res = benchmark_std() # run a suit of tests to test R's performance
 ```
 
-It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are not much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
+It was found that the installation of OpenBLAS led to a 2-fold speed-up (from around 150 to 70 seconds). The majority of the speed gain was from the matrix algebra tests, as can be seen in Figure \@ref(fig:blas-bench). Note that the results of such tests are highly dependent on the particularities of each computer. However, it clearly shows that 'programming' benchmarks (e.g. the calculation of 3,500,000 Fibonacci numbers) are not much faster, whereas matrix calculations and functions receive a substantial speed boost. This demonstrates that the speed-up you can expect from BLAS depends heavily on the type of computations you are undertaking.
 
 (ref:blas-bench) Performance gains obtained changing the underlying BLAS library (tests from `benchmark_std()`).
 
 ```{r blas-bench, fig.width=6, fig.height=4, echo=FALSE, out.width="70%", fig.align="center", fig.cap="(ref:blas-bench)"}
-local(source("code/02-blas.R", local=TRUE))
+local(source("code/02-blas.R", local = TRUE))
 ```
 
 ### Other interpreters
 
 The R *language* can be separated from the R *interpreter*. The former refers to the meaning of R commands, the latter refers to how the computer executes the commands. Alternative interpreters have been developed to try to make R faster and, while promising, none of the following options has fully taken off.
 
-  * [Microsoft R Open](http://www.revolutionanalytics.com/microsoft-r-open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.
+  * [Microsoft R Open](https://mran.microsoft.com/open), formerly known as Revolution R Open (RRO), is the enhanced distribution of R from Microsoft. The key enhancement is that it uses multi-threaded mathematics libraries, which can improve performance.
   * [Rho](https://github.com/rho-devel/rho) (previously called CXXR, short for C++), a re-implementation of the R interpreter for speed and efficiency. Of the new interpreters, this is the one that has the most recent development activity (as of April 2016).
 
  * [pqrR](http://www.pqr-project.org/) (pretty quick R) is a new version of the R interpreter. One major downside, is that it is based on R-2.15.0. The developer (Radford Neal) has made many improvements, some of which have now been incorporated into base R. __pqR__ is an open-source project licensed under the GPL. One notable improvement in pqR is that it is able to do some numeric computations in parallel with each other, and with other operations of the interpreter, on systems with multiple processors or processor cores.
  
   * [Renjin](http://www.renjin.org/) reimplements the R interpreter in Java, so it can run on the Java Virtual Machine (JVM). Since R will be pure Java, it can run anywhere.
 
-  * [Tibco](http://spotfire.tibco.com/) created a C++ based interpreter called TERR. 
+  * [Tibco](http://spotfire.tibco.com/) created a C++ based interpreter called TERR (TIBCO Enterprise Runtime for R) that is incorporated into their analytics platform, Spotfire. 
 
   * Oracle also offer an R-interpreter that uses Intel's mathematics library and therefore achieves a higher performance without changing R's core. 
 

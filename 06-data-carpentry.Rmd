@@ -3,7 +3,7 @@ knit: "bookdown::preview_chapter"
 ---
 
 ```{r, echo=FALSE}
-rm(list=ls())
+rm(list = ls())
 ```
 
 <!-- To do: -->
@@ -116,41 +116,43 @@ Large and complex datasets are usually represented by multiple tables, with uniq
 
 Two common operations facilitated by **tidyr** are *gathering* and *splitting* columns. 
 
-### Make wide tables long with `gather()`
+### Make wide tables long with `pivot_longer()`
 
-Gathering means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
-`gather()` (the inverse of which is `spread()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
+Pivoting Longer means making 'wide' tables 'long', by converting column names to a new variable. This is done with the function
+`pivot_longer()` (the inverse of which is `pivot_wider()`). The process is illustrated in Tables \@ref(tab:tpew) and \@ref(tab:tpewt) respectively.
 The code that performs this operation is provided in the code block below.
 This converts a table with 18 rows and 10 columns into a tidy dataset with 162 rows and 3 columns (compare the output with the output of `pew`, shown above):
 
 ```{r}
 dim(pew)
-pewt = gather(data = pew, key = Income, value = Count, -religion)
+pewt = pivot_longer(data = pew, -religion, names_to = "income", values_to = "count")
 dim(pewt)
-pewt[c(1:3, 50),]
+pewt[c(1:3, 50), ]
 ```
 
-The above code demonstrates the three arguments that `gather()` requires:
+The above code demonstrates the three arguments that `pivot_longer()` requires:
 
 1. `data`, a data frame in which column names will become row values.
-1. `key`, the name of the categorical variable into which the column names in the original datasets are converted.
-1. `value`, the name of cell value columns.
+1. `names_to`, the name of the categorical variable into which the column names in the original datasets are converted.
+1. `values_to`, the name of cell value columns.
 
 As with other functions in the 'tidyverse', all arguments are given using bare names, rather than character strings. Arguments 2 and 3 can be specified by the user, and have no relation to the existing data. Furthermore an additional argument, set as `-religion`, was used to remove the religion variable from the gathering, ensuring that the values in this column are the first column in the output. If no `-religion` argument were specified, all column names are used in the key, meaning the results simply report all 180 column/value pairs resulting from the input dataset with 10 columns by 18 rows:
 
 ```{r}
-gather(pew)
+pivot_longer(pew, -religion)
 ```
 
 ```{r tpew, echo=FALSE, message=FALSE}
-knitr::kable(pew[1:3,1:4], caption = "First 3 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.")
+caption = "First 3 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form."
+knitr::kable(pew[1:3, 1:4], caption = caption)
 ```
 
 ```{r tpewt, echo=FALSE}
 library("tidyr")
-pewt = gather(pew, Income, Count, -religion)
-pewt_mini = gather(pew[1:3,1:4], Income, Count, -religion)
-knitr::kable(pewt_mini, caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).")
+pewt = pivot_longer(pew, -religion)
+pewt_mini = pivot_longer(pew[1:3, 1:4], -religion)
+caption = "Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work)." #nolint
+knitr::kable(pewt_mini, caption = caption)
 ```
 
 ### Split joint variables with `separate()`
@@ -231,12 +233,12 @@ strings = c(" 219 733 8965", "329-293-8753 ", "banana", "595 794 7569",
              "842 566 4692", "Work: 579-499-7527", "$1000", "Home: 543.355.3679")
 ```
 
-Write functions in **stringr** and base R that return:
+Write expressions in **stringr** and base R that return:
 
 - A logical vector reporting whether or not each string contains a number.
 - Complete words only, without extraneous non-letter characters.
 
-```{r}
+```{r, include=FALSE}
 str_detect(string = strings, pattern = "[0-9]")
 str_extract(strings, pattern = "[A-z]+")
 ```
@@ -265,8 +267,8 @@ library("dplyr")
 data("ghg_ems", package = "efficient")
 top_table =
   ghg_ems %>%
-  filter(!grepl("World|Europe", Country)) %>% 
-  group_by(Country) %>% 
+  filter(!grepl("World|Europe", Country)) %>%
+  group_by(Country) %>%
   summarise(Mean = mean(Transportation),
             Growth = diff(range(Transportation))) %>%
   top_n(3, Growth) %>%
@@ -277,7 +279,7 @@ The results, illustrated in table \@ref(tab:speed), show that the USA has the hi
 The aim of this code chunk is not for you to somehow read it and understand it: it is to provide a taster of **dplyr**'s unique syntax, which is described in more detail throughout the duration of this section.
 
 ```{r speed, echo=FALSE}
-knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).")
+knitr::kable(top_table, digits = 0, caption = "The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).") #nolint
 ```
 
 Building on the 'learning by doing' ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
@@ -350,7 +352,7 @@ wb_ineq[cols_to_change] = as.numeric(unlist(wb_ineq[cols_to_change]))
 wb_ineq[cols_to_change] = apply(wb_ineq[cols_to_change], 2, as.numeric)
 
 # Another alternative method using a for loop
-for(i in cols_to_change){
+for (i in cols_to_change) {
   wb_ineq[[i]] = as.numeric(wb_ineq[[i]])
 }
 ```
@@ -373,10 +375,10 @@ There are **dplyr** equivalents of many base R functions but these usually work 
 Another interesting feature of **dplyr** is its ability to chain operations together. This overcomes one of the aesthetic issues with R code: you can end-up with very long commands with many functions nested inside each other to answer relatively simple questions. Combined with the `group_by()` function, pipes can help condense thousands of lines of data into something human readable. Here's how you could use the chains to summarize average Gini indexes per decade, for example:
 
 ```{r}
-wb_ineq %>% 
-  select(Year, gini) %>% 
-  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>% 
-  group_by(decade) %>% 
+wb_ineq %>%
+  select(Year, gini) %>%
+  mutate(decade = floor(as.numeric(Year) / 10) * 10) %>%
+  group_by(decade) %>%
   summarise(mean(gini, na.rm = TRUE))
 ```
 
@@ -391,7 +393,7 @@ By way of explanation, this is what happened:
 Let's ask another question to see how the **dplyr** chaining workflow can be used to answer questions interactively: What are the 5 most unequal years for countries containing the letter g? Here's how chains can help organise the analysis needed to answer this question step-by-step:
 
 ```{r tidy=FALSE}
-wb_ineq %>% 
+wb_ineq %>%
   filter(grepl("g", Country)) %>%
   group_by(Year) %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
@@ -441,8 +443,8 @@ wb_ineq
 followed by:
 
 ```{r}
-wb_ineq %>% 
-  select(Year, gini) 
+wb_ineq %>%
+  select(Year, gini)
 ```
 
 Explain in your own words what changes each time.
@@ -507,7 +509,7 @@ summarise(countries,
   sdev = sd(gini, na.rm  = TRUE),
   # number with gini > 30
   n30 = sum(gini > 30, na.rm  = TRUE),
-  sdn30 = sd(gini[ gini > 30 ], na.rm  = TRUE),
+  sdn30 = sd(gini[gini > 30], na.rm  = TRUE),
   # range
   dif = max(gini, na.rm  = TRUE) - min(gini, na.rm  = TRUE)
   )
@@ -592,7 +594,9 @@ It is clear from the output that some of the non-matches (e.g. the European Unio
 
 ```{r}
 (unmatched_country = unmatched_countries_ghg_ems[1])
-unmatched_world_selection = agrep(pattern = unmatched_country, unique_countries_world, max.distance = 10)
+unmatched_world_selection = agrep(pattern = unmatched_country,
+                                  unique_countries_world,
+                                  max.distance = 10)
 unmatched_world_countries = unique_countries_world[unmatched_world_selection]
 ```
 
@@ -610,7 +614,7 @@ Thus fuzzy matching is still a laborious process that must be complemented by hu
 ## Working with databases
 
 Instead of loading all the data into RAM, as R does, databases query data from the hard-disk. This can allow a subset of a very large dataset to be defined and read into R quickly, without having to load it first.
-R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in the README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
+R can connect to databases in a number of ways, which are briefly touched on below. Databases is a large subject area undergoing rapid evolution. Rather than aiming at comprehensive coverage, we will provide pointers to developments that enable efficient access to a wide range of database types. An up-to-date history of R's interfaces to databases can be found in the README of the [**DBI** package](https://cran.r-project.org/web/packages/DBI/readme/README.html), which provides a common interface and set of classes for driver packages (such as **RSQLite**).
 
 **RODBC** is a veteran package for querying external databases from within R, using the Open Database Connectivity (ODBC) API. The functionality of **RODBC** is described in the package's vignette (see `vignette("RODBC")`) and nowadays its main use is to provide an R interface to
 SQL Server databases which lack a **DBI** interface.
@@ -689,7 +693,7 @@ The first stage is to read-in the data:
 
 ```{r}
 # See help("land_df", package="efficient") for details
-data(land_df, package="efficient")
+data(land_df, package = "efficient")
 ```
 
 The next stage is to create an SQLite database to hold the data:
@@ -697,7 +701,7 @@ The next stage is to create an SQLite database to hold the data:
 ```{r, eval=FALSE}
 # install.packages("RSQLite") # Requires RSQLite package
 my_db = src_sqlite("land.sqlite3", create = TRUE)
-land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price")) 
+land_sqlite = copy_to(my_db, land_df, indexes = list("postcode", "price"))
 ```
 
 What class is the new object `land_sqlite`?
@@ -711,7 +715,7 @@ From the above code we can see that we have created a `tbl`. This can be accesse
 tbl(my_db, sql('SELECT "price", "postcode", "old/new"  FROM land_df'))
 #> Source:   query [?? x 3]
 #> Database: sqlite 3.8.6 [land.sqlite3]
-#> 
+#>
 #>    price postcode `old/new`
 #>    <int>    <chr>     <chr>
 #> 1  84000  CW9 5EU         N
@@ -763,7 +767,7 @@ The result is the same, so why add the extra stage of setting the key? The reaso
 
 ```{r, eval=FALSE, echo=FALSE}
 res = NULL
-for(i in seq(10, 1000, length.out = 10)){
+for (i in seq(10, 1000, length.out = 10)) {
   wb_ineq_big = do.call("rbind", replicate(i, wb_ineq, simplify = FALSE))
   wb_ineq_dt = as.data.table(wb_ineq_big)
   wb_ineq_key = copy(wb_ineq_dt) # copy the object
@@ -789,9 +793,9 @@ saveRDS(res, "extdata/res-datatable.Rds")
 ```
 
 ```{r 6-2, fig.cap="Benchmark illustrating the performance gains to be expected for different dataset sizes.", echo=FALSE, fig.width=6, fig.height=4, out.width="70%", fig.align="center"}
-local(source("code/06-data-carpentry_f2.R", local=TRUE))
+local(source("code/06-data-carpentry_f2.R", local = TRUE))
 ```
 
 Figure \@ref(fig:6-2) demonstrates that **data.table** is *much faster* than base R and **dplyr** at subsetting. As with using external packages to read in data (see Section \@ref(fread)), the relative benefits of **data.table** improve with dataset size, approaching a ~70 fold improvement on base R and a ~50 fold improvement on **dplyr** as the dataset size reaches half a Gigabyte. Interestingly, even the 'non key' implementation of **data.table** subset method is faster than the alternatives: this is because **data.table** creates a key internally by default before subsetting. The process of creating the key accounts for the ~10 fold speed-up in cases where the key has been pre-generated.
 
-This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing. It offers performance gains due to its implementation in C and use of *keys* for subsetting tables. **data.table** offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with `left_join` in **dplyr**); and grouping. For further information on **data.table**, we recommend reading the package's [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf), [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html) and [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignettes.
+This section has introduced **data.table** as a complimentary approach to base and **dplyr** methods for data processing. It offers performance gains due to its implementation in C and use of *keys* for subsetting tables. **data.table** offers much more, however, including: highly efficient data reshaping; dataset merging (also known as joining, as with `left_join` in **dplyr**); and grouping. For further information on **data.table**, we recommend reading the package's [`datatable-intro`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html), [`datatable-reshape`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html) and [`datatable-reference-semantics`](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html) vignettes.
