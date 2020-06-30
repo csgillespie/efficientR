@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-05-26"
+date: "2020-06-30"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -298,9 +298,9 @@ cs_apply = function(x) {
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 112053 117054 176676 120384 129382 5389341   100
-#>  cs_apply(x)  81533  85712 117024  91557 100914 2343532   100
-#>    cumsum(x)    679    826   1064    926   1065   10802   100
+#>    cs_for(x) 113519 118770 180130 124072 130377 5546580   100
+#>  cs_apply(x)  82806  87960 120388  94594 103664 2481766   100
+#>    cumsum(x)    655    792   1123    911   1055   15424   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -856,7 +856,7 @@ nice_par = function(mar = c(3, 3, 2, 1), mgp = c(2, 0.4, 0), tck = -0.01,
 
 Note that these functions are for personal use and are unlikely to interfere with code from other people.
 For this reason even if you use a certain package every day, we don't recommend loading it in your `.Rprofile`.
-Shortening long function names for interactive (but not reproducible code writing) is another option for using `.Rprofile` to increase efficiency.
+Shortening long function names for interactive (but not reproducible) code writing is another option for using `.Rprofile` to increase efficiency.
 If you frequently use `View()`, for example, you may be able to save time by referring to it in abbreviated form. This is illustrated below to make it faster to view datasets (although with IDE-driven autocompletion, outlined in the next section, the time savings is less).
 
 
@@ -1526,7 +1526,7 @@ In R, this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.035   0.014   2.047
+#>   2.003   0.012   2.015
 ```
 
 In contrast, a more R-centric approach would be
@@ -1731,15 +1731,15 @@ Using apply functions when possible, can lead to more succinct and idiomatic R c
 
 Table: (\#tab:apply-family)The apply family of functions from base R.
 
-Function   Description                                           
----------  ------------------------------------------------------
-`apply`    Apply functions over array margins                    
-`by`       Apply a function to a data frame split by factors     
-`eapply`   Apply a function over values in an environment        
-`lapply`   Apply a function over a list or vector                
-`mapply`   Apply a function to multiple list or vector arguments 
-`rapply`   Recursively apply a function to a list                
-`tapply`   Apply a function over a ragged array                  
+|Function |Description                                           |
+|:--------|:-----------------------------------------------------|
+|`apply`  |Apply functions over array margins                    |
+|`by`     |Apply a function to a data frame split by factors     |
+|`eapply` |Apply a function over values in an environment        |
+|`lapply` |Apply a function over a list or vector                |
+|`mapply` |Apply a function to multiple list or vector arguments |
+|`rapply` |Recursively apply a function to a list                |
+|`tapply` |Apply a function over a ragged array                  |
 
 The `apply()` function is used to apply a function to each row or column of a matrix. In many data science
 problems, this is a common task. For example, to calculate the standard deviation of the rows we have
@@ -1959,7 +1959,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0x27b3710>
+#> <bytecode: 0x18b0dd8>
 #> <environment: namespace:base>
 ```
 
@@ -2639,9 +2639,9 @@ microbenchmark(times = 5,
   without_select = data.table::fread(fname)
 )
 #> Unit: milliseconds
-#>            expr   min    lq  mean median    uq  max neval
-#>     with_select  9.41  9.45  9.59   9.55  9.64  9.9     5
-#>  without_select 15.42 15.60 16.06  15.71 15.95 17.6     5
+#>            expr   min    lq  mean median    uq   max neval
+#>     with_select  9.64  9.65  9.77   9.73  9.83  9.98     5
+#>  without_select 15.81 16.02 16.48  16.10 16.26 18.21     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -2649,11 +2649,11 @@ To summarise, the differences between base, **readr** and **data.table** functio
 
 Table: (\#tab:colclasses)Comparison of base, **readr** and **data.table** reading in the voyages data set.
 
-number    boatname    built       departure_date   Function   
---------  ----------  ----------  ---------------  -----------
-integer   character   character   character        base       
-numeric   character   character   Date             readr      
-integer   character   character   character        data.table 
+|number  |boatname  |built     |departure_date |Function   |
+|:-------|:---------|:---------|:--------------|:----------|
+|integer |character |character |character      |base       |
+|numeric |character |character |Date           |readr      |
+|integer |character |character |character      |data.table |
 
 Table \@ref(tab:colclasses) shows 4 main similarities and differences between the three read types of read function:
 
@@ -3015,26 +3015,26 @@ pivot_longer(pew, -religion)
 
 Table: (\#tab:tpew)First 3 rows of the aggregated 'pew' dataset from Wickham (2014a) in an 'untidy' form.
 
-religion    <$10k   $10--20k   $20--30k
----------  ------  ---------  ---------
-Agnostic       27         34         60
-Atheist        12         27         37
-Buddhist       27         21         30
+|religion | <$10k| $10--20k| $20--30k|
+|:--------|-----:|--------:|--------:|
+|Agnostic |    27|       34|       60|
+|Atheist  |    12|       27|       37|
+|Buddhist |    27|       21|       30|
 
 
 Table: (\#tab:tpewt)Long form of the Pew dataset represented above showing the minimum values for annual incomes (includes part time work).
 
-religion   name        value
----------  ---------  ------
-Agnostic   <$10k          27
-Agnostic   $10--20k       34
-Agnostic   $20--30k       60
-Atheist    <$10k          12
-Atheist    $10--20k       27
-Atheist    $20--30k       37
-Buddhist   <$10k          27
-Buddhist   $10--20k       21
-Buddhist   $20--30k       30
+|religion |name     | value|
+|:--------|:--------|-----:|
+|Agnostic |<$10k    |    27|
+|Agnostic |$10--20k |    34|
+|Agnostic |$20--30k |    60|
+|Atheist  |<$10k    |    12|
+|Atheist  |$10--20k |    27|
+|Atheist  |$20--30k |    37|
+|Buddhist |<$10k    |    27|
+|Buddhist |$10--20k |    21|
+|Buddhist |$20--30k |    30|
 
 ### Split joint variables with `separate()`
 
@@ -3056,18 +3056,18 @@ separate(agesex_df, agesex, c("age", "sex"), sep = 1)
 
 Table: (\#tab:to-separate)Joined age and sex variables in one column
 
-agesex     n
--------  ---
-m0-10      3
-f0-10      5
+|agesex |  n|
+|:------|--:|
+|m0-10  |  3|
+|f0-10  |  5|
 
 
 Table: (\#tab:separated)Age and sex variables separated by the function `separate`.
 
-age   sex      n
-----  -----  ---
-m     0-10     3
-f     0-10     5
+|age |sex  |  n|
+|:---|:----|--:|
+|m   |0-10 |  3|
+|f   |0-10 |  5|
 
 ### Other tidyr functions
 
@@ -3174,16 +3174,16 @@ Furthermore, **dplyr** is efficient to *learn* (see Chapter \@ref(learning)). It
 
 Table: (\#tab:verbs)dplyr verb functions.
 
-dplyr function(s)   Description                                                 Base R functions      
-------------------  ----------------------------------------------------------  ----------------------
-filter(), slice()   Subset rows by attribute (filter) or position (slice)       subset(), [           
-arrange()           Return data ordered by variable(s)                          order()               
-select()            Subset columns                                              subset(), [, [[       
-rename()            Rename columns                                              colnames()            
-distinct()          Return unique rows                                          !duplicated()         
-mutate()            Create new variables (transmute drops existing variables)   transform(), [[       
-summarise()         Collapse data into a single row                             aggregate(), tapply() 
-sample_n()          Return a sample of the data                                 sample()              
+|dplyr function(s) |Description                                               |Base R functions      |
+|:-----------------|:---------------------------------------------------------|:---------------------|
+|filter(), slice() |Subset rows by attribute (filter) or position (slice)     |subset(), [           |
+|arrange()         |Return data ordered by variable(s)                        |order()               |
+|select()          |Subset columns                                            |subset(), [, [[       |
+|rename()          |Rename columns                                            |colnames()            |
+|distinct()        |Return unique rows                                        |!duplicated()         |
+|mutate()          |Create new variables (transmute drops existing variables) |transform(), [[       |
+|summarise()       |Collapse data into a single row                           |aggregate(), tapply() |
+|sample_n()        |Return a sample of the data                               |sample()              |
 
 Unlike the base R analogues, **dplyr**'s data processing functions work in a consistent way. Each function takes a data frame object as its first argument and results in another data frame. Variables can be called directly without using the `$` operator. **dplyr** was designed to be used with the 'pipe' operator `%>%` provided by the **magrittr** package, allowing each data processing stage to be represented as a new line. This is illustrated in the code chunk below, which loads a tidy country level dataset of greenhouse gas emissions from the **efficient** package, and then identifies the countries with the greatest absolute growth in emissions from 1971 to 2012: 
 
@@ -3207,11 +3207,11 @@ The aim of this code chunk is not for you to somehow read it and understand it: 
 
 Table: (\#tab:speed)The top 3 countries in terms of average CO2 emissions from transport since 1971, and growth in transport emissions over that period (MTCO2e/yr).
 
-Country          Mean   Growth
---------------  -----  -------
-United States    1462      709
-China             214      656
-India              85      170
+|Country       | Mean| Growth|
+|:-------------|----:|------:|
+|United States | 1462|    709|
+|China         |  214|    656|
+|India         |   85|    170|
 
 Building on the 'learning by doing' ethic, the remainder of this section works through these functions to process and begin to analyse a dataset on economic equality provided by the World Bank. The input dataset can be loaded as follows:
 
@@ -3309,6 +3309,7 @@ wb_ineq %>%
   mutate(decade = floor(as.numeric(Year) / 10) * 10) %>%
   group_by(decade) %>%
   summarise(mean(gini, na.rm = TRUE))
+#> `summarise()` ungrouping output (override with `.groups` argument)
 #> # A tibble: 6 x 2
 #>   decade `mean(gini, na.rm = TRUE)`
 #>    <dbl>                      <dbl>
@@ -3337,6 +3338,7 @@ wb_ineq %>%
   summarise(gini = mean(gini, na.rm  = TRUE)) %>%
   arrange(desc(gini)) %>%
   top_n(n = 5)
+#> `summarise()` ungrouping output (override with `.groups` argument)
 #> Selecting by gini
 #> # A tibble: 5 x 2
 #>   Year   gini
@@ -3472,6 +3474,7 @@ To reinforce the point, this operation is also performed below on the `wb_ineq` 
 ```r
 countries = group_by(wb_ineq, Country)
 summarise(countries, mean_gini = mean(gini, na.rm = TRUE))
+#> `summarise()` ungrouping output (override with `.groups` argument)
 #> # A tibble: 176 x 2
 #>   Country     mean_gini
 #>   <chr>           <dbl>
@@ -3614,13 +3617,14 @@ summarise(countries,
 #> Inf
 #> Warning in min(gini, na.rm = TRUE): no non-missing arguments to min; returning
 #> Inf
+#> `summarise()` ungrouping output (override with `.groups` argument)
 #> # A tibble: 176 x 7
-#>   Country       obs med_t10   sdev   n30  sdn30     dif
-#>   <chr>       <int>   <dbl>  <dbl> <int>  <dbl>   <dbl>
-#> 1 Afghanistan    40    NA   NaN        0 NA     -Inf   
-#> 2 Albania        40    24.4   1.25     3  0.364    2.78
-#> 3 Algeria        40    29.8   3.44     2  3.44     4.86
-#> 4 Angola         40    38.6  11.3      2 11.3     16.0 
+#>   Country       obs med_t10  sdev   n30  sdn30     dif
+#>   <chr>       <int>   <dbl> <dbl> <int>  <dbl>   <dbl>
+#> 1 Afghanistan    40    NA   NA        0 NA     -Inf   
+#> 2 Albania        40    24.4  1.25     3  0.364    2.78
+#> 3 Algeria        40    29.8  3.44     2  3.44     4.86
+#> 4 Angola         40    38.6 11.3      2 11.3     16.0 
 #> # … with 172 more rows
 ```
 
@@ -3770,6 +3774,12 @@ SQL Server databases which lack a **DBI** interface.
 The **DBI** package is a unified framework for accessing databases allowing for other drivers to be added as modular packages. Thus new packages that build on **DBI** can be seen partly as a replacement of **RODBC** (**RMySQL**, **RPostgreSQL**, and **RSQLite**) (see `vignette("backend")` for more on how **DBI** drivers work). Because the **DBI** syntax applies to a wide range of database types we use it here with a worked example.
 
 
+```
+#> Warning: `src_sqlite()` is deprecated as of dplyr 1.0.0.
+#> Please use `tbl()` directly with a database connection
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_warnings()` to see where this warning was generated.
+```
 Imagine you have access to a database that contains the `ghg_ems` data set.
 
 
@@ -4093,7 +4103,7 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.369   0.272   2.640
+#>   2.457   0.172   2.629
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
@@ -4112,7 +4122,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.451   0.192   0.644
+#>   0.454   0.188   0.642
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4215,9 +4225,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq  mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00249 0.00294 0.052 0.00375 0.00578 4.75   100
-#>   ex_df[1, ] 0.48130 0.49012 0.559 0.50415 0.52216 5.16   100
+#>         expr    min     lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0025 0.0031 0.0511 0.00404 0.00579 4.66   100
+#>   ex_df[1, ] 0.4784 0.4915 0.5550 0.50230 0.51371 5.26   100
 ```
 
 <div class="rmdtip">
@@ -4537,7 +4547,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7f8f661a9bc0>, x, y)
+#> .Call(<pointer: 0x7f0dc3359bc0>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
@@ -4561,13 +4571,13 @@ The most basic type of variable is an integer, `int`. An `int` variable can stor
 
 Table: (\#tab:cpptypes)Overview of key C++ object types.
 
-Type     Description                               
--------  ------------------------------------------
-char     A single character.                       
-int      An integer.                               
-float    A single precision floating point number. 
-double   A double-precision floating point number. 
-void     A valueless quantity.                     
+|Type   |Description                               |
+|:------|:-----------------------------------------|
+|char   |A single character.                       |
+|int    |An integer.                               |
+|float  |A single precision floating point number. |
+|double |A double-precision floating point number. |
+|void   |A valueless quantity.                     |
 
 A pointer object is a variable that points to an area of memory that has been given a name. Pointers are a very powerful, but primitive facility contained in the C++ language. They are very useful since rather than passing large objects around, we pass a pointer to the memory location; rather than pass the house, we just give the address. We won't use pointers in this chapter, but mention them for completeness. Table \@ref(tab:cpptypes) gives an overview.
 
@@ -4834,14 +4844,14 @@ since $2^7 = 128$, but $8$ bits were typically used for performance [reasons](ht
 
 Table: (\#tab:ascii)The bit representation of a few ASCII characters.
 
-Bit representation   Character 
--------------------  ----------
-$01000001$           A         
-$01000010$           B         
-$01000011$           C         
-$01000100$           D         
-$01000101$           E         
-$01010010$           R         
+|Bit representation |Character |
+|:------------------|:---------|
+|$01000001$         |A         |
+|$01000010$         |B         |
+|$01000011$         |C         |
+|$01000100$         |D         |
+|$01000101$         |E         |
+|$01010010$         |R         |
 
 The limitation of only having $256$ characters led to the development of Unicode, a standard framework aimed at creating a single character set for every reasonable writing system. Typically, Unicode characters require sixteen bits of storage. 
 
@@ -5746,40 +5756,40 @@ The book depends on the following CRAN packages:
 
 
 
-Name                   Title                                                                           version 
----------------------  ------------------------------------------------------------------------------  --------
-assertive.reflection   Assertions for Checking the State of R [@R-assertive.reflection]                0.0.4   
-benchmarkme            Crowd Sourced System Benchmarks [@R-benchmarkme]                                1.0.3   
-bookdown               Authoring Books and Technical Documents with R Markdown [@R-bookdown]           0.18    
-cranlogs               Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]                    2.1.1   
-data.table             Extension of `data.frame` [@R-data.table]                                       1.12.8  
-dbplyr                 A 'dplyr' Back End for Databases [@R-dbplyr]                                    1.4.3   
-devtools               Tools to Make Developing R Packages Easier [@R-devtools]                        2.3.0   
-DiagrammeR             Graph/Network Visualization [@R-DiagrammeR]                                     1.0.5   
-dplyr                  A Grammar of Data Manipulation [@R-dplyr]                                       0.8.5   
-drat                   'Drat' R Archive Template [@R-drat]                                             0.1.5   
-efficient              Becoming an Efficient R Programmer [@R-efficient]                               0.1.3   
-feather                R Bindings to the Feather 'API' [@R-feather]                                    0.3.5   
-formatR                Format R Code Automatically [@R-formatR]                                        1.7     
-fortunes               R Fortunes [@R-fortunes]                                                        1.5.4   
-geosphere              Spherical Trigonometry [@R-geosphere]                                           1.5.10  
-ggmap                  Spatial Visualization with ggplot2 [@R-ggmap]                                   3.0.0   
-ggplot2                Create Elegant Data Visualisations Using the Grammar of Graphics [@R-ggplot2]   3.3.0   
-ggplot2movies          Movies Data [@R-ggplot2movies]                                                  0.0.1   
-knitr                  A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]         1.28    
-lubridate              Make Dealing with Dates a Little Easier [@R-lubridate]                          1.7.8   
-maps                   Draw Geographical Maps [@R-maps]                                                3.3.0   
-microbenchmark         Accurate Timing Functions [@R-microbenchmark]                                   1.4.7   
-profvis                Interactive Visualizations for Profiling R Code [@R-profvis]                    0.3.6   
-pryr                   Tools for Computing on the Language [@R-pryr]                                   0.1.4   
-Rcpp                   Seamless R and C++ Integration [@R-Rcpp]                                        1.0.4.6 
-readr                  Read Rectangular Text Data [@R-readr]                                           1.3.1   
-reticulate             Interface to 'Python' [@R-reticulate]                                           1.15    
-rio                    A Swiss-Army Knife for Data I/O [@R-rio]                                        0.5.16  
-RSQLite                'SQLite' Interface for R [@R-RSQLite]                                           2.2.0   
-swirl                  Learn R, in R [@R-swirl]                                                        2.4.5   
-tibble                 Simple Data Frames [@R-tibble]                                                  3.0.1   
-tidyr                  Tidy Messy Data [@R-tidyr]                                                      1.0.2   
+|Name                 |Title                                                                         |version |
+|:--------------------|:-----------------------------------------------------------------------------|:-------|
+|assertive.reflection |Assertions for Checking the State of R [@R-assertive.reflection]              |0.0.4   |
+|benchmarkme          |Crowd Sourced System Benchmarks [@R-benchmarkme]                              |1.0.3   |
+|bookdown             |Authoring Books and Technical Documents with R Markdown [@R-bookdown]         |0.18    |
+|cranlogs             |Download Logs from the 'RStudio' 'CRAN' Mirror [@R-cranlogs]                  |2.1.1   |
+|data.table           |Extension of `data.frame` [@R-data.table]                                     |1.12.8  |
+|dbplyr               |A 'dplyr' Back End for Databases [@R-dbplyr]                                  |1.4.3   |
+|devtools             |Tools to Make Developing R Packages Easier [@R-devtools]                      |2.3.0   |
+|DiagrammeR           |Graph/Network Visualization [@R-DiagrammeR]                                   |1.0.5   |
+|dplyr                |A Grammar of Data Manipulation [@R-dplyr]                                     |0.8.5   |
+|drat                 |'Drat' R Archive Template [@R-drat]                                           |0.1.5   |
+|efficient            |Becoming an Efficient R Programmer [@R-efficient]                             |0.1.3   |
+|feather              |R Bindings to the Feather 'API' [@R-feather]                                  |0.3.5   |
+|formatR              |Format R Code Automatically [@R-formatR]                                      |1.7     |
+|fortunes             |R Fortunes [@R-fortunes]                                                      |1.5.4   |
+|geosphere            |Spherical Trigonometry [@R-geosphere]                                         |1.5.10  |
+|ggmap                |Spatial Visualization with ggplot2 [@R-ggmap]                                 |3.0.0   |
+|ggplot2              |Create Elegant Data Visualisations Using the Grammar of Graphics [@R-ggplot2] |3.3.0   |
+|ggplot2movies        |Movies Data [@R-ggplot2movies]                                                |0.0.1   |
+|knitr                |A General-Purpose Package for Dynamic Report Generation in R [@R-knitr]       |1.28    |
+|lubridate            |Make Dealing with Dates a Little Easier [@R-lubridate]                        |1.7.8   |
+|maps                 |Draw Geographical Maps [@R-maps]                                              |3.3.0   |
+|microbenchmark       |Accurate Timing Functions [@R-microbenchmark]                                 |1.4.7   |
+|profvis              |Interactive Visualizations for Profiling R Code [@R-profvis]                  |0.3.6   |
+|pryr                 |Tools for Computing on the Language [@R-pryr]                                 |0.1.4   |
+|Rcpp                 |Seamless R and C++ Integration [@R-Rcpp]                                      |1.0.4.6 |
+|readr                |Read Rectangular Text Data [@R-readr]                                         |1.3.1   |
+|reticulate           |Interface to 'Python' [@R-reticulate]                                         |1.15    |
+|rio                  |A Swiss-Army Knife for Data I/O [@R-rio]                                      |0.5.16  |
+|RSQLite              |'SQLite' Interface for R [@R-RSQLite]                                         |2.2.0   |
+|swirl                |Learn R, in R [@R-swirl]                                                      |2.4.5   |
+|tibble               |Simple Data Frames [@R-tibble]                                                |3.0.1   |
+|tidyr                |Tidy Messy Data [@R-tidyr]                                                    |1.0.2   |
 
 # References {-}
 
