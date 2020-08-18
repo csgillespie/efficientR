@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-06-30" />
+<meta name="date" content="2020-08-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -587,7 +587,7 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">N =<span class="st"> </span><span class="dv">500000</span></a>
 <a class="sourceLine" id="cb68-2" data-line-number="2"><span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))</a>
 <a class="sourceLine" id="cb68-3" data-line-number="3"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   2.003   0.012   2.015</span></a></code></pre></div>
+<a class="sourceLine" id="cb68-4" data-line-number="4"><span class="co">#&gt;   2.377   0.008   2.385</span></a></code></pre></div>
 <p>In contrast, a more R-centric approach would be</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N)) <span class="op">/</span><span class="st"> </span>N</a></code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -772,7 +772,7 @@ problems, this is a common task. For example, to calculate the standard deviatio
 <a class="sourceLine" id="cb81-2" data-line-number="2"><span class="co"># MARGIN=1: corresponds to rows</span></a>
 <a class="sourceLine" id="cb81-3" data-line-number="3">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd)</a></code></pre></div>
 <p>The first argument of <code>apply()</code> is the object of interest. The second argument is the <code>MARGIN</code>. This is a vector giving the subscripts which the function (the third argument) will be applied over. When the object is a matrix, a margin of <code>1</code> indicates rows and <code>2</code> indicates columns. So to calculate the column standard deviations, the second argument is changed to <code>2</code></p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">col_med =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</a></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">col_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">2</span>, sd)</a></code></pre></div>
 <p>Additional arguments can be passed to the function that is to be applied to the data. For example, to pass the <code>na.rm</code> argument to the <code>sd</code> function, we have</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">row_sd =<span class="st"> </span><span class="kw">apply</span>(ex_mat, <span class="dv">1</span>, sd, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The <code>apply()</code> function also works on higher dimensional arrays; a one dimensional array is a vector, a two dimensional array is a matrix.</p>
@@ -910,7 +910,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</a>
 <a class="sourceLine" id="cb96-2" data-line-number="2"><span class="co">#&gt; function (x, ...) </span></a>
 <a class="sourceLine" id="cb96-3" data-line-number="3"><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x18b0dd8&gt;</span></a>
+<a class="sourceLine" id="cb96-4" data-line-number="4"><span class="co">#&gt; &lt;bytecode: 0x222ba80&gt;</span></a>
 <a class="sourceLine" id="cb96-5" data-line-number="5"><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3">

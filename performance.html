@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-06-30" />
+<meta name="date" content="2020-08-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -521,13 +521,13 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb186-3" data-line-number="3">  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb186-4" data-line-number="4">})</a>
 <a class="sourceLine" id="cb186-5" data-line-number="5"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="co">#&gt;   2.457   0.172   2.629</span></a>
+<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="co">#&gt;    2.66    0.20    2.85</span></a>
 <a class="sourceLine" id="cb186-7" data-line-number="7"><span class="kw">system.time</span>({</a>
 <a class="sourceLine" id="cb186-8" data-line-number="8">  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </a>
 <a class="sourceLine" id="cb186-9" data-line-number="9">  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></a>
 <a class="sourceLine" id="cb186-10" data-line-number="10">})</a>
 <a class="sourceLine" id="cb186-11" data-line-number="11"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="co">#&gt;   0.166   0.060   0.226</span></a>
+<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="co">#&gt;   0.151   0.084   0.235</span></a>
 <a class="sourceLine" id="cb186-13" data-line-number="13"><span class="kw">identical</span>(result1, result2)</a>
 <a class="sourceLine" id="cb186-14" data-line-number="14"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
@@ -535,7 +535,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <a class="sourceLine" id="cb187-2" data-line-number="2">  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
 <a class="sourceLine" id="cb187-3" data-line-number="3">})</a>
 <a class="sourceLine" id="cb187-4" data-line-number="4"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb187-5" data-line-number="5"><span class="co">#&gt;   0.454   0.188   0.642</span></a>
+<a class="sourceLine" id="cb187-5" data-line-number="5"><span class="co">#&gt;   0.444   0.220   0.664</span></a>
 <a class="sourceLine" id="cb187-6" data-line-number="6"><span class="kw">identical</span>(result1, result3)</a>
 <a class="sourceLine" id="cb187-7" data-line-number="7"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 </div>
@@ -602,9 +602,9 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 <div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
 <a class="sourceLine" id="cb194-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</a>
 <a class="sourceLine" id="cb194-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="co">#&gt;         expr    min     lq   mean  median      uq  max neval</span></a>
-<a class="sourceLine" id="cb194-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.0025 0.0031 0.0511 0.00404 0.00579 4.66   100</span></a>
-<a class="sourceLine" id="cb194-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.4784 0.4915 0.5550 0.50230 0.51371 5.26   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="co">#&gt;         expr     min      lq  mean  median      uq  max neval</span></a>
+<a class="sourceLine" id="cb194-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00297 0.00346 0.053 0.00495 0.00718 4.72   100</span></a>
+<a class="sourceLine" id="cb194-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.48311 0.49746 0.563 0.50712 0.52323 5.52   100</span></a></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -777,7 +777,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p>C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and providing a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="performance.html#simple-c">7.6.1</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="performance.html#cppfunction">7.6.2</a>. The remainder of the chapter explains C++ data types (Section <a href="performance.html#c-types">7.6.3</a>), illustrates how to source C++ code directly (Section <a href="performance.html#sourcecpp">7.6.4</a>), explains vectors (Section <a href="performance.html#vectors-and-loops">7.6.5</a>) and <strong>Rcpp</strong> sugar (Section <a href="performance.html#sugar">7.6.6</a>) and finally provides guidance on further resources on the subject (Section <a href="performance.html#rcpp-resources">7.6.7</a>).</p>
 <div id="simple-c" class="section level3">
 <h3><span class="header-section-number">7.6.1</span> A simple C++ function</h3>
-<p>To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 1.0.4.6 of <strong>Rcpp</strong>.</p>
+<p>To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 1.0.5 of <strong>Rcpp</strong>.</p>
 <p><strong>Rcpp</strong> is well documented, as illustrated by the number of vignettes on the package’s <a href="https://cran.r-project.org/web/packages/Rcpp/">CRAN</a> page. In addition to its popularity, many other packages depend on <strong>Rcpp</strong>, which can be seen by looking at the <code>Reverse Imports</code> section.</p>
 <p>To check that you have everything needed for this chapter, run the following piece of code from the course R package:</p>
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb210-1" data-line-number="1">efficient<span class="op">::</span><span class="kw">test_rcpp</span>()</a></code></pre></div>
@@ -815,7 +815,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" data-line-number="1">add_cpp</a>
 <a class="sourceLine" id="cb214-2" data-line-number="2"><span class="co">#&gt; function (x, y) </span></a>
-<a class="sourceLine" id="cb214-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7f0dc3359bc0&gt;, x, y)</span></a></code></pre></div>
+<a class="sourceLine" id="cb214-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7fb326f82b70&gt;, x, y)</span></a></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" data-line-number="1"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb215-2" data-line-number="2"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
