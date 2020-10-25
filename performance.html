@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7 Efficient optimisation | Efficient R programming</title>
   <meta name="description" content="Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time. It’s about both computational and programmer efficiency." />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7 Efficient optimisation | Efficient R programming" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-08-25" />
+<meta name="date" content="2020-10-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,6 +34,7 @@
   
 <link rel="prev" href="data-carpentry.html"/>
 <link rel="next" href="hardware.html"/>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,30 +52,32 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,9 +86,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -135,44 +138,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Efficient R programming</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to Efficient R Programming</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to Efficient R Programming</a>
+<ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#authors"><i class="fa fa-check"></i>Authors</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for-and-how-to-use-it"><i class="fa fa-check"></i><b>1.1</b> Who this book is for and how to use it</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-is-efficiency"><i class="fa fa-check"></i><b>1.2</b> What is efficiency?</a></li>
 <li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-is-efficient-r-programming"><i class="fa fa-check"></i><b>1.3</b> What is efficient R programming?</a></li>
 <li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#why-efficiency"><i class="fa fa-check"></i><b>1.4</b> Why efficiency?</a></li>
-<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#cross-transferable-skills-for-efficiency"><i class="fa fa-check"></i><b>1.5</b> Cross-transferable skills for efficiency</a><ul>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#cross-transferable-skills-for-efficiency"><i class="fa fa-check"></i><b>1.5</b> Cross-transferable skills for efficiency</a>
+<ul>
 <li class="chapter" data-level="1.5.1" data-path="introduction.html"><a href="introduction.html#touch-typing"><i class="fa fa-check"></i><b>1.5.1</b> Touch typing</a></li>
 <li class="chapter" data-level="1.5.2" data-path="introduction.html"><a href="introduction.html#consistent-style-and-code-conventions"><i class="fa fa-check"></i><b>1.5.2</b> Consistent style and code conventions</a></li>
 </ul></li>
-<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#benchmarking-and-profiling"><i class="fa fa-check"></i><b>1.6</b> Benchmarking and profiling</a><ul>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#benchmarking-and-profiling"><i class="fa fa-check"></i><b>1.6</b> Benchmarking and profiling</a>
+<ul>
 <li class="chapter" data-level="1.6.1" data-path="introduction.html"><a href="introduction.html#benchmarking"><i class="fa fa-check"></i><b>1.6.1</b> Benchmarking</a></li>
 <li class="chapter" data-level="1.6.2" data-path="introduction.html"><a href="introduction.html#benchmarking-example"><i class="fa fa-check"></i><b>1.6.2</b> Benchmarking example</a></li>
 <li class="chapter" data-level="1.6.3" data-path="introduction.html"><a href="introduction.html#profiling"><i class="fa fa-check"></i><b>1.6.3</b> Profiling</a></li>
 </ul></li>
-<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#book-resources"><i class="fa fa-check"></i><b>1.7</b> Book resources</a><ul>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#book-resources"><i class="fa fa-check"></i><b>1.7</b> Book resources</a>
+<ul>
 <li class="chapter" data-level="1.7.1" data-path="introduction.html"><a href="introduction.html#r-package"><i class="fa fa-check"></i><b>1.7.1</b> R package</a></li>
 <li class="chapter" data-level="1.7.2" data-path="introduction.html"><a href="introduction.html#online-version"><i class="fa fa-check"></i><b>1.7.2</b> Online version</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="set-up.html"><a href="set-up.html"><i class="fa fa-check"></i><b>2</b> Efficient set-up</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="set-up.html"><a href="set-up.html"><i class="fa fa-check"></i><b>2</b> Efficient set-up</a>
+<ul>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#prerequisites-1"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="2.1" data-path="set-up.html"><a href="set-up.html#top-5-tips-for-an-efficient-r-set-up"><i class="fa fa-check"></i><b>2.1</b> Top 5 tips for an efficient R set-up</a></li>
-<li class="chapter" data-level="2.2" data-path="set-up.html"><a href="set-up.html#operating-system"><i class="fa fa-check"></i><b>2.2</b> Operating system</a><ul>
+<li class="chapter" data-level="2.2" data-path="set-up.html"><a href="set-up.html#operating-system"><i class="fa fa-check"></i><b>2.2</b> Operating system</a>
+<ul>
 <li class="chapter" data-level="2.2.1" data-path="set-up.html"><a href="set-up.html#operating-system-and-resource-monitoring"><i class="fa fa-check"></i><b>2.2.1</b> Operating system and resource monitoring</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="set-up.html"><a href="set-up.html#r-version"><i class="fa fa-check"></i><b>2.3</b> R version</a><ul>
+<li class="chapter" data-level="2.3" data-path="set-up.html"><a href="set-up.html#r-version"><i class="fa fa-check"></i><b>2.3</b> R version</a>
+<ul>
 <li class="chapter" data-level="2.3.1" data-path="set-up.html"><a href="set-up.html#installing-r"><i class="fa fa-check"></i><b>2.3.1</b> Installing R</a></li>
 <li class="chapter" data-level="2.3.2" data-path="set-up.html"><a href="set-up.html#updating-r"><i class="fa fa-check"></i><b>2.3.2</b> Updating R</a></li>
 <li class="chapter" data-level="2.3.3" data-path="set-up.html"><a href="set-up.html#installing-r-packages"><i class="fa fa-check"></i><b>2.3.3</b> Installing R packages</a></li>
 <li class="chapter" data-level="2.3.4" data-path="set-up.html"><a href="set-up.html#deps"><i class="fa fa-check"></i><b>2.3.4</b> Installing R packages with dependencies</a></li>
 <li class="chapter" data-level="2.3.5" data-path="set-up.html"><a href="set-up.html#updating-r-packages"><i class="fa fa-check"></i><b>2.3.5</b> Updating R packages</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="set-up.html"><a href="set-up.html#r-startup"><i class="fa fa-check"></i><b>2.4</b> R startup</a><ul>
+<li class="chapter" data-level="2.4" data-path="set-up.html"><a href="set-up.html#r-startup"><i class="fa fa-check"></i><b>2.4</b> R startup</a>
+<ul>
 <li class="chapter" data-level="2.4.1" data-path="set-up.html"><a href="set-up.html#r-startup-arguments"><i class="fa fa-check"></i><b>2.4.1</b> R startup arguments</a></li>
 <li class="chapter" data-level="2.4.2" data-path="set-up.html"><a href="set-up.html#an-overview-of-rs-startup-files"><i class="fa fa-check"></i><b>2.4.2</b> An overview of R’s startup files</a></li>
 <li class="chapter" data-level="2.4.3" data-path="set-up.html"><a href="set-up.html#location"><i class="fa fa-check"></i><b>2.4.3</b> The location of startup files</a></li>
@@ -180,7 +192,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4.5" data-path="set-up.html"><a href="set-up.html#an-example-.rprofile-file"><i class="fa fa-check"></i><b>2.4.5</b> An example <code>.Rprofile</code> file</a></li>
 <li class="chapter" data-level="2.4.6" data-path="set-up.html"><a href="set-up.html#renviron"><i class="fa fa-check"></i><b>2.4.6</b> The <code>.Renviron</code> file</a></li>
 </ul></li>
-<li class="chapter" data-level="2.5" data-path="set-up.html"><a href="set-up.html#rstudio"><i class="fa fa-check"></i><b>2.5</b> RStudio</a><ul>
+<li class="chapter" data-level="2.5" data-path="set-up.html"><a href="set-up.html#rstudio"><i class="fa fa-check"></i><b>2.5</b> RStudio</a>
+<ul>
 <li class="chapter" data-level="2.5.1" data-path="set-up.html"><a href="set-up.html#install-rstudio"><i class="fa fa-check"></i><b>2.5.1</b> Installing and updating RStudio</a></li>
 <li class="chapter" data-level="2.5.2" data-path="set-up.html"><a href="set-up.html#window-pane-layout"><i class="fa fa-check"></i><b>2.5.2</b> Window pane layout</a></li>
 <li class="chapter" data-level="2.5.3" data-path="set-up.html"><a href="set-up.html#rstudio-options"><i class="fa fa-check"></i><b>2.5.3</b> RStudio options</a></li>
@@ -189,73 +202,89 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.5.6" data-path="set-up.html"><a href="set-up.html#object-display-and-output-table"><i class="fa fa-check"></i><b>2.5.6</b> Object display and output table</a></li>
 <li class="chapter" data-level="2.5.7" data-path="set-up.html"><a href="set-up.html#project-management"><i class="fa fa-check"></i><b>2.5.7</b> Project management</a></li>
 </ul></li>
-<li class="chapter" data-level="2.6" data-path="set-up.html"><a href="set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a><ul>
+<li class="chapter" data-level="2.6" data-path="set-up.html"><a href="set-up.html#blas-and-alternative-r-interpreters"><i class="fa fa-check"></i><b>2.6</b> BLAS and alternative R interpreters</a>
+<ul>
 <li class="chapter" data-level="2.6.1" data-path="set-up.html"><a href="set-up.html#testing-performance-gains-from-blas"><i class="fa fa-check"></i><b>2.6.1</b> Testing performance gains from BLAS</a></li>
 <li class="chapter" data-level="2.6.2" data-path="set-up.html"><a href="set-up.html#other-interpreters"><i class="fa fa-check"></i><b>2.6.2</b> Other interpreters</a></li>
 <li class="chapter" data-level="2.6.3" data-path="set-up.html"><a href="set-up.html#useful-blasbenchmarking-resources"><i class="fa fa-check"></i><b>2.6.3</b> Useful BLAS/benchmarking resources</a></li>
-<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-5"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-6"><i class="fa fa-check"></i>Exercises</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="3" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>3</b> Efficient programming</a>
+<ul>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#prerequisites-2"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="3.1" data-path="programming.html"><a href="programming.html#top-5-tips-for-efficient-programming"><i class="fa fa-check"></i><b>3.1</b> Top 5 tips for efficient programming</a></li>
-<li class="chapter" data-level="3.2" data-path="programming.html"><a href="programming.html#general"><i class="fa fa-check"></i><b>3.2</b> General advice</a><ul>
+<li class="chapter" data-level="3.2" data-path="programming.html"><a href="programming.html#general"><i class="fa fa-check"></i><b>3.2</b> General advice</a>
+<ul>
 <li class="chapter" data-level="3.2.1" data-path="programming.html"><a href="programming.html#memory-allocation"><i class="fa fa-check"></i><b>3.2.1</b> Memory allocation</a></li>
 <li class="chapter" data-level="3.2.2" data-path="programming.html"><a href="programming.html#vectorised-code"><i class="fa fa-check"></i><b>3.2.2</b> Vectorised code</a></li>
 <li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a><ul>
+<li class="chapter" data-level="3.3" data-path="programming.html"><a href="programming.html#communicating-with-the-user"><i class="fa fa-check"></i><b>3.3</b> Communicating with the user</a>
+<ul>
 <li><a href="programming.html#fatal-errors-stop">Fatal errors: <code>stop()</code></a></li>
 <li><a href="programming.html#warnings-warning">Warnings: <code>warning()</code></a></li>
 <li><a href="programming.html#informative-output-message-and-cat">Informative output: <code>message()</code> and <code>cat()</code></a></li>
-<li class="chapter" data-level="" data-path="set-up.html"><a href="set-up.html#exercises-1"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="programming.html"><a href="programming.html#exercises-8"><i class="fa fa-check"></i>Exercises</a></li>
 <li class="chapter" data-level="3.3.1" data-path="programming.html"><a href="programming.html#invisible-returns"><i class="fa fa-check"></i><b>3.3.1</b> Invisible returns</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a><ul>
+<li class="chapter" data-level="3.4" data-path="programming.html"><a href="programming.html#factors"><i class="fa fa-check"></i><b>3.4</b> Factors</a>
+<ul>
 <li class="chapter" data-level="3.4.1" data-path="programming.html"><a href="programming.html#inherent-order"><i class="fa fa-check"></i><b>3.4.1</b> Inherent order</a></li>
 <li class="chapter" data-level="3.4.2" data-path="programming.html"><a href="programming.html#fixed-set-of-categories"><i class="fa fa-check"></i><b>3.4.2</b> Fixed set of categories</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.5</b> The apply family</a><ul>
+<li class="chapter" data-level="3.5" data-path="programming.html"><a href="programming.html#the-apply-family"><i class="fa fa-check"></i><b>3.5</b> The apply family</a>
+<ul>
 <li class="chapter" data-level="3.5.1" data-path="programming.html"><a href="programming.html#example-the-movies-data-set"><i class="fa fa-check"></i><b>3.5.1</b> Example: the movies data set</a></li>
 <li class="chapter" data-level="3.5.2" data-path="programming.html"><a href="programming.html#type-consistency"><i class="fa fa-check"></i><b>3.5.2</b> Type consistency</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.6</b> Caching variables</a><ul>
+<li class="chapter" data-level="3.6" data-path="programming.html"><a href="programming.html#caching-variables"><i class="fa fa-check"></i><b>3.6</b> Caching variables</a>
+<ul>
 <li class="chapter" data-level="3.6.1" data-path="programming.html"><a href="programming.html#function-closures"><i class="fa fa-check"></i><b>3.6.1</b> Function closures</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.7</b> The byte compiler</a><ul>
+<li class="chapter" data-level="3.7" data-path="programming.html"><a href="programming.html#the-byte-compiler"><i class="fa fa-check"></i><b>3.7</b> The byte compiler</a>
+<ul>
 <li class="chapter" data-level="3.7.1" data-path="programming.html"><a href="programming.html#example-the-mean-function"><i class="fa fa-check"></i><b>3.7.1</b> Example: the mean function</a></li>
 <li class="chapter" data-level="3.7.2" data-path="programming.html"><a href="programming.html#compiling-code"><i class="fa fa-check"></i><b>3.7.2</b> Compiling code</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="4" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>4</b> Efficient workflow</a>
+<ul>
+<li class="chapter" data-level="" data-path="workflow.html"><a href="workflow.html#prerequisites-3"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="4.1" data-path="workflow.html"><a href="workflow.html#top-5-tips-for-efficient-workflow"><i class="fa fa-check"></i><b>4.1</b> Top 5 tips for efficient workflow</a></li>
 <li class="chapter" data-level="4.2" data-path="workflow.html"><a href="workflow.html#a-project-planning-typology"><i class="fa fa-check"></i><b>4.2</b> A project planning typology</a></li>
-<li class="chapter" data-level="4.3" data-path="workflow.html"><a href="workflow.html#project-planning-and-management"><i class="fa fa-check"></i><b>4.3</b> Project planning and management</a><ul>
+<li class="chapter" data-level="4.3" data-path="workflow.html"><a href="workflow.html#project-planning-and-management"><i class="fa fa-check"></i><b>4.3</b> Project planning and management</a>
+<ul>
 <li class="chapter" data-level="4.3.1" data-path="workflow.html"><a href="workflow.html#chunking-your-work"><i class="fa fa-check"></i><b>4.3.1</b> ‘Chunking’ your work</a></li>
 <li class="chapter" data-level="4.3.2" data-path="workflow.html"><a href="workflow.html#smart"><i class="fa fa-check"></i><b>4.3.2</b> Making your workflow SMART</a></li>
 <li class="chapter" data-level="4.3.3" data-path="workflow.html"><a href="workflow.html#visualising-plans-with-r"><i class="fa fa-check"></i><b>4.3.3</b> Visualising plans with R</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="workflow.html"><a href="workflow.html#package-selection"><i class="fa fa-check"></i><b>4.4</b> Package selection</a><ul>
+<li class="chapter" data-level="4.4" data-path="workflow.html"><a href="workflow.html#package-selection"><i class="fa fa-check"></i><b>4.4</b> Package selection</a>
+<ul>
 <li class="chapter" data-level="4.4.1" data-path="workflow.html"><a href="workflow.html#searching-for-r-packages"><i class="fa fa-check"></i><b>4.4.1</b> Searching for R packages</a></li>
 <li class="chapter" data-level="4.4.2" data-path="workflow.html"><a href="workflow.html#how-to-select-a-package"><i class="fa fa-check"></i><b>4.4.2</b> How to select a package</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="workflow.html"><a href="workflow.html#publication"><i class="fa fa-check"></i><b>4.5</b> Publication</a><ul>
+<li class="chapter" data-level="4.5" data-path="workflow.html"><a href="workflow.html#publication"><i class="fa fa-check"></i><b>4.5</b> Publication</a>
+<ul>
 <li class="chapter" data-level="4.5.1" data-path="workflow.html"><a href="workflow.html#dynamic-documents-with-r-markdown"><i class="fa fa-check"></i><b>4.5.1</b> Dynamic documents with R Markdown</a></li>
 <li class="chapter" data-level="4.5.2" data-path="workflow.html"><a href="workflow.html#r-packages"><i class="fa fa-check"></i><b>4.5.2</b> R packages</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="input-output.html"><a href="input-output.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="5" data-path="input-output.html"><a href="input-output.html"><i class="fa fa-check"></i><b>5</b> Efficient input/output</a>
+<ul>
+<li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#prerequisites-4"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="5.1" data-path="input-output.html"><a href="input-output.html#top-5-tips-for-efficient-data-io"><i class="fa fa-check"></i><b>5.1</b> Top 5 tips for efficient data I/O</a></li>
-<li class="chapter" data-level="5.2" data-path="input-output.html"><a href="input-output.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.2</b> Versatile data import with rio</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#exercises"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="5.2" data-path="input-output.html"><a href="input-output.html#versatile-data-import-with-rio"><i class="fa fa-check"></i><b>5.2</b> Versatile data import with rio</a>
+<ul>
+<li class="chapter" data-level="" data-path="input-output.html"><a href="input-output.html#exercises-11"><i class="fa fa-check"></i>Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="input-output.html"><a href="input-output.html#fread"><i class="fa fa-check"></i><b>5.3</b> Plain text formats</a><ul>
+<li class="chapter" data-level="5.3" data-path="input-output.html"><a href="input-output.html#fread"><i class="fa fa-check"></i><b>5.3</b> Plain text formats</a>
+<ul>
 <li class="chapter" data-level="5.3.1" data-path="input-output.html"><a href="input-output.html#differences-between-fread-and-read_csv"><i class="fa fa-check"></i><b>5.3.1</b> Differences between <code>fread()</code> and <code>read_csv()</code></a></li>
 <li class="chapter" data-level="5.3.2" data-path="input-output.html"><a href="input-output.html#preprocessing-text-outside-r"><i class="fa fa-check"></i><b>5.3.2</b> Preprocessing text outside R</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="input-output.html"><a href="input-output.html#binary-file-formats"><i class="fa fa-check"></i><b>5.4</b> Binary file formats</a><ul>
+<li class="chapter" data-level="5.4" data-path="input-output.html"><a href="input-output.html#binary-file-formats"><i class="fa fa-check"></i><b>5.4</b> Binary file formats</a>
+<ul>
 <li class="chapter" data-level="5.4.1" data-path="input-output.html"><a href="input-output.html#native-binary-formats-rdata-or-rds"><i class="fa fa-check"></i><b>5.4.1</b> Native binary formats: Rdata or Rds?</a></li>
 <li class="chapter" data-level="5.4.2" data-path="input-output.html"><a href="input-output.html#the-feather-file-format"><i class="fa fa-check"></i><b>5.4.2</b> The feather file format</a></li>
 <li class="chapter" data-level="5.4.3" data-path="input-output.html"><a href="input-output.html#benchmarking-binary-file-formats"><i class="fa fa-check"></i><b>5.4.3</b> Benchmarking binary file formats</a></li>
@@ -264,17 +293,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="input-output.html"><a href="input-output.html#download"><i class="fa fa-check"></i><b>5.5</b> Getting data from the internet</a></li>
 <li class="chapter" data-level="5.6" data-path="input-output.html"><a href="input-output.html#accessing-data-stored-in-packages"><i class="fa fa-check"></i><b>5.6</b> Accessing data stored in packages</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="6" data-path="data-carpentry.html"><a href="data-carpentry.html"><i class="fa fa-check"></i><b>6</b> Efficient data carpentry</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-carpentry.html"><a href="data-carpentry.html#prerequisites-5"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#top-5-tips-for-efficient-data-carpentry"><i class="fa fa-check"></i><b>6.1</b> Top 5 tips for efficient data carpentry</a></li>
 <li class="chapter" data-level="6.2" data-path="data-carpentry.html"><a href="data-carpentry.html#efficient-data-frames-with-tibble"><i class="fa fa-check"></i><b>6.2</b> Efficient data frames with tibble</a></li>
-<li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a><ul>
+<li class="chapter" data-level="6.3" data-path="data-carpentry.html"><a href="data-carpentry.html#tidying-data-with-tidyr-and-regular-expressions"><i class="fa fa-check"></i><b>6.3</b> Tidying data with tidyr and regular expressions</a>
+<ul>
 <li class="chapter" data-level="6.3.1" data-path="data-carpentry.html"><a href="data-carpentry.html#make-wide-tables-long-with-pivot_longer"><i class="fa fa-check"></i><b>6.3.1</b> Make wide tables long with <code>pivot_longer()</code></a></li>
 <li class="chapter" data-level="6.3.2" data-path="data-carpentry.html"><a href="data-carpentry.html#split-joint-variables-with-separate"><i class="fa fa-check"></i><b>6.3.2</b> Split joint variables with <code>separate()</code></a></li>
 <li class="chapter" data-level="6.3.3" data-path="data-carpentry.html"><a href="data-carpentry.html#other-tidyr-functions"><i class="fa fa-check"></i><b>6.3.3</b> Other tidyr functions</a></li>
 <li class="chapter" data-level="6.3.4" data-path="data-carpentry.html"><a href="data-carpentry.html#regular-expressions"><i class="fa fa-check"></i><b>6.3.4</b> Regular expressions</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="data-carpentry.html"><a href="data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a><ul>
+<li class="chapter" data-level="6.4" data-path="data-carpentry.html"><a href="data-carpentry.html#dplyr"><i class="fa fa-check"></i><b>6.4</b> Efficient data processing with dplyr</a>
+<ul>
 <li class="chapter" data-level="6.4.1" data-path="data-carpentry.html"><a href="data-carpentry.html#renaming-columns"><i class="fa fa-check"></i><b>6.4.1</b> Renaming columns</a></li>
 <li class="chapter" data-level="6.4.2" data-path="data-carpentry.html"><a href="data-carpentry.html#changing-column-classes"><i class="fa fa-check"></i><b>6.4.2</b> Changing column classes</a></li>
 <li class="chapter" data-level="6.4.3" data-path="data-carpentry.html"><a href="data-carpentry.html#filtering-rows"><i class="fa fa-check"></i><b>6.4.3</b> Filtering rows</a></li>
@@ -283,19 +315,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4.6" data-path="data-carpentry.html"><a href="data-carpentry.html#non-standard-evaluation"><i class="fa fa-check"></i><b>6.4.6</b> Non standard evaluation</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="data-carpentry.html"><a href="data-carpentry.html#combining-datasets"><i class="fa fa-check"></i><b>6.5</b> Combining datasets</a></li>
-<li class="chapter" data-level="6.6" data-path="data-carpentry.html"><a href="data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a><ul>
+<li class="chapter" data-level="6.6" data-path="data-carpentry.html"><a href="data-carpentry.html#working-with-databases"><i class="fa fa-check"></i><b>6.6</b> Working with databases</a>
+<ul>
 <li class="chapter" data-level="6.6.1" data-path="data-carpentry.html"><a href="data-carpentry.html#databases-and-dplyr"><i class="fa fa-check"></i><b>6.6.1</b> Databases and <strong>dplyr</strong></a></li>
 </ul></li>
 <li class="chapter" data-level="6.7" data-path="data-carpentry.html"><a href="data-carpentry.html#data-processing-with-data.table"><i class="fa fa-check"></i><b>6.7</b> Data processing with data.table</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient optimisation</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="7" data-path="performance.html"><a href="performance.html"><i class="fa fa-check"></i><b>7</b> Efficient optimisation</a>
+<ul>
+<li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#prerequisites-6"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="7.1" data-path="performance.html"><a href="performance.html#top-5-tips-for-efficient-performance"><i class="fa fa-check"></i><b>7.1</b> Top 5 tips for efficient performance</a></li>
-<li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.2</b> Code profiling</a><ul>
+<li class="chapter" data-level="7.2" data-path="performance.html"><a href="performance.html#performance-profvis"><i class="fa fa-check"></i><b>7.2</b> Code profiling</a>
+<ul>
 <li class="chapter" data-level="7.2.1" data-path="performance.html"><a href="performance.html#getting-started-with-profvis"><i class="fa fa-check"></i><b>7.2.1</b> Getting started with <strong>profvis</strong></a></li>
 <li class="chapter" data-level="7.2.2" data-path="performance.html"><a href="performance.html#monopoloy"><i class="fa fa-check"></i><b>7.2.2</b> Example: Monopoly Simulation</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.3</b> Efficient base R</a><ul>
+<li class="chapter" data-level="7.3" data-path="performance.html"><a href="performance.html#efficient-base-r"><i class="fa fa-check"></i><b>7.3</b> Efficient base R</a>
+<ul>
 <li><a href="performance.html#the-if-vs-ifelse-functions">The <code>if()</code> vs <code>ifelse()</code> functions</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sorting-and-ordering"><i class="fa fa-check"></i>Sorting and ordering</a></li>
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#reversing-elements"><i class="fa fa-check"></i>Reversing elements</a></li>
@@ -309,13 +345,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="performance.html"><a href="performance.html#sparse-matrices"><i class="fa fa-check"></i>Sparse matrices</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="performance.html"><a href="performance.html#example-optimising-the-move_square-function"><i class="fa fa-check"></i><b>7.4</b> Example: Optimising the <code>move_square()</code> function</a></li>
-<li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.5</b> Parallel computing</a><ul>
+<li class="chapter" data-level="7.5" data-path="performance.html"><a href="performance.html#performance-parallel"><i class="fa fa-check"></i><b>7.5</b> Parallel computing</a>
+<ul>
 <li class="chapter" data-level="7.5.1" data-path="performance.html"><a href="performance.html#parallel-versions-of-apply-functions"><i class="fa fa-check"></i><b>7.5.1</b> Parallel versions of apply functions</a></li>
 <li class="chapter" data-level="7.5.2" data-path="performance.html"><a href="performance.html#example-snakes-and-ladders"><i class="fa fa-check"></i><b>7.5.2</b> Example: Snakes and Ladders</a></li>
 <li class="chapter" data-level="7.5.3" data-path="performance.html"><a href="performance.html#exit-functions-with-care"><i class="fa fa-check"></i><b>7.5.3</b> Exit functions with care</a></li>
 <li class="chapter" data-level="7.5.4" data-path="performance.html"><a href="performance.html#parallel-code-under-linux-os-x"><i class="fa fa-check"></i><b>7.5.4</b> Parallel code under Linux &amp; OS X</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="performance.html"><a href="performance.html#rcpp"><i class="fa fa-check"></i><b>7.6</b> Rcpp</a><ul>
+<li class="chapter" data-level="7.6" data-path="performance.html"><a href="performance.html#rcpp"><i class="fa fa-check"></i><b>7.6</b> Rcpp</a>
+<ul>
 <li class="chapter" data-level="7.6.1" data-path="performance.html"><a href="performance.html#simple-c"><i class="fa fa-check"></i><b>7.6.1</b> A simple C++ function</a></li>
 <li class="chapter" data-level="7.6.2" data-path="performance.html"><a href="performance.html#cppfunction"><i class="fa fa-check"></i><b>7.6.2</b> The <code>cppFunction()</code> command</a></li>
 <li class="chapter" data-level="7.6.3" data-path="performance.html"><a href="performance.html#c-types"><i class="fa fa-check"></i><b>7.6.3</b> C++ data types</a></li>
@@ -325,22 +363,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.7" data-path="performance.html"><a href="performance.html#rcpp-resources"><i class="fa fa-check"></i><b>7.6.7</b> Rcpp resources</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="8" data-path="hardware.html"><a href="hardware.html"><i class="fa fa-check"></i><b>8</b> Efficient hardware</a>
+<ul>
+<li class="chapter" data-level="" data-path="hardware.html"><a href="hardware.html#prerequisites-7"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="8.1" data-path="hardware.html"><a href="hardware.html#top-5-tips-for-efficient-hardware"><i class="fa fa-check"></i><b>8.1</b> Top 5 tips for efficient hardware</a></li>
 <li class="chapter" data-level="8.2" data-path="hardware.html"><a href="hardware.html#background-what-is-a-byte"><i class="fa fa-check"></i><b>8.2</b> Background: what is a byte?</a></li>
 <li class="chapter" data-level="8.3" data-path="hardware.html"><a href="hardware.html#ram"><i class="fa fa-check"></i><b>8.3</b> Random access memory: RAM</a></li>
 <li class="chapter" data-level="8.4" data-path="hardware.html"><a href="hardware.html#hard-drives-hdd-vs-ssd"><i class="fa fa-check"></i><b>8.4</b> Hard drives: HDD vs SSD</a></li>
 <li class="chapter" data-level="8.5" data-path="hardware.html"><a href="hardware.html#operating-systems-32-bit-or-64-bit"><i class="fa fa-check"></i><b>8.5</b> Operating systems: 32-bit or 64-bit</a></li>
 <li class="chapter" data-level="8.6" data-path="hardware.html"><a href="hardware.html#central-processing-unit-cpu"><i class="fa fa-check"></i><b>8.6</b> Central processing unit (CPU)</a></li>
-<li class="chapter" data-level="8.7" data-path="hardware.html"><a href="hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.7</b> Cloud computing</a><ul>
+<li class="chapter" data-level="8.7" data-path="hardware.html"><a href="hardware.html#cloud-computing"><i class="fa fa-check"></i><b>8.7</b> Cloud computing</a>
+<ul>
 <li class="chapter" data-level="8.7.1" data-path="hardware.html"><a href="hardware.html#amazon-ec2"><i class="fa fa-check"></i><b>8.7.1</b> Amazon EC2</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="9" data-path="collaboration.html"><a href="collaboration.html"><i class="fa fa-check"></i><b>9</b> Efficient collaboration</a>
+<ul>
+<li class="chapter" data-level="" data-path="collaboration.html"><a href="collaboration.html#prerequisites-8"><i class="fa fa-check"></i>Prerequisites</a></li>
 <li class="chapter" data-level="9.1" data-path="collaboration.html"><a href="collaboration.html#top-5-tips-for-efficient-collaboration"><i class="fa fa-check"></i><b>9.1</b> Top 5 tips for efficient collaboration</a></li>
-<li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a><ul>
+<li class="chapter" data-level="9.2" data-path="collaboration.html"><a href="collaboration.html#coding-style"><i class="fa fa-check"></i><b>9.2</b> Coding style</a>
+<ul>
 <li class="chapter" data-level="9.2.1" data-path="collaboration.html"><a href="collaboration.html#reformatting-code-with-rstudio"><i class="fa fa-check"></i><b>9.2.1</b> Reformatting code with RStudio</a></li>
 <li class="chapter" data-level="9.2.2" data-path="collaboration.html"><a href="collaboration.html#file-names"><i class="fa fa-check"></i><b>9.2.2</b> File names</a></li>
 <li class="chapter" data-level="9.2.3" data-path="collaboration.html"><a href="collaboration.html#loading-packages"><i class="fa fa-check"></i><b>9.2.3</b> Loading packages</a></li>
@@ -352,7 +394,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.9" data-path="collaboration.html"><a href="collaboration.html#indentation"><i class="fa fa-check"></i><b>9.2.9</b> Indentation</a></li>
 <li class="chapter" data-level="9.2.10" data-path="collaboration.html"><a href="collaboration.html#curly-braces"><i class="fa fa-check"></i><b>9.2.10</b> Curly braces</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="collaboration.html"><a href="collaboration.html#version-control"><i class="fa fa-check"></i><b>9.3</b> Version control</a><ul>
+<li class="chapter" data-level="9.3" data-path="collaboration.html"><a href="collaboration.html#version-control"><i class="fa fa-check"></i><b>9.3</b> Version control</a>
+<ul>
 <li class="chapter" data-level="9.3.1" data-path="collaboration.html"><a href="collaboration.html#commits"><i class="fa fa-check"></i><b>9.3.1</b> Commits</a></li>
 <li class="chapter" data-level="9.3.2" data-path="collaboration.html"><a href="collaboration.html#git-integration-in-rstudio"><i class="fa fa-check"></i><b>9.3.2</b> Git integration in RStudio</a></li>
 <li class="chapter" data-level="9.3.3" data-path="collaboration.html"><a href="collaboration.html#github"><i class="fa fa-check"></i><b>9.3.3</b> GitHub</a></li>
@@ -360,21 +403,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="collaboration.html"><a href="collaboration.html#code-review"><i class="fa fa-check"></i><b>9.4</b> Code review</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a><ul>
+<li class="chapter" data-level="10" data-path="learning.html"><a href="learning.html"><i class="fa fa-check"></i><b>10</b> Efficient learning</a>
+<ul>
 <li class="chapter" data-level="" data-path="learning.html"><a href="learning.html#prerequisties"><i class="fa fa-check"></i>Prerequisties</a></li>
 <li class="chapter" data-level="10.1" data-path="learning.html"><a href="learning.html#top-5-tips-for-efficient-learning"><i class="fa fa-check"></i><b>10.1</b> Top 5 tips for efficient learning</a></li>
-<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a><ul>
+<li class="chapter" data-level="10.2" data-path="learning.html"><a href="learning.html#using-rs-internal-help"><i class="fa fa-check"></i><b>10.2</b> Using R’s internal help</a>
+<ul>
 <li class="chapter" data-level="10.2.1" data-path="learning.html"><a href="learning.html#searching-r-for-topics"><i class="fa fa-check"></i><b>10.2.1</b> Searching R for topics</a></li>
 <li class="chapter" data-level="10.2.2" data-path="learning.html"><a href="learning.html#finding-and-using-vignettes"><i class="fa fa-check"></i><b>10.2.2</b> Finding and using vignettes</a></li>
 <li class="chapter" data-level="10.2.3" data-path="learning.html"><a href="learning.html#getting-help-on-functions"><i class="fa fa-check"></i><b>10.2.3</b> Getting help on functions</a></li>
 <li class="chapter" data-level="10.2.4" data-path="learning.html"><a href="learning.html#reading-r-source-code"><i class="fa fa-check"></i><b>10.2.4</b> Reading R source code</a></li>
 <li class="chapter" data-level="10.2.5" data-path="learning.html"><a href="learning.html#swirl"><i class="fa fa-check"></i><b>10.2.5</b> Swirl</a></li>
 </ul></li>
-<li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a><ul>
+<li class="chapter" data-level="10.3" data-path="learning.html"><a href="learning.html#online-resources"><i class="fa fa-check"></i><b>10.3</b> Online resources</a>
+<ul>
 <li class="chapter" data-level="10.3.1" data-path="learning.html"><a href="learning.html#stackoverflow"><i class="fa fa-check"></i><b>10.3.1</b> Stackoverflow</a></li>
 <li class="chapter" data-level="10.3.2" data-path="learning.html"><a href="learning.html#mailing-lists-and-groups."><i class="fa fa-check"></i><b>10.3.2</b> Mailing lists and groups.</a></li>
 </ul></li>
-<li class="chapter" data-level="10.4" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.4</b> Asking a question</a><ul>
+<li class="chapter" data-level="10.4" data-path="learning.html"><a href="learning.html#asking-a-question"><i class="fa fa-check"></i><b>10.4</b> Asking a question</a>
+<ul>
 <li class="chapter" data-level="" data-path="learning.html"><a href="learning.html#minimal-data-set"><i class="fa fa-check"></i>Minimal data set</a></li>
 <li class="chapter" data-level="" data-path="learning.html"><a href="learning.html#minimal-example"><i class="fa fa-check"></i>Minimal example</a></li>
 </ul></li>
@@ -382,7 +429,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.6" data-path="learning.html"><a href="learning.html#spread-the-knowledge"><i class="fa fa-check"></i><b>10.6</b> Spread the knowledge</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html"><i class="fa fa-check"></i><b>A</b> Building the book from source</a><ul>
+<li class="chapter" data-level="A" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html"><i class="fa fa-check"></i><b>A</b> Building the book from source</a>
+<ul>
 <li class="chapter" data-level="A.1" data-path="building-the-book-from-source.html"><a href="building-the-book-from-source.html#package-dependencies"><i class="fa fa-check"></i><b>A.1</b> Package dependencies</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -407,7 +455,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="performance" class="section level1">
+<div id="performance" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Efficient optimisation</h1>
 <p><a href="https://en.wikiquote.org/wiki/Donald_Knuth">Donald Knuth</a> is a legendary American computer scientist who developed a number of the key algorithms that we use today (see for example <code>?Random</code>). On the subject of optimisation he gives this advice:</p>
 <blockquote>
@@ -416,7 +464,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Knuth’s point is that it is easy to undertake code optimisation inefficiently. When developing code, the causes of inefficiencies may shift so that what originally caused slowness at the beginning of your work may not be relevant at a later stage. This means that time spent optimizing code early in the developmental stage could be wasted. Even worse, there is a trade-off between code speed and code readability; we’ve already made this trade-off once by using readable, (but slow) R compared with verbose C code!</p>
 <p>For this reason this chapter is covered towards the latter half of the book. The previous chapters deliberately focussed on concepts, packages and functions to increase efficiency. These are (relatively) easy ways of saving time that, once implemented, will work for future projects. Code optimisation, by contrast, is an advanced topic that should only be tackled once ‘low hanging fruit’ for efficiency gains have been taken.</p>
 <p>In this chapter we assume that you already have well-developed code that is mature conceptually and has been tried and tested. Now you want to optimize this code, but not prematurely. The chapter is organised as follows. First we begin with general hints and tips about optimising base R code. Code profiling can identify key bottlenecks in the code in need of optimisation, and this is covered in the next section. Section <a href="performance.html#performance-parallel">7.5</a> discusses how parallel code can overcome efficiency bottlenecks for some problems. The final section explains how <code>Rcpp</code> can be used to efficiently incorporate C++ code into an R analysis.</p>
-<div id="prerequisites" class="section level3 unnumbered">
+<div id="prerequisites-6" class="section level3 unnumbered" number="">
 <h3>Prerequisites</h3>
 <p>In this chapter, some of the examples require a working C++ compiler. The installation method depends on your operating system:</p>
 <ul>
@@ -425,12 +473,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Windows: Install <a href="http://cran.r-project.org/bin/windows/">Rtools</a>. Make sure you select the version that corresponds to your version of R.</li>
 </ul>
 <p>The packages used in this chapter are</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</a>
-<a class="sourceLine" id="cb179-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;ggplot2movies&quot;</span>)</a>
-<a class="sourceLine" id="cb179-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
-<a class="sourceLine" id="cb179-4" data-line-number="4"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="performance.html#cb179-1"></a><span class="kw">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</span>
+<span id="cb179-2"><a href="performance.html#cb179-2"></a><span class="kw">library</span>(<span class="st">&quot;ggplot2movies&quot;</span>)</span>
+<span id="cb179-3"><a href="performance.html#cb179-3"></a><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</span>
+<span id="cb179-4"><a href="performance.html#cb179-4"></a><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</span></code></pre></div>
 </div>
-<div id="top-5-tips-for-efficient-performance" class="section level2">
+<div id="top-5-tips-for-efficient-performance" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> Top 5 tips for efficient performance</h2>
 <ol style="list-style-type: decimal">
 <li>Before you start to optimise your code, ensure you know where the bottleneck lies; use
@@ -442,24 +490,24 @@ to a matrix for a speed boost.</li>
 <li>For optimal performance, consider re-writing key parts of your code in C++.</li>
 </ol>
 </div>
-<div id="performance-profvis" class="section level2">
+<div id="performance-profvis" class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> Code profiling</h2>
 <p>Often you will have working code, but simply want it to run faster. In some cases it’s obvious where the bottleneck lies. Sometimes you will guess, relying on intuition. A drawback of this is that you could be wrong, and waste time optimising the wrong piece of code. To make slow code run faster, it is first important to determine where the slow code lives. This is the purpose of code profiling.</p>
 <p>The <code>Rprof()</code> function is a built-in tool for profiling the execution of R expressions. At regular time intervals, the profiler stops the R interpreter, records the current function call stack, and saves the information to a file. The results from <code>Rprof()</code> are stochastic. Each time we run a function in R, the conditions have changed. Hence, each time you profile your code, the result will be slightly different.</p>
 <p>Unfortunately <code>Rprof()</code> is not user friendly. For this reason we recommend using the <strong>profvis</strong> package for profiling your R code.
 <strong>profvis</strong> provides an interactive graphical interface for visualising code profiling data data from <code>Rprof()</code>.</p>
-<div id="getting-started-with-profvis" class="section level3">
+<div id="getting-started-with-profvis" class="section level3" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Getting started with <strong>profvis</strong></h3>
-<p>After installing <strong>profvis</strong>, e.g. with <code>install.packages(&quot;profvis&quot;)</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movie was made versus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</a>
-<a class="sourceLine" id="cb180-2" data-line-number="2"><span class="kw">profvis</span>({</a>
-<a class="sourceLine" id="cb180-3" data-line-number="3">  <span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span></a>
-<a class="sourceLine" id="cb180-4" data-line-number="4">  movies =<span class="st"> </span>movies[movies<span class="op">$</span>Comedy <span class="op">==</span><span class="st"> </span><span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb180-5" data-line-number="5">  <span class="kw">plot</span>(movies<span class="op">$</span>year, movies<span class="op">$</span>rating)</a>
-<a class="sourceLine" id="cb180-6" data-line-number="6">  model =<span class="st"> </span><span class="kw">loess</span>(rating <span class="op">~</span><span class="st"> </span>year, <span class="dt">data =</span> movies) <span class="co"># loess regression line</span></a>
-<a class="sourceLine" id="cb180-7" data-line-number="7">  j =<span class="st"> </span><span class="kw">order</span>(movies<span class="op">$</span>year)</a>
-<a class="sourceLine" id="cb180-8" data-line-number="8">  <span class="kw">lines</span>(movies<span class="op">$</span>year[j], model<span class="op">$</span>fitted[j]) <span class="co"># Add line to the plot</span></a>
-<a class="sourceLine" id="cb180-9" data-line-number="9">})</a></code></pre></div>
+<p>After installing <strong>profvis</strong>, e.g. with <code>install.packages("profvis")</code>, it can be used to profile R code. As a simple example, we will use the <code>movies</code> data set, which contains information on around 60,000 movies. First, we’ll select movies that are classed as comedies, then plot year the movie was made versus the movie rating, and draw a local polynomial regression line to pick out the trend. The main function from the <strong>profvis</strong> package is <code>profvis()</code>, which profiles the code and creates an interactive HTML page of the results. The first argument of <code>profvis()</code> is the R expression of interest. This can be many lines long:</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="performance.html#cb180-1"></a><span class="kw">library</span>(<span class="st">&quot;profvis&quot;</span>)</span>
+<span id="cb180-2"><a href="performance.html#cb180-2"></a><span class="kw">profvis</span>({</span>
+<span id="cb180-3"><a href="performance.html#cb180-3"></a>  <span class="kw">data</span>(movies, <span class="dt">package =</span> <span class="st">&quot;ggplot2movies&quot;</span>) <span class="co"># Load data</span></span>
+<span id="cb180-4"><a href="performance.html#cb180-4"></a>  movies =<span class="st"> </span>movies[movies<span class="op">$</span>Comedy <span class="op">==</span><span class="st"> </span><span class="dv">1</span>,]</span>
+<span id="cb180-5"><a href="performance.html#cb180-5"></a>  <span class="kw">plot</span>(movies<span class="op">$</span>year, movies<span class="op">$</span>rating)</span>
+<span id="cb180-6"><a href="performance.html#cb180-6"></a>  model =<span class="st"> </span><span class="kw">loess</span>(rating <span class="op">~</span><span class="st"> </span>year, <span class="dt">data =</span> movies) <span class="co"># loess regression line</span></span>
+<span id="cb180-7"><a href="performance.html#cb180-7"></a>  j =<span class="st"> </span><span class="kw">order</span>(movies<span class="op">$</span>year)</span>
+<span id="cb180-8"><a href="performance.html#cb180-8"></a>  <span class="kw">lines</span>(movies<span class="op">$</span>year[j], model<span class="op">$</span>fitted[j]) <span class="co"># Add line to the plot</span></span>
+<span id="cb180-9"><a href="performance.html#cb180-9"></a>})</span></code></pre></div>
 <p>The above code provides an interactive HTML page (figure <a href="performance.html#fig:7-1">7.1</a>). On the left side is the code and on the right is a flame graph (horizontal direction is time in milliseconds and the vertical direction is the call stack).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-1"></span>
 <img src="figures/f7_1_profvis.png" alt="Output from profvis" width="100%" />
@@ -470,15 +518,15 @@ Figure 7.1: Output from profvis
 <p>The left hand panel gives the amount of time spent on each line of code. It shows that majority of time is spent calculating the <code>loess()</code> smoothing line. The bottom line of the right panel also highlights that most of the execution time is spent on the <code>loess()</code> function. Travelling up the function, we see that <code>loess()</code> calls <code>simpleLoess()</code> which in turn calls <code>.C()</code> function.</p>
 <p>The conclusion from this graph is that if optimisation were required, it would make sense to focus on the <code>loess()</code> and possibly the <code>order()</code> function calls.</p>
 </div>
-<div id="monopoloy" class="section level3">
+<div id="monopoloy" class="section level3" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Example: Monopoly Simulation</h3>
 <p>Monopoly is a board game that originated in the United States over <span class="math inline">\(100\)</span> years ago. The objective of the game is to go round the board and purchase squares (properties). If other players land on your properties they have to pay a tax. The player with the most money at the end of the game, wins. To make things more interesting, there are Chance and Community Chest squares. If you land on one of these squares, you draw card, which may send to you to other parts of the board. The other special square, is Jail. One way of entering Jail is to roll three successive doubles.</p>
 <p>The <strong>efficient</strong> package contains a Monte-Carlo function for simulating a simplified game of monopoly. By keeping track of where a person lands when going round the board, we obtain an estimate of the probability of landing on a certain square. The entire code is around 100 lines long. In order for <strong>profvis</strong> to fully profile the code, the <strong>efficient</strong> package needs to be installed from source</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,</a>
-<a class="sourceLine" id="cb181-2" data-line-number="2">                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="performance.html#cb181-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;csgillespie/efficient&quot;</span>,</span>
+<span id="cb181-2"><a href="performance.html#cb181-2"></a>                         <span class="dt">args =</span> <span class="st">&quot;--with-keep.source&quot;</span>)</span></code></pre></div>
 <p>The function can then be profiled via the following code, which results in figure <a href="performance.html#fig:7-2">7.2</a>.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)</a>
-<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="kw">profvis</span>(<span class="kw">simulate_monopoly</span>(<span class="dv">10000</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="performance.html#cb182-1"></a><span class="kw">library</span>(<span class="st">&quot;efficient&quot;</span>)</span>
+<span id="cb182-2"><a href="performance.html#cb182-2"></a><span class="kw">profvis</span>(<span class="kw">simulate_monopoly</span>(<span class="dv">10000</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:7-2"></span>
 <img src="figures/f7_2_profvis_monopoly.png" alt="Code profiling for simulating the game of Monopoly." width="100%" />
 <p class="caption">
@@ -496,62 +544,62 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <p>The function <code>move_square()</code> captures this logic. Now we know where the code is slow, how can we speed up the computation? In the next section, we will discuss standard techniques that can be used. We will then revisit this example.</p>
 </div>
 </div>
-<div id="efficient-base-r" class="section level2">
+<div id="efficient-base-r" class="section level2" number="7.3">
 <h2><span class="header-section-number">7.3</span> Efficient base R</h2>
 <p>In R there is often more than one way to solve a problem. In this section we highlight standard tricks or alternative methods that may improve performance.</p>
-<div id="the-if-vs-ifelse-functions" class="section level3 unnumbered">
+<div id="the-if-vs-ifelse-functions" class="section level3 unnumbered" number="">
 <h3>The <code>if()</code> vs <code>ifelse()</code> functions</h3>
 <p><code>ifelse()</code> is a vectorised version of the standard control-flow function <code>if(test) if_yes else if_no</code> that works as follows:</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1"><span class="kw">ifelse</span>(test, if_yes, if_no)</a></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="performance.html#cb183-1"></a><span class="kw">ifelse</span>(test, if_yes, if_no)</span></code></pre></div>
 <p>In the above imaginary example, the return value is filled with elements from the <code>if_yes</code> and <code>if_no</code> arguments that are determined by whether the element of <code>test</code> is <code>TRUE</code> or <code>FALSE</code>. For example, suppose we have a vector of exam marks. <code>ifelse()</code> could be used to classify them as pass or fail:</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">marks =<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">55</span>, <span class="dv">75</span>)</a>
-<a class="sourceLine" id="cb184-2" data-line-number="2"><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
-<a class="sourceLine" id="cb184-3" data-line-number="3"><span class="co">#&gt; [1] &quot;fail&quot; &quot;pass&quot; &quot;pass&quot;</span></a></code></pre></div>
-<p>If the length of <code>test</code> condition is equal to <span class="math inline">\(1\)</span>, i.e. <code>length(test) == 1</code>, then the standard conditional statement</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">mark =<span class="st"> </span><span class="dv">25</span></a>
-<a class="sourceLine" id="cb185-2" data-line-number="2"><span class="cf">if</span>(mark <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>) {</a>
-<a class="sourceLine" id="cb185-3" data-line-number="3">  <span class="st">&quot;pass&quot;</span> </a>
-<a class="sourceLine" id="cb185-4" data-line-number="4">} <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb185-5" data-line-number="5">  <span class="st">&quot;fail&quot;</span></a>
-<a class="sourceLine" id="cb185-6" data-line-number="6">}</a></code></pre></div>
-<p>is around five to ten times faster than <code>ifelse(mark &gt;= 40, &quot;pass&quot;, &quot;fail&quot;)</code>.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="performance.html#cb184-1"></a>marks =<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">55</span>, <span class="dv">75</span>)</span>
+<span id="cb184-2"><a href="performance.html#cb184-2"></a><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</span>
+<span id="cb184-3"><a href="performance.html#cb184-3"></a><span class="co">#&gt; [1] &quot;fail&quot; &quot;pass&quot; &quot;pass&quot;</span></span></code></pre></div>
+<p>If the length of <code>test</code> condition is equal to <span class="math inline">\(1\)</span>, i.e. <code>length(test) == 1</code>, then the standard conditional statement</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="performance.html#cb185-1"></a>mark =<span class="st"> </span><span class="dv">25</span></span>
+<span id="cb185-2"><a href="performance.html#cb185-2"></a><span class="cf">if</span>(mark <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>) {</span>
+<span id="cb185-3"><a href="performance.html#cb185-3"></a>  <span class="st">&quot;pass&quot;</span> </span>
+<span id="cb185-4"><a href="performance.html#cb185-4"></a>} <span class="cf">else</span> {</span>
+<span id="cb185-5"><a href="performance.html#cb185-5"></a>  <span class="st">&quot;fail&quot;</span></span>
+<span id="cb185-6"><a href="performance.html#cb185-6"></a>}</span></code></pre></div>
+<p>is around five to ten times faster than <code>ifelse(mark &gt;= 40, "pass", "fail")</code>.</p>
 <p>An additional quirk of <code>ifelse()</code> is that although it is more <em>programmer efficient</em>, as it is more concise and understandable than multi-line alternatives, it is often <strong>less</strong> <em>computationally efficient</em> than a more verbose alternative. This is illustrated with the following benchmark, in which the second option runs around 20 times faster, despite the results being identical:</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">marks =<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="fl">10e6</span>, <span class="dt">min =</span> <span class="dv">30</span>, <span class="dt">max =</span> <span class="dv">99</span>)</a>
-<a class="sourceLine" id="cb186-2" data-line-number="2"><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb186-3" data-line-number="3">  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
-<a class="sourceLine" id="cb186-4" data-line-number="4">})</a>
-<a class="sourceLine" id="cb186-5" data-line-number="5"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="co">#&gt;   2.417   0.192   2.609</span></a>
-<a class="sourceLine" id="cb186-7" data-line-number="7"><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb186-8" data-line-number="8">  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </a>
-<a class="sourceLine" id="cb186-9" data-line-number="9">  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></a>
-<a class="sourceLine" id="cb186-10" data-line-number="10">})</a>
-<a class="sourceLine" id="cb186-11" data-line-number="11"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="co">#&gt;   0.144   0.080   0.223</span></a>
-<a class="sourceLine" id="cb186-13" data-line-number="13"><span class="kw">identical</span>(result1, result2)</a>
-<a class="sourceLine" id="cb186-14" data-line-number="14"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="performance.html#cb186-1"></a>marks =<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="fl">10e6</span>, <span class="dt">min =</span> <span class="dv">30</span>, <span class="dt">max =</span> <span class="dv">99</span>)</span>
+<span id="cb186-2"><a href="performance.html#cb186-2"></a><span class="kw">system.time</span>({</span>
+<span id="cb186-3"><a href="performance.html#cb186-3"></a>  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</span>
+<span id="cb186-4"><a href="performance.html#cb186-4"></a>})</span>
+<span id="cb186-5"><a href="performance.html#cb186-5"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb186-6"><a href="performance.html#cb186-6"></a><span class="co">#&gt;   2.578   0.272   2.850</span></span>
+<span id="cb186-7"><a href="performance.html#cb186-7"></a><span class="kw">system.time</span>({</span>
+<span id="cb186-8"><a href="performance.html#cb186-8"></a>  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </span>
+<span id="cb186-9"><a href="performance.html#cb186-9"></a>  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></span>
+<span id="cb186-10"><a href="performance.html#cb186-10"></a>})</span>
+<span id="cb186-11"><a href="performance.html#cb186-11"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb186-12"><a href="performance.html#cb186-12"></a><span class="co">#&gt;   0.151   0.072   0.224</span></span>
+<span id="cb186-13"><a href="performance.html#cb186-13"></a><span class="kw">identical</span>(result1, result2)</span>
+<span id="cb186-14"><a href="performance.html#cb186-14"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1"><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb187-2" data-line-number="2">  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</a>
-<a class="sourceLine" id="cb187-3" data-line-number="3">})</a>
-<a class="sourceLine" id="cb187-4" data-line-number="4"><span class="co">#&gt;    user  system elapsed </span></a>
-<a class="sourceLine" id="cb187-5" data-line-number="5"><span class="co">#&gt;   0.470   0.168   0.637</span></a>
-<a class="sourceLine" id="cb187-6" data-line-number="6"><span class="kw">identical</span>(result1, result3)</a>
-<a class="sourceLine" id="cb187-7" data-line-number="7"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="performance.html#cb187-1"></a><span class="kw">system.time</span>({</span>
+<span id="cb187-2"><a href="performance.html#cb187-2"></a>  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</span>
+<span id="cb187-3"><a href="performance.html#cb187-3"></a>})</span>
+<span id="cb187-4"><a href="performance.html#cb187-4"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb187-5"><a href="performance.html#cb187-5"></a><span class="co">#&gt;   0.496   0.200   0.696</span></span>
+<span id="cb187-6"><a href="performance.html#cb187-6"></a><span class="kw">identical</span>(result1, result3)</span>
+<span id="cb187-7"><a href="performance.html#cb187-7"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
-<div id="sorting-and-ordering" class="section level3 unnumbered">
+<div id="sorting-and-ordering" class="section level3 unnumbered" number="">
 <h3>Sorting and ordering</h3>
 <p>Sorting a vector is relatively quick; sorting a vector of length <span class="math inline">\(10^7\)</span> takes around <span class="math inline">\(0.01\)</span> seconds. If you only sort a vector once at the top of a script, then don’t worry too much about this. However if you are sorting inside a loop, or in a shiny application, then it can be worthwhile thinking about how to optimise this operation.</p>
-<p>There are currently three sorting algorithms, <code>c(&quot;shell&quot;, &quot;quick&quot;, &quot;radix&quot;)</code> that can be specified in the <code>sort()</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is the most computationally efficient option for most situations (it is around 20% faster when sorting a large vector of doubles).</p>
-<p>Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the <code>partial</code> argument, i.e. <code>sort(x, partial = 1:10)</code>. For very large vectors, this can give a three fold speed increase.</p>
+<p>There are currently three sorting algorithms, <code>c("shell", "quick", "radix")</code> that can be specified in the <code>sort()</code> function; with <code>radix</code> being a new addition to R 3.3. Typically the <code>radix</code> (the non-default option) is the most computationally efficient option for most situations (it is around 20% faster when sorting a large vector of doubles).</p>
+<p>Another useful trick is to partially order the results. For example, if you only want to display the top ten results, then use the <code>partial</code> argument, i.e. <code>sort(x, partial = 1:10)</code>. For very large vectors, this can give a three fold speed increase.</p>
 </div>
-<div id="reversing-elements" class="section level3 unnumbered">
+<div id="reversing-elements" class="section level3 unnumbered" number="">
 <h3>Reversing elements</h3>
 <p>The <code>rev()</code> function provides a reversed version of its argument. If you wish to sort in decreasing order, <code>sort(x, decreasing = TRUE)</code> is marginally (around 10%) faster than <code>rev(sort(x))</code>.</p>
 </div>
-<div id="which-indices-are-true" class="section level3 unnumbered">
+<div id="which-indices-are-true" class="section level3 unnumbered" number="">
 <h3>Which indices are <code>TRUE</code>  </h3>
-<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which()</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then using the efficient <code>which.min()</code>/<code>which.max()</code> variants can be orders of magnitude faster (see figure <a href="performance.html#fig:7-3">7.3</a>)</p>
+<p>To determine which index of a vector or array are <code>TRUE</code>, we would typically use the <code>which()</code> function. If we want to find the index of just the minimum or maximum value, i.e. <code>which(x == min(x))</code> then using the efficient <code>which.min()</code>/<code>which.max()</code> variants can be orders of magnitude faster (see figure <a href="performance.html#fig:7-3">7.3</a>)</p>
 <div class="figure" style="text-align: center"><span id="fig:7-3"></span>
 <img src="_main_files/figure-html/7-3-1.png" alt="Comparison of `which.min()` with `which()`." width="70%" />
 <p class="caption">
@@ -559,70 +607,70 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 </p>
 </div>
 </div>
-<div id="converting-factors-to-numerics" class="section level3 unnumbered">
+<div id="converting-factors-to-numerics" class="section level3 unnumbered" number="">
 <h3>Converting factors to numerics</h3>
 <p>A factor is just a vector of integers with associated levels. Occasionally we want to convert a factor into its numerical equivalent. The most efficient way of doing this (especially for long factors) is:</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1"><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</a></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="performance.html#cb188-1"></a><span class="kw">as.numeric</span>(<span class="kw">levels</span>(f))[f]</span></code></pre></div>
 </div>
-<div id="logical-and-and-or" class="section level3 unnumbered">
+<div id="logical-and-and-or" class="section level3 unnumbered" number="">
 <h3>Logical AND and OR</h3>
 <p>The logical AND (<code>&amp;</code>) and OR (<code>|</code>) operators are vectorised functions and are typically used during multi-criteria subsetting operations. The code below, for example, returns <code>TRUE</code> for all elements of <code>x</code> less than <span class="math inline">\(0.4\)</span> or greater than <span class="math inline">\(0.6\)</span>.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1">x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">|</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></a>
-<a class="sourceLine" id="cb189-2" data-line-number="2"><span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="performance.html#cb189-1"></a>x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">|</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></span>
+<span id="cb189-2"><a href="performance.html#cb189-2"></a><span class="co">#&gt; [1]  TRUE FALSE  TRUE</span></span></code></pre></div>
 <p>When R executes the above comparison, it will <strong>always</strong> calculate <code>x &gt; 0.6</code> regardless of the value of <code>x &lt; 0.4</code>. In contrast, the non-vectorised version, <code>&amp;&amp;</code>, only executes the second component if needed. This is efficient and leads to neater code, e.g.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="co"># We only calculate the mean if data doesn&#39;t contain NAs</span></a>
-<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x)) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</a>
-<a class="sourceLine" id="cb190-3" data-line-number="3">  <span class="co"># Do something</span></a>
-<a class="sourceLine" id="cb190-4" data-line-number="4">}</a></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="performance.html#cb190-1"></a><span class="co"># We only calculate the mean if data doesn&#39;t contain NAs</span></span>
+<span id="cb190-2"><a href="performance.html#cb190-2"></a><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x)) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb190-3"><a href="performance.html#cb190-3"></a>  <span class="co"># Do something</span></span>
+<span id="cb190-4"><a href="performance.html#cb190-4"></a>}</span></code></pre></div>
 <p>compared to</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x))) {</a>
-<a class="sourceLine" id="cb191-2" data-line-number="2">  <span class="cf">if</span>(<span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</a>
-<a class="sourceLine" id="cb191-3" data-line-number="3">    <span class="co"># do somthing</span></a>
-<a class="sourceLine" id="cb191-4" data-line-number="4">  }</a>
-<a class="sourceLine" id="cb191-5" data-line-number="5">}</a></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="performance.html#cb191-1"></a><span class="cf">if</span>(<span class="kw">all</span>(<span class="op">!</span><span class="kw">is.na</span>(x))) {</span>
+<span id="cb191-2"><a href="performance.html#cb191-2"></a>  <span class="cf">if</span>(<span class="kw">mean</span>(x) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb191-3"><a href="performance.html#cb191-3"></a>    <span class="co"># do somthing</span></span>
+<span id="cb191-4"><a href="performance.html#cb191-4"></a>  }</span>
+<span id="cb191-5"><a href="performance.html#cb191-5"></a>}</span></code></pre></div>
 <p>However care must be taken not to use <code>&amp;&amp;</code> or <code>||</code> on vectors since it only evaluates the first element of the vector, giving the incorrect answer. This is illustrated below:</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1">x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">||</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></a>
-<a class="sourceLine" id="cb192-2" data-line-number="2"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="performance.html#cb192-1"></a>x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span> <span class="op">||</span><span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span></span>
+<span id="cb192-2"><a href="performance.html#cb192-2"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
-<div id="row-and-column-operations" class="section level3 unnumbered">
+<div id="row-and-column-operations" class="section level3 unnumbered" number="">
 <h3>Row and column operations</h3>
 <p>In data analysis we often want to apply a function to each column or row of a data set. For example, we might want to calculate the column or row sums. The <code>apply()</code> function makes this type of operation straightforward.</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span></a>
-<a class="sourceLine" id="cb193-2" data-line-number="2"><span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</a></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="performance.html#cb193-1"></a><span class="co"># Second argument: 1 -&gt; rows. 2 -&gt; columns</span></span>
+<span id="cb193-2"><a href="performance.html#cb193-2"></a><span class="kw">apply</span>(data_set, <span class="dv">1</span>, function_name)</span></code></pre></div>
 <p>There are optimised functions for calculating row and columns sums/means, <code>rowSums()</code>, <code>colSums()</code>, <code>rowMeans()</code> and <code>colMeans()</code> that should be used whenever possible. The package <strong>matrixStats</strong> contains many optimised row/col functions.</p>
 </div>
-<div id="is.na-and-anyna" class="section level3 unnumbered">
+<div id="is.na-and-anyna" class="section level3 unnumbered" number="">
 <h3><code>is.na()</code> and <code>anyNA()</code>  </h3>
 <p>To test whether a vector (or other object) contains missing values we use the <code>is.na()</code> function. Often we are interested in whether a vector contains <em>any</em> missing values. In this case, <code>anyNA(x)</code> is more efficient than <code>any(is.na(x))</code>.</p>
 </div>
-<div id="matrices" class="section level3 unnumbered">
+<div id="matrices" class="section level3 unnumbered" number="">
 <h3>Matrices</h3>
 <p>A matrix is similar to a data frame: it is a two dimensional object and sub-setting and other functions work in the same way. However all matrix elements must have the same type. Matrices tend to be used during statistical calculations. The <code>lm()</code> function, for example, internally converts the data to a matrix before calculating the results; any characters are thus recoded as numeric dummy variables.</p>
 <p>Matrices are generally faster than data frames. For example, the datasets <code>ex_mat</code> and <code>ex_df</code> from the <strong>efficient</strong> package each have <span class="math inline">\(1000\)</span> rows and <span class="math inline">\(100\)</span> columns and contain the same random numbers. However selecting rows from the data frame is around <span class="math inline">\(150\)</span> times slower than a matrix, as illustrated below:</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1"><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</a>
-<a class="sourceLine" id="cb194-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</a>
-<a class="sourceLine" id="cb194-3" data-line-number="3"><span class="co">#&gt; Unit: milliseconds</span></a>
-<a class="sourceLine" id="cb194-4" data-line-number="4"><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></a>
-<a class="sourceLine" id="cb194-5" data-line-number="5"><span class="co">#&gt;  ex_mat[1, ] 0.00276 0.00323 0.0514 0.00411 0.00578 4.69   100</span></a>
-<a class="sourceLine" id="cb194-6" data-line-number="6"><span class="co">#&gt;   ex_df[1, ] 0.47696 0.49043 0.5508 0.50005 0.50989 5.44   100</span></a></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="performance.html#cb194-1"></a><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</span>
+<span id="cb194-2"><a href="performance.html#cb194-2"></a><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</span>
+<span id="cb194-3"><a href="performance.html#cb194-3"></a><span class="co">#&gt; Unit: milliseconds</span></span>
+<span id="cb194-4"><a href="performance.html#cb194-4"></a><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></span>
+<span id="cb194-5"><a href="performance.html#cb194-5"></a><span class="co">#&gt;  ex_mat[1, ] 0.00287 0.00353 0.0584 0.00548 0.00834 5.18   100</span></span>
+<span id="cb194-6"><a href="performance.html#cb194-6"></a><span class="co">#&gt;   ex_df[1, ] 0.48791 0.52588 0.6116 0.54488 0.57812 5.23   100</span></span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
 </p>
 </div>
 </div>
-<div id="the-integer-data-type" class="section level3 unnumbered">
+<div id="the-integer-data-type" class="section level3 unnumbered" number="">
 <h3>The integer data type</h3>
-<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a>, which is described in detail in <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
+<p>Numbers in R are usually stored in <a href="https://goo.gl/ZA5R8a">double-precision floating-point format</a>, which is described in detail in <span class="citation">Braun and Murdoch (<a href="#ref-Braun2007" role="doc-biblioref">2007</a>)</span> and <span class="citation">Goldberg (<a href="#ref-Goldberg1991" role="doc-biblioref">1991</a>)</span>. The term ‘double’ refers to the fact that on <span class="math inline">\(32\)</span> bit systems (for which the format was developed) two memory locations are used to store a single number. Each double-precision number is accurate to around <span class="math inline">\(17\)</span> decimal places.</p>
 <div class="rmdnote">
 <p>
 When comparing floating point numbers we should be particularly careful, since <code>y = sqrt(2) * sqrt(2)</code> is not exactly <span class="math inline"><span class="math inline">\(2\)</span></span>, instead it’s <strong>almost</strong> <span class="math inline"><span class="math inline">\(2\)</span></span>. Using <code>sprintf(“%.17f”, y)</code> will give you the true value of <code>y</code> (to 17 decimal places).
 </p>
 </div>
 <p>Integers are another numeric data type. Integers primarily exist to be passed to C or Fortran code. You do not need to create integers for most applications. However, they are occasionally used to optimise sub-setting operations. When we subset a data frame or matrix, we are interacting with C code so we might be tempted to use integers with the purpose of speeding up our code. For example, if we look at the arguments for the <code>head</code> function</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1"><span class="kw">args</span>(head.matrix)</a>
-<a class="sourceLine" id="cb195-2" data-line-number="2"><span class="co">#&gt; function (x, n = 6L, ...) </span></a>
-<a class="sourceLine" id="cb195-3" data-line-number="3"><span class="co">#&gt; NULL</span></a></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="performance.html#cb195-1"></a><span class="kw">args</span>(head.matrix)</span>
+<span id="cb195-2"><a href="performance.html#cb195-2"></a><span class="co">#&gt; function (x, n = 6L, ...) </span></span>
+<span id="cb195-3"><a href="performance.html#cb195-3"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <div class="rmdtip">
 <p>
 Using the <code>:</code> operator automatically creates a vector of integers.
@@ -630,40 +678,40 @@ Using the <code>:</code> operator automatically creates a vector of integers.
 </div>
 <p>we see that the default argument for <code>n</code> is <code>6L</code> rather than simply <code>6</code> (the <code>L</code> is short for Literal and is used to create an
 integer). This gives a tiny speed boost (around 0.1 microseconds!)</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="kw">microbenchmark</span>(<span class="kw">head</span>(x, <span class="fl">6.0</span>), <span class="kw">head</span>(x, 6L), <span class="dt">times=</span><span class="dv">1000000</span>)</a>
-<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb196-4" data-line-number="4"><span class="co">#        expr   min    lq  mean median    uq    max neval cld</span></a>
-<a class="sourceLine" id="cb196-5" data-line-number="5"><span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span></a>
-<a class="sourceLine" id="cb196-6" data-line-number="6"><span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></a></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="performance.html#cb196-1"></a>x =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</span>
+<span id="cb196-2"><a href="performance.html#cb196-2"></a><span class="kw">microbenchmark</span>(<span class="kw">head</span>(x, <span class="fl">6.0</span>), <span class="kw">head</span>(x, 6L), <span class="dt">times=</span><span class="dv">1000000</span>)</span>
+<span id="cb196-3"><a href="performance.html#cb196-3"></a><span class="co"># Unit: microseconds</span></span>
+<span id="cb196-4"><a href="performance.html#cb196-4"></a><span class="co">#        expr   min    lq  mean median    uq    max neval cld</span></span>
+<span id="cb196-5"><a href="performance.html#cb196-5"></a><span class="co">#  head(x, 6) 7.067 8.309 9.058  8.686 9.098 105266 1e+06   a</span></span>
+<span id="cb196-6"><a href="performance.html#cb196-6"></a><span class="co"># head(x, 6L) 6.947 8.219 8.933  8.594 9.007 106307 1e+06   a</span></span></code></pre></div>
 <p>Since this function is ubiquitous, this low level optimisation is useful. In general, if you are worried about shaving microseconds off your R code run time, you should probably consider switching to another language.</p>
 <p>Integers are more space efficient. The code below compares the size of an integer vector to a standard numeric vector:</p>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>)</a>
-<a class="sourceLine" id="cb197-2" data-line-number="2"><span class="co">#&gt; Registered S3 method overwritten by &#39;pryr&#39;:</span></a>
-<a class="sourceLine" id="cb197-3" data-line-number="3"><span class="co">#&gt;   method      from</span></a>
-<a class="sourceLine" id="cb197-4" data-line-number="4"><span class="co">#&gt;   print.bytes Rcpp</span></a>
-<a class="sourceLine" id="cb197-5" data-line-number="5"><span class="co">#&gt; 40 kB</span></a>
-<a class="sourceLine" id="cb197-6" data-line-number="6">pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))</a>
-<a class="sourceLine" id="cb197-7" data-line-number="7"><span class="co">#&gt; 80 kB</span></a></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="performance.html#cb197-1"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>)</span>
+<span id="cb197-2"><a href="performance.html#cb197-2"></a><span class="co">#&gt; Registered S3 method overwritten by &#39;pryr&#39;:</span></span>
+<span id="cb197-3"><a href="performance.html#cb197-3"></a><span class="co">#&gt;   method      from</span></span>
+<span id="cb197-4"><a href="performance.html#cb197-4"></a><span class="co">#&gt;   print.bytes Rcpp</span></span>
+<span id="cb197-5"><a href="performance.html#cb197-5"></a><span class="co">#&gt; 40 kB</span></span>
+<span id="cb197-6"><a href="performance.html#cb197-6"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(<span class="dt">y =</span> <span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>, <span class="dt">by=</span><span class="fl">1.0</span>))</span>
+<span id="cb197-7"><a href="performance.html#cb197-7"></a><span class="co">#&gt; 80 kB</span></span></code></pre></div>
 <p>The results show that the integer version is roughly half the size. However, most mathematical operations will convert the integer vector into a standard numerical vector, as illustrated below:</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">is.integer</span>(1L <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb198-2" data-line-number="2"><span class="co">#&gt; [1] FALSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="performance.html#cb198-1"></a><span class="kw">is.integer</span>(1L <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb198-2"><a href="performance.html#cb198-2"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>Further storage savings can be obtained using the <strong>bit</strong> package.</p>
 </div>
-<div id="sparse-matrices" class="section level3 unnumbered">
+<div id="sparse-matrices" class="section level3 unnumbered" number="">
 <h3>Sparse matrices</h3>
 <p>Another data structure that can be stored efficiently is a sparse matrix. This is simply a matrix where most of the elements are zero. Conversely, if most elements are non-zero, the matrix is considered dense. The proportion of non-zero elements is called the sparsity. Large sparse matrices often crop up when performing numerical calculations. Typically, our data isn’t sparse but the resulting data structures we create may be sparse. There are a number of techniques/methods used to store sparse matrices. Methods for creating sparse matrices can be found in the <strong>Matrix</strong> package<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a>.</p>
 <p>As an example, suppose we have a large matrix where the diagonal elements are non-zero:</p>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)</a>
-<a class="sourceLine" id="cb199-2" data-line-number="2">N =<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb199-3" data-line-number="3">sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span><span class="op">:</span>N, <span class="dv">1</span><span class="op">:</span>N, <span class="dt">x =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb199-4" data-line-number="4">m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</a></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="performance.html#cb199-1"></a><span class="kw">library</span>(<span class="st">&quot;Matrix&quot;</span>)</span>
+<span id="cb199-2"><a href="performance.html#cb199-2"></a>N =<span class="st"> </span><span class="dv">10000</span></span>
+<span id="cb199-3"><a href="performance.html#cb199-3"></a>sp =<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dv">1</span><span class="op">:</span>N, <span class="dv">1</span><span class="op">:</span>N, <span class="dt">x =</span> <span class="dv">1</span>)</span>
+<span id="cb199-4"><a href="performance.html#cb199-4"></a>m =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">1</span>, N, N)</span></code></pre></div>
 <p>Both objects contain the same information, but the data is stored differently; since we have the same value multiple times in the matrix, we only need to store the value once and link it to multiple matrix locations. The matrix object stores each individual element, while the sparse matrix object only stores the location of the non-zero elements. This is much more memory efficient, as illustrated below:</p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" data-line-number="1">pryr<span class="op">::</span><span class="kw">object_size</span>(sp)</a>
-<a class="sourceLine" id="cb200-2" data-line-number="2"><span class="co">#&gt; 162 kB</span></a>
-<a class="sourceLine" id="cb200-3" data-line-number="3">pryr<span class="op">::</span><span class="kw">object_size</span>(m)</a>
-<a class="sourceLine" id="cb200-4" data-line-number="4"><span class="co">#&gt; 800 MB</span></a></code></pre></div>
-<div id="exercises" class="section level4 unnumbered">
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="performance.html#cb200-1"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(sp)</span>
+<span id="cb200-2"><a href="performance.html#cb200-2"></a><span class="co">#&gt; 162 kB</span></span>
+<span id="cb200-3"><a href="performance.html#cb200-3"></a>pryr<span class="op">::</span><span class="kw">object_size</span>(m)</span>
+<span id="cb200-4"><a href="performance.html#cb200-4"></a><span class="co">#&gt; 800 MB</span></span></code></pre></div>
+<div id="exercises-16" class="section level4 unnumbered" number="">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li><p>Create a vector <code>x</code>. Benchmark <code>any(is.na(x))</code> against <code>anyNA()</code>. Do the results vary with the size of the vector?</p></li>
@@ -681,14 +729,14 @@ A related memory saving idea is to replace <code>logical</code> vectors with vec
 </div>
 </div>
 </div>
-<div id="example-optimising-the-move_square-function" class="section level2">
+<div id="example-optimising-the-move_square-function" class="section level2" number="7.4">
 <h2><span class="header-section-number">7.4</span> Example: Optimising the <code>move_square()</code> function</h2>
 <p>Figure <a href="performance.html#fig:7-2">7.2</a> shows that our main bottleneck in simulating the game of Monopoly is the <code>move_square()</code> function. Within this function, we spend around 50% of the time creating a data frame, 20% of the time calculating row sums, and the remainder on comparison operations. This piece of code can be optimised fairly easily (while still retaining the same overall structure) by incorporating the following improvements<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a>:</p>
 <ul>
 <li><p>Instead of using <code>seq(1, 6)</code> to generate the 6 possible values of rolling a dice, use <code>1:6</code>. Also, instead of a data frame, use a matrix and perform a single call to the <code>sample()</code> function</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
-Overall, this revised line is around 25 times faster; most of the speed boost came from switching to a matrix.</li>
-<li>Using <code>rowSums()</code> instead of <code>apply()</code>. The <code>apply()</code> function call is already faster since we’ve switched from a data frame to a matrix (around 3 times). Using <code>rowSums()</code> with a matrix, gives a 10 fold speed boost.</li>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="performance.html#cb201-1"></a><span class="kw">matrix</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p>Overall, this revised line is around 25 times faster; most of the speed boost came from switching to a matrix.</p></li>
+<li><p>Using <code>rowSums()</code> instead of <code>apply()</code>. The <code>apply()</code> function call is already faster since we’ve switched from a data frame to a matrix (around 3 times). Using <code>rowSums()</code> with a matrix, gives a 10 fold speed boost.</p></li>
 <li><p>Use <code>&amp;&amp;</code> in the <code>if</code> condition; this is around twice as fast compared to <code>&amp;</code>.</p></li>
 </ul>
 <p>Impressively the refactored code runs 20 times faster than the original code, compare figures <a href="performance.html#fig:7-2">7.2</a> and <a href="performance.html#fig:7-4">7.4</a>, with the main speed boost coming from using a matrix instead of a data frame.</p>
@@ -698,72 +746,72 @@ Overall, this revised line is around 25 times faster; most of the speed boost ca
 Figure 7.4: Code profiling of the optimised code.
 </p>
 </div>
-<div id="exercise" class="section level4 unnumbered">
+<div id="exercise-6" class="section level4 unnumbered" number="">
 <h4>Exercise</h4>
 <p>The <code>move_square()</code> function above uses a vectorised solution. Whenever we move, we always roll six dice, then examine the outcome and determine the number of doubles. However, this is potentially wasteful, since the probability of getting one double is <span class="math inline">\(1/6\)</span> and two doubles is <span class="math inline">\(1/36\)</span>. Another method is too only roll additional dice if and when they are needed. Implement and time this solution.</p>
 </div>
 </div>
-<div id="performance-parallel" class="section level2">
+<div id="performance-parallel" class="section level2" number="7.5">
 <h2><span class="header-section-number">7.5</span> Parallel computing</h2>
-<p>This section provides a brief foray into the world of parallel computing. It only looks at methods for parallel computing on ‘shared memory systems’. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of what is possible; for a fuller account of parallel processing in R, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011">2011</a>)</span>.</p>
+<p>This section provides a brief foray into the world of parallel computing. It only looks at methods for parallel computing on ‘shared memory systems’. This simply means computers in which multiple central processor unit (CPU) cores can access the same block, i.e. most laptops and desktops sold worldwide. This section provides a flavour of what is possible; for a fuller account of parallel processing in R, see <span class="citation">McCallum and Weston (<a href="#ref-mccallum2011" role="doc-biblioref">2011</a>)</span>.</p>
 <p>The foundational package for parallel computing in R is <strong>parallel</strong>. In recent R versions (since R 2.14.0) this comes pre-installed with base R. The <strong>parallel</strong> package must still be loaded before use, however, and you must determine the number of available cores manually, as illustrated below:</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</a>
-<a class="sourceLine" id="cb202-2" data-line-number="2">no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="performance.html#cb202-1"></a><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</span>
+<span id="cb202-2"><a href="performance.html#cb202-2"></a>no_of_cores =<span class="st"> </span><span class="kw">detectCores</span>()</span></code></pre></div>
 <div class="rmdnote">
 <p>
 The value returned by <code>detectCores()</code> turns out to be operating system and chip maker dependent - see <code>help(“detectCores”)</code> for full details. For most standard machines, <code>detectCores()</code> returns the number of simultaneous threads.
 </p>
 </div>
-<div id="parallel-versions-of-apply-functions" class="section level3">
+<div id="parallel-versions-of-apply-functions" class="section level3" number="7.5.1">
 <h3><span class="header-section-number">7.5.1</span> Parallel versions of apply functions</h3>
 <p>The most commonly used parallel applications are parallelised replacements of <code>lapply()</code>, <code>sapply()</code> and <code>apply()</code>. The parallel implementations and their arguments are shown below.</p>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1"><span class="kw">parLapply</span>(cl, x, FUN, ...)</a>
-<a class="sourceLine" id="cb203-2" data-line-number="2"><span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)</a>
-<a class="sourceLine" id="cb203-3" data-line-number="3"><span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="performance.html#cb203-1"></a><span class="kw">parLapply</span>(cl, x, FUN, ...)</span>
+<span id="cb203-2"><a href="performance.html#cb203-2"></a><span class="kw">parApply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, MARGIN, FUN, ...)</span>
+<span id="cb203-3"><a href="performance.html#cb203-3"></a><span class="kw">parSapply</span>(<span class="dt">cl =</span> <span class="ot">NULL</span>, X, FUN, ..., <span class="dt">simplify =</span> <span class="ot">TRUE</span>, <span class="dt">USE.NAMES =</span> <span class="ot">TRUE</span>) </span></code></pre></div>
 <p>The key point is that there is very little difference in arguments between <code>parLapply()</code> and <code>lapply()</code>, so the barrier to using (this form) of parallel computing is low, assuming you are proficient with the apply family of functions. Each function above has an argument <code>cl</code>, which is created by a <code>makeCluster()</code> call. This function, amongst other things, specifies the number of processors to use.</p>
 </div>
-<div id="example-snakes-and-ladders" class="section level3">
+<div id="example-snakes-and-ladders" class="section level3" number="7.5.2">
 <h3><span class="header-section-number">7.5.2</span> Example: Snakes and Ladders</h3>
 <p>Parallel computing is ideal for Monte-Carlo simulations. Each core independently simulates a realisation from the model. At the end, we gather up the results. In the <strong>efficient</strong> package, there is a function that simulates a single game of Snakes and Ladders - <code>snakes_ladders()</code><a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a></p>
 <p>The following code illustrates how to simulate <code>N</code> games using <code>sapply()</code>:</p>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1">N =<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb204-2" data-line-number="2"><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="performance.html#cb204-1"></a>N =<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span></span>
+<span id="cb204-2"><a href="performance.html#cb204-2"></a><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</span></code></pre></div>
 <p>Rewriting this code to make use of the <strong>parallel</strong> package is straightforward.
 Begin by making a cluster object:</p>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</a>
-<a class="sourceLine" id="cb205-2" data-line-number="2">cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="performance.html#cb205-1"></a><span class="kw">library</span>(<span class="st">&quot;parallel&quot;</span>)</span>
+<span id="cb205-2"><a href="performance.html#cb205-2"></a>cl =<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>)</span></code></pre></div>
 <p>Then simply swap <code>sapply()</code> for <code>parSapply()</code>:</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" data-line-number="1"><span class="kw">parSapply</span>(cl, <span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="performance.html#cb206-1"></a><span class="kw">parSapply</span>(cl, <span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</span></code></pre></div>
 <p>Not stopping the clusters can lead to memory leaks,<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> so it is important to stop the created clusters as illustrated below:</p>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1"><span class="kw">stopCluster</span>(cl)</a></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="performance.html#cb207-1"></a><span class="kw">stopCluster</span>(cl)</span></code></pre></div>
 <p>and used a four (or more) core, then we would
 obtain a four-fold speed up (we set <code>makeCluster(4)</code>).</p>
 <p>On a multi-processor computer with four (or more) cores, if we achieved perfect parallelisation this could lead to a four-fold speed-up. However, it is rare that we would achieve this optimal speed-up since there is always communication between threads.</p>
 </div>
-<div id="exit-functions-with-care" class="section level3">
+<div id="exit-functions-with-care" class="section level3" number="7.5.3">
 <h3><span class="header-section-number">7.5.3</span> Exit functions with care</h3>
 <p>Always call <code>stopCluster()</code> to free resources when you finish with the cluster object. However if the parallel code is within function, it’s possible that function ends as the results of an error and so <code>stopCluster()</code> is omitted.</p>
 <p>The <code>on.exit()</code> function handles this problem with the minimum of fuss; regardless of how the function ends, <code>on.exit()</code> is always called. In the context of parallel programming we will have something similar to:</p>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1">simulate =<span class="st"> </span><span class="cf">function</span>(cores) {</a>
-<a class="sourceLine" id="cb208-2" data-line-number="2">  cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)</a>
-<a class="sourceLine" id="cb208-3" data-line-number="3">  <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))</a>
-<a class="sourceLine" id="cb208-4" data-line-number="4">  <span class="co"># Do something  </span></a>
-<a class="sourceLine" id="cb208-5" data-line-number="5">}</a></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="performance.html#cb208-1"></a>simulate =<span class="st"> </span><span class="cf">function</span>(cores) {</span>
+<span id="cb208-2"><a href="performance.html#cb208-2"></a>  cl =<span class="st"> </span><span class="kw">makeCluster</span>(cores)</span>
+<span id="cb208-3"><a href="performance.html#cb208-3"></a>  <span class="kw">on.exit</span>(<span class="kw">stopCluster</span>(cl))</span>
+<span id="cb208-4"><a href="performance.html#cb208-4"></a>  <span class="co"># Do something  </span></span>
+<span id="cb208-5"><a href="performance.html#cb208-5"></a>}</span></code></pre></div>
 <div class="rmdtip">
 <p>
 Another common use of <code>on.exit()</code> is with the <code>par()</code> function. If you use <code>par()</code> to change graphical parameters within a function, <code>on.exit()</code> ensures these parameters are reset to their previous value when the function ends.
 </p>
 </div>
 </div>
-<div id="parallel-code-under-linux-os-x" class="section level3">
+<div id="parallel-code-under-linux-os-x" class="section level3" number="7.5.4">
 <h3><span class="header-section-number">7.5.4</span> Parallel code under Linux &amp; OS X</h3>
 <p>If you are using Linux or OS X, then another way of running code in parallel is to use the <code>mclapply()</code> and <code>mcmapply()</code> functions</p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb209-1" data-line-number="1"><span class="co"># This will run on Windows, but will only use 1 core</span></a>
-<a class="sourceLine" id="cb209-2" data-line-number="2"><span class="kw">mclapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</a></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="performance.html#cb209-1"></a><span class="co"># This will run on Windows, but will only use 1 core</span></span>
+<span id="cb209-2"><a href="performance.html#cb209-2"></a><span class="kw">mclapply</span>(<span class="dv">1</span><span class="op">:</span>N, snakes_ladders)</span></code></pre></div>
 <p>These functions use forking, that is creating a new copy of a process running on the CPU. However Windows does not support this low-level functionality in the way that Linux does. The main advantage of <code>mclapply()</code> is that you don’t have to start and stop cluster objects. The big disadvantage is that on Windows machines, you are limited to a single core.</p>
 </div>
 </div>
-<div id="rcpp" class="section level2">
+<div id="rcpp" class="section level2" number="7.6">
 <h2><span class="header-section-number">7.6</span> Rcpp</h2>
 <p>Sometimes R is just slow. You’ve tried every trick you know, and your code is still crawling along. At this point you could consider rewriting key parts of your code in another, faster language. R has interfaces to other languages via packages, such as <strong>Rcpp</strong>, <strong>rJava</strong>, <strong>rPython</strong> and recently <strong>V8</strong>. These provide R interfaces to C++, Java, Python and JavaScript respectively. <strong>Rcpp</strong> is the most popular of these (figure <a href="performance.html#fig:7-5">7.5</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:7-5"></span>
@@ -775,12 +823,12 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p>C++ is a modern, fast and very well-supported language with libraries for performing many kinds of computational tasks. <strong>Rcpp</strong> makes incorporating C++ code into your R workflow easy.</p>
 <p>Although C/Fortran routines can be used using the <code>.Call()</code> function this is not recommended: using <code>.Call()</code> can be a painful experience. <strong>Rcpp</strong> provides a friendly API (Application Program Interface) that lets you write high-performance code, bypassing R’s tricky C API. Typical bottlenecks that C++ addresses are loops and recursive functions.</p>
 <p>C++ is a powerful programming language about which entire books have been written. This section therefore is focussed on getting started and providing a flavour of what is possible. It is structured as follows. After ensuring that your computer is set-up for <strong>Rcpp</strong>, we proceed by creating a simple C++ function, to show how C++ compares with R (Section <a href="performance.html#simple-c">7.6.1</a>). This is converted into an R function using <code>cppFunction()</code> in Section <a href="performance.html#cppfunction">7.6.2</a>. The remainder of the chapter explains C++ data types (Section <a href="performance.html#c-types">7.6.3</a>), illustrates how to source C++ code directly (Section <a href="performance.html#sourcecpp">7.6.4</a>), explains vectors (Section <a href="performance.html#vectors-and-loops">7.6.5</a>) and <strong>Rcpp</strong> sugar (Section <a href="performance.html#sugar">7.6.6</a>) and finally provides guidance on further resources on the subject (Section <a href="performance.html#rcpp-resources">7.6.7</a>).</p>
-<div id="simple-c" class="section level3">
+<div id="simple-c" class="section level3" number="7.6.1">
 <h3><span class="header-section-number">7.6.1</span> A simple C++ function</h3>
 <p>To write and compile C++ functions, you need a working C++ compiler (see the Prerequiste section at the beginning of this chapter). The code in this chapter was generated using version 1.0.5 of <strong>Rcpp</strong>.</p>
 <p><strong>Rcpp</strong> is well documented, as illustrated by the number of vignettes on the package’s <a href="https://cran.r-project.org/web/packages/Rcpp/">CRAN</a> page. In addition to its popularity, many other packages depend on <strong>Rcpp</strong>, which can be seen by looking at the <code>Reverse Imports</code> section.</p>
 <p>To check that you have everything needed for this chapter, run the following piece of code from the course R package:</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb210-1" data-line-number="1">efficient<span class="op">::</span><span class="kw">test_rcpp</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="performance.html#cb210-1"></a>efficient<span class="op">::</span><span class="kw">test_rcpp</span>()</span></code></pre></div>
 <p>A C++ function is similar to an R function: you pass a set of inputs to the function, some code is run, a single object is returned. However there are some key differences.</p>
 <ol style="list-style-type: decimal">
 <li>In the C++ function each line must be terminated with <code>;</code> In R, we use <code>;</code> only when we have multiple statements on the same line.</li>
@@ -791,37 +839,37 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <li>One line comments can be created using <code>//</code>. Multi-line comments are created using <code>/*...*/</code></li>
 </ol>
 <p>Suppose we want to create a function that adds two numbers together. In R this would be a simple one line affair:</p>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" data-line-number="1">add_r =<span class="st"> </span><span class="cf">function</span>(x, y) x <span class="op">+</span><span class="st"> </span>y</a></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="performance.html#cb211-1"></a>add_r =<span class="st"> </span><span class="cf">function</span>(x, y) x <span class="op">+</span><span class="st"> </span>y</span></code></pre></div>
 <p>In C++ it is a bit more long winded:</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb212-1" data-line-number="1"><span class="co">/* Return type double</span></a>
-<a class="sourceLine" id="cb212-2" data-line-number="2"><span class="co"> * Two arguments, also doubles</span></a>
-<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="co"> */</span></a>
-<a class="sourceLine" id="cb212-4" data-line-number="4"><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) { </a>
-<a class="sourceLine" id="cb212-5" data-line-number="5">  <span class="dt">double</span> value = x + y;</a>
-<a class="sourceLine" id="cb212-6" data-line-number="6">  <span class="cf">return</span> value;</a>
-<a class="sourceLine" id="cb212-7" data-line-number="7">}</a></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb212-1"><a href="performance.html#cb212-1"></a><span class="co">/* Return type double</span></span>
+<span id="cb212-2"><a href="performance.html#cb212-2"></a><span class="co"> * Two arguments, also doubles</span></span>
+<span id="cb212-3"><a href="performance.html#cb212-3"></a><span class="co"> */</span></span>
+<span id="cb212-4"><a href="performance.html#cb212-4"></a><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) { </span>
+<span id="cb212-5"><a href="performance.html#cb212-5"></a>  <span class="dt">double</span> value = x + y;</span>
+<span id="cb212-6"><a href="performance.html#cb212-6"></a>  <span class="cf">return</span> value;</span>
+<span id="cb212-7"><a href="performance.html#cb212-7"></a>}</span></code></pre></div>
 <p>If we were writing a C++ program we would also need another function called <code>main()</code>. We would then compile the code to obtain an executable. The executable is platform dependent. The beauty of using <strong>Rcpp</strong> is that it makes it very easy to call C++ functions from R and the user doesn’t have to worry about the platform, or compilers or the R/C++ interface.</p>
 </div>
-<div id="cppfunction" class="section level3">
+<div id="cppfunction" class="section level3" number="7.6.2">
 <h3><span class="header-section-number">7.6.2</span> The <code>cppFunction()</code> command</h3>
 <p>If we pass the C++ function created in the previous section as a text string argument to <code>cppFunction()</code>:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</a>
-<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="kw">cppFunction</span>(<span class="st">&#39;</span></a>
-<a class="sourceLine" id="cb213-3" data-line-number="3"><span class="st">  double add_cpp(double x, double y) {</span></a>
-<a class="sourceLine" id="cb213-4" data-line-number="4"><span class="st">    double value = x + y;</span></a>
-<a class="sourceLine" id="cb213-5" data-line-number="5"><span class="st">    return value;</span></a>
-<a class="sourceLine" id="cb213-6" data-line-number="6"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb213-7" data-line-number="7"><span class="st">&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="performance.html#cb213-1"></a><span class="kw">library</span>(<span class="st">&quot;Rcpp&quot;</span>)</span>
+<span id="cb213-2"><a href="performance.html#cb213-2"></a><span class="kw">cppFunction</span>(<span class="st">&#39;</span></span>
+<span id="cb213-3"><a href="performance.html#cb213-3"></a><span class="st">  double add_cpp(double x, double y) {</span></span>
+<span id="cb213-4"><a href="performance.html#cb213-4"></a><span class="st">    double value = x + y;</span></span>
+<span id="cb213-5"><a href="performance.html#cb213-5"></a><span class="st">    return value;</span></span>
+<span id="cb213-6"><a href="performance.html#cb213-6"></a><span class="st">  }</span></span>
+<span id="cb213-7"><a href="performance.html#cb213-7"></a><span class="st">&#39;</span>)</span></code></pre></div>
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" data-line-number="1">add_cpp</a>
-<a class="sourceLine" id="cb214-2" data-line-number="2"><span class="co">#&gt; function (x, y) </span></a>
-<a class="sourceLine" id="cb214-3" data-line-number="3"><span class="co">#&gt; .Call(&lt;pointer: 0x7faf6ed76b70&gt;, x, y)</span></a></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="performance.html#cb214-1"></a>add_cpp</span>
+<span id="cb214-2"><a href="performance.html#cb214-2"></a><span class="co">#&gt; function (x, y) </span></span>
+<span id="cb214-3"><a href="performance.html#cb214-3"></a><span class="co">#&gt; .Call(&lt;pointer: 0x7ff855383b70&gt;, x, y)</span></span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" data-line-number="1"><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb215-2" data-line-number="2"><span class="co">#&gt; [1] 3</span></a></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="performance.html#cb215-1"></a><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb215-2"><a href="performance.html#cb215-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 <p>We don’t have to worry about compilers. Also, if you include this function in a package, users don’t have to worry about any of the <strong>Rcpp</strong> magic. It just works.</p>
 </div>
-<div id="c-types" class="section level3">
+<div id="c-types" class="section level3" number="7.6.3">
 <h3><span class="header-section-number">7.6.3</span> C++ data types</h3>
 <p>The most basic type of variable is an integer, <code>int</code>. An <code>int</code> variable can store a value in the range <span class="math inline">\(-32768\)</span> to <span class="math inline">\(+32767\)</span>. To store floating point numbers, there are single precision numbers, <code>float</code> and double precision numbers, <code>double</code>. A <code>double</code> takes twice as much memory as a <code>float</code> (in general, we should always work with double precision numbers unless we have a compelling reason to switch to floats). For <strong>single</strong> characters, we use the <code>char</code> data type.</p>
 <div class="rmdnote">
@@ -862,77 +910,77 @@ There is also something called an unsigned int, which goes from <span class="mat
 </table>
 <p>A pointer object is a variable that points to an area of memory that has been given a name. Pointers are a very powerful, but primitive facility contained in the C++ language. They are very useful since rather than passing large objects around, we pass a pointer to the memory location; rather than pass the house, we just give the address. We won’t use pointers in this chapter, but mention them for completeness. Table <a href="performance.html#tab:cpptypes">7.1</a> gives an overview.</p>
 </div>
-<div id="sourcecpp" class="section level3">
+<div id="sourcecpp" class="section level3" number="7.6.4">
 <h3><span class="header-section-number">7.6.4</span> The <code>sourceCpp()</code> function</h3>
-<p>The <code>cppFunction()</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp(&quot;path/to/file.cpp&quot;)</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. The <code>include</code> line</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb216-1" data-line-number="1"><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></a></code></pre></div>
+<p>The <code>cppFunction()</code> is great for getting small examples up and running. But it is better practice to put your C++ code in a separate file (with file extension <code>cpp</code>) and use the function call <code>sourceCpp("path/to/file.cpp")</code> to compile them. However we need to include a few headers at the top of the file. The first line we add gives us access to the <strong>Rcpp</strong> functions. The file <code>Rcpp.h</code> contains a list of function and class definitions supplied by <strong>Rcpp</strong>. This file will be located where <strong>Rcpp</strong> is installed. The <code>include</code> line</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb216-1"><a href="performance.html#cb216-1"></a><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></span></code></pre></div>
 <p>causes the compiler to replace that lines with the contents of the named source file. This means that we can access the functions defined by <strong>Rcpp</strong>. To access the <strong>Rcpp</strong> functions we would have to type <code>Rcpp::function_1</code>. To avoid typing <code>Rcpp::</code>, we use the namespace facility</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb217-1" data-line-number="1"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</a></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb217-1"><a href="performance.html#cb217-1"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</span></code></pre></div>
 <p>Now we can just type <code>function_1()</code>; this is the same concept that R uses for managing function name collisions when loading packages. Above each function we want to export/use in R, we add the tag</p>
-<div class="sourceCode" id="cb218"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb218-1" data-line-number="1"><span class="co">// [[Rcpp::export]]</span></a></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb218-1"><a href="performance.html#cb218-1"></a><span class="co">// [[Rcpp::export]]</span></span></code></pre></div>
 <div class="rmdnote">
 <p>
 Similar to packages and the <code>library()</code> function in R, we access additional functions via <code>#include</code>. A standard header to include is <code>#include &lt;math.h&gt;</code> which contains standard mathematics functions.
 </p>
 </div>
 <p>This would give the complete file</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb219-1" data-line-number="1"><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></a>
-<a class="sourceLine" id="cb219-2" data-line-number="2"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</a>
-<a class="sourceLine" id="cb219-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb219-4" data-line-number="4"><span class="co">// [[Rcpp::export]]</span></a>
-<a class="sourceLine" id="cb219-5" data-line-number="5"><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) {</a>
-<a class="sourceLine" id="cb219-6" data-line-number="6">  <span class="dt">double</span> value = x + y;</a>
-<a class="sourceLine" id="cb219-7" data-line-number="7">  <span class="cf">return</span> value;</a>
-<a class="sourceLine" id="cb219-8" data-line-number="8">}</a></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb219-1"><a href="performance.html#cb219-1"></a><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></span>
+<span id="cb219-2"><a href="performance.html#cb219-2"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</span>
+<span id="cb219-3"><a href="performance.html#cb219-3"></a></span>
+<span id="cb219-4"><a href="performance.html#cb219-4"></a><span class="co">// [[Rcpp::export]]</span></span>
+<span id="cb219-5"><a href="performance.html#cb219-5"></a><span class="dt">double</span> add_cpp(<span class="dt">double</span> x, <span class="dt">double</span> y) {</span>
+<span id="cb219-6"><a href="performance.html#cb219-6"></a>  <span class="dt">double</span> value = x + y;</span>
+<span id="cb219-7"><a href="performance.html#cb219-7"></a>  <span class="cf">return</span> value;</span>
+<span id="cb219-8"><a href="performance.html#cb219-8"></a>}</span></code></pre></div>
 <p>There are two main benefits with putting your C++ functions in separate files. First, we have the benefit of syntax highlighting (RStudio has great support for C++ editing). Second, it’s easier to make syntax errors when switching between R and C++ in the same file. To save space we’ll omit the headers for the remainder of the chapter.</p>
 </div>
-<div id="vectors-and-loops" class="section level3">
+<div id="vectors-and-loops" class="section level3" number="7.6.5">
 <h3><span class="header-section-number">7.6.5</span> Vectors and loops</h3>
 <p>Let’s now consider a slightly more complicated example. Here we want to write our own function that calculates the mean. This is just an illustrative example: R’s version is much better and more robust to scale differences in our data. For comparison, let’s create a corresponding R function - this is the same function we used in chapter <a href="programming.html#programming">3</a>. The function takes a single vector <code>x</code> as input, and returns the mean value, <code>m</code>:</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb220-1" data-line-number="1">mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb220-2" data-line-number="2">  m =<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb220-3" data-line-number="3">  n =<span class="st"> </span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb220-4" data-line-number="4">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n)</a>
-<a class="sourceLine" id="cb220-5" data-line-number="5">    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</a>
-<a class="sourceLine" id="cb220-6" data-line-number="6">  m</a>
-<a class="sourceLine" id="cb220-7" data-line-number="7">}</a></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="performance.html#cb220-1"></a>mean_r =<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb220-2"><a href="performance.html#cb220-2"></a>  m =<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb220-3"><a href="performance.html#cb220-3"></a>  n =<span class="st"> </span><span class="kw">length</span>(x)</span>
+<span id="cb220-4"><a href="performance.html#cb220-4"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n)</span>
+<span id="cb220-5"><a href="performance.html#cb220-5"></a>    m =<span class="st"> </span>m <span class="op">+</span><span class="st"> </span>x[i] <span class="op">/</span><span class="st"> </span>n</span>
+<span id="cb220-6"><a href="performance.html#cb220-6"></a>  m</span>
+<span id="cb220-7"><a href="performance.html#cb220-7"></a>}</span></code></pre></div>
 <p>This is a very bad R function; we should just use the base function <code>mean()</code> for real world applications. However the purpose of <code>mean_r()</code> is to provide a comparison for the C++ version, which we will write in a similar way.</p>
 <p>In this example, we will let <strong>Rcpp</strong> smooth the interface between C++ and R by using the <code>NumericVector</code> data type. This <strong>Rcpp</strong> data type mirrors the R vector object type. Other common classes are: <code>IntegerVector</code>, <code>CharacterVector</code>, and <code>LogicalVector</code>.</p>
 <p>In the C++ version of the mean function, we specify the arguments types: <code>x</code> (<code>NumericVector</code>) and the return value (<code>double</code>). The C++ version of the <code>mean()</code> function is a few lines longer. Almost always, the corresponding C++ version will be, possibly much, longer. In general R optimises for reduced development time; C++ optimises for fast execution time. The corresponding C++ function for calculating the mean is:</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb221-1" data-line-number="1"><span class="dt">double</span> mean_cpp(NumericVector x) {</a>
-<a class="sourceLine" id="cb221-2" data-line-number="2">  <span class="dt">int</span> i;</a>
-<a class="sourceLine" id="cb221-3" data-line-number="3">  <span class="dt">int</span> n = x.size();</a>
-<a class="sourceLine" id="cb221-4" data-line-number="4">  <span class="dt">double</span> mean = <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb221-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb221-6" data-line-number="6">  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</a>
-<a class="sourceLine" id="cb221-7" data-line-number="7">    mean = mean + x[i] / n;</a>
-<a class="sourceLine" id="cb221-8" data-line-number="8">  }</a>
-<a class="sourceLine" id="cb221-9" data-line-number="9">  <span class="cf">return</span> mean;</a>
-<a class="sourceLine" id="cb221-10" data-line-number="10">}</a></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb221-1"><a href="performance.html#cb221-1"></a><span class="dt">double</span> mean_cpp(NumericVector x) {</span>
+<span id="cb221-2"><a href="performance.html#cb221-2"></a>  <span class="dt">int</span> i;</span>
+<span id="cb221-3"><a href="performance.html#cb221-3"></a>  <span class="dt">int</span> n = x.size();</span>
+<span id="cb221-4"><a href="performance.html#cb221-4"></a>  <span class="dt">double</span> mean = <span class="dv">0</span>;</span>
+<span id="cb221-5"><a href="performance.html#cb221-5"></a></span>
+<span id="cb221-6"><a href="performance.html#cb221-6"></a>  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</span>
+<span id="cb221-7"><a href="performance.html#cb221-7"></a>    mean = mean + x[i] / n;</span>
+<span id="cb221-8"><a href="performance.html#cb221-8"></a>  }</span>
+<span id="cb221-9"><a href="performance.html#cb221-9"></a>  <span class="cf">return</span> mean;</span>
+<span id="cb221-10"><a href="performance.html#cb221-10"></a>}</span></code></pre></div>
 <p>To use the C++ function we need to source the file (remember to put the necessary headers in).</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1"><span class="kw">sourceCpp</span>(<span class="st">&quot;src/mean_cpp.cpp&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="performance.html#cb222-1"></a><span class="kw">sourceCpp</span>(<span class="st">&quot;src/mean_cpp.cpp&quot;</span>)</span></code></pre></div>
 <p>Although the C++ version is similar, there are a few crucial differences.</p>
 <ol style="list-style-type: decimal">
-<li>We use the <code>.size()</code> method to find the length of <code>x</code>.</li>
+<li><p>We use the <code>.size()</code> method to find the length of <code>x</code>.</p></li>
 <li><p>The <code>for</code> loop has a more complicated syntax.</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb223-1" data-line-number="1"><span class="cf">for</span> (variable initialisation; condition; variable update ) {</a>
-<a class="sourceLine" id="cb223-2" data-line-number="2">  <span class="co">// Code to execute</span></a>
-<a class="sourceLine" id="cb223-3" data-line-number="3">}</a></code></pre></div>
-In this example, the loop initialises <code>i = 0</code> and will continue running until <code>i &lt; n</code> is false.
-The statement <code>i++</code> increases the value of <code>i</code> by <code>1</code>; essentially it’s just shortcut for <code>i = i + 1</code>.</li>
+<div class="sourceCode" id="cb223"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb223-1"><a href="performance.html#cb223-1"></a><span class="cf">for</span> (variable initialisation; condition; variable update ) {</span>
+<span id="cb223-2"><a href="performance.html#cb223-2"></a>  <span class="co">// Code to execute</span></span>
+<span id="cb223-3"><a href="performance.html#cb223-3"></a>}</span></code></pre></div>
+<p>In this example, the loop initialises <code>i = 0</code> and will continue running until <code>i &lt; n</code> is false.
+The statement <code>i++</code> increases the value of <code>i</code> by <code>1</code>; essentially it’s just shortcut for <code>i = i + 1</code>.</p></li>
 <li><p>Similar to <code>i++</code>, C++ provides other operators to modify variables in place. For example we could rewrite part of the loop as</p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb224-1" data-line-number="1">mean += x[i] / n;</a></code></pre></div>
-The above code adds <code>x[i] / n</code> to the value of <code>mean</code>. Other similar operators are <code>-=</code>, <code>*=</code>, <code>/=</code> and <code>i--</code>.</li>
+<div class="sourceCode" id="cb224"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb224-1"><a href="performance.html#cb224-1"></a>mean += x[i] / n;</span></code></pre></div>
+<p>The above code adds <code>x[i] / n</code> to the value of <code>mean</code>. Other similar operators are <code>-=</code>, <code>*=</code>, <code>/=</code> and <code>i--</code>.</p></li>
 <li><p>A C++ vector starts at <code>0</code> <strong>not</strong> <code>1</code></p></li>
 </ol>
 <p>To compare the C++ and R functions, we’ll generate some normal random numbers for the comparison:</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb225-1" data-line-number="1">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="performance.html#cb225-1"></a>x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e4</span>)</span></code></pre></div>
 <p>Then call the <code>microbenchmark()</code> function (results plotted in figure <a href="performance.html#fig:7-6">7.6</a>).</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1"><span class="co"># com_mean_r is the compiled version of mean_r</span></a>
-<a class="sourceLine" id="cb226-2" data-line-number="2">z =<span class="st"> </span><span class="kw">microbenchmark</span>(</a>
-<a class="sourceLine" id="cb226-3" data-line-number="3">  <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_cpp</span>(x),</a>
-<a class="sourceLine" id="cb226-4" data-line-number="4">  <span class="dt">times =</span> <span class="dv">1000</span></a>
-<a class="sourceLine" id="cb226-5" data-line-number="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="performance.html#cb226-1"></a><span class="co"># com_mean_r is the compiled version of mean_r</span></span>
+<span id="cb226-2"><a href="performance.html#cb226-2"></a>z =<span class="st"> </span><span class="kw">microbenchmark</span>(</span>
+<span id="cb226-3"><a href="performance.html#cb226-3"></a>  <span class="kw">mean</span>(x), <span class="kw">mean_r</span>(x), <span class="kw">com_mean_r</span>(x), <span class="kw">mean_cpp</span>(x),</span>
+<span id="cb226-4"><a href="performance.html#cb226-4"></a>  <span class="dt">times =</span> <span class="dv">1000</span></span>
+<span id="cb226-5"><a href="performance.html#cb226-5"></a>)</span></code></pre></div>
 <p>In this simple example, the Rcpp variant is around <span class="math inline">\(100\)</span> times faster than the corresponding pure R version. This sort of speed-up is not uncommon when switching to an Rcpp solution. Notice that the Rcpp version and standard base function <code>mean()</code> run at roughly the same speed; after all, the base R function is written in C. However, <code>mean()</code> uses a more sophisticated algorithm when calculating the mean to ensure accuracy.</p>
 <div class="figure" style="text-align: center"><span id="fig:7-6"></span>
 <img src="_main_files/figure-html/7-6-1.png" alt="Comparison of mean functions." width="70%" />
@@ -940,16 +988,16 @@ The above code adds <code>x[i] / n</code> to the value of <code>mean</code>. Oth
 Figure 7.6: Comparison of mean functions.
 </p>
 </div>
-<div id="exercises-1" class="section level4 unnumbered">
+<div id="exercises-17" class="section level4 unnumbered" number="">
 <h4>Exercises</h4>
 <p>Consider the following piece of code:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb227-1" data-line-number="1"><span class="dt">double</span> test1() {</a>
-<a class="sourceLine" id="cb227-2" data-line-number="2">  <span class="dt">double</span> a = <span class="fl">1.0</span> / <span class="dv">81</span>;</a>
-<a class="sourceLine" id="cb227-3" data-line-number="3">  <span class="dt">double</span> b = <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb227-4" data-line-number="4">  <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">729</span>; ++i)</a>
-<a class="sourceLine" id="cb227-5" data-line-number="5">    b = b + a;</a>
-<a class="sourceLine" id="cb227-6" data-line-number="6">  <span class="cf">return</span> b;</a>
-<a class="sourceLine" id="cb227-7" data-line-number="7">}</a></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb227-1"><a href="performance.html#cb227-1"></a><span class="dt">double</span> test1() {</span>
+<span id="cb227-2"><a href="performance.html#cb227-2"></a>  <span class="dt">double</span> a = <span class="fl">1.0</span> / <span class="dv">81</span>;</span>
+<span id="cb227-3"><a href="performance.html#cb227-3"></a>  <span class="dt">double</span> b = <span class="dv">0</span>;</span>
+<span id="cb227-4"><a href="performance.html#cb227-4"></a>  <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">729</span>; ++i)</span>
+<span id="cb227-5"><a href="performance.html#cb227-5"></a>    b = b + a;</span>
+<span id="cb227-6"><a href="performance.html#cb227-6"></a>  <span class="cf">return</span> b;</span>
+<span id="cb227-7"><a href="performance.html#cb227-7"></a>}</span></code></pre></div>
 <ol style="list-style-type: decimal">
 <li>Save the function <code>test1()</code> in a separate file. Make sure it works.</li>
 <li>Write a similar function in R and compare the speed of the C++ and R versions.</li>
@@ -958,41 +1006,41 @@ Figure 7.6: Comparison of mean functions.
 <li>(Hard) What’s the difference between <code>i++</code> and <code>++i</code>?</li>
 </ol>
 </div>
-<div id="matrices-1" class="section level4 unnumbered">
+<div id="matrices-1" class="section level4 unnumbered" number="">
 <h4>Matrices</h4>
 <p>Each vector type has a corresponding matrix equivalent: <code>NumericMatrix</code>, <code>IntegerMatrix</code>, <code>CharacterMatrix</code> and <code>LogicalMatrix</code>. We use these types in a similar way to how we used <code>NumericVector</code>’s. The main differences are:</p>
 <ul>
 <li><p>When we initialise, we need to specify the number of rows and columns</p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb228-1" data-line-number="1"><span class="co">// 10 rows, 5 columns</span></a>
-<a class="sourceLine" id="cb228-2" data-line-number="2">NumericMatrix mat(<span class="dv">10</span>, <span class="dv">5</span>);</a>
-<a class="sourceLine" id="cb228-3" data-line-number="3"><span class="co">// Length 10</span></a>
-<a class="sourceLine" id="cb228-4" data-line-number="4">NumericVector v(<span class="dv">10</span>);</a></code></pre></div></li>
-<li>We subset using <code>()</code>, i.e. <code>mat(5, 4)</code>.</li>
-<li>The first element in a matrix is <code>mat(0, 0)</code> - remember indexes start with <code>0</code> not <code>1</code>.</li>
+<div class="sourceCode" id="cb228"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb228-1"><a href="performance.html#cb228-1"></a><span class="co">// 10 rows, 5 columns</span></span>
+<span id="cb228-2"><a href="performance.html#cb228-2"></a>NumericMatrix mat(<span class="dv">10</span>, <span class="dv">5</span>);</span>
+<span id="cb228-3"><a href="performance.html#cb228-3"></a><span class="co">// Length 10</span></span>
+<span id="cb228-4"><a href="performance.html#cb228-4"></a>NumericVector v(<span class="dv">10</span>);</span></code></pre></div></li>
+<li><p>We subset using <code>()</code>, i.e. <code>mat(5, 4)</code>.</p></li>
+<li><p>The first element in a matrix is <code>mat(0, 0)</code> - remember indexes start with <code>0</code> not <code>1</code>.</p></li>
 <li><p>To determine the number of rows and columns, we use the <code>.nrow()</code> and <code>.ncol()</code> methods.</p></li>
 </ul>
 </div>
 </div>
-<div id="sugar" class="section level3">
+<div id="sugar" class="section level3" number="7.6.6">
 <h3><span class="header-section-number">7.6.6</span> C++ with sugar on top</h3>
 <p><strong>Rcpp</strong> sugar brings a higher-level of abstraction to C++ code written using the <strong>Rcpp</strong> API. What this means in practice is that we can write C++ code in the style of R. For example, suppose we wanted to find the squared difference of two vectors; a squared residual in regression. In R we would use</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" data-line-number="1">sq_diff_r =<span class="st"> </span><span class="cf">function</span>(x, y) (x <span class="op">-</span><span class="st"> </span>y)<span class="op">^</span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="performance.html#cb229-1"></a>sq_diff_r =<span class="st"> </span><span class="cf">function</span>(x, y) (x <span class="op">-</span><span class="st"> </span>y)<span class="op">^</span><span class="dv">2</span></span></code></pre></div>
 <p>Rewriting the function in standard C++ would give</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb230-1" data-line-number="1">NumericVector res_c(NumericVector x, NumericVector y) {</a>
-<a class="sourceLine" id="cb230-2" data-line-number="2">  <span class="dt">int</span> i;</a>
-<a class="sourceLine" id="cb230-3" data-line-number="3">  <span class="dt">int</span> n = x.size();</a>
-<a class="sourceLine" id="cb230-4" data-line-number="4">  NumericVector residuals(n);</a>
-<a class="sourceLine" id="cb230-5" data-line-number="5">  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</a>
-<a class="sourceLine" id="cb230-6" data-line-number="6">    residuals[i] = pow(x[i] - y[i], <span class="dv">2</span>);</a>
-<a class="sourceLine" id="cb230-7" data-line-number="7">  }</a>
-<a class="sourceLine" id="cb230-8" data-line-number="8">  <span class="cf">return</span> residuals;</a>
-<a class="sourceLine" id="cb230-9" data-line-number="9">}</a></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb230-1"><a href="performance.html#cb230-1"></a>NumericVector res_c(NumericVector x, NumericVector y) {</span>
+<span id="cb230-2"><a href="performance.html#cb230-2"></a>  <span class="dt">int</span> i;</span>
+<span id="cb230-3"><a href="performance.html#cb230-3"></a>  <span class="dt">int</span> n = x.size();</span>
+<span id="cb230-4"><a href="performance.html#cb230-4"></a>  NumericVector residuals(n);</span>
+<span id="cb230-5"><a href="performance.html#cb230-5"></a>  <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt; n; i++) {</span>
+<span id="cb230-6"><a href="performance.html#cb230-6"></a>    residuals[i] = pow(x[i] - y[i], <span class="dv">2</span>);</span>
+<span id="cb230-7"><a href="performance.html#cb230-7"></a>  }</span>
+<span id="cb230-8"><a href="performance.html#cb230-8"></a>  <span class="cf">return</span> residuals;</span>
+<span id="cb230-9"><a href="performance.html#cb230-9"></a>}</span></code></pre></div>
 <p>With <strong>Rcpp</strong> sugar we can rewrite this code to be more succinct and have more of an R feel:</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb231-1" data-line-number="1">NumericVector res_sugar(NumericVector x, NumericVector y) {</a>
-<a class="sourceLine" id="cb231-2" data-line-number="2">  <span class="cf">return</span> pow(x - y, <span class="dv">2</span>);</a>
-<a class="sourceLine" id="cb231-3" data-line-number="3">}</a></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb231-1"><a href="performance.html#cb231-1"></a>NumericVector res_sugar(NumericVector x, NumericVector y) {</span>
+<span id="cb231-2"><a href="performance.html#cb231-2"></a>  <span class="cf">return</span> pow(x - y, <span class="dv">2</span>);</span>
+<span id="cb231-3"><a href="performance.html#cb231-3"></a>}</span></code></pre></div>
 <p>In the above C++ code, the <code>pow()</code> function and <code>x-y</code> are valid due to <strong>Rcpp</strong> sugar. Other functions that are available include the d/q/p/r statistical functions, such as <code>rnorm()</code> and <code>pnorm()</code>. The sweetened versions aren’t usually faster than the C++ version, but typically there’s very little difference between the two. However with the sugared variety, the code is shorter and is constantly being improved.</p>
-<div id="exercises-2" class="section level4 unnumbered">
+<div id="exercises-18" class="section level4 unnumbered" number="">
 <h4>Exercises</h4>
 <ol style="list-style-type: decimal">
 <li>Construct an R version (using a <code>for</code> loop rather than the vectorised solution), <code>res_r()</code> and compare the three function variants.</li>
@@ -1000,13 +1048,13 @@ Figure 7.6: Comparison of mean functions.
 </ol>
 </div>
 </div>
-<div id="rcpp-resources" class="section level3">
+<div id="rcpp-resources" class="section level3" number="7.6.7">
 <h3><span class="header-section-number">7.6.7</span> Rcpp resources</h3>
 <p>The aim of this section was to provide an introduction to <strong>Rcpp</strong>. One of the selling features of <strong>Rcpp</strong> is that there is a great deal of documentation available.</p>
 <ul>
 <li>The <strong>Rcpp</strong> <a href="http://www.rcpp.org/">website</a>;</li>
-<li>The original Journal of Statistical Software paper describing <strong>Rcpp</strong> and the follow-up book <span class="citation">(Eddelbuettel and François <a href="#ref-Eddelbuettel2011">2011</a>; Eddelbuettel <a href="#ref-Eddelbuettel2013">2013</a>)</span>;</li>
-<li><span class="citation">H. Wickham (<a href="#ref-Wickham2014">2014</a><a href="#ref-Wickham2014">a</a>)</span> provides a very readable chapter on <strong>Rcpp</strong> that goes into a bit more detail than this section;</li>
+<li>The original Journal of Statistical Software paper describing <strong>Rcpp</strong> and the follow-up book <span class="citation">(Eddelbuettel and François <a href="#ref-Eddelbuettel2011" role="doc-biblioref">2011</a>; Eddelbuettel <a href="#ref-Eddelbuettel2013" role="doc-biblioref">2013</a>)</span>;</li>
+<li><span class="citation">H. Wickham (<a href="#ref-Wickham2014" role="doc-biblioref">2014</a><a href="#ref-Wickham2014" role="doc-biblioref">a</a>)</span> provides a very readable chapter on <strong>Rcpp</strong> that goes into a bit more detail than this section;</li>
 <li>The <strong>Rcpp</strong> section on the <a href="https://stackoverflow.com/questions/tagged/rcpp">StackOverflow</a> website. Questions are often answered by the <strong>Rcpp</strong> authors.</li>
 </ul>
 
@@ -1025,7 +1073,7 @@ Figure 7.6: Comparison of mean functions.
 <p>Eddelbuettel, Dirk, and Romain François. 2011. “Rcpp: Seamless R and C++ Integration.” <em>Journal of Statistical Software</em> 40 (8): 1–18.</p>
 </div>
 <div id="ref-Goldberg1991">
-<p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1). ACM: 5–48.</p>
+<p>Goldberg, David. 1991. “What Every Computer Scientist Should Know About Floating-Point Arithmetic.” <em>ACM Computing Surveys (CSUR)</em> 23 (1): 5–48.</p>
 </div>
 <div id="ref-mccallum2011">
 <p>McCallum, Ethan, and Stephen Weston. 2011. <em>Parallel R</em>. O’Reilly Media.</p>
@@ -1037,10 +1085,10 @@ Figure 7.6: Comparison of mean functions.
 <div class="footnotes">
 <hr />
 <ol start="19">
-<li id="fn19"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref19" class="footnote-back">↩</a></p></li>
-<li id="fn20"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref20" class="footnote-back">↩</a></p></li>
-<li id="fn21"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref21" class="footnote-back">↩</a></p></li>
-<li id="fn22"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn19"><p>Technically this isn’t in base R, it’s a recommended package.<a href="performance.html#fnref19" class="footnote-back">↩︎</a></p></li>
+<li id="fn20"><p>Solutions are available in the <strong>efficient</strong> package vignette.<a href="performance.html#fnref20" class="footnote-back">↩︎</a></p></li>
+<li id="fn21"><p>The idea for this example came to one of the authors after a particularly long and dull game of Snakes and Ladders with his son.<a href="performance.html#fnref21" class="footnote-back">↩︎</a></p></li>
+<li id="fn22"><p>See <a href="https://github.com/npct/pct-shiny/issues/292">github.com/npct/pct-shiny/issues/292</a> for a real world example of the dangers of not stopping created cores.<a href="performance.html#fnref22" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
