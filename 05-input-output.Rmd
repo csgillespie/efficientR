@@ -150,11 +150,11 @@ When we run the equivalent operation using **readr**,
 voyages_readr = readr::read_tsv(fname)
 ```
 
-a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
+a warning is raised regarding row 1023 in the `hired` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
 ```{r}
-voyages_base$built[2841] # a factor.
-voyages_readr$built[2841] # an NA: text cannot be converted to numeric
+voyages_base$hired[1023] # a character
+voyages_readr$hired[1023] # an NA: text cannot be converted to logical(i.e read_*() interprets this column as logical)
 ```
 
 Reading the file using **data.table** 
