@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-10-25" />
+<meta name="date" content="2020-11-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -585,11 +585,11 @@ Figure 5.1: Benchmarks of base, data.table and readr approches for reading csv f
 <span id="cb122-25"><a href="input-output.html#cb122-25"></a><span class="co">#&gt; 1035 hired 1/0/T/F/TRUE/FALSE 1665   &#39;/home/travis/R/Library/efficient/extdata/voc_voyages.tsv&#39;</span></span>
 <span id="cb122-26"><a href="input-output.html#cb122-26"></a><span class="co">#&gt; .... ..... .................. ...... ..........................................................</span></span>
 <span id="cb122-27"><a href="input-output.html#cb122-27"></a><span class="co">#&gt; See problems(...) for more details.</span></span></code></pre></div>
-<p>a warning is raised regarding row 2841 in the <code>built</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first <span class="math inline">\(1000\)</span> rows, rather than all rows, as base <code>read.*()</code> functions do. Printing the offending element</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="input-output.html#cb123-1"></a>voyages_base<span class="op">$</span>built[<span class="dv">2841</span>] <span class="co"># a factor.</span></span>
-<span id="cb123-2"><a href="input-output.html#cb123-2"></a><span class="co">#&gt; [1] &quot;1721-01-01&quot;</span></span>
-<span id="cb123-3"><a href="input-output.html#cb123-3"></a>voyages_readr<span class="op">$</span>built[<span class="dv">2841</span>] <span class="co"># an NA: text cannot be converted to numeric</span></span>
-<span id="cb123-4"><a href="input-output.html#cb123-4"></a><span class="co">#&gt; [1] &quot;1721-01-01&quot;</span></span></code></pre></div>
+<p>a warning is raised regarding row 1023 in the <code>hired</code> variable. This is because <code>read_*()</code> decides what class each variable is based on the first <span class="math inline">\(1000\)</span> rows, rather than all rows, as base <code>read.*()</code> functions do. Printing the offending element</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="input-output.html#cb123-1"></a>voyages_base<span class="op">$</span>hired[<span class="dv">1023</span>] <span class="co"># a character</span></span>
+<span id="cb123-2"><a href="input-output.html#cb123-2"></a><span class="co">#&gt; [1] &quot;1664&quot;</span></span>
+<span id="cb123-3"><a href="input-output.html#cb123-3"></a>voyages_readr<span class="op">$</span>hired[<span class="dv">1023</span>] <span class="co"># an NA: text cannot be converted to logical(i.e read_*() interprets this column as logical)</span></span>
+<span id="cb123-4"><a href="input-output.html#cb123-4"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
 <p>Reading the file using <strong>data.table</strong></p>
 <div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="input-output.html#cb124-1"></a><span class="co"># Verbose warnings not shown</span></span>
 <span id="cb124-2"><a href="input-output.html#cb124-2"></a>voyages_dt =<span class="st"> </span>data.table<span class="op">::</span><span class="kw">fread</span>(fname)</span></code></pre></div>
@@ -600,8 +600,8 @@ Figure 5.1: Benchmarks of base, data.table and readr approches for reading csv f
 <span id="cb125-4"><a href="input-output.html#cb125-4"></a>)</span>
 <span id="cb125-5"><a href="input-output.html#cb125-5"></a><span class="co">#&gt; Unit: milliseconds</span></span>
 <span id="cb125-6"><a href="input-output.html#cb125-6"></a><span class="co">#&gt;            expr  min   lq mean median   uq  max neval</span></span>
-<span id="cb125-7"><a href="input-output.html#cb125-7"></a><span class="co">#&gt;     with_select 10.9 11.0 11.5   11.4 12.0 12.0     5</span></span>
-<span id="cb125-8"><a href="input-output.html#cb125-8"></a><span class="co">#&gt;  without_select 15.3 15.7 16.4   15.7 17.3 18.2     5</span></span></code></pre></div>
+<span id="cb125-7"><a href="input-output.html#cb125-7"></a><span class="co">#&gt;     with_select 10.6 10.6 10.7   10.6 10.6 11.3     5</span></span>
+<span id="cb125-8"><a href="input-output.html#cb125-8"></a><span class="co">#&gt;  without_select 14.5 14.7 14.7   14.8 14.8 14.8     5</span></span></code></pre></div>
 <p>To summarise, the differences between base, <strong>readr</strong> and <strong>data.table</strong> functions for reading in data go beyond code execution times. The functions <code>read_csv()</code> and <code>fread()</code> boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table <a href="input-output.html#tab:colclasses">5.1</a>.</p>
 <table>
 <caption><span id="tab:colclasses">Table 5.1: </span>Comparison of base, <strong>readr</strong> and <strong>data.table</strong> reading in the voyages data set.</caption>

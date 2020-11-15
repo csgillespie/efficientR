@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-10-25" />
+<meta name="date" content="2020-11-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -569,13 +569,13 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <span id="cb186-3"><a href="performance.html#cb186-3"></a>  result1 =<span class="st"> </span><span class="kw">ifelse</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</span>
 <span id="cb186-4"><a href="performance.html#cb186-4"></a>})</span>
 <span id="cb186-5"><a href="performance.html#cb186-5"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb186-6"><a href="performance.html#cb186-6"></a><span class="co">#&gt;   2.578   0.272   2.850</span></span>
+<span id="cb186-6"><a href="performance.html#cb186-6"></a><span class="co">#&gt;   2.460   0.192   2.652</span></span>
 <span id="cb186-7"><a href="performance.html#cb186-7"></a><span class="kw">system.time</span>({</span>
 <span id="cb186-8"><a href="performance.html#cb186-8"></a>  result2 =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;fail&quot;</span>, <span class="kw">length</span>(marks)) </span>
 <span id="cb186-9"><a href="performance.html#cb186-9"></a>  result2[marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>] =<span class="st"> &quot;pass&quot;</span></span>
 <span id="cb186-10"><a href="performance.html#cb186-10"></a>})</span>
 <span id="cb186-11"><a href="performance.html#cb186-11"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb186-12"><a href="performance.html#cb186-12"></a><span class="co">#&gt;   0.151   0.072   0.224</span></span>
+<span id="cb186-12"><a href="performance.html#cb186-12"></a><span class="co">#&gt;   0.156   0.060   0.216</span></span>
 <span id="cb186-13"><a href="performance.html#cb186-13"></a><span class="kw">identical</span>(result1, result2)</span>
 <span id="cb186-14"><a href="performance.html#cb186-14"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>There is talk on the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">R-devel email</a> list of speeding up <code>ifelse()</code> in base R. A simple solution is to use the <code>if_else()</code> function from <strong>dplyr</strong>, although, as discussed in the <a href="http://r.789695.n4.nabble.com/ifelse-woes-can-we-agree-on-a-ifelse2-td4723584.html">same thread</a>, it cannot replace <code>ifelse()</code> in all situations. For our exam result test example, <code>if_else()</code> works fine and is much faster than base R’s implementation (although it is still around 3 times slower than the hard-coded solution):</p>
@@ -583,7 +583,7 @@ Figure 7.2: Code profiling for simulating the game of Monopoly.
 <span id="cb187-2"><a href="performance.html#cb187-2"></a>  result3 =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">if_else</span>(marks <span class="op">&gt;=</span><span class="st"> </span><span class="dv">40</span>, <span class="st">&quot;pass&quot;</span>, <span class="st">&quot;fail&quot;</span>)</span>
 <span id="cb187-3"><a href="performance.html#cb187-3"></a>})</span>
 <span id="cb187-4"><a href="performance.html#cb187-4"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb187-5"><a href="performance.html#cb187-5"></a><span class="co">#&gt;   0.496   0.200   0.696</span></span>
+<span id="cb187-5"><a href="performance.html#cb187-5"></a><span class="co">#&gt;   0.484   0.172   0.656</span></span>
 <span id="cb187-6"><a href="performance.html#cb187-6"></a><span class="kw">identical</span>(result1, result3)</span>
 <span id="cb187-7"><a href="performance.html#cb187-7"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
@@ -650,9 +650,9 @@ Figure 7.3: Comparison of <code>which.min()</code> with <code>which()</code>.
 <div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="performance.html#cb194-1"></a><span class="kw">data</span>(ex_mat, ex_df, <span class="dt">package=</span><span class="st">&quot;efficient&quot;</span>)</span>
 <span id="cb194-2"><a href="performance.html#cb194-2"></a><span class="kw">microbenchmark</span>(<span class="dt">times=</span><span class="dv">100</span>, <span class="dt">unit=</span><span class="st">&quot;ms&quot;</span>, ex_mat[<span class="dv">1</span>,], ex_df[<span class="dv">1</span>,])</span>
 <span id="cb194-3"><a href="performance.html#cb194-3"></a><span class="co">#&gt; Unit: milliseconds</span></span>
-<span id="cb194-4"><a href="performance.html#cb194-4"></a><span class="co">#&gt;         expr     min      lq   mean  median      uq  max neval</span></span>
-<span id="cb194-5"><a href="performance.html#cb194-5"></a><span class="co">#&gt;  ex_mat[1, ] 0.00287 0.00353 0.0584 0.00548 0.00834 5.18   100</span></span>
-<span id="cb194-6"><a href="performance.html#cb194-6"></a><span class="co">#&gt;   ex_df[1, ] 0.48791 0.52588 0.6116 0.54488 0.57812 5.23   100</span></span></code></pre></div>
+<span id="cb194-4"><a href="performance.html#cb194-4"></a><span class="co">#&gt;         expr    min      lq   mean  median      uq  max neval</span></span>
+<span id="cb194-5"><a href="performance.html#cb194-5"></a><span class="co">#&gt;  ex_mat[1, ] 0.0028 0.00328 0.0506 0.00442 0.00632 4.55   100</span></span>
+<span id="cb194-6"><a href="performance.html#cb194-6"></a><span class="co">#&gt;   ex_df[1, ] 0.4864 0.49829 0.5557 0.50650 0.51922 5.20   100</span></span></code></pre></div>
 <div class="rmdtip">
 <p>
 Use the <code>data.matrix()</code> function to efficiently convert a data frame into a matrix.
@@ -863,7 +863,7 @@ Figure 7.5: Downloads per day from the RStudio CRAN mirror of packages that prov
 <p><strong>Rcpp</strong> will magically compile the C++ code and construct a function that bridges the gap between R and C++. After running the above code, we now have access to the <code>add_cpp()</code> function</p>
 <div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="performance.html#cb214-1"></a>add_cpp</span>
 <span id="cb214-2"><a href="performance.html#cb214-2"></a><span class="co">#&gt; function (x, y) </span></span>
-<span id="cb214-3"><a href="performance.html#cb214-3"></a><span class="co">#&gt; .Call(&lt;pointer: 0x7ff855383b70&gt;, x, y)</span></span></code></pre></div>
+<span id="cb214-3"><a href="performance.html#cb214-3"></a><span class="co">#&gt; .Call(&lt;pointer: 0x7f43885b9b70&gt;, x, y)</span></span></code></pre></div>
 <p>and can call the <code>add_cpp()</code> function in the usual way</p>
 <div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="performance.html#cb215-1"></a><span class="kw">add_cpp</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span>
 <span id="cb215-2"><a href="performance.html#cb215-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>

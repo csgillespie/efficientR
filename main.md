@@ -1,7 +1,7 @@
 --- 
 title: "Efficient R programming"
 author: ["Colin Gillespie", "Robin Lovelace"]
-date: "2020-10-25"
+date: "2020-11-15"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
@@ -298,9 +298,9 @@ cs_apply = function(x) {
 microbenchmark(cs_for(x), cs_apply(x), cumsum(x))
 #> Unit: nanoseconds
 #>         expr    min     lq   mean median     uq     max neval
-#>    cs_for(x) 115318 129388 201910 136822 148146 6140261   100
-#>  cs_apply(x)  85901  94610 136808 103932 116273 2560815   100
-#>    cumsum(x)    743    950   2105   1115   1454   81474   100
+#>    cs_for(x) 113293 122105 184703 127225 133953 5685718   100
+#>  cs_apply(x)  86145  89708 122607  94656 103436 2546782   100
+#>    cumsum(x)    678    801   1138    898   1078   14196   100
 ```
 
 1. Which method is fastest and how many times faster is it?
@@ -1526,7 +1526,7 @@ In R, this takes a few seconds
 N = 500000
 system.time(monte_carlo(N))
 #>    user  system elapsed 
-#>   2.335   0.012   2.346
+#>   2.236   0.006   2.242
 ```
 
 In contrast, a more R-centric approach would be
@@ -1959,7 +1959,7 @@ Since R 2.14.0, all of the standard functions and packages in base R are pre-com
 getFunction("mean")
 #> function (x, ...) 
 #> UseMethod("mean")
-#> <bytecode: 0xeb9c20>
+#> <bytecode: 0xdcfcc8>
 #> <environment: namespace:base>
 ```
 
@@ -2615,14 +2615,14 @@ voyages_readr = readr::read_tsv(fname)
 #> See problems(...) for more details.
 ```
 
-a warning is raised regarding row 2841 in the `built` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
+a warning is raised regarding row 1023 in the `hired` variable. This is because `read_*()` decides what class each variable is based on the first $1000$ rows, rather than all rows, as base `read.*()` functions do. Printing the offending element
 
 
 ```r
-voyages_base$built[2841] # a factor.
-#> [1] "1721-01-01"
-voyages_readr$built[2841] # an NA: text cannot be converted to numeric
-#> [1] "1721-01-01"
+voyages_base$hired[1023] # a character
+#> [1] "1664"
+voyages_readr$hired[1023] # an NA: text cannot be converted to logical(i.e read_*() interprets this column as logical)
+#> [1] NA
 ```
 
 Reading the file using **data.table** 
@@ -2642,8 +2642,8 @@ microbenchmark(times = 5,
 )
 #> Unit: milliseconds
 #>            expr  min   lq mean median   uq  max neval
-#>     with_select 10.9 11.0 11.5   11.4 12.0 12.0     5
-#>  without_select 15.3 15.7 16.4   15.7 17.3 18.2     5
+#>     with_select 10.6 10.6 10.7   10.6 10.6 11.3     5
+#>  without_select 14.5 14.7 14.7   14.8 14.8 14.8     5
 ```
 
 To summarise, the differences between base, **readr** and **data.table** functions for reading in data go beyond code execution times. The functions `read_csv()` and `fread()` boost speed partially at the expense of robustness because they decide column classes based on a small sample of available data. The similarities and differences between the approaches are summarised for the Dutch shipping data in Table \@ref(tab:colclasses).
@@ -4105,13 +4105,13 @@ system.time({
   result1 = ifelse(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   2.578   0.272   2.850
+#>   2.460   0.192   2.652
 system.time({
   result2 = rep("fail", length(marks)) 
   result2[marks >= 40] = "pass"
 })
 #>    user  system elapsed 
-#>   0.151   0.072   0.224
+#>   0.156   0.060   0.216
 identical(result1, result2)
 #> [1] TRUE
 ```
@@ -4124,7 +4124,7 @@ system.time({
   result3 = dplyr::if_else(marks >= 40, "pass", "fail")
 })
 #>    user  system elapsed 
-#>   0.496   0.200   0.696
+#>   0.484   0.172   0.656
 identical(result1, result3)
 #> [1] TRUE
 ```
@@ -4227,9 +4227,9 @@ Matrices are generally faster than data frames. For example, the datasets `ex_ma
 data(ex_mat, ex_df, package="efficient")
 microbenchmark(times=100, unit="ms", ex_mat[1,], ex_df[1,])
 #> Unit: milliseconds
-#>         expr     min      lq   mean  median      uq  max neval
-#>  ex_mat[1, ] 0.00287 0.00353 0.0584 0.00548 0.00834 5.18   100
-#>   ex_df[1, ] 0.48791 0.52588 0.6116 0.54488 0.57812 5.23   100
+#>         expr    min      lq   mean  median      uq  max neval
+#>  ex_mat[1, ] 0.0028 0.00328 0.0506 0.00442 0.00632 4.55   100
+#>   ex_df[1, ] 0.4864 0.49829 0.5557 0.50650 0.51922 5.20   100
 ```
 
 <div class="rmdtip">
@@ -4549,7 +4549,7 @@ cppFunction('
 ```r
 add_cpp
 #> function (x, y) 
-#> .Call(<pointer: 0x7ff855383b70>, x, y)
+#> .Call(<pointer: 0x7f43885b9b70>, x, y)
 ```
 
 and can call the `add_cpp()` function in the usual way
