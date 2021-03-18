@@ -25,7 +25,7 @@
 <meta name="author" content="Robin Lovelace" />
 
 
-<meta name="date" content="2020-11-15" />
+<meta name="date" content="2021-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,7 +34,7 @@
   
 <link rel="prev" href="set-up.html"/>
 <link rel="next" href="workflow.html"/>
-<script src="libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -53,8 +53,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -635,7 +633,7 @@ using a Monte-Carlo method. Essentially, we throw darts at the curve and count t
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="programming.html#cb68-1"></a>N =<span class="st"> </span><span class="dv">500000</span></span>
 <span id="cb68-2"><a href="programming.html#cb68-2"></a><span class="kw">system.time</span>(<span class="kw">monte_carlo</span>(N))</span>
 <span id="cb68-3"><a href="programming.html#cb68-3"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb68-4"><a href="programming.html#cb68-4"></a><span class="co">#&gt;   2.236   0.006   2.242</span></span></code></pre></div>
+<span id="cb68-4"><a href="programming.html#cb68-4"></a><span class="co">#&gt;   2.206   0.004   2.210</span></span></code></pre></div>
 <p>In contrast, a more R-centric approach would be</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="programming.html#cb69-1"></a>monte_carlo_vec =<span class="st"> </span><span class="cf">function</span>(N) <span class="kw">sum</span>(<span class="kw">runif</span>(N)<span class="op">^</span><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="kw">runif</span>(N)) <span class="op">/</span><span class="st"> </span>N</span></code></pre></div>
 <p>The <code>monte_carlo_vec()</code> function contains (at least) four aspects of vectorisation</p>
@@ -958,7 +956,7 @@ A related idea to function closures, is non-standard evaluation (NSE), or progra
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="programming.html#cb96-1"></a><span class="kw">getFunction</span>(<span class="st">&quot;mean&quot;</span>)</span>
 <span id="cb96-2"><a href="programming.html#cb96-2"></a><span class="co">#&gt; function (x, ...) </span></span>
 <span id="cb96-3"><a href="programming.html#cb96-3"></a><span class="co">#&gt; UseMethod(&quot;mean&quot;)</span></span>
-<span id="cb96-4"><a href="programming.html#cb96-4"></a><span class="co">#&gt; &lt;bytecode: 0xdcfcc8&gt;</span></span>
+<span id="cb96-4"><a href="programming.html#cb96-4"></a><span class="co">#&gt; &lt;bytecode: 0x242e2c0&gt;</span></span>
 <span id="cb96-5"><a href="programming.html#cb96-5"></a><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></span></code></pre></div>
 <p>The third line contains the <code>bytecode</code> of the function. This means that the <strong>compiler</strong> package has translated the R function into another language that can be interpreted by a very fast interpreter. Amazingly the <strong>compiler</strong> package is almost entirely pure R, with just a few C support routines.</p>
 <div id="example-the-mean-function" class="section level3" number="3.7.1">
