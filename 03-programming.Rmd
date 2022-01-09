@@ -470,7 +470,7 @@ Figure \@ref(fig:3-2) highlights that voting patterns are clearly not uniform be
 
 ### Type consistency
 
-When programming, it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example, the functions `sapply()` and `[.data.frame()` aren't type consistent
+When programming, it is helpful if the return value from a function always takes the same form. Unfortunately, not all base R functions follow this idiom. For example, the functions `sapply()` and `[.data.frame()` aren't type consistent.
 
 ```{r, results="hide"}
 two_cols = data.frame(x = 1:5, y = letters[1:5])
@@ -501,14 +501,14 @@ the `drop` argument.
 
 ## Caching variables
 
-A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing `sd(x)` in multiple function calls with the object `sd_x` that is defined once and reused. For example,  suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the  entire data set
+A straightforward method for speeding up code is to calculate objects once and reuse the value when necessary. This could be as simple as replacing `sd(x)` in multiple function calls with the object `sd_x` that is defined once and reused. For example,  suppose we wish to normalise each column of a matrix. However, instead of using the standard deviation of each column, we will use the standard deviation of the entire data set.
 
 ```{r, echo=-1, results="hide"}
 x = matrix(rnorm(100), ncol = 10)
 apply(x, 2, function(i) mean(i) / sd(x))
 ```
 
-This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result
+This is inefficient since the value of `sd(x)` is constant and thus recalculating the standard deviation for every column is unnecessary. Instead we should evaluate once and store the result.
 
 ```{r, results="hide"}
 sd_x = sd(x)
@@ -558,7 +558,7 @@ Construct a box plot of timings for the standard plotting function and the memoi
 The following section is meant to provide an introduction to function closures with example use cases. See @Wickham2014 for a detailed introduction.
 ```
 
-More advanced caching is available using _function closures_. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in `.GlobalEnv`. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function  closure
+More advanced caching is available using _function closures_. A closure in R is an object that contains functions bound to the environment the closure was created in. Technically all functions in R have this property, but we use the term function closure to denote functions where the environment is not in `.GlobalEnv`. One of the environments associated with a function is known as the enclosing environment, that is, where the function was created. This allows us to store values between function calls. Suppose we want to create a stop-watch type function. This is easily achieved with a function closure.
 
 ```{r}
 # <<- assigns values to the parent environment
@@ -574,7 +574,7 @@ stop_watch = function() {
 watch = stop_watch()
 ```
 
-The object `watch` is a list, that contains two functions. One function for starting the timer
+The object `watch` is a list, that contains two functions. One function for starting the timer.
 
 ```{r}
 watch$start()
