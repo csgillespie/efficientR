@@ -18,12 +18,13 @@ As emphasised in the next section, it's useful to run code and experiment as you
 
 - A working installation of R on your computer (see Section \@ref(install-rstudio)).
 
-- Install and load the **microbenchmark**, **profvis** and **ggplot2** packages (see Section \@ref(installing-r-packages) for tips on installing packages and keeping them up-to-date). You can ensure these packages are installed by loading them as follows:
+- Install and load the **microbenchmark**, **profvis**, **readr** and **ggplot2** packages (see Section \@ref(installing-r-packages) for tips on installing packages and keeping them up-to-date). You can ensure these packages are installed by loading them as follows:
 
 ```{r}
 library("microbenchmark")
 library("profvis")
 library("ggplot2")
+library("readr")
 ```
 
 The prerequisites needed to run the code contained in the entire book are covered in \@ref(book-resources) at the end of this chapter.
@@ -186,8 +187,10 @@ profvis(expr = {
   library("ggplot2")
 
   # Stage 2: load and process data
-  out = readRDS("extdata/out-ice.Rds")
-  df = dplyr::rbind_all(out, id = "Year")
+  extdata_path <-
+    "https://raw.githubusercontent.com/csgillespie/efficientR/master/extdata/"
+  out <- readr::read_rds(paste0(extdata_path, "out-ice.Rds"))
+  df <- dplyr::bind_rows(out, .id = "Year")
 
   # Stage 3: visualise output
   ggplot(df, aes(long, lat, group = paste(group, Year))) +
