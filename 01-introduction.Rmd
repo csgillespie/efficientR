@@ -187,7 +187,8 @@ profvis(expr = {
 
   # Stage 2: load and process data
   out = readRDS("extdata/out-ice.Rds")
-  df = dplyr::rbind_all(out, id = "Year")
+  #df = dplyr::rbind_all(out, id = "Year")
+  df = dplyr::bind_rows(out, .id = "Year")
 
   # Stage 3: visualise output
   ggplot(df, aes(long, lat, group = paste(group, Year))) +
