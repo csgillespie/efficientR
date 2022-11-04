@@ -544,8 +544,8 @@ library(rlang)
 group_by(cars, speed = cut(speed, c(0, 10, 100))) %>%
   summarise(mean_dist = mean(dist))
 # 2: Evaluation from character string
-group_by(cars, speed = !!parse_expr("cut(speed, c(0, 10, 100))", env = caller_env())) %>%
-  summarise(mean_dist = !!parse_expr("mean(dist)", env = caller_env()))
+group_by(cars, speed = !!parse_expr("cut(speed, c(0, 10, 100))")) %>%
+  summarise(mean_dist = !!parse_expr("mean(dist)"))
 # 3: Using !! to evaluate 'quosures' when appropriate
 q1 = quo(cut(speed, c(0, 10, 100)))
 q2 = quo(mean(dist))
