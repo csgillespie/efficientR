@@ -4,16 +4,21 @@ html:
 	cp -fvr images _book/
 	cp -fvr _main.utf8.md _book/main.md
 
+epub:
+	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::epub_book", clean = FALSE)'
+	cp -fvr css/style.css _book/
+	cp -fvr images _book/
+
 build:
 	make html
 	Rscript -e 'browseURL("_book/index.html")'
-	
+
 pdf:
 	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book")'
 
 md:
 	Rscript -e 'bookdown::render_book("index.Rmd", output_format = "bookdown::pdf_book",clean=FALSE)'
-	
+
 install:
 	Rscript -e 'devtools::install_github("csgillespie/efficientR")'
 
@@ -29,4 +34,3 @@ cleaner:
 	make clean && rm -fvr rsconnect
 	rm -frv *.aux *.out  *.toc # Latex output
 	rm -fvr *.html # rogue html files
-	
